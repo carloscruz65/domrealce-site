@@ -53,6 +53,8 @@ import AdminEditor from "@/pages/admin-editor";
 import AdminMedia from "@/pages/admin-media";
 import ServicoPeliculaSolar from "@/pages/servico-pelicula-solar";
 import DemoInterativo from "@/pages/demo-interativo";
+import VisualEditorDemo from "@/pages/visual-editor-demo";
+import { VisualEditorProvider, VisualEditorToolbar } from "@/components/visual-editor";
 // import CustomCursor from "@/components/custom-cursor";
 // import ScrollAnimations from "@/components/scroll-animations";
 
@@ -137,6 +139,8 @@ function Router() {
         <Route path="/aviso-legal" component={AvisoLegal} />
         {/* Demo Interativo */}
         <Route path="/demo-interativo" component={DemoInterativo} />
+        {/* Visual Editor Demo */}
+        <Route path="/visual-editor-demo" component={VisualEditorDemo} />
         
         <Route component={NotFound} />
       </Switch>
@@ -191,11 +195,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <PerformanceOptimizer />
-        <PerformancePreloader />
-        <Toaster />
-        <Router />
-        <WhatsAppFAB />
+        <VisualEditorProvider>
+          <PerformanceOptimizer />
+          <PerformancePreloader />
+          <Toaster />
+          <Router />
+          <WhatsAppFAB />
+          <VisualEditorToolbar />
+        </VisualEditorProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
