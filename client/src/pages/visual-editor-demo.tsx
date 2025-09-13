@@ -6,7 +6,6 @@ export default function VisualEditorDemo() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
-      <VisualEditorToolbar />
       
       <main className="pt-16">
         {/* Hero Section - Editável */}

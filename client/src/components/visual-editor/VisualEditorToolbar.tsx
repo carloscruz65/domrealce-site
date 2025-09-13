@@ -39,14 +39,14 @@ export function VisualEditorToolbar() {
 
   if (!isEditMode) {
     return (
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed bottom-4 left-4 z-40">
         <Button
           onClick={toggleEditMode}
           className="bg-[#FFD700] text-black hover:bg-[#FFC700] shadow-lg"
           data-testid="enter-edit-mode"
         >
           <Edit3 className="h-4 w-4 mr-2" />
-          Editar Página
+          ✏️ Editar
         </Button>
       </div>
     );

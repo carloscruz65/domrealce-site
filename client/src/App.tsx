@@ -151,14 +151,8 @@ function Router() {
         {/* Visual Editor Demo - apenas no Replit */}
         {showEditor && <Route path="/visual-editor-demo" component={VisualEditorDemo} />}
         
-        {/* Renderizar VisualEditorToolbar se modo de edição estiver ativo via URL */}
-        {showEditor && isEditMode && (
-          <div className="fixed inset-0 z-50 pointer-events-none">
-            <div className="pointer-events-auto">
-              <VisualEditorToolbar />
-            </div>
-          </div>
-        )}
+        {/* Sempre renderizar VisualEditorToolbar quando em Replit */}
+        {showEditor && <VisualEditorToolbar />}
         
         <Route component={NotFound} />
       </Switch>

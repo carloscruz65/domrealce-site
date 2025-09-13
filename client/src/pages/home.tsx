@@ -7,6 +7,7 @@ import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
 import ClientLogos from "@/components/ClientLogos";
+import { AutoEditableText } from "@/components/visual-editor";
 
 export default function Home() {
   const { getConfig, isLoading } = usePageConfig("home");
