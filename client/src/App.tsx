@@ -71,6 +71,11 @@ declare global {
 function Router() {
   useScrollToTop();
   const [location] = useLocation();
+  
+  // Detectar se está rodando no Replit
+  const isReplitPreview = typeof window !== 'undefined' && 
+    (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
+  const showEditor = isReplitPreview || import.meta.env.DEV;
 
   // Track page views when routes change
   useEffect(() => {
@@ -139,8 +144,8 @@ function Router() {
         <Route path="/aviso-legal" component={AvisoLegal} />
         {/* Demo Interativo */}
         <Route path="/demo-interativo" component={DemoInterativo} />
-        {/* Visual Editor Demo */}
-        <Route path="/visual-editor-demo" component={VisualEditorDemo} />
+        {/* Visual Editor Demo - apenas no Replit */}
+        {showEditor && <Route path="/visual-editor-demo" component={VisualEditorDemo} />}
         
         <Route component={NotFound} />
       </Switch>
@@ -150,6 +155,11 @@ function Router() {
 
 function App() {
   useLazyImages();
+
+  // Detectar se está rodando no Replit
+  const isReplitPreview = typeof window !== 'undefined' && 
+    (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
+  const showEditor = isReplitPreview || import.meta.env.DEV;
 
   // Initialize Google Analytics when app loads
   useEffect(() => {
@@ -195,14 +205,24 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <VisualEditorProvider>
-          <PerformanceOptimizer />
-          <PerformancePreloader />
-          <Toaster />
-          <Router />
-          <WhatsAppFAB />
-          <VisualEditorToolbar />
-        </VisualEditorProvider>
+        {showEditor ? (
+          <VisualEditorProvider>
+            <PerformanceOptimizer />
+            <PerformancePreloader />
+            <Toaster />
+            <Router />
+            <WhatsAppFAB />
+            <VisualEditorToolbar />
+          </VisualEditorProvider>
+        ) : (
+          <>
+            <PerformanceOptimizer />
+            <PerformancePreloader />
+            <Toaster />
+            <Router />
+            <WhatsAppFAB />
+          </>
+        )}
       </TooltipProvider>
     </QueryClientProvider>
   );
