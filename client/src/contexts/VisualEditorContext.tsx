@@ -88,13 +88,7 @@ export function VisualEditorProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleEditMode = useCallback(() => {
-    console.log('🎨 Toggle Edit Mode chamado!');
-    setState(prev => {
-      console.log('🎨 Estado anterior:', { isEditMode: prev.isEditMode });
-      const newState = { ...prev, isEditMode: !prev.isEditMode };
-      console.log('🎨 Novo estado:', { isEditMode: newState.isEditMode });
-      return newState;
-    });
+    setState(prev => ({ ...prev, isEditMode: !prev.isEditMode }));
   }, []);
 
   const exitEditMode = useCallback(() => {

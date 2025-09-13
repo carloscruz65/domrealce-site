@@ -34,7 +34,6 @@ export function VisualEditorToolbar() {
     clipboard,
   } = useVisualEditor();
 
-  console.log('🎨 VisualEditorToolbar renderizado:', { isEditMode });
 
   const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);
 
@@ -42,10 +41,7 @@ export function VisualEditorToolbar() {
     return (
       <div className="fixed top-4 right-4 z-50">
         <Button
-          onClick={() => {
-            console.log('🎨 Botão Editar Página clicado!');
-            toggleEditMode();
-          }}
+          onClick={toggleEditMode}
           className="bg-[#FFD700] text-black hover:bg-[#FFC700] shadow-lg"
           data-testid="enter-edit-mode"
         >

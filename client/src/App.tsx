@@ -76,6 +76,10 @@ function Router() {
   const isReplitPreview = typeof window !== 'undefined' && 
     (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
   const showEditor = isReplitPreview || import.meta.env.DEV;
+  
+  // Verificar se o modo de edição está ativo via URL
+  const isEditMode = typeof window !== 'undefined' && 
+    new URLSearchParams(window.location.search).get('edit') === 'true';
 
   // Track page views when routes change
   useEffect(() => {
@@ -147,6 +151,15 @@ function Router() {
         {/* Visual Editor Demo - apenas no Replit */}
         {showEditor && <Route path="/visual-editor-demo" component={VisualEditorDemo} />}
         
+        {/* Renderizar VisualEditorToolbar se modo de edição estiver ativo via URL */}
+        {showEditor && isEditMode && (
+          <div className="fixed inset-0 z-50 pointer-events-none">
+            <div className="pointer-events-auto">
+              <VisualEditorToolbar />
+            </div>
+          </div>
+        )}
+        
         <Route component={NotFound} />
       </Switch>
     </>
@@ -212,7 +225,6 @@ function App() {
             <Toaster />
             <Router />
             <WhatsAppFAB />
-            <VisualEditorToolbar />
           </VisualEditorProvider>
         ) : (
           <>
