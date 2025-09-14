@@ -8,6 +8,7 @@ interface InlineTextEditorProps {
   className?: string;
   placeholder?: string;
   multiline?: boolean;
+  as?: keyof JSX.IntrinsicElements;
 }
 
 export function InlineTextEditor({
@@ -15,7 +16,8 @@ export function InlineTextEditor({
   initialText,
   className,
   placeholder = 'Clique para editar...',
-  multiline = false
+  multiline = false,
+  as
 }: InlineTextEditorProps) {
   const { isEditMode, updateElement, selectedElementId, elements } = useVisualEditor();
   const [isEditing, setIsEditing] = useState(false);
@@ -99,8 +101,13 @@ export function InlineTextEditor({
     );
   }
 
+  // Use span for inline elements (multiline=false) to avoid invalid DOM nesting
+  // Use div for block elements (multiline=true)
+  // Allow override with `as` prop
+  const Component = as || (multiline ? 'div' : 'span');
+
   return (
-    <div
+    <Component
       onDoubleClick={handleDoubleClick}
       className={cn(
         'cursor-text min-h-[1.5em] transition-all duration-200',
@@ -117,6 +124,6 @@ export function InlineTextEditor({
           Duplo clique para editar
         </span>
       )}
-    </div>
+    </Component>
   );
 }
