@@ -28,7 +28,7 @@ export default function VisualEditorDemo() {
             
             <EditableElement 
               id="hero-subtitle"
-              tag="p" 
+              tag="div" 
               className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto"
             >
               <InlineTextEditor
@@ -89,7 +89,7 @@ export default function VisualEditorDemo() {
                 </EditableElement>
                 <EditableElement 
                   id="feature-1-desc"
-                  tag="p" 
+                  tag="div" 
                   className="text-gray-300"
                 >
                   <InlineTextEditor
@@ -118,7 +118,7 @@ export default function VisualEditorDemo() {
                 </EditableElement>
                 <EditableElement 
                   id="feature-2-desc"
-                  tag="p" 
+                  tag="div" 
                   className="text-gray-300"
                 >
                   <InlineTextEditor
@@ -147,7 +147,7 @@ export default function VisualEditorDemo() {
                 </EditableElement>
                 <EditableElement 
                   id="feature-3-desc"
-                  tag="p" 
+                  tag="div" 
                   className="text-gray-300"
                 >
                   <InlineTextEditor
