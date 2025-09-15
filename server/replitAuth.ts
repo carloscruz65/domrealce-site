@@ -24,19 +24,16 @@ const getOidcConfig = memoize(
 
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  
-  // Temporarily using MemoryStore due to Neon DB endpoint being disabled
-  // const pgStore = connectPg(session);
-  // const sessionStore = new pgStore({
-  //   conString: process.env.DATABASE_URL,
-  //   createTableIfMissing: false,
-  //   ttl: sessionTtl,
-  //   tableName: "sessions",
-  // });
-  
+  const pgStore = connectPg(session);
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: false,
+    ttl: sessionTtl,
+    tableName: "sessions",
+  });
   return session({
     secret: process.env.SESSION_SECRET!,
-    // store: sessionStore, // Using default MemoryStore temporarily
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {

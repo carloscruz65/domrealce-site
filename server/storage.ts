@@ -51,48 +51,6 @@ export class MemStorage implements IStorage {
     this.news = new Map();
     this.slides = new Map();
     this.pageConfigs = new Map();
-    
-    // Add basic data to prevent empty site after DB loss
-    this.initializeBasicData();
-  }
-
-  private initializeBasicData() {
-    // Add default slide
-    const slideId = randomUUID();
-    this.slides.set(slideId, {
-      id: slideId,
-      image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=1200&h=600&fit=crop",
-      title: "DOMREALCE - Comunicação Visual",
-      text: "Soluções profissionais para a sua marca",
-      order_position: "1",
-      active: true,
-      createdAt: new Date()
-    });
-
-    // Add default featured products
-    const productId1 = randomUUID();
-    this.products.set(productId1, {
-      id: productId1,
-      titulo: "Impressão Digital Premium",
-      descricao: "Serviços de impressão digital de alta qualidade para todos os seus projetos",
-      preco: "50.00",
-      categoria: "impressao-digital",
-      imagem: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop",
-      destaque: true,
-      createdAt: new Date()
-    });
-
-    // Add default news
-    const newsId = randomUUID();
-    this.news.set(newsId, {
-      id: newsId,
-      titulo: "Novos Serviços Disponíveis",
-      descricao: "Expandimos a nossa gama de serviços para melhor servir os nossos clientes.",
-      categoria: "geral",
-      imagem: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=300&fit=crop",
-      data: new Date(),
-      createdAt: new Date()
-    });
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -123,10 +81,10 @@ export class MemStorage implements IStorage {
     } else {
       const user: User = { 
         id: insertUser.id || randomUUID(),
-        email: insertUser.email || null,
-        firstName: insertUser.firstName || null,
-        lastName: insertUser.lastName || null,
-        profileImageUrl: insertUser.profileImageUrl || null,
+        email: insertUser.email ?? null,
+        firstName: insertUser.firstName ?? null,
+        lastName: insertUser.lastName ?? null,
+        profileImageUrl: insertUser.profileImageUrl ?? null,
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -505,5 +463,4 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Use database storage for production
-// Temporarily using MemStorage due to Neon DB endpoint being disabled
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
