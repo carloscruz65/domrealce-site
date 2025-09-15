@@ -96,8 +96,11 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { 
-      ...insertUser, 
       id,
+      email: insertUser.email ?? null,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
+      profileImageUrl: insertUser.profileImageUrl ?? null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -462,5 +465,5 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use database storage for production
-export const storage = new DatabaseStorage();
+// Temporarily use memory storage until database connection is fixed
+export const storage = new MemStorage();
