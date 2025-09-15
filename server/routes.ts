@@ -1053,6 +1053,39 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // Admin Page Config routes
+  // Endpoint for EditableConfigText component to save individual configurations
+  // Must be BEFORE the generic /:page route to avoid conflicts
+  app.post("/api/admin/pages/:page/config", async (req, res) => {
+    try {
+      const { page } = req.params;
+      const { section, element, value } = req.body;
+      
+      console.log('Config update request:', { page, section, element, value });
+      
+      // Validate required fields
+      if (!section || !element || value === undefined) {
+        return res.status(400).json({ 
+          error: "Missing required fields: section, element, and value are required" 
+        });
+      }
+
+      const configData = {
+        page,
+        section,
+        element,
+        type: "text", // Default type, can be enhanced later
+        value: String(value)
+      };
+
+      const config = await storage.upsertPageConfig(configData);
+      console.log('Config saved successfully:', config);
+      res.json({ success: true, config });
+    } catch (error) {
+      console.error("Error updating page config:", error);
+      res.status(500).json({ error: "Failed to update page config" });
+    }
+  });
+
   app.get("/api/admin/pages", async (req, res) => {
     try {
       const { page } = req.query;
@@ -1119,6 +1152,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       res.status(500).json({ error: "Failed to upsert page config" });
     }
   });
+
 
   // API endpoint to get page configurations for frontend rendering
   app.get("/api/page-config/:page", async (req, res) => {

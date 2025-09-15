@@ -5,11 +5,12 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
+import { EditableConfigText } from "@/components/EditableConfigText";
 import sobreImage from "@assets/Create a colorful im_1755881158641.png";
 import carlosCruzImage from "@/assets/carlos-cruz.webp";
 
 export default function Sobre() {
-  const { getConfig, isLoading } = usePageConfig('about');
+  const { getConfig, isLoading, updateConfig } = usePageConfig('about');
 
   // Get content from config or use defaults
   const pageTitle = getConfig('hero', 'title', 'Sobre Nós');
@@ -37,12 +38,21 @@ export default function Sobre() {
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {pageTitle}
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            {heroDescription}
-          </p>
+          <EditableConfigText
+            value={pageTitle}
+            onSave={(value) => updateConfig('hero', 'title', value)}
+            tag="h1"
+            className="text-4xl md:text-6xl font-bold mb-6"
+            dataTestId="page-title"
+          />
+          <EditableConfigText
+            value={heroDescription}
+            onSave={(value) => updateConfig('hero', 'description', value)}
+            tag="p"
+            className="text-xl text-gray-300 max-w-3xl mx-auto"
+            multiline={true}
+            dataTestId="hero-description"
+          />
         </div>
       </section>
 
@@ -51,10 +61,28 @@ export default function Sobre() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4 text-[#FFD700]">{carlosTitle}</h2>
-              <p className="text-lg text-gray-300 mb-6">{carlosSubtitle}</p>
+              <EditableConfigText
+                value={carlosTitle}
+                onSave={(value) => updateConfig('carlos', 'title', value)}
+                tag="h2"
+                className="text-3xl font-bold mb-4 text-[#FFD700]"
+                dataTestId="carlos-title"
+              />
+              <EditableConfigText
+                value={carlosSubtitle}
+                onSave={(value) => updateConfig('carlos', 'subtitle', value)}
+                tag="p"
+                className="text-lg text-gray-300 mb-6"
+                dataTestId="carlos-subtitle"
+              />
 
-              <h3 className="text-2xl font-bold mb-4">{carlosStoryTitle}</h3>
+              <EditableConfigText
+                value={carlosStoryTitle}
+                onSave={(value) => updateConfig('carlos', 'story_title', value)}
+                tag="h3"
+                className="text-2xl font-bold mb-4"
+                dataTestId="carlos-story-title"
+              />
 
               <div className="space-y-4 text-gray-300">
                 <p>{carlosStory1}</p>

@@ -15,7 +15,13 @@ export function usePageConfig(page: string) {
   
   const updateConfigMutation = useMutation({
     mutationFn: async ({ section, element, value }: { section: string; element: string; value: string }) => {
-      return apiRequest(`/api/admin/pages/${page}/config`, 'POST', { section, element, value });
+      return apiRequest(`/api/admin/pages/upsert`, 'POST', { 
+        page,
+        section, 
+        element, 
+        value,
+        type: "text"
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/pages', page] });

@@ -274,3 +274,29 @@ export function useVisualEditor() {
   }
   return context;
 }
+
+// Default state for when no provider is available
+const defaultVisualEditorState: VisualEditorContextType = {
+  ...initialState,
+  toggleEditMode: () => {},
+  exitEditMode: () => {},
+  selectElement: () => {},
+  hoverElement: () => {},
+  updateElement: () => {},
+  deleteElement: () => {},
+  duplicateElement: () => {},
+  moveElement: () => {},
+  resizeElement: () => {},
+  setBreakpoint: () => {},
+  undo: () => {},
+  redo: () => {},
+  copyElement: () => {},
+  pasteElement: () => {},
+  updateElementContent: () => {},
+  updateElementStyles: () => {},
+};
+
+export function useVisualEditorSafe() {
+  const context = useContext(VisualEditorContext);
+  return context || defaultVisualEditorState;
+}
