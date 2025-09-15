@@ -463,4 +463,5 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Use database storage for production
-export const storage = new DatabaseStorage();
+// Temporarily using MemStorage due to Neon DB endpoint being disabled
+export const storage = new MemStorage();
