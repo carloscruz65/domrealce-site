@@ -21,8 +21,8 @@ import {
 } from "./visual-editor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication first
-  await setupAuth(app);
+  // Setup authentication first - TEMPORARILY DISABLED
+  // await setupAuth(app);
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -38,7 +38,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage service
   const objectStorageService = new ObjectStorageService();
 
-  // Auth routes
+  // Auth routes - TEMPORARILY DISABLED
+  /*
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -49,6 +50,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+  */
 
   // Object Storage endpoints for Visual Editor
   // Upload endpoint for getting presigned URLs
