@@ -34,6 +34,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Object storage service
   const objectStorageService = new ObjectStorageService();
+
+  // Object Storage endpoints for Visual Editor
+  // Upload endpoint for getting presigned URLs
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Normalize uploaded image path
+  app.post("/api/images/normalize", async (req, res) => {
+    if (!req.body.imageURL) {
+      return res.status(400).json({ error: "imageURL is required" });
+    }
+
+    try {
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(req.body.imageURL);
+      res.json({ objectPath: normalizedPath });
+    } catch (error) {
+      console.error("Error normalizing image path:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
   
   // IfthenPay service
   const ifthenPayService = createIfthenPayService();

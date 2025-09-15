@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import { ObjectStorageService } from "./objectStorage";
+import { storage } from "./storage";
+import type { InsertPageConfig } from "@shared/schema";
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -151,6 +153,180 @@ function generateAltFromFilename(filename: string): string {
   return name.replace(/[_-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
+// Function to convert PageContent blocks to PageConfig entries
+async function syncPageContentToDatabase(pageContent: PageContent): Promise<void> {
+  try {
+    console.log(`🔄 Syncing page content to database: ${pageContent.route}`);
+    
+    // Map route to page identifier
+    const pageId = pageContent.route === '/' ? 'home' : pageContent.route.replace('/', '');
+    
+    // Sync SEO metadata
+    if (pageContent.metadata.seoTitle) {
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: 'seo',
+        element: 'title',
+        type: 'text',
+        value: pageContent.metadata.seoTitle,
+        defaultValue: null,
+        metadata: null
+      });
+    }
+    
+    if (pageContent.metadata.seoDescription) {
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: 'seo',
+        element: 'description',
+        type: 'text',
+        value: pageContent.metadata.seoDescription,
+        defaultValue: null,
+        metadata: null
+      });
+    }
+    
+    if (pageContent.metadata.keywords) {
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: 'seo',
+        element: 'keywords',
+        type: 'text',
+        value: pageContent.metadata.keywords,
+        defaultValue: null,
+        metadata: null
+      });
+    }
+    
+    // Sync page title
+    await storage.upsertPageConfig({
+      page: pageId,
+      section: 'page',
+      element: 'title',
+      type: 'text',
+      value: pageContent.title,
+      defaultValue: null,
+      metadata: null
+    });
+    
+    // Sync blocks
+    for (const block of pageContent.blocks) {
+      const blockSection = `block_${block.position}`;
+      
+      // Store block type
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: blockSection,
+        element: 'type',
+        type: 'text',
+        value: block.type,
+        defaultValue: null,
+        metadata: null
+      });
+      
+      // Store block content as JSON
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: blockSection,
+        element: 'content',
+        type: 'json',
+        value: JSON.stringify(block.content),
+        defaultValue: null,
+        metadata: null
+      });
+      
+      // Store block styles as JSON
+      await storage.upsertPageConfig({
+        page: pageId,
+        section: blockSection,
+        element: 'styles',
+        type: 'json',
+        value: JSON.stringify(block.styles),
+        defaultValue: null,
+        metadata: null
+      });
+      
+      // For compatibility with existing usePageConfig, sync common content
+      if (block.type === 'hero' && block.content.title) {
+        await storage.upsertPageConfig({
+          page: pageId,
+          section: 'hero',
+          element: 'title',
+          type: 'text',
+          value: block.content.title,
+          defaultValue: null,
+          metadata: null
+        });
+        
+        if (block.content.subtitle) {
+          await storage.upsertPageConfig({
+            page: pageId,
+            section: 'hero',
+            element: 'subtitle',
+            type: 'text',
+            value: block.content.subtitle,
+            defaultValue: null,
+            metadata: null
+          });
+        }
+        
+        if (block.content.description) {
+          await storage.upsertPageConfig({
+            page: pageId,
+            section: 'hero',
+            element: 'description',
+            type: 'text',
+            value: block.content.description,
+            defaultValue: null,
+            metadata: null
+          });
+        }
+      }
+      
+      if (block.type === 'text' && block.content.content) {
+        await storage.upsertPageConfig({
+          page: pageId,
+          section: 'content',
+          element: 'text',
+          type: 'html',
+          value: block.content.content,
+          defaultValue: null,
+          metadata: null
+        });
+      }
+      
+      if (block.type === 'section' && block.content.title) {
+        await storage.upsertPageConfig({
+          page: pageId,
+          section: 'section',
+          element: 'title',
+          type: 'text',
+          value: block.content.title,
+          defaultValue: null,
+          metadata: null
+        });
+        
+        if (block.content.content) {
+          await storage.upsertPageConfig({
+            page: pageId,
+            section: 'section',
+            element: 'content',
+            type: 'text',
+            value: block.content.content,
+            defaultValue: null,
+            metadata: null
+          });
+        }
+      }
+    }
+    
+    console.log(`✅ Successfully synced page content to database: ${pageContent.route}`);
+  } catch (error) {
+    console.error(`❌ Error syncing page content to database:`, error);
+    throw error;
+  }
+}
+
 // Editor endpoints
 export async function getPageContent(req: Request, res: Response) {
   try {
@@ -234,7 +410,14 @@ export async function savePageContentEndpoint(req: Request, res: Response) {
     // Update timestamp
     pageContent.updatedAt = new Date().toISOString();
     
+    // Save to JSON file (for editor draft/published state)
     savePageContent(pageContent);
+    
+    // If publishing, sync to PostgreSQL database for public pages
+    if (pageContent.status === 'published') {
+      console.log(`📤 Publishing page content to database: ${pageContent.route}`);
+      await syncPageContentToDatabase(pageContent);
+    }
     
     res.json({ success: true, pageContent });
   } catch (error) {

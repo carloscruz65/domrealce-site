@@ -1,18 +1,17 @@
 {
-  "id": "737fdfce68873caf27beee342be79ce4",
-  "route": "/sobre",
-  "title": "Sobre Nós",
+  "id": "2f980331861b87acc51352ce849c2eda",
+  "route": "/home",
+  "title": "Nova Página",
   "blocks": [
     {
-      "id": "f33b62abe13853469d5aab70615a0688",
+      "id": "2f0193bd1b65424d1d93bafdac0bf171",
       "type": "hero",
       "content": {
-        "title": "Teste Final 554308",
-        "subtitle": "Our mission and vision for the future.",
+        "title": "Bem-vindo",
+        "subtitle": "Esta é uma página nova criada no Editor Visual",
         "backgroundImage": "",
         "buttonText": "Saiba Mais",
-        "buttonLink": "#",
-        "description": "We are dedicated to providing the best service to our customers."
+        "buttonLink": "#"
       },
       "styles": {
         "backgroundColor": "#0a0a0a",
@@ -28,7 +27,7 @@
     "seoDescription": "Comunicação visual e impressão digital em Portugal",
     "keywords": "comunicação visual, impressão digital, design gráfico"
   },
-  "version": 9,
-  "status": "published",
-  "updatedAt": "2025-09-15T09:17:34.513Z"
+  "version": 1,
+  "status": "draft",
+  "updatedAt": "2025-09-15T09:22:06.946Z"
 }

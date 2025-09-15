@@ -1,0 +1,34 @@
+{
+  "id": "test-page-id",
+  "route": "/teste",
+  "title": "Página de Teste - Sync",
+  "blocks": [
+    {
+      "id": "hero-block-1",
+      "type": "hero",
+      "content": {
+        "title": "Título Teste de Sync",
+        "subtitle": "Subtítulo para testar sincronização",
+        "description": "Esta é uma página de teste para verificar se o sync funciona",
+        "backgroundImage": "",
+        "buttonText": "Testar",
+        "buttonLink": "#"
+      },
+      "styles": {
+        "backgroundColor": "#FFD700",
+        "textColor": "#000000",
+        "padding": "3rem 1rem",
+        "textAlign": "center"
+      },
+      "position": 0
+    }
+  ],
+  "metadata": {
+    "seoTitle": "Teste Sync - DOMREALCE",
+    "seoDescription": "Página de teste para sincronização admin editor",
+    "keywords": "teste, sync, admin"
+  },
+  "version": 1,
+  "status": "published",
+  "updatedAt": "2025-09-15T09:22:18.684Z"
+}
