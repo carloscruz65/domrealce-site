@@ -148,11 +148,18 @@ function Router() {
         <Route path="/aviso-legal" component={AvisoLegal} />
         {/* Demo Interativo */}
         <Route path="/demo-interativo" component={DemoInterativo} />
-        {/* Visual Editor Demo - apenas no Replit */}
-        {showEditor && <Route path="/visual-editor-demo" component={VisualEditorDemo} />}
+        {/* Visual Editor Demo - DESATIVADO, redireciona para /admin/editor */}
+        {showEditor && <Route path="/visual-editor-demo">
+          {() => {
+            if (typeof window !== 'undefined') {
+              window.location.href = '/admin/editor';
+            }
+            return null;
+          }}
+        </Route>}
         
-        {/* Sempre renderizar VisualEditorToolbar quando em Replit */}
-        {showEditor && <VisualEditorToolbar />}
+        {/* Toolbar apenas em páginas de admin */}
+        {showEditor && location.startsWith('/admin') && <VisualEditorToolbar />}
         
         <Route component={NotFound} />
       </Switch>
@@ -212,23 +219,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {showEditor ? (
-          <VisualEditorProvider>
-            <PerformanceOptimizer />
-            <PerformancePreloader />
-            <Toaster />
-            <Router />
-            <WhatsAppFAB />
-          </VisualEditorProvider>
-        ) : (
-          <>
-            <PerformanceOptimizer />
-            <PerformancePreloader />
-            <Toaster />
-            <Router />
-            <WhatsAppFAB />
-          </>
-        )}
+        <PerformanceOptimizer />
+        <PerformancePreloader />
+        <Toaster />
+        <Router />
+        <WhatsAppFAB />
       </TooltipProvider>
     </QueryClientProvider>
   );

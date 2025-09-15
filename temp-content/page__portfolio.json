@@ -1,0 +1,33 @@
+{
+  "id": "8989b199347930fad9863c4a19eab0a1",
+  "route": "/portfolio",
+  "title": "Portfólio",
+  "blocks": [
+    {
+      "id": "14295b49be81028df82b36596afbc279",
+      "type": "hero",
+      "content": {
+        "title": "Bem-vindo",
+        "subtitle": "Esta é uma página nova criada no Editor Visual",
+        "backgroundImage": "",
+        "buttonText": "Saiba Mais",
+        "buttonLink": "#"
+      },
+      "styles": {
+        "backgroundColor": "#0a0a0a",
+        "textColor": "#ffffff",
+        "padding": "4rem 1rem",
+        "textAlign": "center"
+      },
+      "position": 0
+    }
+  ],
+  "metadata": {
+    "seoTitle": "DOMREALCE",
+    "seoDescription": "Comunicação visual e impressão digital em Portugal",
+    "keywords": "comunicação visual, impressão digital, design gráfico"
+  },
+  "version": 1,
+  "status": "draft",
+  "updatedAt": "2025-09-15T07:35:44.836Z"
+}

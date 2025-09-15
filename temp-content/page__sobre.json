@@ -1,0 +1,33 @@
+{
+  "id": "737fdfce68873caf27beee342be79ce4",
+  "route": "/sobre",
+  "title": "Sobre Nós",
+  "blocks": [
+    {
+      "id": "f33b62abe13853469d5aab70615a0688",
+      "type": "hero",
+      "content": {
+        "title": "Bem-vindo",
+        "subtitle": "Esta é uma página nova criada no Editor Visual",
+        "backgroundImage": "",
+        "buttonText": "Saiba Mais",
+        "buttonLink": "#"
+      },
+      "styles": {
+        "backgroundColor": "#0a0a0a",
+        "textColor": "#ffffff",
+        "padding": "4rem 1rem",
+        "textAlign": "center"
+      },
+      "position": 0
+    }
+  ],
+  "metadata": {
+    "seoTitle": "DOMREALCE",
+    "seoDescription": "Comunicação visual e impressão digital em Portugal",
+    "keywords": "comunicação visual, impressão digital, design gráfico"
+  },
+  "version": 1,
+  "status": "draft",
+  "updatedAt": "2025-09-15T07:39:27.796Z"
+}

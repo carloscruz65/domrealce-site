@@ -1,0 +1,33 @@
+{
+  "id": "6b6c8f3ce26a75fd862582ce7fbf0d41",
+  "route": "/contactos",
+  "title": "Contactos",
+  "blocks": [
+    {
+      "id": "c12f181d0fb1d826f77276df0318869f",
+      "type": "hero",
+      "content": {
+        "title": "Bem-vindo",
+        "subtitle": "Esta é uma página nova criada no Editor Visual",
+        "backgroundImage": "",
+        "buttonText": "Saiba Mais",
+        "buttonLink": "#"
+      },
+      "styles": {
+        "backgroundColor": "#0a0a0a",
+        "textColor": "#ffffff",
+        "padding": "4rem 1rem",
+        "textAlign": "center"
+      },
+      "position": 0
+    }
+  ],
+  "metadata": {
+    "seoTitle": "DOMREALCE",
+    "seoDescription": "Comunicação visual e impressão digital em Portugal",
+    "keywords": "comunicação visual, impressão digital, design gráfico"
+  },
+  "version": 1,
+  "status": "draft",
+  "updatedAt": "2025-09-15T07:38:58.936Z"
+}
