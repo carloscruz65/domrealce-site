@@ -10,13 +10,13 @@ interface SliderResponse {
 
 export default function DynamicSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { data, isLoading, error } = useQuery<SliderResponse>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["/api/admin/slider"],
     staleTime: 0,
-    cacheTime: 0
+    gcTime: 0
   });
 
-  let activeSlides = data?.slides?.filter((slide: Slide) => slide.active) || [];
+  let activeSlides = (data as SliderResponse)?.slides?.filter((slide: Slide) => slide.active) || [];
 
   // 👉 Forçar que o 2º slide (index 1) fique sempre em 1º
   if (activeSlides.length > 1) {
