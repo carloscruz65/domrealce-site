@@ -7,11 +7,12 @@
       "id": "f33b62abe13853469d5aab70615a0688",
       "type": "hero",
       "content": {
-        "title": "Bem-vindo",
-        "subtitle": "Esta é uma página nova criada no Editor Visual",
+        "title": "My New Title for About Us",
+        "subtitle": "This is the subtitle for the About Us page",
         "backgroundImage": "",
         "buttonText": "Saiba Mais",
-        "buttonLink": "#"
+        "buttonLink": "#",
+        "description": "This is the description for the About Us page, providing more details about the company's mission and values. It expands on the previous text."
       },
       "styles": {
         "backgroundColor": "#0a0a0a",
@@ -27,7 +28,7 @@
     "seoDescription": "Comunicação visual e impressão digital em Portugal",
     "keywords": "comunicação visual, impressão digital, design gráfico"
   },
-  "version": 1,
+  "version": 3,
   "status": "draft",
-  "updatedAt": "2025-09-15T07:39:27.796Z"
+  "updatedAt": "2025-09-15T07:55:44.878Z"
 }

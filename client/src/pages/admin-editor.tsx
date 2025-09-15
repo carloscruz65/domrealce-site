@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { VisualEditorProvider } from "@/components/visual-editor";
 
 interface Block {
   id: string;
@@ -576,8 +577,9 @@ export default function AdminEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <Navigation />
+    <VisualEditorProvider>
+      <div className="min-h-screen bg-[#0a0a0a] text-white">
+        <Navigation />
       
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
@@ -750,5 +752,6 @@ export default function AdminEditor() {
         )}
       </div>
     </div>
+    </VisualEditorProvider>
   );
 }
