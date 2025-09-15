@@ -11,7 +11,9 @@ interface SliderResponse {
 export default function DynamicSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { data, isLoading, error } = useQuery<SliderResponse>({
-    queryKey: ["/api/admin/slider"]
+    queryKey: ["/api/admin/slider"],
+    staleTime: 0,
+    cacheTime: 0
   });
 
   let activeSlides = data?.slides?.filter((slide: Slide) => slide.active) || [];
