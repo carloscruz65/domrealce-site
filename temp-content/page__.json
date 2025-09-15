@@ -7,7 +7,7 @@
       "id": "bfd9ed0e-ad9b-492d-8355-8321d4fba4e4",
       "type": "hero",
       "content": {
-        "title": "Automated Title P2",
+        "title": "Sistema de Edição - Teste Final",
         "subtitle": "Automated Subtitle P2",
         "description": "Descrição do hero banner",
         "backgroundImage": "",
@@ -53,7 +53,7 @@
     "seoDescription": "Comunicação visual e impressão digital em Portugal",
     "keywords": "comunicação visual, impressão digital, design gráfico"
   },
-  "version": 6,
+  "version": 8,
   "status": "published",
-  "updatedAt": "2025-09-15T07:59:13.869Z"
+  "updatedAt": "2025-09-15T09:27:32.500Z"
 }
