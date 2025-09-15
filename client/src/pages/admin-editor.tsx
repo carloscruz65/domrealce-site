@@ -16,6 +16,7 @@ import {
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { VisualEditorProvider } from "@/components/visual-editor";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Block {
   id: string;
@@ -71,6 +72,7 @@ const availablePages = [
 
 export default function AdminEditor() {
   const { toast } = useToast();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const [selectedPage, setSelectedPage] = useState<string>('/');
   const [pageContent, setPageContent] = useState<PageContent | null>(null);
   const [loading, setLoading] = useState(false);
@@ -78,6 +80,51 @@ export default function AdminEditor() {
   const [showPreview, setShowPreview] = useState(false);
   const [history, setHistory] = useState<PageContent[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      toast({
+        title: "Acesso restrito",
+        description: "É necessário fazer login para aceder ao editor administrativo.",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 1000);
+      return;
+    }
+  }, [isAuthenticated, isLoading, toast]);
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700] mx-auto mb-4"></div>
+          <p className="text-gray-300">A verificar autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#FFD700] mb-4">Acesso Restrito</h1>
+          <p className="text-gray-300 mb-6">É necessário fazer login para aceder ao editor administrativo.</p>
+          <Button 
+            onClick={() => window.location.href = "/api/login"}
+            className="bg-[#FFD700] text-black hover:bg-[#E6C200]"
+          >
+            Fazer Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     loadPageContent();

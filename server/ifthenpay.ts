@@ -369,19 +369,23 @@ export class IfthenPayService {
       throw new Error('MBWAY Key is required');
     }
 
-    const url = `${this.baseUrl}/spg/payment/mbway/status`;
-    const payload = {
-      mbwayKey: this.config.mbwayKey,
-      requestId: requestId,
-    };
+    // Use GET method with query parameters for MB WAY status check
+    const url = `${this.baseUrl}/spg/payment/mbway/status?mbwayKey=${this.config.mbwayKey}&requestId=${requestId}`;
 
     try {
+      console.log('🔍 Checking MB WAY status with URL:', url);
+      
       const response = await fetch(url, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+      });
+
+      console.log('📡 MB WAY Status Response:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: url
       });
 
       if (!response.ok) {
@@ -389,9 +393,11 @@ export class IfthenPayService {
       }
 
       const data = await response.json();
+      console.log('✅ MB WAY Status Data:', data);
+      
       return {
-        status: data.status,
-        message: data.message,
+        status: data.Status || data.status || 'pending',
+        message: data.Message || data.message,
       };
     } catch (error) {
       console.error('Error checking MB WAY status:', error);

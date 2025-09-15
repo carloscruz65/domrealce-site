@@ -114,7 +114,10 @@ export default function LojaPapelParede() {
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3">
             {textureCovers.map((texture: TextureCover) => (
               <Link key={texture.fileName} href={`/loja/papel-parede/textura/${texture.fileName.toLowerCase().replace(/_/g, '-')}`}>
-                <div className="group text-center cursor-pointer">
+                <div 
+                  className="group text-center cursor-pointer"
+                  data-testid={`card-textura-${texture.fileName.toLowerCase().replace(/_/g, '-')}`}
+                >
                   {/* Imagem com overlay "Ver Mais" no hover */}
                   <div className="relative overflow-hidden rounded-lg mb-1 md:mb-2">
                     <img

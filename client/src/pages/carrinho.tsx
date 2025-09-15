@@ -299,6 +299,7 @@ export default function Carrinho() {
                                     }
                                   }}
                                   className="w-full px-3 py-2 bg-[#0a0a0a] border border-[#333] rounded text-white text-sm focus:border-[#FFD700] focus:outline-none"
+                                  data-testid="input-largura-cm"
                                 />
                               </div>
                               <div>
@@ -316,6 +317,7 @@ export default function Carrinho() {
                                     }
                                   }}
                                   className="w-full px-3 py-2 bg-[#0a0a0a] border border-[#333] rounded text-white text-sm focus:border-[#FFD700] focus:outline-none"
+                                  data-testid="input-altura-cm"
                                 />
                               </div>
                             </div>

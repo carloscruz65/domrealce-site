@@ -31,7 +31,7 @@ export default function Contactos() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: InsertContact) => {
-      return await apiRequest('/api/contact', 'POST', data);
+      return await apiRequest('POST', '/api/contact', data);
     },
     onSuccess: (data: any) => {
       toast({
