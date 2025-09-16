@@ -27,6 +27,10 @@ externalPort = 3002
 localPort = 43085
 externalPort = 3001
 
+[[ports]]
+localPort = 44745
+externalPort = 3003
+
 [env]
 PORT = "5000"
 VITE_GA_MEASUREMENT_ID = "G-X8YYC3X3E0"
