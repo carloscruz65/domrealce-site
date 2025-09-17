@@ -148,15 +148,8 @@ function Router() {
         <Route path="/aviso-legal" component={AvisoLegal} />
         {/* Demo Interativo */}
         <Route path="/demo-interativo" component={DemoInterativo} />
-        {/* Visual Editor Demo - DESATIVADO, redireciona para /admin/editor */}
-        {showEditor && <Route path="/visual-editor-demo">
-          {() => {
-            if (typeof window !== 'undefined') {
-              window.location.href = '/admin/editor';
-            }
-            return null;
-          }}
-        </Route>}
+        {/* Visual Editor Demo */}
+        <Route path="/visual-editor-demo" component={VisualEditorDemo} />
         
         {/* Toolbar apenas em páginas de admin */}
         {showEditor && location.startsWith('/admin') && <VisualEditorToolbar />}
