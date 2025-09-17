@@ -212,11 +212,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <PerformanceOptimizer />
-        <PerformancePreloader />
-        <Toaster />
-        <Router />
-        <WhatsAppFAB />
+        <VisualEditorProvider>
+          <PerformanceOptimizer />
+          <PerformancePreloader />
+          <Toaster />
+          <Router />
+          <WhatsAppFAB />
+        </VisualEditorProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
