@@ -17,7 +17,7 @@ import {
   Zap,
   Award
 } from "lucide-react";
-import buildingImage from "@assets/generated_images/Building_with_solar_films_981bb10c.png";
+// Imagem agora vem do object storage
 
 export default function ServicoPeliculasProtecaoSolar() {
   const benefits = [
@@ -181,7 +181,7 @@ export default function ServicoPeliculasProtecaoSolar() {
               {/* Image */}
               <div className="order-2 lg:order-1">
                 <img 
-                  src={buildingImage} 
+                  src="/public-objects/essenciais/1758147555446_Building_with_solar_films_981bb10c.png" 
                   alt="Edifício com películas de proteção solar aplicadas" 
                   className="w-full h-[400px] object-cover rounded-2xl border border-gray-800"
                 />

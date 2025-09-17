@@ -10,7 +10,7 @@ import { Link } from "wouter";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { Button } from "@/components/ui/button";
 import { Shield, Upload, FileText, X } from "lucide-react";
-import cabineTelefonica from "@assets/cabine_telefónica_1757173064310.webp";
+// Imagem agora vem do object storage
 
 export default function Contactos() {
   const { toast } = useToast();
@@ -84,7 +84,7 @@ export default function Contactos() {
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat bg-black"
         style={{
-          backgroundImage: `url(${cabineTelefonica})`,
+          backgroundImage: `url(/public-objects/essenciais/1758147554363_cabine_telefónica_1757173064310.webp)`,
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
         }}

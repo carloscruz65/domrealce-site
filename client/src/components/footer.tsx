@@ -1,7 +1,7 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import domrealceLogo from "@/assets/domrealce-logo.png";
+// Logo agora vem do object storage
 
 export default function Footer() {
   return (
@@ -10,7 +10,7 @@ export default function Footer() {
         {/* Logo centralizado */}
         <div className="text-center mb-12">
           <img 
-            src={domrealceLogo} 
+            src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
             alt="DOMREALCE Logo" 
             className="h-16 w-auto mx-auto"
           />

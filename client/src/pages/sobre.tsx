@@ -6,8 +6,7 @@ import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
 import { EditableConfigText } from "@/components/EditableConfigText";
-import sobreImage from "@assets/Create a colorful im_1755881158641.png";
-import carlosCruzImage from "@/assets/carlos-cruz.webp";
+// Imagens agora vêm do object storage
 
 export default function Sobre() {
   const { getConfig, isLoading, updateConfig } = usePageConfig('about');
@@ -94,7 +93,7 @@ export default function Sobre() {
             {/* Imagem Ajustada sem caixilho preto */}
             <div className="relative">
               <img 
-                src={carlosCruzImage} 
+                src="/public-objects/essenciais/1758147536515_carlos-cruz.webp" 
                 alt="Carlos Cruz - Fundador da DOMREALCE"
                 className="w-full h-auto max-h-[500px] object-contain rounded-lg shadow-2xl"
                 loading="lazy"

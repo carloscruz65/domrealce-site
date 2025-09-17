@@ -6,8 +6,7 @@ import { Star, ShoppingCart, Settings } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import wallpaperSamplesImage from "@assets/box_amostras_prodeccor_plus_1755963100331.webp";
-import quadrosCanvasCover from "@assets/image_1756920896021.png";
+// Imagens agora vêm do object storage
 
 interface Product {
   id: number;
@@ -109,7 +108,7 @@ export default function Loja() {
                   <CardContent className="p-4">
                     <div className="w-full h-24 rounded-lg mx-auto mb-4 overflow-hidden">
                       <img 
-                        src={wallpaperSamplesImage} 
+                        src="/public-objects/essenciais/1758147540061_box_amostras_prodeccor_plus_1755963100331.webp" 
                         alt="Papel de Parede Samples" 
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -128,7 +127,7 @@ export default function Loja() {
                   <CardContent className="p-4">
                     <div className="w-full h-24 rounded-lg mx-auto mb-4 overflow-hidden">
                       <img 
-                        src={quadrosCanvasCover} 
+                        src="/public-objects/essenciais/1758147537971_image_1756920896021.png" 
                         alt="Quadros em Canvas" 
                         className="w-full h-full object-cover rounded-lg"
                       />

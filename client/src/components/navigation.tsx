@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
-import domrealceLogo from "@/assets/domrealce-logo.png";
+// Logo agora vem do object storage
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
             <img 
-              src={domrealceLogo} 
+              src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
               alt="DOMREALCE Logo" 
               className="h-14 w-auto"
             />
