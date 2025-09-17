@@ -118,8 +118,8 @@ export default function ServicoDesignGrafico() {
               <Button asChild className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold px-8 py-6 text-lg">
                 <Link href="/contactos#formulario">Iniciar Meu Projeto</Link>
               </Button>
-              <Button variant="outline" className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg">
-                Ver Portfolio
+              <Button asChild variant="outline" className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg">
+                <Link href="/contactos#formulario">Contactar</Link>
               </Button>
             </div>
           </div>

@@ -106,15 +106,17 @@ export default function ServicoPeliculaSolar() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contactos">
+              <Link href="/contactos#formulario">
                 <Button size="lg" className="bg-[#FFD700] text-black hover:bg-yellow-400 font-semibold">
                   <Phone className="w-5 h-5 mr-2" />
                   Pedir Orçamento
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-[#00d4aa] text-[#00d4aa] hover:bg-[#00d4aa] hover:text-black">
-                <Eye className="w-5 h-5 mr-2" />
-                Ver Portfólio
+              <Button asChild size="lg" variant="outline" className="border-[#00d4aa] text-[#00d4aa] hover:bg-[#00d4aa] hover:text-black">
+                <Link href="/contactos#formulario">
+                  <Eye className="w-5 h-5 mr-2" />
+                  Contactar
+                </Link>
               </Button>
             </div>
           </div>
@@ -293,7 +295,7 @@ export default function ServicoPeliculaSolar() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contactos">
+              <Link href="/contactos#formulario">
                 <Button size="lg" className="bg-[#FFD700] text-black hover:bg-yellow-400 font-semibold">
                   <Phone className="w-5 h-5 mr-2" />
                   Contactar Agora

@@ -160,7 +160,7 @@ export default function Contactos() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-lg text-white font-semibold mb-2">
-                      D. M Realce
+                      DomRealce
                     </h4>
                     <div className="text-white/80">
                       Rua de Rebolido, 42<br />
@@ -213,7 +213,7 @@ export default function Contactos() {
             </div>
 
             {/* Contact Form - Right Side */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2" id="formulario">
               <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-brand-yellow/30">
                 <h3 className="text-2xl font-bold text-brand-yellow mb-6">Formulário de Contacto</h3>
 

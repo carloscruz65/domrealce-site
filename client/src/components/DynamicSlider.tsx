@@ -110,7 +110,7 @@ export default function DynamicSlider() {
                     Explorar Serviços
                   </button>
                 </Link>
-                <Link href="/portfolio" className="flex-1">
+                <Link href="/contactos#formulario" className="flex-1">
                   <button className="w-full px-3 py-2 rounded-md font-medium text-xs sm:text-sm transition text-center border border-white text-white hover:bg-white hover:text-black">
                     Ver Portfólio
                   </button>

@@ -163,8 +163,8 @@ export default function ServicoDecoracaoViaturas() {
               <Button asChild className="bg-gradient-to-r from-orange-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
                 <Link href="/contactos#formulario">Transformar Minha Viatura</Link>
               </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Portfolio
+              <Button asChild variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
+                <Link href="/contactos#formulario">Contactar</Link>
               </Button>
             </div>
           </div>

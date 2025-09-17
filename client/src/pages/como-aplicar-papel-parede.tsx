@@ -141,7 +141,7 @@ export default function ComoAplicarPapelParede() {
               Para garantir resultado perfeito, recomendamos aplicação profissional. Contacte-nos para orçamento sem compromisso.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contactos">
+              <Link href="/contactos#formulario">
                 <Button className="bg-[#FFD700] text-black hover:bg-[#FFD700]/90 px-6 py-3">
                   💬 Contactar para Orçamento
                 </Button>

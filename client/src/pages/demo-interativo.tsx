@@ -289,7 +289,7 @@ export default function DemoInterativo() {
               </Button>
             </Link>
             
-            <Link href="/contactos">
+            <Link href="/contactos#formulario">
               <Button variant="outline" className="border-[#4dabf7] text-[#4dabf7] hover:bg-[#4dabf7] hover:text-white text-lg px-8 py-3">
                 Entre em Contacto
                 <ArrowRight className="h-5 w-5 ml-2" />
