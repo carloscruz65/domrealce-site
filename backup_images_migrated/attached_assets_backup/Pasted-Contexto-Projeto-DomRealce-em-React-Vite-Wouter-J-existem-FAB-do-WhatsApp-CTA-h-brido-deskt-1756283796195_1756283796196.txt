@@ -1,0 +1,188 @@
+Contexto
+Projeto DomRealce em React + Vite + Wouter. Já existem: FAB do WhatsApp, CTA híbrido (desktop→formulário / mobile→WhatsApp), carrossel no hero, JSON-LD LocalBusiness e UTM + GA4 para cliques de WhatsApp.
+Quero apenas melhorias incrementais de performance, acessibilidade, SEO e conversão, sem reescrever componentes existentes.
+
+Regras
+
+Não remover nada; apenas acrescentar ou ajustar de forma compatível.
+
+Comentar intervenções com // DOMREALCE: ou /* DOMREALCE: */.
+
+Usar ficheiros incrementais quando fizer sentido:
+
+src/lib/analytics.ts (se ainda não existir, criar)
+
+src/lib/wa-origin.ts (se necessário)
+
+src/enhancers/wa-auto-enhancer.ts (se necessário)
+
+src/components (novos componentes leves só se precisos)
+
+CSS incremental: respeitar estilos atuais
+
+1) Performance
+1.1 Imagens do hero
+
+Comprimir hero-1/2/3.webp para ≤ 200 KB cada (qualidade 70–78), mantendo 1920×1080 (ou 1600×900).
+
+Garantir preload do primeiro slide (já existe no <head>).
+
+Segundo e terceiro slides devem carregar lazy (atributos loading="lazy", decoding="async").
+
+1.2 Dimensões fixas para imagens
+
+Em todas as <img> críticas (hero, cards, logos) definir width/height reais ou style={{ aspectRatio: "16/9" }} quando aplicável, para reduzir CLS.
+
+1.3 content-visibility abaixo da dobra
+
+Adicionar classe utilitária para secções que aparecem depois do hero (ex.: Portfólio/Notícias):
+
+/* DOMREALCE: performance util */
+.below-the-fold { content-visibility:auto; contain-intrinsic-size:1px 1000px; }
+
+
+Aplicar nos contêineres dessas secções.
+
+1.4 Fonts
+
+Manter preconnect/preload das Google Fonts. (Opcional: preparar self-host em .woff2 no futuro.)
+
+Critérios de aceitação (Perf)
+
+LCP (mobile) ≤ 2.5s, CLS ≤ 0.1.
+
+Lighthouse Performance (mobile) ≥ 90.
+
+2) Acessibilidade
+2.1 Carrossel acessível
+
+Garantir nos controles:
+
+Setas com aria-label="Imagem anterior" / "Próxima imagem".
+
+Dots com role="tab", aria-selected="true|false", aria-label="Slide N".
+
+Atualizar aria-selected sempre que o slide mudar.
+
+2.2 Skip link
+
+Inserir no topo da app:
+
+<a href="#conteudo" class="sr-only focus:not-sr-only">Saltar para o conteúdo</a>
+
+
+No Layout, garantir <main id="conteudo">...</main>.
+
+2.3 Ícones
+
+Ícones puramente decorativos: alt="" ou aria-hidden="true".
+
+Critérios de aceitação (A11y)
+
+Lighthouse Acessibilidade ≥ 90.
+
+Navegação por teclado no carrossel (setas esquerda/direita).
+
+3) SEO
+3.1 Heading único
+
+Garantir um <h1> por página (hero). Subtítulos como <h2>/<h3>.
+
+3.2 Alt descritivo (onde for conteúdo)
+
+Somente para imagens de conteúdo (produtos/portfólio). Decorativas ficam com alt="".
+
+3.3 Sitemap & robots
+
+Confirmar existência de /sitemap.xml e /robots.txt. Se houver, opcionalmente ligar no <head>:
+
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+3.4 Links internos
+
+No final de páginas de Serviços, inserir blocos de links internos para Portfólio e vice-versa (sem exagero).
+
+Critérios de aceitação (SEO)
+
+Lighthouse SEO ≥ 95.
+
+4) Conversão & Analytics
+4.1 Evento de envio de formulário (GA4)
+
+No formulário de /contactos#orcamento, disparar form_submit no submit OK:
+
+// DOMREALCE: GA4 form submit
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "form_submit",
+  form_id: "orcamento_contactos",
+  page_path: window.location.pathname,
+  page_title: document.title
+});
+
+
+Manter eventos whatsapp_click já existentes (nav_cta/fab/cards).
+
+4.2 Prova social sob o hero
+
+Inserir uma faixa leve logo abaixo do hero com 2–4 logos de clientes ou “40+ anos de experiência”.
+
+Imagens pequenos (≤ 20 KB cada), loading="lazy".
+
+Critérios de aceitação (Conversão)
+
+form_submit a aparecer no GA4 DebugView.
+
+Prova social visível e responsiva.
+
+5) Testes de saída (obrigatórios)
+
+Rodar Lighthouse mobile na home:
+
+Performance ≥ 90
+
+Acessibilidade ≥ 90
+
+Best Practices ≥ 95
+
+SEO ≥ 95
+
+Verificar sem erros no console.
+
+Confirmar que o layout não mudou além das melhorias (no hero e abaixo da dobra).
+
+(Opcional) Snippets prontos para colar
+A) Atualizar dots do carrossel (JS vanilla)
+// DOMREALCE: atualizar aria-selected nos dots quando mudar de slide
+function updateDots(index){
+  document.querySelectorAll('.dr-dots [role="tab"]').forEach((dot,i)=>{
+    const active = i === index;
+    dot.setAttribute('aria-selected', String(active));
+    dot.classList.toggle('is-active', active);
+  });
+}
+
+B) content-visibility util (CSS)
+/* DOMREALCE: performance util */
+.below-the-fold { content-visibility:auto; contain-intrinsic-size:1px 1000px; }
+
+C) Form submit (React – exemplo)
+// DOMREALCE: GA4 form submit (exemplo)
+function onSubmitOk(){
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event:"form_submit",
+    form_id:"orcamento_contactos",
+    page_path:window.location.pathname,
+    page_title:document.title
+  });
+}
+
+
+Entrega
+
+Commitar alterações com mensagens claras chore(domrealce): ....
+
+Descrever no PR: ficheiros alterados, métricas Lighthouse (antes/depois), e como validar o evento form_submit no GA4.
+
+Qualquer divergência estrutural (ex.: nomes de componentes/ficheiros) adapte minimamente, mantendo o comportamento atual e documentando a mudança no PR.
