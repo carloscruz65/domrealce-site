@@ -84,7 +84,7 @@ export default function Contactos() {
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat bg-black"
         style={{
-          backgroundImage: `url(/public-objects/essenciais/1758147554363_cabine_telefónica_1757173064310.webp)`,
+          backgroundImage: `url(/public-objects/media/1758149640133_cabine_telefÃ³nica_1757173064310.webp)`,
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
         }}
