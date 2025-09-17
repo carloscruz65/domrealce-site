@@ -9,6 +9,7 @@ import Navigation from "@/components/navigation";
 import { ArrowLeft, Plus, Edit, Trash2, Save, X, FileText, Calendar, Tag } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { ImageUploadField } from "@/components/visual-editor/ImageUploadField";
 import type { News } from "@shared/schema";
 
 interface NewsForm {
@@ -247,13 +248,11 @@ export default function AdminNoticias() {
                 />
               </div>
               <div>
-                <Label htmlFor="new-imagem" className="text-white">URL da Imagem</Label>
-                <Input
-                  id="new-imagem"
+                <ImageUploadField
+                  label="Imagem da Notícia"
                   value={editForm.imagem}
-                  onChange={(e) => setEditForm({ ...editForm, imagem: e.target.value })}
-                  placeholder="https://exemplo.com/noticia.jpg"
-                  className="bg-[#222] border-[#444] text-white mt-1"
+                  onChange={(value) => setEditForm({ ...editForm, imagem: value })}
+                  placeholder="https://exemplo.com/noticia.jpg ou faça upload"
                 />
               </div>
               <div className="md:col-span-2">
@@ -349,11 +348,11 @@ export default function AdminNoticias() {
                             />
                           </div>
                           <div>
-                            <Label className="text-white">URL da Imagem</Label>
-                            <Input
+                            <ImageUploadField
+                              label="Imagem da Notícia"
                               value={editForm.imagem}
-                              onChange={(e) => setEditForm({ ...editForm, imagem: e.target.value })}
-                              className="bg-[#333] border-[#444] text-white mt-1"
+                              onChange={(value) => setEditForm({ ...editForm, imagem: value })}
+                              placeholder="https://exemplo.com/noticia.jpg ou faça upload"
                             />
                           </div>
                         </div>
