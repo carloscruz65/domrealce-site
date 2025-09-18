@@ -344,11 +344,11 @@ export default function Contactos() {
                     )}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <div className="pt-4">
                     <button
                       type="submit"
                       disabled={submitMutation.isPending}
-                      className="flex-1 bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {submitMutation.isPending ? (
                         <>
@@ -359,15 +359,6 @@ export default function Contactos() {
                         'Enviar Mensagem'
                       )}
                     </button>
-
-                    <Link href={`https://wa.me/351930682725?text=${encodeURIComponent('Olá! Gostaria de saber mais sobre os vossos serviços.')}`}>
-                      <button
-                        type="button"
-                        className="flex-1 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
-                      >
-                        📱 WhatsApp
-                      </button>
-                    </Link>
                   </div>
                 </form>
               </div>
