@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Share2, Facebook, Instagram, Linkedin, Search, Filter, Eye, Heart, MessageCircle, Play, ArrowRight, Loader2 } from "lucide-react";
+import { Calendar, Clock, Share2, Facebook, Instagram, Linkedin, Search, Filter, Eye, Heart, MessageCircle, ArrowRight, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -16,16 +16,16 @@ import type { News } from "@shared/schema";
 export default function Noticias() {
   const [filtroCategoria, setFiltroCategoria] = useState("Todas");
   const [termoPesquisa, setTermoPesquisa] = useState("");
-  
+
   // Buscar notícias da API
   const { data: noticias = [], isLoading, error } = useQuery<News[]>({
     queryKey: ['/api/admin/noticias'],
     select: (data: any) => data.noticias || data
   });
-  
+
   // Gerar categorias dinamicamente dos dados da API
   const categorias = ["Todas", ...Array.from(new Set(noticias.map(n => n.categoria)))];
-  
+
   const [noticiasFiltradas, setNoticiasFiltradas] = useState<News[]>([]);
 
   // Filtrar notícias quando carregam ou filtros mudam
@@ -36,7 +36,7 @@ export default function Noticias() {
   // Filtrar notícias
   const filtrarNoticias = () => {
     if (!noticias?.length) return;
-    
+
     let resultado = noticias;
 
     // Filtro por categoria
@@ -71,8 +71,6 @@ export default function Noticias() {
     window.open(url, '_blank', 'width=600,height=400');
   };
 
-
-
   const formatarData = (data: string) => {
     return new Date(data).toLocaleDateString('pt-PT', {
       year: 'numeric',
@@ -89,7 +87,7 @@ export default function Noticias() {
   return (
     <div className="bg-background text-foreground min-h-screen">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
         <div className="container mx-auto px-4">
@@ -118,7 +116,7 @@ export default function Noticias() {
                   className="pl-10 w-full sm:w-80"
                 />
               </div>
-              
+
               <Select value={filtroCategoria} onValueChange={setFiltroCategoria}>
                 <SelectTrigger className="w-full sm:w-48">
                   <Filter size={16} className="mr-2" />
@@ -136,30 +134,6 @@ export default function Noticias() {
 
             <div className="text-sm text-muted-foreground">
               {noticiasFiltradas.length} {noticiasFiltradas.length === 1 ? 'resultado' : 'resultados'}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Destaque - Demonstração Interativa */}
-      <section className="pt-0 pb-4">
-        <div className="container mx-auto px-4">
-          <div className="relative bg-gradient-to-r from-[#e84b5e] to-[#4dabf7] rounded-2xl p-8 mb-8 shadow-2xl">
-            <div className="absolute inset-0 bg-black/20 rounded-2xl"></div>
-            <div className="relative z-10 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                🎬 Experimente Nossa Nova Demonstração Interativa!
-              </h2>
-              <p className="text-white/90 mb-6 text-lg">
-                Descubra tudo sobre a DOMREALCE numa jornada guiada de 6 passos - como um vídeo que pode controlar!
-              </p>
-              <Link href="/demo-interativo">
-                <Button className="bg-white text-[#e84b5e] hover:bg-gray-100 font-bold px-8 py-3 text-lg">
-                  <Play className="h-5 w-5 mr-2" />
-                  Ver Demonstração Agora
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
@@ -209,7 +183,7 @@ export default function Noticias() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Conteúdo */}
                   <div className="md:w-2/3 p-6">
                     <CardHeader className="p-0 mb-4">
@@ -232,11 +206,11 @@ export default function Noticias() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <CardTitle className="text-2xl mb-2 hover:text-brand-turquoise transition-colors cursor-pointer">
                         {noticia.titulo}
                       </CardTitle>
-                      
+
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Calendar size={14} />
@@ -253,7 +227,7 @@ export default function Noticias() {
                       <CardDescription className="text-base mb-4 leading-relaxed">
                         {noticia.descricao.slice(0, 150)}...
                       </CardDescription>
-                      
+
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2 mb-4">
                         <Badge variant="outline" className="text-xs">
@@ -272,7 +246,7 @@ export default function Noticias() {
                             🌟 Descobrir Agora
                           </Link>
                         </Button>
-                        
+
                         {/* Partilha Social */}
                         <div className="flex items-center gap-2">
                           <span className="text-sm text-muted-foreground mr-2">Partilhar:</span>
@@ -319,7 +293,7 @@ export default function Noticias() {
                 </div>
               </Card>
             ))}
-            
+
             {/* Mensagem quando não há resultados */}
             {noticiasFiltradas.length === 0 && (
             <div className="text-center py-16">
@@ -358,7 +332,7 @@ export default function Noticias() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-muted">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-heading font-bold mb-4">
             Tem um projeto em mente?
