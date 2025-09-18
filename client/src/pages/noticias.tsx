@@ -166,7 +166,7 @@ export default function Noticias() {
           {!isLoading && !error && (
             <div className="grid gap-8">
               {noticiasFiltradas.map((noticia) => (
-                <Card key={noticia.id} className="overflow-hidden hover-lift border-border bg-card">
+                <Card key={noticia.id} className="overflow-hidden hover-lift border-border bg-card mt-12">
                 <div className="md:flex">
                   {/* Imagem */}
                   <div className="md:w-1/3">
