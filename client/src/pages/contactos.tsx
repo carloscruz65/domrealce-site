@@ -7,7 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { insertContactSchema, type InsertContact } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
-// Upload de ficheiros temporariamente desabilitado - contacto direto
+import { ObjectUploader } from "@/components/ObjectUploader";
 import { Button } from "@/components/ui/button";
 import { Shield, Upload, FileText, X } from "lucide-react";
 // Imagem agora vem do object storage
@@ -25,7 +25,8 @@ export default function Contactos() {
     email: '',
     telefone: '',
     assunto: '',
-    mensagem: ''
+    mensagem: '',
+    anexos: [] as any[]
   });
 
   const submitMutation = useMutation({
@@ -43,7 +44,8 @@ export default function Contactos() {
         email: '',
         telefone: '',
         assunto: '',
-        mensagem: ''
+        mensagem: '',
+        anexos: []
       });
     },
     onError: (error: any) => {
@@ -61,7 +63,7 @@ export default function Contactos() {
     try {
       const dataToSubmit = {
         ...formData,
-        ficheiros: [] // Sem anexos por agora
+        ficheiros: formData.anexos?.map(file => file.uploadURL) || []
       };
 
       const validatedData = insertContactSchema.parse(dataToSubmit);
@@ -279,21 +281,67 @@ export default function Contactos() {
 
                   <div>
                     <label className="block text-white/80 mb-2 font-medium">Anexos (opcional)</label>
-                    <div className="border-2 border-dashed border-brand-yellow/50 rounded-lg p-4 text-center bg-gray-800/30">
-                      <Upload className="w-8 h-8 text-brand-yellow mx-auto mb-2" />
-                      <p className="text-white/70 text-sm mb-2">
-                        Para anexar ficheiros, por favor contacte-nos por:
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-2 justify-center text-sm">
-                        <a href="mailto:geral@domrealce.com" className="text-brand-yellow hover:text-brand-yellow/80 transition-colors">
-                          📧 geral@domrealce.com
-                        </a>
-                        <span className="text-white/40 hidden sm:inline">•</span>
-                        <a href="https://wa.me/351938741650" className="text-brand-turquoise hover:text-brand-turquoise/80 transition-colors">
-                          📱 WhatsApp
-                        </a>
+                    <ObjectUploader
+                      maxNumberOfFiles={3}
+                      maxFileSize={10485760}
+                      onGetUploadParameters={async () => {
+                        const response = await fetch('/api/objects/upload', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+                        return {
+                          method: 'PUT' as const,
+                          url: data.uploadURL,
+                        };
+                      }}
+                      onComplete={(result) => {
+                        const uploadedFiles = result.successful?.map(file => ({
+                          originalName: file.name,
+                          size: file.size,
+                          uploadURL: file.uploadURL,
+                        })) || [];
+                        setFormData(prev => ({
+                          ...prev,
+                          anexos: [...prev.anexos, ...uploadedFiles]
+                        }));
+                      }}
+                      buttonClassName="w-full"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Anexar Ficheiros
+                    </ObjectUploader>
+
+                    {formData.anexos && formData.anexos.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-white/60 mb-2 text-sm">Ficheiros anexados:</p>
+                        <div className="space-y-2">
+                          {formData.anexos.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10">
+                              <div className="flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-brand-turquoise" />
+                                <span className="text-white/80 text-sm">{file.originalName}</span>
+                                <span className="text-white/40 text-xs">({(file.size / 1024).toFixed(1)} KB)</span>
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setFormData({
+                                    ...formData,
+                                    anexos: formData.anexos?.filter((_, i) => i !== index)
+                                  });
+                                }}
+                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
