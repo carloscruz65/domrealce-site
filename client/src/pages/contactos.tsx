@@ -4,29 +4,28 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { insertContactSchema, type InsertContact } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-
-interface FileData {
-  name: string;
-  size: number;
-  uploadURL: string;
-  file: File;
-}
+import { Link } from "wouter";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import { Button } from "@/components/ui/button";
 
 interface FormData {
   nome: string;
   email: string;
   telefone: string;
-  empresa: string;
+  assunto: string;
+  empresa?: string;
   mensagem: string;
-  anexos: FileData[];
+  anexos: any[];
 }
 
 export default function ContactosPage() {
   const { toast } = useToast();
+  
   const [formData, setFormData] = useState<FormData>({
     nome: '',
     email: '',
     telefone: '',
+    assunto: '',
     empresa: '',
     mensagem: '',
     anexos: []
@@ -38,7 +37,7 @@ export default function ContactosPage() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (data: InsertContact) => apiRequest('/api/contacts', 'POST', data),
+    mutationFn: (data: InsertContact) => apiRequest('/api/contact', 'POST', data),
     onSuccess: () => {
       toast({
         title: "Mensagem enviada!",
@@ -48,6 +47,7 @@ export default function ContactosPage() {
         nome: '',
         email: '',
         telefone: '',
+        assunto: '',
         empresa: '',
         mensagem: '',
         anexos: []
@@ -66,26 +66,15 @@ export default function ContactosPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar mensagem mínima de 10 caracteres
-    if (formData.mensagem.trim().length < 10) {
-      toast({
-        title: "Mensagem muito curta",
-        description: "A mensagem deve ter pelo menos 10 caracteres.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
+      // Construir payload apenas com campos aceites pelo schema
       const payload: InsertContact = {
         nome: formData.nome.trim(),
         email: formData.email.trim(),
-        telefone: formData.telefone.trim() || undefined,
-        empresa: formData.empresa.trim() || undefined,
+        telefone: formData.telefone?.trim() || undefined,
+        empresa: formData.empresa?.trim() || undefined,
         mensagem: formData.mensagem.trim(),
-        ficheiros: formData.anexos.map(f => 
-          `${f.name} (${(f.size / 1024).toFixed(1)} KB)`
-        )
+        ficheiros: formData.anexos?.map(file => file.uploadURL) || []
       };
 
       const validatedData = insertContactSchema.parse(payload);
@@ -93,18 +82,11 @@ export default function ContactosPage() {
     } catch (error) {
       console.error('Erro de validação:', error);
       toast({
-        title: "Dados inválidos",
-        description: "Verifique se todos os campos estão preenchidos correctamente.",
+        title: "Erro de validação",
+        description: "Por favor, verifique os dados inseridos.",
         variant: "destructive",
       });
     }
-  };
-
-  const removeFile = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      anexos: prev.anexos.filter((_, i) => i !== index)
-    }));
   };
 
   return (
@@ -171,15 +153,26 @@ export default function ContactosPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-white/80 mb-2 font-medium">Empresa</label>
+                  <label className="block text-white/80 mb-2 font-medium">Assunto</label>
                   <input
                     type="text"
-                    value={formData.empresa}
-                    onChange={(e) => setFormData(prev => ({ ...prev, empresa: e.target.value }))}
+                    value={formData.assunto}
+                    onChange={(e) => setFormData(prev => ({ ...prev, assunto: e.target.value }))}
                     className="w-full p-3 bg-gray-700/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-brand-yellow"
-                    placeholder="Nome da sua empresa"
+                    placeholder="Assunto da mensagem"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-white/80 mb-2 font-medium">Empresa</label>
+                <input
+                  type="text"
+                  value={formData.empresa}
+                  onChange={(e) => setFormData(prev => ({ ...prev, empresa: e.target.value }))}
+                  className="w-full p-3 bg-gray-700/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-brand-yellow"
+                  placeholder="Nome da sua empresa"
+                />
               </div>
 
               <div>
@@ -189,35 +182,55 @@ export default function ContactosPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, mensagem: e.target.value }))}
                   rows={5}
                   className="w-full p-3 bg-gray-700/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-brand-yellow resize-vertical"
-                  placeholder="Descreva o seu projeto ou dúvida (mínimo 10 caracteres)..."
+                  placeholder="Descreva o seu projeto ou dúvida..."
                   required
                 />
-                <div className="text-xs text-white/50 mt-1">
-                  {formData.mensagem.length}/10 caracteres mínimos
-                </div>
               </div>
 
               <div>
                 <label className="block text-white/80 mb-2 font-medium">Anexos (opcional)</label>
-                <input
-                  type="file"
-                  multiple
-                  accept=".jpg,.jpeg,.png,.tiff,.tif,.svg,.ai,.pdf"
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files || []);
-                    const fileData = files.map(file => ({
-                      name: file.name,
-                      size: file.size,
-                      uploadURL: URL.createObjectURL(file),
-                      file: file
-                    }));
-                    setFormData(prev => ({
-                      ...prev,
-                      anexos: [...prev.anexos, ...fileData]
-                    }));
+                <ObjectUploader
+                  maxNumberOfFiles={3}
+                  maxFileSize={10485760}
+                  onGetUploadParameters={async () => {
+                    try {
+                      const response = await fetch('/api/objects/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                      });
+                      if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status}`);
+                      }
+                      const data = await response.json();
+                      return {
+                        method: 'PUT' as const,
+                        url: data.uploadURL,
+                      };
+                    } catch (error) {
+                      console.error('Erro ao obter URL de upload:', error);
+                      throw error;
+                    }
                   }}
-                  className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-black file:bg-brand-yellow hover:file:bg-brand-yellow/90 file:cursor-pointer"
-                />
+                  onComplete={(result) => {
+                    try {
+                      const uploadedFiles = result.successful?.map(file => ({
+                        originalName: file.name,
+                        size: file.size,
+                        uploadURL: file.uploadURL,
+                      })) || [];
+                      setFormData(prev => ({
+                        ...prev,
+                        anexos: [...prev.anexos, ...uploadedFiles]
+                      }));
+                    } catch (error) {
+                      console.error('Erro ao processar ficheiros carregados:', error);
+                    }
+                  }}
+                  buttonClassName="w-full"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Anexar Ficheiros
+                </ObjectUploader>
                 
                 <div className="mt-2 text-xs text-white/60 space-y-1">
                   <p>• Máximo 3 ficheiros, até 10MB cada</p>
@@ -225,7 +238,7 @@ export default function ContactosPage() {
                   <p>• <strong>Importante:</strong> Fontes devem ser convertidas em linhas antes do envio</p>
                 </div>
 
-                {formData.anexos.length > 0 && (
+                {formData.anexos && formData.anexos.length > 0 && (
                   <div className="mt-3">
                     <p className="text-white/60 mb-2 text-sm">Ficheiros anexados:</p>
                     <div className="space-y-2">
@@ -233,12 +246,15 @@ export default function ContactosPage() {
                         <div key={index} className="flex items-center justify-between bg-gray-700/30 p-2 rounded">
                           <div className="flex items-center text-white/80 text-sm">
                             <Upload className="w-4 h-4 mr-2" />
-                            <span>{file.name}</span>
+                            <span>{file.originalName}</span>
                             <span className="ml-2 text-white/50">({(file.size / 1024).toFixed(1)} KB)</span>
                           </div>
                           <button
                             type="button"
-                            onClick={() => removeFile(index)}
+                            onClick={() => setFormData(prev => ({
+                              ...prev,
+                              anexos: prev.anexos.filter((_, i) => i !== index)
+                            }))}
                             className="text-red-400 hover:text-red-300"
                           >
                             <X className="w-4 h-4" />
@@ -307,6 +323,22 @@ export default function ContactosPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Cabine Telefónica */}
+              <div className="mt-8 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 rounded-full mb-4">
+                  <PhoneCall className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">Contacto Direto</h4>
+                <a 
+                  href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  💬 WhatsApp
+                </a>
+              </div>
             </div>
 
             {/* Map */}
@@ -314,14 +346,14 @@ export default function ContactosPage() {
               <div className="h-64">
                 {configData?.apiKey ? (
                   <iframe
-                    src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3006.234567890123!2d-8.123456789012345!3d41.12345678901235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sDOMREALCE!5e0!3m2!1sen!2spt!4v1234567890123&q=Rua+de+Rebolido,+42,+4580-402+Gondalães,+Paredes`}
+                    src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3006.2345678901234!2d-8.5591234567891!3d41.2234567891234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDEzJzI0LjQiTiA4wrAzMycyOC44Ilc!5e0!3m2!1spt!2spt!4v1234567890123&q=Rua+de+Rebolido,+42,+4580-402+Gondalães,+Paredes`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Localização DOMREALCE"
+                    title="Localização DOMREALCE - Rua de Rebolido, 42, Gondalães, Paredes"
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-700 flex items-center justify-center">
