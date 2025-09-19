@@ -80,6 +80,49 @@ export const pageConfigs = pgTable("page_configs", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const orders = pgTable("orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  numeroEncomenda: text("numero_encomenda").notNull().unique(),
+  
+  // Dados do cliente
+  clienteNome: text("cliente_nome").notNull(),
+  clienteEmail: text("cliente_email").notNull(),
+  clienteTelefone: text("cliente_telefone"),
+  clienteMorada: text("cliente_morada").notNull(),
+  clienteCodigoPostal: text("cliente_codigo_postal").notNull(),
+  clienteCidade: text("cliente_cidade").notNull(),
+  clienteNIF: text("cliente_nif"),
+  
+  // Itens da encomenda (JSON array com os produtos)
+  itens: jsonb("itens").notNull(), // Array de CartItem
+  
+  // Totais
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  envio: decimal("envio", { precision: 10, scale: 2 }).notNull(),
+  iva: decimal("iva", { precision: 10, scale: 2 }).notNull(),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  
+  // Estado da encomenda
+  estado: text("estado").notNull().default("pendente"), // pendente, paga, processando, enviada, entregue, cancelada
+  
+  // Dados de pagamento
+  metodoPagamento: text("metodo_pagamento").notNull(), // mbway, multibanco, payshop, creditcard
+  estadoPagamento: text("estado_pagamento").notNull().default("pendente"), // pendente, pago, falhado
+  referenciaIfthenpay: text("referencia_ifthenpay"), // Reference/ID from IfthenPay
+  dadosPagamento: jsonb("dados_pagamento"), // Payment details from IfthenPay
+  
+  // Tracking e notas
+  codigoRastreio: text("codigo_rastreio"),
+  notasInternas: text("notas_internas"),
+  
+  // Timestamps
+  dataPagamento: timestamp("data_pagamento"),
+  dataEnvio: timestamp("data_envio"),
+  dataEntrega: timestamp("data_entrega"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   firstName: true,
@@ -148,6 +191,49 @@ export const insertPageConfigSchema = createInsertSchema(pageConfigs).pick({
   metadata: z.string().optional(),
 });
 
+export const insertOrderSchema = createInsertSchema(orders).pick({
+  numeroEncomenda: true,
+  clienteNome: true,
+  clienteEmail: true,
+  clienteTelefone: true,
+  clienteMorada: true,
+  clienteCodigoPostal: true,
+  clienteCidade: true,
+  clienteNIF: true,
+  itens: true,
+  subtotal: true,
+  envio: true,
+  iva: true,
+  total: true,
+  estado: true,
+  metodoPagamento: true,
+  estadoPagamento: true,
+  referenciaIfthenpay: true,
+  dadosPagamento: true,
+  codigoRastreio: true,
+  notasInternas: true,
+}).extend({
+  clienteNome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  clienteEmail: z.string().email("Email inválido"),
+  clienteMorada: z.string().min(5, "Morada deve ter pelo menos 5 caracteres"),
+  clienteCodigoPostal: z.string().min(8, "Código postal inválido"),
+  clienteCidade: z.string().min(2, "Cidade deve ter pelo menos 2 caracteres"),
+  clienteTelefone: z.string().optional(),
+  clienteNIF: z.string().optional(),
+  estado: z.enum(["pendente", "paga", "processando", "enviada", "entregue", "cancelada"]).default("pendente"),
+  metodoPagamento: z.enum(["mbway", "multibanco", "payshop", "creditcard"]),
+  estadoPagamento: z.enum(["pendente", "pago", "falhado"]).default("pendente"),
+  itens: z.array(z.any()).min(1, "Deve ter pelo menos um item"),
+  subtotal: z.string().or(z.number()),
+  envio: z.string().or(z.number()),
+  iva: z.string().or(z.number()),
+  total: z.string().or(z.number()),
+  referenciaIfthenpay: z.string().optional(),
+  dadosPagamento: z.any().optional(),
+  codigoRastreio: z.string().optional(),
+  notasInternas: z.string().optional(),
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
@@ -161,3 +247,5 @@ export type InsertSlide = z.infer<typeof insertSlideSchema>;
 export type Slide = typeof slides.$inferSelect;
 export type InsertPageConfig = z.infer<typeof insertPageConfigSchema>;
 export type PageConfig = typeof pageConfigs.$inferSelect;
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof orders.$inferSelect;
