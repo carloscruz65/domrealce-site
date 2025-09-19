@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertContactSchema, insertProductSchema, insertNewsSchema, insertSlideSchema, insertPageConfigSchema, type Contact } from "@shared/schema";
+import { insertContactSchema, insertProductSchema, insertNewsSchema, insertSlideSchema, insertPageConfigSchema, insertOrderSchema, type Contact, type Order } from "@shared/schema";
 import { sendContactEmail, sendAutoReplyEmail } from "./email";
 import { ObjectStorageService } from "./objectStorage";
 import { createIfthenPayService, type PaymentMethod } from "./ifthenpay";
@@ -687,6 +687,91 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       console.error("Error fetching recent news:", error);
       res.status(500).json({ error: "Failed to fetch recent news" });
+    }
+  });
+
+  // Orders management routes
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const orderData = insertOrderSchema.parse(req.body);
+      const order = await storage.createOrder(orderData);
+      res.json({ success: true, order });
+    } catch (error) {
+      console.error("Error creating order:", error);
+      res.status(500).json({ error: "Failed to create order" });
+    }
+  });
+
+  app.get("/api/admin/orders", async (req, res) => {
+    try {
+      const orders = await storage.getAllOrders();
+      res.json({ orders });
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      res.status(500).json({ error: "Failed to fetch orders" });
+    }
+  });
+
+  app.get("/api/orders/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const order = await storage.getOrder(id);
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      res.status(500).json({ error: "Failed to fetch order" });
+    }
+  });
+
+  app.get("/api/orders/number/:numeroEncomenda", async (req, res) => {
+    try {
+      const { numeroEncomenda } = req.params;
+      const order = await storage.getOrderByNumber(numeroEncomenda);
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      console.error("Error fetching order by number:", error);
+      res.status(500).json({ error: "Failed to fetch order" });
+    }
+  });
+
+  app.put("/api/admin/orders/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      const order = await storage.updateOrder(id, updateData);
+      res.json({ success: true, order });
+    } catch (error) {
+      console.error("Error updating order:", error);
+      res.status(500).json({ error: "Failed to update order" });
+    }
+  });
+
+  app.put("/api/admin/orders/:id/status", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { estado, estadoPagamento } = req.body;
+      const order = await storage.updateOrderStatus(id, estado, estadoPagamento);
+      res.json({ success: true, order });
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      res.status(500).json({ error: "Failed to update order status" });
+    }
+  });
+
+  app.delete("/api/admin/orders/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteOrder(id);
+      res.json({ success });
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      res.status(500).json({ error: "Failed to delete order" });
     }
   });
 
