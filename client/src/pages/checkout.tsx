@@ -100,7 +100,7 @@ export default function Checkout() {
     0,
   );
 
-  const custoEnvio = totalCarrinho > 100 ? 0 : 15;
+  const custoEnvio = totalCarrinho >= 100 ? 0 : 10;
   const ivaRate = 0.23; // 23% IVA em Portugal
   const totalSemIva = totalCarrinho + custoEnvio;
   const valorIva = totalSemIva * ivaRate;
@@ -152,7 +152,7 @@ export default function Checkout() {
         clienteMorada: customerData.morada,
         clienteCodigoPostal: customerData.codigoPostal,
         clienteCidade: customerData.cidade,
-        clienteNIF: customerData.nif || null,
+        clienteNIF: customerData.nif || undefined,
         itens: cartItems,
         subtotal: totalCarrinho.toString(),
         envio: custoEnvio.toString(),
@@ -622,31 +622,39 @@ export default function Checkout() {
                       className="flex gap-3 p-3 bg-[#0a0a0a] rounded border border-[#333]"
                     >
                       <img
-                        src={item.textureImage}
-                        alt={item.textureName}
+                        src={item.textureImage || item.canvasImage}
+                        alt={item.textureName || item.canvasName}
                         className="w-16 h-16 object-cover rounded"
                       />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium text-white truncate">
-                          {item.textureName}
+                          {item.textureName || item.canvasName}
                         </h4>
-                        <p className="text-xs text-gray-400">
-                          {item.larguraCm}×{item.alturaCm}cm ={" "}
-                          {((item.largura || 0) * (item.altura || 0)).toFixed(
-                            2,
-                          )}
-                          m²
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {item.acabamento} •{" "}
-                          {item.tipoCola === "com-cola"
-                            ? "Com cola"
-                            : "Sem cola"}
-                          {item.laminacao && " • Laminação"}
-                        </p>
+                        {item.type === "quadros-canvas" ? (
+                          <p className="text-xs text-gray-400">
+                            {item.tamanho} • Quadro em Canvas
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-xs text-gray-400">
+                              {item.larguraCm}×{item.alturaCm}cm ={" "}
+                              {((item.largura || 0) * (item.altura || 0)).toFixed(
+                                2,
+                              )}
+                              m²
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {item.acabamento} •{" "}
+                              {item.tipoCola === "com-cola"
+                                ? "Com cola"
+                                : "Sem cola"}
+                              {item.laminacao && " • Laminação"}
+                            </p>
+                          </>
+                        )}
                         <p className="text-sm font-semibold text-[#FFD700]">
                           €
-                          {(item.precoTotal * (item.quantidade || 1)).toFixed(
+                          {(item.precoTotal * (item.quantidade || item.quantity || 1)).toFixed(
                             2,
                           )}
                         </p>
