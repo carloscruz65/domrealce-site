@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, users, contacts, products, news, slides, pageConfigs } from "@shared/schema";
+import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, users, contacts, products, news, slides, pageConfigs, orders } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -34,6 +34,14 @@ export interface IStorage {
   updatePageConfig(id: string, config: InsertPageConfig): Promise<PageConfig>;
   deletePageConfig(id: string): Promise<boolean>;
   upsertPageConfig(config: InsertPageConfig): Promise<PageConfig>;
+  // Orders management
+  createOrder(order: InsertOrder): Promise<Order>;
+  getAllOrders(): Promise<Order[]>;
+  getOrder(id: string): Promise<Order | undefined>;
+  getOrderByNumber(numeroEncomenda: string): Promise<Order | undefined>;
+  updateOrder(id: string, order: Partial<InsertOrder>): Promise<Order>;
+  updateOrderStatus(id: string, estado: string, estadoPagamento?: string): Promise<Order>;
+  deleteOrder(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -43,6 +51,7 @@ export class MemStorage implements IStorage {
   private news: Map<string, News>;
   private slides: Map<string, Slide>;
   private pageConfigs: Map<string, PageConfig>;
+  private orders: Map<string, Order>;
 
   constructor() {
     this.users = new Map();
@@ -51,6 +60,7 @@ export class MemStorage implements IStorage {
     this.news = new Map();
     this.slides = new Map();
     this.pageConfigs = new Map();
+    this.orders = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -305,6 +315,75 @@ export class MemStorage implements IStorage {
       return await this.createPageConfig(config);
     }
   }
+
+  // Orders methods
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const id = randomUUID();
+    const newOrder: Order = {
+      ...insertOrder,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      dataPagamento: null,
+      dataEnvio: null,
+      dataEntrega: null,
+    };
+    this.orders.set(id, newOrder);
+    return newOrder;
+  }
+
+  async getAllOrders(): Promise<Order[]> {
+    return Array.from(this.orders.values()).sort((a, b) => 
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    );
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async getOrderByNumber(numeroEncomenda: string): Promise<Order | undefined> {
+    return Array.from(this.orders.values()).find(order => order.numeroEncomenda === numeroEncomenda);
+  }
+
+  async updateOrder(id: string, orderData: Partial<InsertOrder>): Promise<Order> {
+    const existingOrder = this.orders.get(id);
+    if (!existingOrder) {
+      throw new Error(`Order with id ${id} not found`);
+    }
+    
+    const updatedOrder: Order = {
+      ...existingOrder,
+      ...orderData,
+      id,
+      updatedAt: new Date(),
+    };
+    
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async updateOrderStatus(id: string, estado: string, estadoPagamento?: string): Promise<Order> {
+    const updateData: Partial<InsertOrder> = { estado };
+    if (estadoPagamento) {
+      updateData.estadoPagamento = estadoPagamento;
+      if (estadoPagamento === "pago") {
+        updateData.dataPagamento = new Date();
+      }
+    }
+    if (estado === "enviada") {
+      updateData.dataEnvio = new Date();
+    }
+    if (estado === "entregue") {
+      updateData.dataEntrega = new Date();
+    }
+    
+    return await this.updateOrder(id, updateData);
+  }
+
+  async deleteOrder(id: string): Promise<boolean> {
+    return this.orders.delete(id);
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -459,6 +538,62 @@ export class DatabaseStorage implements IStorage {
     } else {
       return await this.createPageConfig(config);
     }
+  }
+
+  // Orders methods
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const [order] = await db.insert(orders).values(insertOrder).returning();
+    return order;
+  }
+
+  async getAllOrders(): Promise<Order[]> {
+    return await db.select().from(orders).orderBy(desc(orders.createdAt));
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order;
+  }
+
+  async getOrderByNumber(numeroEncomenda: string): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.numeroEncomenda, numeroEncomenda));
+    return order;
+  }
+
+  async updateOrder(id: string, orderData: Partial<InsertOrder>): Promise<Order> {
+    const [updatedOrder] = await db.update(orders).set({
+      ...orderData,
+      updatedAt: new Date()
+    }).where(eq(orders.id, id)).returning();
+    return updatedOrder;
+  }
+
+  async updateOrderStatus(id: string, estado: string, estadoPagamento?: string): Promise<Order> {
+    const updateData: any = { 
+      estado,
+      updatedAt: new Date()
+    };
+    
+    if (estadoPagamento) {
+      updateData.estadoPagamento = estadoPagamento;
+      if (estadoPagamento === "pago") {
+        updateData.dataPagamento = new Date();
+      }
+    }
+    if (estado === "enviada") {
+      updateData.dataEnvio = new Date();
+    }
+    if (estado === "entregue") {
+      updateData.dataEntrega = new Date();
+    }
+    
+    const [updatedOrder] = await db.update(orders).set(updateData).where(eq(orders.id, id)).returning();
+    return updatedOrder;
+  }
+
+  async deleteOrder(id: string): Promise<boolean> {
+    const result = await db.delete(orders).where(eq(orders.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
 }
 
