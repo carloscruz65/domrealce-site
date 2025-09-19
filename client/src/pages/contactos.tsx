@@ -61,9 +61,16 @@ export default function Contactos() {
     e.preventDefault();
 
     try {
+      // Simular upload dos ficheiros anexados
+      const ficheirosData = formData.anexos?.map(file => ({
+        nome: file.originalName,
+        tamanho: file.size,
+        tipo: file.originalName.split('.').pop() || ''
+      })) || [];
+
       const dataToSubmit = {
         ...formData,
-        ficheiros: formData.anexos?.map(file => file.uploadURL) || []
+        ficheiros: ficheirosData
       };
 
       const validatedData = insertContactSchema.parse(dataToSubmit);
@@ -281,48 +288,25 @@ export default function Contactos() {
 
                   <div>
                     <label className="block text-white/80 mb-2 font-medium">Anexos (opcional)</label>
-                    <ObjectUploader
-                      maxNumberOfFiles={3}
-                      maxFileSize={10485760}
-                      onGetUploadParameters={async () => {
-                        try {
-                          const response = await fetch('/api/objects/upload', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                          });
-                          if (!response.ok) {
-                            throw new Error(`Erro HTTP: ${response.status}`);
-                          }
-                          const data = await response.json();
-                          return {
-                            method: 'PUT' as const,
-                            url: data.uploadURL,
-                          };
-                        } catch (error) {
-                          console.error('Erro ao obter URL de upload:', error);
-                          throw error;
-                        }
+                    <input
+                      type="file"
+                      multiple
+                      accept=".jpg,.jpeg,.png,.tiff,.tif,.svg,.ai,.pdf"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        const fileData = files.map(file => ({
+                          originalName: file.name,
+                          size: file.size,
+                          uploadURL: URL.createObjectURL(file),
+                          file: file
+                        }));
+                        setFormData(prev => ({
+                          ...prev,
+                          anexos: [...prev.anexos, ...fileData]
+                        }));
                       }}
-                      onComplete={(result) => {
-                        try {
-                          const uploadedFiles = result.successful?.map(file => ({
-                            originalName: file.name,
-                            size: file.size,
-                            uploadURL: file.uploadURL,
-                          })) || [];
-                          setFormData(prev => ({
-                            ...prev,
-                            anexos: [...prev.anexos, ...uploadedFiles]
-                          }));
-                        } catch (error) {
-                          console.error('Erro ao processar ficheiros carregados:', error);
-                        }
-                      }}
-                      buttonClassName="w-full"
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Anexar Ficheiros
-                    </ObjectUploader>
+                      className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-black file:bg-brand-yellow hover:file:bg-brand-yellow/90 file:cursor-pointer"
+                    />
                     
                     <div className="mt-2 text-xs text-white/60 space-y-1">
                       <p>• Máximo 3 ficheiros, até 10MB cada</p>
