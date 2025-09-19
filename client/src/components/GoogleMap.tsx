@@ -23,10 +23,6 @@ export default function GoogleMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Default center for DOMREALCE location
-  const defaultCenter = { lat: 41.2055, lng: -8.3349 };
-  const mapCenter = center ?? defaultCenter;
 
   useEffect(() => {
     // Check if Google Maps is already loaded
@@ -58,14 +54,14 @@ export default function GoogleMap({
         script.parentNode.removeChild(script);
       }
     };
-  }, [apiKey, center?.lat, center?.lng, zoom]);
+  }, [apiKey, center.lat, center.lng, zoom]);
 
   const initializeMap = () => {
     if (!mapRef.current || !(window as any).google) return;
 
     try {
       const map = new (window as any).google.maps.Map(mapRef.current, {
-        center: mapCenter,
+        center: center,
         zoom: zoom,
         styles: [
           {
@@ -165,7 +161,7 @@ export default function GoogleMap({
 
       // Add custom marker
       const marker = new (window as any).google.maps.Marker({
-        position: mapCenter,
+        position: center,
         map: map,
         title: companyName,
         icon: {
