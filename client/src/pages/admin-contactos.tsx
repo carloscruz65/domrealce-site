@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Download, Mail, Phone, Building2, Calendar, MessageSquare } from "lucide-react";
+import { Download, Mail, Phone, Building2, Calendar, MessageSquare, FileText } from "lucide-react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { type Contact } from "@shared/schema";
@@ -182,6 +182,7 @@ export default function AdminContactos() {
                       <TableHead className="text-gray-300">Telefone</TableHead>
                       <TableHead className="text-gray-300">Empresa</TableHead>
                       <TableHead className="text-gray-300">Data</TableHead>
+                      <TableHead className="text-gray-300">Anexos</TableHead>
                       <TableHead className="text-gray-300">Mensagem</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -224,6 +225,26 @@ export default function AdminContactos() {
                               {formatDate(contact.createdAt)}
                             </span>
                           </div>
+                        </TableCell>
+                        <TableCell>
+                          {contact.ficheiros && contact.ficheiros.length > 0 ? (
+                            <div className="flex items-center gap-2">
+                              <FileText className="h-4 w-4 text-[#20B2AA]" />
+                              <div className="text-xs">
+                                <span className="text-[#20B2AA] font-medium">{contact.ficheiros.length}</span>
+                                <span className="text-gray-400"> ficheiro(s)</span>
+                                <div className="max-w-xs">
+                                  {contact.ficheiros.map((ficheiro, index) => (
+                                    <div key={index} className="text-gray-300 text-xs truncate">
+                                      📎 {ficheiro}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500">Nenhum</span>
+                          )}
                         </TableCell>
                         <TableCell className="max-w-xs">
                           <div className="flex items-start gap-2">
