@@ -62,6 +62,56 @@ export default function Contactos() {
     e.preventDefault();
 
     try {
+      // Upload dos ficheiros primeiro se existirem
+      let ficheirosUpload: string[] = [];
+      
+      if (formData.anexos && formData.anexos.length > 0) {
+        toast({
+          title: "A carregar ficheiros...",
+          description: "Por favor aguarde enquanto os ficheiros são carregados.",
+        });
+
+        for (const anexo of formData.anexos) {
+          try {
+            // Obter URL de upload
+            const uploadResponse = await fetch('/api/objects/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (!uploadResponse.ok) {
+              throw new Error(`Erro ao obter URL de upload: ${uploadResponse.status}`);
+            }
+            
+            const uploadData = await uploadResponse.json();
+            
+            // Fazer upload do ficheiro
+            const fileUploadResponse = await fetch(uploadData.uploadURL, {
+              method: 'PUT',
+              body: anexo.file,
+              headers: {
+                'Content-Type': anexo.file.type || 'application/octet-stream'
+              }
+            });
+            
+            if (!fileUploadResponse.ok) {
+              throw new Error(`Erro no upload do ficheiro ${anexo.name}`);
+            }
+            
+            // Guardar URL do ficheiro carregado
+            ficheirosUpload.push(`${anexo.name}|${uploadData.uploadURL.split('?')[0]}`);
+            
+          } catch (error) {
+            console.error('Erro no upload do ficheiro:', error);
+            toast({
+              title: "Erro no upload",
+              description: `Erro ao carregar o ficheiro ${anexo.name}. Continuando sem este ficheiro.`,
+              variant: "destructive",
+            });
+          }
+        }
+      }
+      
       // Construir payload explicitamente apenas com campos aceites pelo schema
       const payload: InsertContact = {
         nome: formData.nome.trim(),
@@ -69,9 +119,7 @@ export default function Contactos() {
         telefone: formData.telefone?.trim() || undefined,
         empresa: undefined,
         mensagem: formData.mensagem.trim(),
-        ficheiros: (formData.anexos || []).map(f => 
-          `${f.name || f.originalName || 'ficheiro'} (${(f.size / 1024).toFixed(1)} KB)`
-        )
+        ficheiros: ficheirosUpload
       };
 
       console.log('🔍 Payload a enviar:', payload);
