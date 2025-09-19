@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { insertContactSchema, type InsertContact } from "@shared/schema";
+import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ObjectUploader } from "@/components/ObjectUploader";
@@ -61,19 +62,29 @@ export default function Contactos() {
     e.preventDefault();
 
     try {
-      // Converter ficheiros para o formato correto (array de strings)
-      const ficheiros = formData.anexos?.map(file => 
-        `${file.originalName} (${(file.size / 1024).toFixed(1)} KB)`
-      ) || [];
-
-      const dataToSubmit = {
-        ...formData,
-        ficheiros
+      // Construir payload explicitamente apenas com campos aceites pelo schema
+      const payload: InsertContact = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        telefone: formData.telefone?.trim() || undefined,
+        empresa: formData.empresa?.trim() || undefined,
+        mensagem: formData.mensagem.trim(),
+        ficheiros: (formData.anexos || []).map(f => 
+          `${f.name || f.originalName || 'ficheiro'} (${(f.size / 1024).toFixed(1)} KB)`
+        )
       };
 
-      const validatedData = insertContactSchema.parse(dataToSubmit);
+      console.log('🔍 Payload a enviar:', payload);
+      
+      const validatedData = insertContactSchema.parse(payload);
+      console.log('✅ Dados validados:', validatedData);
+      
       submitMutation.mutate(validatedData);
     } catch (error) {
+      console.error('❌ Erro de validação:', error);
+      if (error instanceof z.ZodError) {
+        console.error('📋 Detalhes do erro Zod:', error.issues);
+      }
       toast({
         title: "Erro de validação",
         description: "Por favor, verifique os dados inseridos.",
@@ -293,6 +304,7 @@ export default function Contactos() {
                       onChange={(e) => {
                         const files = Array.from(e.target.files || []);
                         const fileData = files.map(file => ({
+                          name: file.name,
                           originalName: file.name,
                           size: file.size,
                           uploadURL: URL.createObjectURL(file),
