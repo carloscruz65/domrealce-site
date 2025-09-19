@@ -138,7 +138,10 @@ export default function Checkout() {
 
     try {
       const orderId = `DP${Date.now()}`;
-      const numeroEncomenda = `EN-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+      // Melhor geração de número para evitar conflitos
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substr(2, 4).toUpperCase();
+      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp.toString().slice(-6)}-${randomSuffix}`;
 
       // Criar encomenda na base de dados primeiro
       const orderData = {

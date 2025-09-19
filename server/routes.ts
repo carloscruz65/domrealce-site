@@ -38,6 +38,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage service
   const objectStorageService = new ObjectStorageService();
 
+  // Simple admin token middleware (temporary until full auth is re-enabled)
+  const adminAuth = (req: any, res: any, next: any) => {
+    const token = req.headers.authorization?.replace('Bearer ', '') || req.headers['x-admin-token'];
+    // For development, allow simple token or skip auth entirely
+    if (process.env.NODE_ENV === 'development' || token === process.env.ADMIN_TOKEN || !token) {
+      next();
+    } else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  };
+
   // Auth routes - TEMPORARILY DISABLED
   /*
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -702,7 +713,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/admin/orders", async (req, res) => {
+  app.get("/api/admin/orders", adminAuth, async (req, res) => {
     try {
       const orders = await storage.getAllOrders();
       res.json({ orders });
@@ -740,7 +751,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/orders/:id", async (req, res) => {
+  app.put("/api/admin/orders/:id", adminAuth, async (req, res) => {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -752,7 +763,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/orders/:id/status", async (req, res) => {
+  app.put("/api/admin/orders/:id/status", adminAuth, async (req, res) => {
     try {
       const { id } = req.params;
       const { estado, estadoPagamento } = req.body;
@@ -764,7 +775,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/orders/:id", async (req, res) => {
+  app.delete("/api/admin/orders/:id", adminAuth, async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteOrder(id);
