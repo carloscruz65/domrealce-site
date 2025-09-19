@@ -61,16 +61,14 @@ export default function Contactos() {
     e.preventDefault();
 
     try {
-      // Simular upload dos ficheiros anexados
-      const ficheirosData = formData.anexos?.map(file => ({
-        nome: file.originalName,
-        tamanho: file.size,
-        tipo: file.originalName.split('.').pop() || ''
-      })) || [];
+      // Converter ficheiros para o formato correto (array de strings)
+      const ficheiros = formData.anexos?.map(file => 
+        `${file.originalName} (${(file.size / 1024).toFixed(1)} KB)`
+      ) || [];
 
       const dataToSubmit = {
         ...formData,
-        ficheiros: ficheirosData
+        ficheiros
       };
 
       const validatedData = insertContactSchema.parse(dataToSubmit);

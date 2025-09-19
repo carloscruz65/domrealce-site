@@ -25,6 +25,12 @@ export async function sendContactEmail(contact: Contact): Promise<boolean> {
         <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
           ${contact.mensagem.replace(/\n/g, '<br>')}
         </div>
+        ${contact.ficheiros && contact.ficheiros.length > 0 ? `
+        <h3>Ficheiros anexados:</h3>
+        <ul>
+          ${contact.ficheiros.map(ficheiro => `<li>📎 ${ficheiro}</li>`).join('')}
+        </ul>
+        ` : ''}
         <hr>
         <p style="color: #666; font-size: 12px;">
           Esta mensagem foi enviada através do formulário de contacto do website da DOMREALCE.
@@ -39,6 +45,11 @@ export async function sendContactEmail(contact: Contact): Promise<boolean> {
         
         Mensagem:
         ${contact.mensagem}
+        
+        ${contact.ficheiros && contact.ficheiros.length > 0 ? `
+        Ficheiros anexados:
+        ${contact.ficheiros.map(ficheiro => `- ${ficheiro}`).join('\n')}
+        ` : ''}
         
         ---
         Esta mensagem foi enviada através do formulário de contacto do website da DOMREALCE.
