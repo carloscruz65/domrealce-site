@@ -621,6 +621,53 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
+  // Download attachment endpoint
+  app.get('/api/contacts/attachment/:contactId/:fileName', async (req, res) => {
+    try {
+      const { contactId, fileName } = req.params;
+      
+      // Buscar o contacto para verificar se o ficheiro existe
+      const contacts = await storage.getAllContacts();
+      const contact = contacts.find(c => c.id === contactId);
+      
+      if (!contact) {
+        return res.status(404).json({ error: 'Contacto não encontrado' });
+      }
+      
+      if (!contact.ficheiros || contact.ficheiros.length === 0) {
+        return res.status(404).json({ error: 'Nenhum ficheiro encontrado para este contacto' });
+      }
+      
+      // Encontrar o ficheiro pelo nome (formato: "nome.ext|url" ou apenas "nome.ext")
+      const fileInfo = contact.ficheiros.find(f => {
+        if (f.includes('|')) {
+          const [originalName] = f.split('|');
+          return originalName.includes(decodeURIComponent(fileName));
+        }
+        return f.includes(decodeURIComponent(fileName));
+      });
+      
+      if (!fileInfo) {
+        return res.status(404).json({ error: 'Ficheiro não encontrado' });
+      }
+      
+      // Se o ficheiro tem URL (formato: "nome.ext|url"), redirecionar
+      if (fileInfo.includes('|')) {
+        const [originalName, fileUrl] = fileInfo.split('|');
+        if (fileUrl) {
+          return res.redirect(fileUrl);
+        }
+      }
+      
+      // Se não tem URL, retornar erro (ficheiro antigo sem upload real)
+      return res.status(404).json({ error: 'URL do ficheiro não encontrado - ficheiro não foi carregado correctamente' });
+      
+    } catch (error) {
+      console.error('Error downloading attachment:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
   // Get featured products for homepage
   app.get("/api/products/featured", async (req, res) => {
     try {
