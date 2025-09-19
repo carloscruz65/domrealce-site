@@ -67,7 +67,7 @@ export default function Contactos() {
         nome: formData.nome.trim(),
         email: formData.email.trim(),
         telefone: formData.telefone?.trim() || undefined,
-        empresa: formData.empresa?.trim() || undefined,
+        empresa: undefined,
         mensagem: formData.mensagem.trim(),
         ficheiros: (formData.anexos || []).map(f => 
           `${f.name || f.originalName || 'ficheiro'} (${(f.size / 1024).toFixed(1)} KB)`
@@ -85,9 +85,22 @@ export default function Contactos() {
       if (error instanceof z.ZodError) {
         console.error('📋 Detalhes do erro Zod:', error.issues);
       }
+      let errorMessage = "Por favor, verifique os dados inseridos.";
+      
+      if (error instanceof z.ZodError) {
+        const issues = error.issues;
+        if (issues.some(issue => issue.path[0] === 'nome' && issue.message.includes('2 caracteres'))) {
+          errorMessage = "Nome deve ter pelo menos 2 caracteres.";
+        } else if (issues.some(issue => issue.path[0] === 'mensagem' && issue.message.includes('10 caracteres'))) {
+          errorMessage = "Mensagem deve ter pelo menos 10 caracteres.";
+        } else if (issues.some(issue => issue.path[0] === 'email')) {
+          errorMessage = "Por favor insira um email válido.";
+        }
+      }
+      
       toast({
         title: "Erro de validação",
-        description: "Por favor, verifique os dados inseridos.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
@@ -245,6 +258,7 @@ export default function Contactos() {
                         placeholder="O seu nome"
                         required
                       />
+                      <p className="text-xs text-white/50 mt-1">Mínimo 2 caracteres</p>
                     </div>
 
                     <div>
@@ -293,6 +307,7 @@ export default function Contactos() {
                       placeholder="Descreva o seu projeto ou dúvida em detalhe..."
                       required
                     />
+                    <p className="text-xs text-white/50 mt-1">Mínimo 10 caracteres</p>
                   </div>
 
                   <div>
