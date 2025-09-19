@@ -26,10 +26,11 @@ export async function sendContactEmail(contact: Contact): Promise<boolean> {
           ${contact.mensagem.replace(/\n/g, '<br>')}
         </div>
         ${contact.ficheiros && contact.ficheiros.length > 0 ? `
-        <h3>Ficheiros anexados:</h3>
+        <h3>Ficheiros mencionados pelo cliente:</h3>
         <ul>
           ${contact.ficheiros.map(ficheiro => `<li>📎 ${ficheiro}</li>`).join('')}
         </ul>
+        <p><em>Nota: Os ficheiros reais devem ser solicitados directamente ao cliente.</em></p>
         ` : ''}
         <hr>
         <p style="color: #666; font-size: 12px;">
@@ -47,8 +48,10 @@ export async function sendContactEmail(contact: Contact): Promise<boolean> {
         ${contact.mensagem}
         
         ${contact.ficheiros && contact.ficheiros.length > 0 ? `
-        Ficheiros anexados:
+        Ficheiros mencionados pelo cliente:
         ${contact.ficheiros.map(ficheiro => `- ${ficheiro}`).join('\n')}
+        
+        Nota: Os ficheiros reais devem ser solicitados directamente ao cliente.
         ` : ''}
         
         ---

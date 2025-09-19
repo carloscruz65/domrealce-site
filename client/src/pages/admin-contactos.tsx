@@ -234,33 +234,15 @@ export default function AdminContactos() {
                                 <span className="text-[#20B2AA] font-medium">{contact.ficheiros.length}</span>
                                 <span className="text-gray-400"> ficheiro(s)</span>
                                 <div className="max-w-xs space-y-1 mt-1">
-                                  {contact.ficheiros.map((ficheiro, index) => {
-                                    const fileName = ficheiro.includes('|') ? ficheiro.split('|')[0] : ficheiro;
-                                    const hasDownload = ficheiro.includes('|');
-                                    
-                                    return (
-                                      <div key={index} className="flex items-center gap-1">
-                                        {hasDownload ? (
-                                          <a
-                                            href={`/api/contacts/attachment/${contact.id}/${encodeURIComponent(fileName)}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-[#20B2AA] hover:text-[#FFD700] text-xs truncate flex items-center gap-1 transition-colors"
-                                            title={`Fazer download de ${fileName}`}
-                                          >
-                                            <Download className="h-3 w-3" />
-                                            {fileName}
-                                          </a>
-                                        ) : (
-                                          <div className="text-gray-300 text-xs truncate flex items-center gap-1">
-                                            <FileText className="h-3 w-3" />
-                                            {fileName}
-                                            <span className="text-red-400">(sem download)</span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
+                                  {contact.ficheiros.map((ficheiro, index) => (
+                                    <div key={index} className="text-gray-300 text-xs truncate flex items-center gap-1">
+                                      <FileText className="h-3 w-3" />
+                                      {ficheiro}
+                                    </div>
+                                  ))}
+                                  <div className="text-xs text-yellow-400 mt-2">
+                                    ℹ️ Os ficheiros foram anexados ao email de contacto
+                                  </div>
                                 </div>
                               </div>
                             </div>
