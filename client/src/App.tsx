@@ -51,6 +51,7 @@ import AdminLoja from "@/pages/admin-loja";
 import AdminPages from "@/pages/admin-pages";
 import AdminEditor from "@/pages/admin-editor";
 import AdminMedia from "@/pages/admin-media";
+import AdminEncomendas from "@/pages/admin-encomendas";
 import ServicoPeliculaSolar from "@/pages/servico-pelicula-solar";
 import DemoInterativo from "@/pages/demo-interativo";
 import VisualEditorDemo from "@/pages/visual-editor-demo";
@@ -138,6 +139,7 @@ function Router() {
         <Route path="/admin/produtos" component={AdminProdutos} />
         <Route path="/admin/noticias" component={AdminNoticias} />
         <Route path="/admin/loja" component={AdminLoja} />
+        <Route path="/admin/encomendas" component={AdminEncomendas} />
         <Route path="/admin/editor" component={AdminEditor} />
         <Route path="/admin/media" component={AdminMedia} />
         <Route path="/noticias" component={Noticias} />

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
-import { ArrowLeft, Monitor, Package, FileText, Image, Users, Palette, Store, FolderOpen, Wand2 } from "lucide-react";
+import { ArrowLeft, Monitor, Package, FileText, Image, Users, Palette, Store, FolderOpen, Wand2, ShoppingCart } from "lucide-react";
 import { Link } from "wouter";
 
 const adminSections = [
@@ -60,6 +60,14 @@ const adminSections = [
     icon: Store,
     color: "text-pink-400",
     bg: "hover:bg-pink-400/10",
+  },
+  {
+    title: "Encomendas",
+    description: "Gerencie todas as encomendas e estados de pagamento",
+    href: "/admin/encomendas",
+    icon: ShoppingCart,
+    color: "text-[#20B2AA]",
+    bg: "hover:bg-[#20B2AA]/10",
   },
   {
     title: "Editor Visual",
