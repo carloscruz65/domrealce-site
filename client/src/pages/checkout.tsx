@@ -63,6 +63,9 @@ export default function Checkout() {
     metodoPagamento: "mbway", // MB WAY como padrão (mais popular)
   });
 
+  // Estado para rastrear erros de validação
+  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({});
+
   useEffect(() => {
     // Carregar carrinho do localStorage
     const savedCart = localStorage.getItem("cart");
@@ -106,29 +109,90 @@ export default function Checkout() {
   const valorIva = totalSemIva * ivaRate;
   const totalFinal = totalSemIva + valorIva;
 
-  const handleFinalizarPedido = async () => {
-    // Validar dados obrigatórios
-    if (
-      !customerData.nome ||
-      !customerData.email ||
-      !customerData.telefone ||
-      !customerData.morada ||
-      !customerData.codigoPostal ||
-      !customerData.cidade
-    ) {
-      toast({
-        title: "Dados incompletos",
-        description: "Por favor, preencha todos os campos obrigatórios.",
-        variant: "destructive",
-      });
-      return;
+  // Função para validar um campo específico
+  const validateField = (fieldName: string, value: string): string => {
+    switch (fieldName) {
+      case "nome":
+        if (!value) return "Nome é obrigatório";
+        if (value.length < 2) return "Nome deve ter pelo menos 2 caracteres";
+        return "";
+      case "email":
+        if (!value) return "Email é obrigatório";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return "Email inválido";
+        return "";
+      case "telefone":
+        if (!value) return "Telefone é obrigatório";
+        const phoneRegex = /^[0-9]{9}$/;
+        if (!phoneRegex.test(value.replace(/\s/g, ""))) return "Telefone deve ter 9 dígitos";
+        return "";
+      case "morada":
+        if (!value) return "Morada é obrigatória";
+        if (value.length < 5) return "Morada deve ter pelo menos 5 caracteres";
+        return "";
+      case "codigoPostal":
+        if (!value) return "Código postal é obrigatório";
+        const postalRegex = /^\d{4}-\d{3}$/;
+        if (!postalRegex.test(value)) return "Código postal deve ter formato 0000-000";
+        return "";
+      case "cidade":
+        if (!value) return "Cidade é obrigatória";
+        if (value.length < 2) return "Cidade deve ter pelo menos 2 caracteres";
+        return "";
+      case "nif":
+        if (value && value.length !== 9) return "NIF deve ter 9 dígitos";
+        if (value && !/^\d{9}$/.test(value)) return "NIF deve conter apenas números";
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  // Função para validar todos os campos
+  const validateAllFields = () => {
+    const errors: {[key: string]: string} = {};
+    
+    Object.keys(customerData).forEach(fieldName => {
+      const error = validateField(fieldName, customerData[fieldName as keyof typeof customerData]);
+      if (error) {
+        errors[fieldName] = error;
+      }
+    });
+
+    if (!paymentData.metodoPagamento) {
+      errors.metodoPagamento = "Método de pagamento é obrigatório";
     }
 
-    // Validação do método de pagamento
-    if (!paymentData.metodoPagamento) {
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Função para atualizar campo e validar
+  const updateCustomerData = (field: string, value: string) => {
+    setCustomerData({ ...customerData, [field]: value });
+    
+    // Limpar erro do campo quando o usuário começar a digitar
+    if (fieldErrors[field]) {
+      const newErrors = { ...fieldErrors };
+      delete newErrors[field];
+      setFieldErrors(newErrors);
+    }
+    
+    // Validar o campo em tempo real após 1 segundo
+    setTimeout(() => {
+      const error = validateField(field, value);
+      if (error) {
+        setFieldErrors(prev => ({ ...prev, [field]: error }));
+      }
+    }, 1000);
+  };
+
+  const handleFinalizarPedido = async () => {
+    // Validar todos os campos
+    if (!validateAllFields()) {
       toast({
-        title: "Método de pagamento não selecionado",
-        description: "Por favor, escolha um método de pagamento.",
+        title: "Dados incompletos ou inválidos",
+        description: "Por favor, corrija os campos marcados a vermelho.",
         variant: "destructive",
       });
       return;
@@ -439,15 +503,17 @@ export default function Checkout() {
                     <Input
                       id="nome"
                       value={customerData.nome}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          nome: e.target.value,
-                        })
-                      }
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      onChange={(e) => updateCustomerData("nome", e.target.value)}
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.nome 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                       required
                     />
+                    {fieldErrors.nome && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.nome}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="email" className="text-gray-300">
@@ -457,15 +523,17 @@ export default function Checkout() {
                       id="email"
                       type="email"
                       value={customerData.email}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          email: e.target.value,
-                        })
-                      }
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      onChange={(e) => updateCustomerData("email", e.target.value)}
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.email 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                       required
                     />
+                    {fieldErrors.email && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -476,16 +544,20 @@ export default function Checkout() {
                     </Label>
                     <Input
                       id="telefone"
+                      type="tel"
                       value={customerData.telefone}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          telefone: e.target.value,
-                        })
-                      }
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      onChange={(e) => updateCustomerData("telefone", e.target.value)}
+                      placeholder="9xxxxxxxx"
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.telefone 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                       required
                     />
+                    {fieldErrors.telefone && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.telefone}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="nif" className="text-gray-300">
@@ -494,14 +566,17 @@ export default function Checkout() {
                     <Input
                       id="nif"
                       value={customerData.nif}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          nif: e.target.value,
-                        })
-                      }
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      onChange={(e) => updateCustomerData("nif", e.target.value)}
+                      placeholder="123456789"
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.nif 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                     />
+                    {fieldErrors.nif && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.nif}</p>
+                    )}
                   </div>
                 </div>
 
@@ -512,15 +587,17 @@ export default function Checkout() {
                   <Input
                     id="morada"
                     value={customerData.morada}
-                    onChange={(e) =>
-                      setCustomerData({
-                        ...customerData,
-                        morada: e.target.value,
-                      })
-                    }
-                    className="bg-[#0a0a0a] border-[#333] text-white"
+                    onChange={(e) => updateCustomerData("morada", e.target.value)}
+                    className={`bg-[#0a0a0a] text-white ${
+                      fieldErrors.morada 
+                        ? 'border-red-500 focus:border-red-500' 
+                        : 'border-[#333]'
+                    }`}
                     required
                   />
+                  {fieldErrors.morada && (
+                    <p className="text-red-500 text-sm mt-1">{fieldErrors.morada}</p>
+                  )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -531,16 +608,18 @@ export default function Checkout() {
                     <Input
                       id="codigoPostal"
                       value={customerData.codigoPostal}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          codigoPostal: e.target.value,
-                        })
-                      }
+                      onChange={(e) => updateCustomerData("codigoPostal", e.target.value)}
                       placeholder="0000-000"
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.codigoPostal 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                       required
                     />
+                    {fieldErrors.codigoPostal && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.codigoPostal}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="cidade" className="text-gray-300">
@@ -549,15 +628,17 @@ export default function Checkout() {
                     <Input
                       id="cidade"
                       value={customerData.cidade}
-                      onChange={(e) =>
-                        setCustomerData({
-                          ...customerData,
-                          cidade: e.target.value,
-                        })
-                      }
-                      className="bg-[#0a0a0a] border-[#333] text-white"
+                      onChange={(e) => updateCustomerData("cidade", e.target.value)}
+                      className={`bg-[#0a0a0a] text-white ${
+                        fieldErrors.cidade 
+                          ? 'border-red-500 focus:border-red-500' 
+                          : 'border-[#333]'
+                      }`}
                       required
                     />
+                    {fieldErrors.cidade && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.cidade}</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -573,11 +654,21 @@ export default function Checkout() {
               <CardContent className="space-y-4">
                 <Select
                   value={paymentData.metodoPagamento}
-                  onValueChange={(value) =>
-                    setPaymentData({ ...paymentData, metodoPagamento: value })
-                  }
+                  onValueChange={(value) => {
+                    setPaymentData({ ...paymentData, metodoPagamento: value });
+                    // Limpar erro do método de pagamento
+                    if (fieldErrors.metodoPagamento) {
+                      const newErrors = { ...fieldErrors };
+                      delete newErrors.metodoPagamento;
+                      setFieldErrors(newErrors);
+                    }
+                  }}
                 >
-                  <SelectTrigger className="bg-[#0a0a0a] border-[#333] text-white">
+                  <SelectTrigger className={`bg-[#0a0a0a] text-white ${
+                    fieldErrors.metodoPagamento 
+                      ? 'border-red-500 focus:border-red-500' 
+                      : 'border-[#333]'
+                  }`}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#111111] border-[#333]">
@@ -595,6 +686,9 @@ export default function Checkout() {
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                {fieldErrors.metodoPagamento && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.metodoPagamento}</p>
+                )}
 
                 {paymentData.metodoPagamento === "transferencia" && (
                   <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
