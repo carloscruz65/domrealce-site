@@ -285,32 +285,50 @@ export default function Contactos() {
                       maxNumberOfFiles={3}
                       maxFileSize={10485760}
                       onGetUploadParameters={async () => {
-                        const response = await fetch('/api/objects/upload', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' }
-                        });
-                        const data = await response.json();
-                        return {
-                          method: 'PUT' as const,
-                          url: data.uploadURL,
-                        };
+                        try {
+                          const response = await fetch('/api/objects/upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                          });
+                          if (!response.ok) {
+                            throw new Error(`Erro HTTP: ${response.status}`);
+                          }
+                          const data = await response.json();
+                          return {
+                            method: 'PUT' as const,
+                            url: data.uploadURL,
+                          };
+                        } catch (error) {
+                          console.error('Erro ao obter URL de upload:', error);
+                          throw error;
+                        }
                       }}
                       onComplete={(result) => {
-                        const uploadedFiles = result.successful?.map(file => ({
-                          originalName: file.name,
-                          size: file.size,
-                          uploadURL: file.uploadURL,
-                        })) || [];
-                        setFormData(prev => ({
-                          ...prev,
-                          anexos: [...prev.anexos, ...uploadedFiles]
-                        }));
+                        try {
+                          const uploadedFiles = result.successful?.map(file => ({
+                            originalName: file.name,
+                            size: file.size,
+                            uploadURL: file.uploadURL,
+                          })) || [];
+                          setFormData(prev => ({
+                            ...prev,
+                            anexos: [...prev.anexos, ...uploadedFiles]
+                          }));
+                        } catch (error) {
+                          console.error('Erro ao processar ficheiros carregados:', error);
+                        }
                       }}
                       buttonClassName="w-full"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       Anexar Ficheiros
                     </ObjectUploader>
+                    
+                    <div className="mt-2 text-xs text-white/60 space-y-1">
+                      <p>• Máximo 3 ficheiros, até 10MB cada</p>
+                      <p>• Formatos aceites: JPEG, TIFF, SVG, AI, PDF</p>
+                      <p>• <strong>Importante:</strong> Fontes devem ser convertidas em linhas antes do envio</p>
+                    </div>
 
                     {formData.anexos && formData.anexos.length > 0 && (
                       <div className="mt-3">
