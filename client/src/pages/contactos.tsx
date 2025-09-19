@@ -326,7 +326,7 @@ export default function Contactos() {
                     
                     <div className="mt-2 text-xs text-white/60 space-y-1">
                       <p>• Máximo 3 ficheiros, até 10MB cada</p>
-                      <p>• Formatos aceites: JPEG, TIFF, SVG, AI, PDF</p>
+                      <p>• Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF</p>
                       <p>• <strong>Importante:</strong> Fontes devem ser convertidas em linhas antes do envio</p>
                     </div>
 

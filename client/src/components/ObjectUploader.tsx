@@ -41,7 +41,7 @@ export function ObjectUploader({
       restrictions: {
         maxNumberOfFiles,
         maxFileSize,
-        allowedFileTypes: ['.jpg', '.jpeg', '.tiff', '.tif', '.svg', '.ai', '.pdf'],
+        allowedFileTypes: ['.jpg', '.jpeg', '.png', '.tiff', '.tif', '.svg', '.ai', '.pdf'],
       },
       autoProceed: false,
     })
@@ -52,6 +52,12 @@ export function ObjectUploader({
       .on("complete", (result) => {
         onComplete?.(result);
         setShowModal(false);
+      })
+      .on("upload-error", (file, error, response) => {
+        console.error("Upload error:", error, response);
+      })
+      .on("error", (error) => {
+        console.error("Uppy error:", error);
       })
   );
 
