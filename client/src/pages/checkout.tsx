@@ -138,18 +138,57 @@ export default function Checkout() {
 
     try {
       const orderId = `DP${Date.now()}`;
+      const numeroEncomenda = `EN-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+
+      // Criar encomenda na base de dados primeiro
+      const orderData = {
+        numeroEncomenda,
+        clienteNome: customerData.nome,
+        clienteEmail: customerData.email,
+        clienteTelefone: customerData.telefone,
+        clienteMorada: customerData.morada,
+        clienteCodigoPostal: customerData.codigoPostal,
+        clienteCidade: customerData.cidade,
+        clienteNIF: customerData.nif || null,
+        itens: cartItems,
+        subtotal: totalCarrinho.toString(),
+        envio: custoEnvio.toString(),
+        iva: valorIva.toString(),
+        total: totalFinal.toString(),
+        metodoPagamento: getPaymentMethod(),
+        estado: "pendente",
+        estadoPagamento: "pendente"
+      };
+
+      console.log("🛒 Criando encomenda:", orderData);
+
+      // Criar encomenda
+      const orderResponse = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const orderResult = await orderResponse.json();
+      console.log("📦 Encomenda criada:", orderResult);
+
+      if (!orderResult.success) {
+        throw new Error("Erro ao criar encomenda");
+      }
 
       // Preparar dados para o pagamento
       const paymentRequest = {
         method: getPaymentMethod(),
-        orderId,
+        orderId: orderResult.order.id, // Usar o ID da encomenda
         amount: totalFinal,
         customerData: {
           email: customerData.email,
           phone: customerData.telefone,
         },
         returnUrls: {
-          success: `${window.location.origin}/pedido-confirmado`,
+          success: `${window.location.origin}/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`,
           error: `${window.location.origin}/checkout`,
           cancel: `${window.location.origin}/checkout`,
         },
@@ -165,10 +204,24 @@ export default function Checkout() {
       });
 
       const result = await response.json();
-      console.log("Payment API result:", result);
+      console.log("💳 Payment API result:", result);
 
       if (!result.success) {
         throw new Error(result.message || "Erro ao processar pagamento");
+      }
+
+      // Atualizar encomenda com dados do pagamento
+      if (result.data) {
+        await fetch(`/api/admin/orders/${orderResult.order.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            referenciaIfthenpay: result.data.requestId || result.data.reference,
+            dadosPagamento: result.data
+          }),
+        });
       }
 
       // Processar resposta baseada no método de pagamento
@@ -183,10 +236,10 @@ export default function Checkout() {
         });
 
         // Monitorizar status do pagamento
-        monitorMBWayPayment(result.data.requestId, orderId);
+        monitorMBWayPayment(result.data.requestId, numeroEncomenda, orderResult.order.id);
       } else {
         // Multibanco - mostrar referências
-        showPaymentInstructions(method, result.data, orderId);
+        showPaymentInstructions(method, result.data, numeroEncomenda, orderResult.order.id);
       }
     } catch (error) {
       console.error("Payment error:", error);
@@ -214,7 +267,7 @@ export default function Checkout() {
     }
   };
 
-  const monitorMBWayPayment = async (requestId: string, orderId: string) => {
+  const monitorMBWayPayment = async (requestId: string, numeroEncomenda: string, orderId: string) => {
     const maxAttempts = 48; // 4 minutos (48 x 5 segundos)
     let attempts = 0;
 
@@ -231,15 +284,36 @@ export default function Checkout() {
         const result = await response.json();
 
         if (result.status === "000") {
-          // Pagamento confirmado
+          // Pagamento confirmado - atualizar estado da encomenda
+          await fetch(`/api/admin/orders/${orderId}/status`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              estado: "paga",
+              estadoPagamento: "pago"
+            }),
+          });
+
           localStorage.removeItem("cart");
           toast({
             title: "Pagamento confirmado!",
             description: "O seu pedido foi processado com sucesso.",
           });
-          setLocation(`/pedido-confirmado?orderId=${orderId}`);
+          setLocation(`/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`);
         } else if (result.status === "101") {
           // Pagamento expirado
+          await fetch(`/api/admin/orders/${orderId}/status`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              estadoPagamento: "falhado"
+            }),
+          });
+          
           toast({
             title: "Pagamento expirado",
             description: "O pagamento MB WAY expirou. Tente novamente.",
@@ -269,6 +343,7 @@ export default function Checkout() {
   const showPaymentInstructions = (
     method: string,
     data: any,
+    numeroEncomenda: string,
     orderId: string,
   ) => {
     if (method === "multibanco") {
@@ -284,6 +359,7 @@ export default function Checkout() {
       "pendingOrder",
       JSON.stringify({
         orderId,
+        numeroEncomenda,
         method,
         data,
         amount: totalFinal,
@@ -292,7 +368,7 @@ export default function Checkout() {
     );
 
     // Redirecionar para página de instruções
-    setLocation(`/instrucoes-pagamento?method=${method}&orderId=${orderId}`);
+    setLocation(`/instrucoes-pagamento?method=${method}&numeroEncomenda=${numeroEncomenda}`);
   };
 
   return (
