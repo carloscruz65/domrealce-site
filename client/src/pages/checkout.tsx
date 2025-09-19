@@ -178,7 +178,30 @@ export default function Checkout() {
       console.log("📦 Encomenda criada:", orderResult);
 
       if (!orderResult.success) {
-        throw new Error("Erro ao criar encomenda");
+        // Mostrar erro específico se disponível
+        let errorMessage = "Erro ao criar encomenda";
+        
+        if (orderResult.error) {
+          if (orderResult.error.includes("email")) {
+            errorMessage = "Email inválido. Verifique o formato do email.";
+          } else if (orderResult.error.includes("telefone")) {
+            errorMessage = "Número de telefone inválido.";
+          } else if (orderResult.error.includes("codigo")) {
+            errorMessage = "Código postal inválido. Use o formato 0000-000.";
+          } else if (orderResult.error.includes("nif") || orderResult.error.includes("NIF")) {
+            errorMessage = "NIF inválido. Deve ter 9 dígitos.";
+          } else if (orderResult.error.includes("nome")) {
+            errorMessage = "Nome deve ter pelo menos 2 caracteres.";
+          } else if (orderResult.error.includes("morada")) {
+            errorMessage = "Morada deve ter pelo menos 5 caracteres.";
+          } else if (orderResult.error.includes("cidade")) {
+            errorMessage = "Cidade deve ter pelo menos 2 caracteres.";
+          } else {
+            errorMessage = orderResult.error;
+          }
+        }
+        
+        throw new Error(errorMessage);
       }
 
       // Preparar dados para o pagamento
