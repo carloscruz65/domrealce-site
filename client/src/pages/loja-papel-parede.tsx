@@ -29,16 +29,18 @@ export default function LojaPapelParede() {
         .replace(/\b\w/g, (l: string) => l.toUpperCase());
       
       // Count textures in this category
+      // Special mapping for mismatched folder names
+      const folderName = fileName === 'Tijolos' ? 'Tijolo' : fileName;
       const categoryImages = (images as { images: string[] })?.images
         ?.filter((imgPath: string) => 
-          imgPath.includes(`texturas/${fileName}/`) &&
+          imgPath.includes(`texturas/${folderName}/`) &&
           /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath)
         ) || [];
       
       return {
         name: displayName,
         path: `/public-objects/${path}`,
-        fileName: fileName,
+        fileName: folderName, // Use folderName for consistent URL generation
         textureCount: categoryImages.length
       };
     })
