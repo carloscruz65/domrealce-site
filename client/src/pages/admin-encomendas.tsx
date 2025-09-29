@@ -44,8 +44,11 @@ import {
   RefreshCw,
   Truck,
   CreditCard,
-  Search
+  Search,
+  Trash2,
+  AlertTriangle
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Order {
   id: string;
@@ -98,6 +101,8 @@ export default function AdminEncomendas() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [filterEstado, setFilterEstado] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Estados para edição
   const [editEstado, setEditEstado] = useState("");
@@ -111,7 +116,7 @@ export default function AdminEncomendas() {
     enabled: true,
   });
 
-  const orders: Order[] = ordersData?.orders || [];
+  const orders: Order[] = (ordersData as any)?.orders || [];
 
   // Update order mutation
   const updateOrderMutation = useMutation({
@@ -168,6 +173,39 @@ export default function AdminEncomendas() {
     },
   });
 
+  // Delete multiple orders mutation
+  const deleteOrdersMutation = useMutation({
+    mutationFn: async (orderIds: string[]) => {
+      const promises = orderIds.map(id => 
+        fetch(`/api/admin/orders/${id}`, {
+          method: "DELETE",
+        })
+      );
+      const responses = await Promise.all(promises);
+      const failedDeletes = responses.filter(r => !r.ok);
+      if (failedDeletes.length > 0) {
+        throw new Error(`Failed to delete ${failedDeletes.length} orders`);
+      }
+      return responses;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/orders"] });
+      setSelectedOrders(new Set());
+      setIsDeleteDialogOpen(false);
+      toast({
+        title: "Encomendas eliminadas",
+        description: "As encomendas selecionadas foram eliminadas com sucesso.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro",
+        description: "Erro ao eliminar algumas encomendas.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const openEditDialog = (order: Order) => {
     setSelectedOrder(order);
     setEditEstado(order.estado);
@@ -193,6 +231,35 @@ export default function AdminEncomendas() {
     });
   };
 
+  // Selection functions
+  const toggleOrderSelection = (orderId: string) => {
+    const newSelected = new Set(selectedOrders);
+    if (newSelected.has(orderId)) {
+      newSelected.delete(orderId);
+    } else {
+      newSelected.add(orderId);
+    }
+    setSelectedOrders(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    const pendingOrderIds = filteredOrders
+      .filter(order => order.estado === 'pendente')
+      .map(order => order.id);
+    
+    if (selectedOrders.size === pendingOrderIds.length && 
+        pendingOrderIds.every(id => selectedOrders.has(id))) {
+      setSelectedOrders(new Set());
+    } else {
+      setSelectedOrders(new Set(pendingOrderIds));
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    const selectedOrderIds = Array.from(selectedOrders);
+    deleteOrdersMutation.mutate(selectedOrderIds);
+  };
+
   const filteredOrders = orders.filter((order) => {
     const matchesFilter = filterEstado === "all" || order.estado === filterEstado;
     const matchesSearch = 
@@ -202,6 +269,14 @@ export default function AdminEncomendas() {
     
     return matchesFilter && matchesSearch;
   });
+
+  // Get pending orders that can be selected for deletion
+  const pendingOrders = filteredOrders.filter(order => order.estado === 'pendente');
+  const selectedPendingOrders = Array.from(selectedOrders).filter(id => 
+    pendingOrders.some(order => order.id === id)
+  );
+  const allPendingSelected = pendingOrders.length > 0 && 
+    pendingOrders.every(order => selectedOrders.has(order.id));
 
   const formatCurrency = (value: string) => {
     return `€${parseFloat(value).toFixed(2)}`;
@@ -346,6 +421,66 @@ export default function AdminEncomendas() {
           </CardContent>
         </Card>
 
+        {/* Delete Selected Button */}
+        {selectedPendingOrders.length > 0 && (
+          <Card className="bg-red-500/10 border-red-500/30 mb-4">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-400" />
+                  <span className="text-red-400">
+                    {selectedPendingOrders.length} encomenda(s) pendente(s) selecionada(s)
+                  </span>
+                </div>
+                <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="gap-2"
+                      data-testid="button-delete-selected"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Eliminar Selecionadas
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[#111111] border-[#333] text-white">
+                    <DialogHeader>
+                      <DialogTitle className="text-red-400">Eliminar Encomendas</DialogTitle>
+                      <DialogDescription className="text-gray-300">
+                        Tem a certeza que deseja eliminar {selectedPendingOrders.length} encomenda(s) pendente(s)?
+                        Esta ação não pode ser desfeita.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsDeleteDialogOpen(false)}
+                        className="border-[#333] hover:bg-[#222]"
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteSelected}
+                        disabled={deleteOrdersMutation.isPending}
+                        className="gap-2"
+                      >
+                        {deleteOrdersMutation.isPending ? (
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
+                        Eliminar
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Orders Table */}
         <Card className="bg-[#111111] border-[#333]">
           <CardHeader>
@@ -358,6 +493,16 @@ export default function AdminEncomendas() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-[#333] hover:bg-[#0a0a0a]">
+                    <TableHead className="text-gray-300 w-12">
+                      {pendingOrders.length > 0 && (
+                        <Checkbox
+                          checked={allPendingSelected}
+                          onCheckedChange={toggleSelectAll}
+                          data-testid="checkbox-select-all"
+                          aria-label="Selecionar todas as encomendas pendentes"
+                        />
+                      )}
+                    </TableHead>
                     <TableHead className="text-gray-300">Nº Encomenda</TableHead>
                     <TableHead className="text-gray-300">Cliente</TableHead>
                     <TableHead className="text-gray-300">Total</TableHead>
@@ -371,6 +516,16 @@ export default function AdminEncomendas() {
                 <TableBody>
                   {filteredOrders.map((order) => (
                     <TableRow key={order.id} className="border-[#333] hover:bg-[#0a0a0a]">
+                      <TableCell>
+                        {order.estado === 'pendente' && (
+                          <Checkbox
+                            checked={selectedOrders.has(order.id)}
+                            onCheckedChange={() => toggleOrderSelection(order.id)}
+                            data-testid={`checkbox-order-${order.id}`}
+                            aria-label={`Selecionar encomenda ${order.numeroEncomenda}`}
+                          />
+                        )}
+                      </TableCell>
                       <TableCell>
                         <div className="font-mono text-sm">
                           {order.numeroEncomenda}
