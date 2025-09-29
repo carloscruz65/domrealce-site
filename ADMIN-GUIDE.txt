@@ -1,0 +1,141 @@
+========================================================
+    📋 GUIA DE LINKS ADMINISTRATIVOS - DOMREALCE
+========================================================
+
+🎯 LINK PRINCIPAL PARA VER ENCOMENDAS:
+http://localhost:5000/admin/encomendas
+
+🏠 DASHBOARD GERAL:
+http://localhost:5000/admin
+
+========================================================
+📦 GESTÃO DE ENCOMENDAS E VENDAS
+========================================================
+
+🛒 Ver e Gerir Encomendas:
+http://localhost:5000/admin/encomendas
+• Visualizar todas as encomendas
+• Alterar estados (pendente, paga, enviada, entregue)
+• Ver detalhes de pagamento
+• Adicionar códigos de rastreio
+• Exportar dados
+
+🏪 Gestão da Loja:
+http://localhost:5000/admin/loja
+• Gerir produtos da loja online
+• Adicionar/editar produtos de papel de parede
+• Gestão de categorias e preços
+
+📦 Produtos Gerais:
+http://localhost:5000/admin/produtos
+• Gestão geral de produtos
+• Configurações de inventário
+
+========================================================
+📞 GESTÃO DE CONTACTOS E LEADS
+========================================================
+
+📞 Contactos:
+http://localhost:5000/admin/contactos
+• Ver mensagens do formulário de contacto
+• Exportar lista de contactos para CSV
+• Gestão de leads de clientes
+
+========================================================
+🎨 GESTÃO DE CONTEÚDO VISUAL
+========================================================
+
+🎭 Portfolio:
+http://localhost:5000/admin/portfolio
+• Gerir imagens do portfolio
+• Adicionar/remover trabalhos realizados
+• Organizar por categorias
+
+🖼️ Slider da Homepage:
+http://localhost:5000/admin/slider
+• Gerir slides da página inicial
+• Adicionar/editar imagens do carrossel
+
+💾 Gestão de Media:
+http://localhost:5000/admin/media
+• Upload de imagens e ficheiros
+• Organização de assets
+• Gestão geral de media
+
+🎨 Texturas de Papel de Parede:
+http://localhost:5000/admin/texturas
+• Gerir texturas disponíveis
+• Upload de novas texturas
+• Organização por categorias
+
+========================================================
+📝 GESTÃO DE CONTEÚDO E PÁGINAS
+========================================================
+
+📄 Configuração de Páginas:
+http://localhost:5000/admin/pages
+• Editar textos das páginas
+• Configurar meta tags SEO
+• Personalizar conteúdos
+
+✏️ Editor Visual:
+http://localhost:5000/admin/editor
+• Editor avançado de páginas
+• Interface visual para edições
+• Edição em tempo real
+
+📰 Notícias e Blog:
+http://localhost:5000/admin/noticias
+• Criar/editar artigos
+• Gestão do blog corporativo
+• Publicação de novidades
+
+========================================================
+🔗 RESUMO DE LINKS RÁPIDOS
+========================================================
+
+📦 VER ENCOMENDAS: http://localhost:5000/admin/encomendas
+📞 Contactos: http://localhost:5000/admin/contactos
+🏪 Loja: http://localhost:5000/admin/loja
+🎨 Portfolio: http://localhost:5000/admin/portfolio
+📝 Páginas: http://localhost:5000/admin/pages
+📰 Notícias: http://localhost:5000/admin/noticias
+🖼️ Slider: http://localhost:5000/admin/slider
+💾 Media: http://localhost:5000/admin/media
+✏️ Editor: http://localhost:5000/admin/editor
+🎭 Texturas: http://localhost:5000/admin/texturas
+
+========================================================
+💡 INSTRUÇÕES DE USO
+========================================================
+
+PARA VER ENCOMENDAS:
+1. Aceda a: http://localhost:5000/admin/encomendas
+2. Pode filtrar por estado, data, cliente
+3. Clique numa encomenda para ver detalhes
+4. Altere o estado conforme o progresso
+
+PARA EDITAR PÁGINAS:
+1. Textos: http://localhost:5000/admin/pages
+2. Visual: http://localhost:5000/admin/editor
+3. As alterações são guardadas automaticamente
+
+PARA GERIR LOJA:
+1. Produtos: http://localhost:5000/admin/loja
+2. Texturas: http://localhost:5000/admin/texturas
+3. Inventário: http://localhost:5000/admin/produtos
+
+========================================================
+🔐 NOTAS IMPORTANTES
+========================================================
+
+• Todos os links são para localhost:5000 (desenvolvimento)
+• Em produção, use www.domrealce.com no lugar de localhost:5000
+• Mantenha sempre as credenciais de admin seguras
+• Faça backups regulares dos dados importantes
+
+========================================================
+Documento gerado: 29 Setembro 2024
+Sistema: DOMREALCE - Comunicação Visual
+Versão: 2024
+========================================================
