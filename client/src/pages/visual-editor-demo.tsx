@@ -6,6 +6,7 @@ export default function VisualEditorDemo() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
+      <VisualEditorToolbar />
       
       <main className="pt-16">
         {/* Hero Section - Editável */}
@@ -181,12 +182,12 @@ export default function VisualEditorDemo() {
             
             <EditableElement 
               id="demo-desc"
-              tag="p" 
+              tag="div" 
               className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto"
             >
               <InlineTextEditor
                 elementId="demo-desc"
-                initialText="Clique no botão 'Editar Página' no canto superior direito para ativar o modo de edição. Depois pode editar qualquer elemento desta página!"
+                initialText="Clique no botão 'Editar' no canto inferior esquerdo para ativar o modo de edição. Depois pode editar qualquer elemento desta página!"
                 multiline={true}
               />
             </EditableElement>
@@ -206,7 +207,7 @@ export default function VisualEditorDemo() {
               
               <EditableElement 
                 id="demo-box-text"
-                tag="p" 
+                tag="div" 
                 className="text-gray-300"
               >
                 <InlineTextEditor
@@ -241,15 +242,15 @@ export default function VisualEditorDemo() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Ativar Modo de Edição</h3>
-                      <p className="text-gray-300">Clique no botão "Editar Página" no canto superior direito</p>
+                      <p className="text-gray-300">Clique no botão "✏️ Editar" no canto inferior esquerdo</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Editar Texto</h3>
                       <p className="text-gray-300">Duplo clique em qualquer texto para editá-lo inline</p>
@@ -257,7 +258,7 @@ export default function VisualEditorDemo() {
                   </div>
                   
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Mover Elementos</h3>
                       <p className="text-gray-300">Clique e arraste elementos para reposicioná-los</p>
@@ -267,7 +268,7 @@ export default function VisualEditorDemo() {
                 
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">4</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Redimensionar</h3>
                       <p className="text-gray-300">Use os handles nos cantos para redimensionar elementos</p>
@@ -275,7 +276,7 @@ export default function VisualEditorDemo() {
                   </div>
                   
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">5</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Menu de Contexto</h3>
                       <p className="text-gray-300">Clique com o botão direito para copiar, duplicar ou eliminar</p>
@@ -283,10 +284,10 @@ export default function VisualEditorDemo() {
                   </div>
                   
                   <div className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm">6</div>
+                    <div className="w-8 h-8 bg-[#FFD700] text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">6</div>
                     <div>
-                      <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Guardar</h3>
-                      <p className="text-gray-300">Clique em "Guardar" na barra de ferramentas para salvar as mudanças</p>
+                      <h3 className="text-lg font-semibold mb-2 text-[#FFD700]">Preview e Guardar</h3>
+                      <p className="text-gray-300">Use o botão "Preview" para ver as mudanças sem editar</p>
                     </div>
                   </div>
                 </div>
