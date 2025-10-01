@@ -21,6 +21,21 @@
         "textAlign": "center"
       },
       "position": 0
+    },
+    {
+      "id": "1a3e96f7-df05-42cc-90c7-9d7b0842f4dc",
+      "type": "gallery",
+      "content": {
+        "images": [],
+        "layout": "grid",
+        "columns": 3
+      },
+      "styles": {
+        "padding": "2rem",
+        "margin": "0",
+        "textAlign": "left"
+      },
+      "position": 1
     }
   ],
   "metadata": {
@@ -28,7 +43,7 @@
     "seoDescription": "Comunicação visual e impressão digital em Portugal",
     "keywords": "comunicação visual, impressão digital, design gráfico"
   },
-  "version": 9,
+  "version": 10,
   "status": "published",
-  "updatedAt": "2025-09-15T09:17:34.513Z"
+  "updatedAt": "2025-10-01T21:30:31.468Z"
 }
