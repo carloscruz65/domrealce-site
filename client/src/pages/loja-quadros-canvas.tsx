@@ -55,11 +55,22 @@ export default function LojaQuadrosCanvas() {
         .replace(/\b\w/g, (l: string) => l.toUpperCase());
       
       // Count canvas images in this category
+      // Normalize for case-insensitive matching
+      const normalizeStr = (str: string) => str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      
+      const normalizedFileName = normalizeStr(fileName);
+      
       const categoryImages = (images as { images: string[] })?.images
-        ?.filter((imgPath: string) => 
-          imgPath.includes(`Quadros-em-canvas/${fileName}/`) &&
-          /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath)
-        ) || [];
+        ?.filter((imgPath: string) => {
+          const pathParts = imgPath.split('/');
+          if (pathParts.length < 4) return false;
+          const folderName = pathParts[3]; // Get category folder name
+          return normalizeStr(folderName) === normalizedFileName &&
+                 /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath);
+        }) || [];
       
       return {
         name: displayName,
