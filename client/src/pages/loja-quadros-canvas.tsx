@@ -55,20 +55,30 @@ export default function LojaQuadrosCanvas() {
         .replace(/\b\w/g, (l: string) => l.toUpperCase());
       
       // Count canvas images in this category
-      // Normalize for case-insensitive matching
+      // Special mapping for categories with name variations
+      const categoryMappings: { [key: string]: string[] } = {
+        'Arte_Contemporânea': ['Arte_Contemporânia', 'Arte_Contemporánea'],
+      };
+      
+      // Normalize for case-insensitive and accent-insensitive matching
       const normalizeStr = (str: string) => str
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '');
       
       const normalizedFileName = normalizeStr(fileName);
+      const possibleNames = categoryMappings[fileName] || [fileName];
+      const normalizedPossibleNames = possibleNames.map(normalizeStr);
       
       const categoryImages = (images as { images: string[] })?.images
         ?.filter((imgPath: string) => {
           const pathParts = imgPath.split('/');
           if (pathParts.length < 4) return false;
-          const folderName = pathParts[3]; // Get category folder name
-          return normalizeStr(folderName) === normalizedFileName &&
+          const folderName = pathParts[3];
+          const normalizedFolderName = normalizeStr(folderName);
+          return (normalizedFolderName === normalizedFileName || 
+                  normalizedPossibleNames.includes(normalizedFolderName)) &&
                  /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath);
         }) || [];
       
