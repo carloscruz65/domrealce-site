@@ -44,12 +44,25 @@ export default function LojaQuadrosCanvas() {
     queryKey: ["/api/loja/images"],
   });
 
+  // Custom display names for categories - EDITA AQUI OS NOMES QUE APARECEM NA LOJA
+  const displayNameOverrides: { [key: string]: string } = {
+    'Mármore_geométrico': 'Mármore Geométrico',
+    'Textura_mármore': 'Textura Mármore',
+    'Geometrico_Minimalista': 'Geométrico Minimalista',
+    'Animais_Cores': 'Animais Cores',
+    'Plantas_abstratas': 'Plantas Abstratas',
+    'Arte_Contemporânea': 'Arte Contemporânea',
+    // Adiciona mais categorias aqui se precisares personalizar os nomes
+  };
+
   // Filter and format canvas cover images
   const canvasCovers: CanvasCover[] = (images as { images: string[] })?.images
     ?.filter((path: string) => path.includes('Quadros-em-canvas/Capas-quadros-em-canvas'))
     ?.map((path: string) => {
       const fileName = path.split('/').pop()?.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '') || '';
-      const displayName = fileName
+      
+      // Use custom display name if available, otherwise auto-generate
+      const displayName = displayNameOverrides[fileName] || fileName
         .replace(/-/g, ' ')
         .replace(/_/g, ' ')
         .replace(/\b\w/g, (l: string) => l.toUpperCase());
