@@ -42,6 +42,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
+      // Dev mode: return mock user for localhost
+      const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1' || req.hostname.startsWith('192.168.');
+      if (process.env.NODE_ENV === 'development' && isLocalhost) {
+        return res.json({
+          id: 'dev-user',
+          email: 'dev@localhost',
+          firstName: 'Dev',
+          lastName: 'User',
+          profileImageUrl: null
+        });
+      }
+
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);

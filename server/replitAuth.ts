@@ -101,15 +101,22 @@ export async function setupAuth(app: Express) {
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
+  const getStrategyName = (hostname: string) => {
+    const domains = process.env.REPLIT_DOMAINS!.split(",");
+    // Use the first Replit domain as fallback for localhost/127.0.0.1
+    const domain = domains.includes(hostname) ? hostname : domains[0];
+    return `replitauth:${domain}`;
+  };
+
   app.get("/api/login", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    passport.authenticate(getStrategyName(req.hostname), {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
     })(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    passport.authenticate(getStrategyName(req.hostname), {
       successReturnToOrRedirect: "/",
       failureRedirect: "/api/login",
     })(req, res, next);
@@ -127,7 +134,17 @@ export async function setupAuth(app: Express) {
   });
 }
 
+// Dev auth bypass for localhost
+const isLocalhost = (hostname: string) => {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.');
+};
+
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  // Dev mode: allow access on localhost without authentication
+  if (process.env.NODE_ENV === 'development' && isLocalhost(req.hostname)) {
+    return next();
+  }
+
   const user = req.user as any;
 
   if (!req.isAuthenticated() || !user.expires_at) {
