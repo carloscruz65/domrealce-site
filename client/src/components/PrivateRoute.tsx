@@ -1,26 +1,25 @@
-import { Redirect } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
+import PrivateRoute from "@/components/PrivateRoute";
+import Login from "@/pages/Login";
 
-interface PrivateRouteProps {
-  component: React.ComponentType<any>;
-}
+// ...
 
-export default function PrivateRoute({ component: Component }: PrivateRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+<Switch>
+  <Route path="/" component={Home} />
+  <Route path="/sobre" component={Sobre} />
+  <Route path="/contactos" component={Contactos} />
+  <Route path="/login" component={Login} />
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#20B2AA] border-t-transparent rounded-full" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    // Redirect to Replit Auth login
-    window.location.href = '/api/login';
-    return null;
-  }
-
-  return <Component />;
-}
+  {/* Rotas ADMIN protegidas */}
+  <Route path="/admin" component={() => <PrivateRoute component={AdminDashboard} />} />
+  <Route path="/admin/texturas" component={() => <PrivateRoute component={AdminTexturas} />} />
+  <Route path="/admin/contactos" component={() => <PrivateRoute component={AdminContactos} />} />
+  <Route path="/admin/portfolio" component={() => <PrivateRoute component={AdminPortfolio} />} />
+  <Route path="/admin/slider" component={() => <PrivateRoute component={AdminSlider} />} />
+  <Route path="/admin/pages" component={() => <PrivateRoute component={AdminPages} />} />
+  <Route path="/admin/produtos" component={() => <PrivateRoute component={AdminProdutos} />} />
+  <Route path="/admin/noticias" component={() => <PrivateRoute component={AdminNoticias} />} />
+  <Route path="/admin/loja" component={() => <PrivateRoute component={AdminLoja} />} />
+  <Route path="/admin/encomendas" component={() => <PrivateRoute component={AdminEncomendas} />} />
+  <Route path="/admin/editor" component={() => <PrivateRoute component={AdminEditor} />} />
+  <Route path="/admin/media" component={() => <PrivateRoute component={AdminMedia} />} />
+</Switch>

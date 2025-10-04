@@ -1,22 +1,3 @@
-import React from "react";
-
-export default function AdminDashboard() {
-  const isReplit = typeof window !== "undefined" && (
-    window.location.hostname.includes("repl.co") ||
-    window.location.hostname.includes("replit.dev")
-  );
-
-  if (!isReplit) {
-    return <h1 style={{textAlign: "center", marginTop: "50px"}}>🚫 Acesso restrito</h1>;
-  }
-
-  return (
-    <div>
-      <h1>Painel de Administração</h1>
-      <p>Bem-vindo! Esta página só aparece no preview do Replit.</p>
-    </div>
-  );
-}
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
