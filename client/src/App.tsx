@@ -137,7 +137,6 @@ function Router() {
         <Route path="/admin/portfolio" component={AdminPortfolio} />
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/slider" component={AdminSlider} />
-        <Route path="/admin/pages" component={AdminPages} />
         <Route path="/admin/produtos" component={AdminProdutos} />
         <Route path="/admin/noticias" component={AdminNoticias} />
         <Route path="/admin/loja" component={AdminLoja} />
