@@ -52,7 +52,6 @@ export default function LojaQuadrosCanvas() {
     'Animais_Cores': 'Animais Cores',
     'Plantas_abstratas': 'Plantas Abstratas',
     'Arte_Contemporânea': 'Arte Contemporânea',
-    'Geométricos': 'Geométricos',
     // Adiciona mais categorias aqui se precisares personalizar os nomes
   };
 

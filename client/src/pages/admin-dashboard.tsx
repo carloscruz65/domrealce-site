@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Navigation from "@/components/navigation";
 import { ArrowLeft, Monitor, Package, FileText, Image, Users, Palette, Store, FolderOpen, Wand2, ShoppingCart } from "lucide-react";
 import { Link } from "wouter";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const adminSections = [
   {
@@ -90,8 +89,7 @@ const adminSections = [
 
 export default function AdminDashboard() {
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
       {/* Header */}
@@ -234,7 +232,6 @@ export default function AdminDashboard() {
           </Card>
         </div>
       </div>
-      </div>
-    </ProtectedRoute>
+    </div>
   );
 }

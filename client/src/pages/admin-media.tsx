@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,15 +29,21 @@ interface MediaFile {
   hash: string;
   uploadedAt: string;
 }
+
 interface MediaFolder {
+  name: string;
   path: string;
   count: number;
   lastModified: string;
+}
+
 interface SyncResult {
   newFiles: number;
   updatedFiles: number;
   ignoredFiles: number;
   errors: string[];
+}
+
 export default function AdminMedia() {
   const { toast } = useToast();
   const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
@@ -51,10 +56,12 @@ export default function AdminMedia() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [uploadProgress, setUploadProgress] = useState(0);
+
   useEffect(() => {
     loadMediaIndex();
     loadFolders();
   }, []);
+
   const loadMediaIndex = async () => {
     try {
       setLoading(true);
@@ -74,68 +81,140 @@ export default function AdminMedia() {
       setLoading(false);
     }
   };
+
   const loadFolders = async () => {
+    try {
       const response = await fetch('/api/admin/media/folders');
+      if (response.ok) {
+        const data = await response.json();
         setFolders(data.folders || []);
+      }
+    } catch (error) {
       console.error('Error loading folders:', error);
+    }
+  };
+
   const syncGlobalImages = async () => {
+    try {
       setSyncing(true);
       const response = await fetch('/api/admin/media/sync-global', {
         method: 'POST'
+      });
+
+      if (response.ok) {
         const result: SyncResult = await response.json();
         
         toast({
           title: "Sincronização Concluída",
           description: `${result.newFiles} novas, ${result.updatedFiles} atualizadas, ${result.ignoredFiles} ignoradas`,
         });
+
         if (result.errors.length > 0) {
           console.warn('Sync errors:', result.errors);
         }
+
         await loadMediaIndex();
         await loadFolders();
       } else {
         throw new Error('Falha na sincronização');
+      }
+    } catch (error) {
       console.error('Error syncing:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao sincronizar imagens",
+        variant: "destructive",
+      });
+    } finally {
       setSyncing(false);
+    }
+  };
+
   const uploadFiles = async (files: FileList) => {
+    try {
       setUploading(true);
       setUploadProgress(0);
+
       const formData = new FormData();
       Array.from(files).forEach(file => {
         formData.append('files', file);
+      });
+
       // Add current folder context
       formData.append('folder', selectedFolder === 'all' ? 'media' : selectedFolder);
+
       const response = await fetch('/api/admin/media/upload', {
         method: 'POST',
         body: formData,
+      });
+
+      if (response.ok) {
         const result = await response.json();
+        
+        toast({
           title: "Upload Concluído",
           description: `${result.uploaded} ficheiros enviados com sucesso`,
+        });
+
+        await loadMediaIndex();
+        await loadFolders();
+      } else {
         throw new Error('Falha no upload');
+      }
+    } catch (error) {
       console.error('Error uploading:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao enviar ficheiros",
+        variant: "destructive",
+      });
+    } finally {
       setUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
   const deleteFiles = async (fileKeys: string[]) => {
     if (!confirm(`Eliminar ${fileKeys.length} ficheiro(s)? Esta ação não pode ser desfeita.`)) {
       return;
+    }
+
+    try {
       const response = await fetch('/api/admin/media/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keys: fileKeys }),
+      });
+
+      if (response.ok) {
         setMediaFiles(prev => prev.filter(file => !fileKeys.includes(file.key)));
         setSelectedFiles([]);
+        
+        toast({
           title: "Sucesso",
           description: `${fileKeys.length} ficheiro(s) eliminado(s)`,
+        });
+      } else {
         throw new Error('Falha ao eliminar');
+      }
+    } catch (error) {
       console.error('Error deleting:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao eliminar ficheiros",
+        variant: "destructive",
+      });
+    }
+  };
+
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url);
     toast({
       title: "Copiado",
       description: "URL copiado para a área de transferência",
     });
+  };
+
   const filteredFiles = mediaFiles.filter(file => {
     const matchesFolder = selectedFolder === 'all' || 
       file.key.startsWith(`${selectedFolder}/`) ||
@@ -145,20 +224,26 @@ export default function AdminMedia() {
       file.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       file.alt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       file.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return matchesFolder && matchesSearch;
   });
+
   const formatFileSize = (bytes: number) => {
     const sizes = ['B', 'KB', 'MB', 'GB'];
     if (bytes === 0) return '0 B';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
   const getFileIcon = (file: MediaFile) => {
     if (file.type.startsWith('image/')) {
       return <FileImage className="h-5 w-5 text-blue-400" />;
+    }
     return <FileImage className="h-5 w-5 text-gray-400" />;
+  };
+
   if (loading) {
     return (
-    <ProtectedRoute>
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         <Navigation />
         <div className="container mx-auto px-4 py-16 mt-16">
@@ -170,6 +255,7 @@ export default function AdminMedia() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
@@ -184,6 +270,7 @@ export default function AdminMedia() {
                 Dashboard
               </Button>
             </Link>
+
             <div className="flex items-center gap-2">
               <Button
                 onClick={syncGlobalImages}
@@ -194,6 +281,8 @@ export default function AdminMedia() {
               >
                 <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
                 {syncing ? 'Sincronizando...' : 'Sincronizar Imagens'}
+              </Button>
+
               <input
                 type="file"
                 multiple
@@ -202,14 +291,20 @@ export default function AdminMedia() {
                 className="hidden"
                 id="file-upload"
               />
+              <Button
                 asChild
+                size="sm"
                 className="gap-2 bg-blue-600 hover:bg-blue-700"
                 disabled={uploading}
+              >
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <Upload className="h-4 w-4" />
                   {uploading ? 'Enviando...' : 'Upload'}
                 </label>
+              </Button>
             </div>
+          </div>
+
           <div className="flex items-center gap-3 mb-4">
             <Image className="h-6 w-6 text-[#FFD700]" />
             <h1 className="text-2xl font-bold text-white">
@@ -218,6 +313,8 @@ export default function AdminMedia() {
             <Badge variant="secondary" className="bg-[#FFD700] text-black">
               {filteredFiles.length} ficheiros
             </Badge>
+          </div>
+
           {uploading && (
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-2">
@@ -225,7 +322,11 @@ export default function AdminMedia() {
                 <span className="text-sm text-gray-300">A enviar ficheiros...</span>
               </div>
               <Progress value={uploadProgress} className="h-2" />
+            </div>
           )}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-6">
@@ -261,10 +362,15 @@ export default function AdminMedia() {
                 ))}
               </CardContent>
             </Card>
+
             {/* Sync Info */}
             <Card className="bg-[#111111] border-[#333]">
+              <CardHeader>
+                <CardTitle className="text-[#FFD700] text-lg flex items-center gap-2">
                   <Settings className="h-5 w-5" />
                   Sincronização
+                </CardTitle>
+              </CardHeader>
               <CardContent>
                 <div className="space-y-3 text-sm text-gray-300">
                   <div className="flex items-start gap-2">
@@ -280,15 +386,22 @@ export default function AdminMedia() {
                   </div>
                   
                   <Separator className="bg-[#333]" />
+                  
                   <div>
                     <p className="font-medium mb-1">Última sincronização:</p>
                     <p className="text-xs text-gray-400">
                       {new Date().toLocaleString('pt-PT')}
                     </p>
+                  </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Controls */}
+            <Card className="bg-[#111111] border-[#333] mb-6">
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
@@ -300,6 +413,9 @@ export default function AdminMedia() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10 bg-[#222] border-[#444] text-white"
                       />
+                    </div>
+                  </div>
+
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
@@ -309,6 +425,7 @@ export default function AdminMedia() {
                     >
                       {viewMode === 'grid' ? 'Lista' : 'Grid'}
                     </Button>
+
                     {selectedFiles.length > 0 && (
                       <Button
                         onClick={() => deleteFiles(selectedFiles)}
@@ -320,6 +437,11 @@ export default function AdminMedia() {
                         Eliminar ({selectedFiles.length})
                       </Button>
                     )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Files Grid/List */}
             {filteredFiles.length === 0 ? (
               <Card className="bg-[#111111] border-[#333]">
@@ -358,11 +480,16 @@ export default function AdminMedia() {
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
+                        <Button
+                          size="sm"
                           variant="destructive"
                           className="h-6 w-6 p-0"
                           onClick={() => deleteFiles([file.key])}
+                        >
                           <Trash2 className="h-3 w-3" />
+                        </Button>
                       </div>
+
                       <div className="absolute top-2 left-2">
                         <input
                           type="checkbox"
@@ -375,6 +502,9 @@ export default function AdminMedia() {
                             }
                           }}
                           className="w-4 h-4 rounded border-gray-300"
+                        />
+                      </div>
+                    </div>
                     
                     <CardContent className="p-3">
                       <h3 className="text-white font-medium text-sm mb-1 truncate" title={file.name}>
@@ -387,16 +517,23 @@ export default function AdminMedia() {
                         <span className="text-xs text-gray-400">
                           {formatFileSize(file.size)}
                         </span>
+                      </div>
                       {file.dimensions && (
                         <p className="text-xs text-gray-400">
                           {file.dimensions.width} × {file.dimensions.height}
                         </p>
+                      )}
                       {file.pageRoute && (
                         <p className="text-xs text-blue-400 truncate">
                           → {file.pageRoute}
+                        </p>
+                      )}
                     </CardContent>
                   </Card>
+                ))}
+              </div>
             ) : (
+              <Card className="bg-[#111111] border-[#333]">
                 <CardContent className="p-0">
                   <div className="divide-y divide-[#333]">
                     {filteredFiles.map((file) => (
@@ -427,6 +564,7 @@ export default function AdminMedia() {
                               getFileIcon(file)
                             )}
                           </div>
+                          
                           <div className="flex-1 min-w-0">
                             <h3 className="text-white font-medium truncate">{file.name}</h3>
                             <div className="flex items-center gap-2 mt-1">
@@ -446,6 +584,9 @@ export default function AdminMedia() {
                               <p className="text-xs text-blue-400 mt-1">
                                 Página: {file.pageRoute}
                               </p>
+                            )}
+                          </div>
+                          
                           <div className="flex items-center gap-2">
                             <Button
                               size="sm"
@@ -455,10 +596,25 @@ export default function AdminMedia() {
                             >
                               <Copy className="h-4 w-4" />
                             </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
                               onClick={() => deleteFiles([file.key])}
                               className="border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
+                            >
                               <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
+          </div>
+        </div>
+      </div>
     </div>
   );
+}

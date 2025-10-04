@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,15 +17,18 @@ interface SlideData {
   title: string;
   text: string;
 }
+
 export default function AdminSlider() {
   const { toast } = useToast();
   const [slides, setSlides] = useState<SlideData[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ image: "", title: "", text: "" });
+
   useEffect(() => {
     fetchSlides();
   }, []);
+
   const fetchSlides = async () => {
     try {
       setLoading(true);
@@ -44,7 +46,10 @@ export default function AdminSlider() {
       setLoading(false);
     }
   };
+
   const syncSliderImages = async () => {
+    try {
+      setLoading(true);
       const response = await fetch('/api/slider/images');
       if (response.ok) {
         await fetchSlides();
@@ -55,9 +60,20 @@ export default function AdminSlider() {
       } else {
         throw new Error('Falha na sincronização');
       }
+    } catch (error) {
       console.error('Error syncing images:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao sincronizar imagens",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const saveSlide = async (slideData: Omit<SlideData, 'id'>, slideId?: number) => {
+    try {
       const url = slideId ? `/api/admin/slider/${slideId}` : '/api/admin/slider';
       const method = slideId ? 'PUT' : 'POST';
       
@@ -65,29 +81,68 @@ export default function AdminSlider() {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(slideData),
+      });
+
+      if (response.ok) {
+        await fetchSlides();
         setEditingId(null);
         setEditForm({ image: "", title: "", text: "" });
+        toast({
+          title: "Sucesso",
           description: slideId ? "Slide atualizado" : "Slide criado",
+        });
+      } else {
         throw new Error('Falha ao salvar slide');
+      }
+    } catch (error) {
       console.error('Error saving slide:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao salvar slide",
+        variant: "destructive",
+      });
+    }
+  };
+
   const deleteSlide = async (slideId: number) => {
     if (!confirm('Tem certeza que deseja remover este slide?')) return;
+
+    try {
       const response = await fetch(`/api/admin/slider/${slideId}`, {
         method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchSlides();
+        toast({
+          title: "Sucesso",
           description: "Slide removido",
+        });
+      } else {
         throw new Error('Falha ao remover slide');
+      }
+    } catch (error) {
       console.error('Error deleting slide:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao remover slide",
+        variant: "destructive",
+      });
+    }
+  };
+
   const startEdit = (slide: SlideData) => {
     setEditingId(slide.id);
     setEditForm({ image: slide.image, title: slide.title, text: slide.text });
+  };
+
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({ image: "", title: "", text: "" });
+  };
+
   if (loading) {
     return (
-    <ProtectedRoute>
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         <Navigation />
         <div className="container mx-auto px-4 py-16 mt-16">
@@ -99,9 +154,11 @@ export default function AdminSlider() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
+      
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -112,12 +169,16 @@ export default function AdminSlider() {
                 Voltar à Homepage
               </Button>
             </Link>
+          </div>
           <h1 className="text-4xl font-bold text-white mb-4">
             Administração do <span className="text-[#FFD700]">Slider</span>
           </h1>
           <p className="text-gray-300 text-lg">
             Gere as imagens e textos do slider da página inicial
           </p>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -129,12 +190,23 @@ export default function AdminSlider() {
             </CardContent>
           </Card>
           
+          <Card className="bg-[#111111] border-[#333]">
+            <CardContent className="p-6 text-center">
               <Image className="h-8 w-8 text-[#00d4aa] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">5s</div>
               <div className="text-sm text-gray-400">Tempo por Slide</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-[#111111] border-[#333]">
+            <CardContent className="p-6 text-center">
               <Plus className="h-8 w-8 text-[#4dabf7] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">100vh</div>
               <div className="text-sm text-gray-400">Altura Total</div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Action Buttons */}
         <div className="flex gap-4 mb-8">
           <Button 
@@ -145,11 +217,18 @@ export default function AdminSlider() {
             <Plus className="h-4 w-4 mr-2" />
             Adicionar Novo Slide
           </Button>
+          
+          <Button 
             onClick={syncSliderImages}
             variant="outline"
             className="border-[#00d4aa] text-[#00d4aa] hover:bg-[#00d4aa] hover:text-black"
+            disabled={loading}
+          >
             <Image className="h-4 w-4 mr-2" />
             Detectar Imagens Automaticamente
+          </Button>
+        </div>
+
         {/* Add New Slide */}
         {editingId === -1 && (
           <Card className="bg-[#111111] border-[#333] mb-8">
@@ -167,6 +246,7 @@ export default function AdminSlider() {
                   />
                 </div>
               </div>
+              <div>
                 <Label htmlFor="new-title" className="text-white">Título</Label>
                 <Input
                   id="new-title"
@@ -175,12 +255,17 @@ export default function AdminSlider() {
                   placeholder="Título do slide"
                   className="bg-[#222] border-[#444] text-white mt-1"
                 />
+              </div>
+              <div>
                 <Label htmlFor="new-text" className="text-white">Descrição</Label>
                 <Textarea
                   id="new-text"
                   value={editForm.text}
                   onChange={(e) => setEditForm({ ...editForm, text: e.target.value })}
                   placeholder="Texto descritivo do slide"
+                  className="bg-[#222] border-[#444] text-white mt-1"
+                />
+              </div>
               <div className="flex gap-2">
                 <Button 
                   onClick={() => saveSlide(editForm)}
@@ -192,15 +277,27 @@ export default function AdminSlider() {
                 <Button onClick={cancelEdit} variant="outline">
                   <X className="w-4 h-4 mr-2" />
                   Cancelar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         )}
+
         {/* Add Button */}
         {editingId !== -1 && (
+          <Card className="bg-[#111111] border-[#333] mb-8">
+            <CardContent className="p-6 text-center">
               <Button 
                 onClick={() => setEditingId(-1)}
                 className="bg-[#FFD700] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Novo Slide
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Slides List */}
         <Card className="bg-[#111111] border-[#333]">
           <CardHeader>
@@ -217,6 +314,7 @@ export default function AdminSlider() {
                 <Monitor className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-400 text-lg">Nenhum slide encontrado</p>
                 <p className="text-gray-500 text-sm">Adicione slides para a página inicial</p>
+              </div>
             ) : (
               <div className="space-y-6">
                 {slides.map((slide, index) => (
@@ -236,16 +334,22 @@ export default function AdminSlider() {
                             />
                           </div>
                         </div>
+                        <div>
                           <Label className="text-white">Título</Label>
                           <Input
                             value={editForm.title}
                             onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                             className="bg-[#333] border-[#444] text-white mt-1"
                           />
+                        </div>
+                        <div>
                           <Label className="text-white">Descrição</Label>
                           <Textarea
                             value={editForm.text}
                             onChange={(e) => setEditForm({ ...editForm, text: e.target.value })}
+                            className="bg-[#333] border-[#444] text-white mt-1"
+                          />
+                        </div>
                         <div className="flex gap-2">
                           <Button 
                             onClick={() => saveSlide(editForm, slide.id)}
@@ -257,6 +361,8 @@ export default function AdminSlider() {
                           <Button onClick={cancelEdit} variant="outline">
                             <X className="w-4 h-4 mr-2" />
                             Cancelar
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="flex">
@@ -265,6 +371,8 @@ export default function AdminSlider() {
                             src={slide.image} 
                             alt={slide.title}
                             className="w-full h-full object-cover"
+                          />
+                        </div>
                         <div className="flex-1 p-6">
                           <div className="flex items-start justify-between">
                             <div>
@@ -286,14 +394,25 @@ export default function AdminSlider() {
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
+                              <Button
+                                size="sm"
                                 variant="destructive"
                                 onClick={() => deleteSlide(slide.id)}
+                              >
                                 <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 ))}
+              </div>
             )}
           </CardContent>
         </Card>
+      </div>
     </div>
   );
+}

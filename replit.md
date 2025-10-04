@@ -2,17 +2,7 @@
 
 This is a full-stack web application for DOMREALCE, a Portuguese visual communication and digital printing company. The application serves as a company portfolio and business website showcasing services like digital printing, vinyl cutting, vehicle wrapping, and custom signage. Built with a modern tech stack including React, Express, TypeScript, and PostgreSQL, it follows a monorepo structure with separate client and server directories.
 
-## Recent Changes (October 2025)
-- **Security Enhancement - Replit Authentication**: Reactivated Replit authentication system to protect all administrative modifications
-  - Replit Auth (OpenID Connect) with session-based authentication
-  - POST/PUT/DELETE operations on `/api/admin/*` routes require authentication
-  - GET operations remain public for content display to visitors
-  - Visual editor, media upload, and object storage operations protected
-  - Session management via PostgreSQL with 7-day TTL
-  - `isAuthenticated` middleware enforces login on protected routes
-  - Login flow: `/api/login`, logout: `/api/logout`
-
-## Previous Changes (August 2025)
+## Recent Changes (August 2025)
 - **Service Detail Pages**: Created 7 comprehensive service detail pages with professional layouts:
   - Design Gráfico (/servico-design-grafico)
   - Impressão Digital (/servico-impressao-digital)
@@ -72,15 +62,8 @@ Preferred communication style: Simple, everyday language.
 - **Code Quality**: TypeScript strict mode for type safety
 
 ## Security and Authentication
-- **Authentication System**: Replit Authentication (OAuth-based OpenID Connect) for secure admin access
-- **Session Management**: Express sessions with PostgreSQL store (connect-pg-simple) with 7-day TTL
-- **Protected Routes**: Administrative modification endpoints require authentication via `isAuthenticated` middleware
-  - Admin API write operations: POST/PUT/DELETE on `/api/admin/*` (slider, produtos, noticias, loja, pages)
-  - Visual Editor: `/api/editor/*` (page content management)
-  - Media Manager: `/api/media/*` (upload, sync, delete)
-  - Object Storage: `/api/objects/upload`, `/api/images/normalize`
-- **Public Access**: GET operations on admin routes remain publicly accessible for content display
-- **Login Flow**: Users access `/api/login` to authenticate via Replit, `/api/logout` to sign out
+- **Session Management**: Express sessions with PostgreSQL store (connect-pg-simple)
+- **Password Handling**: Planned implementation for user authentication
 - **CORS**: Configured for development and production environments
 
 # External Dependencies

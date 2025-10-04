@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
@@ -12,6 +11,7 @@ export default function AdminTexturas() {
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastResult, setLastResult] = useState<any>(null);
+
   const handleAutoGenerate = async () => {
     setIsGenerating(true);
     try {
@@ -21,29 +21,34 @@ export default function AdminTexturas() {
       
       const result = await response.json();
       setLastResult(result);
+      
       if (response.ok) {
         toast({
           title: "Geração automática concluída!",
           description: `${result.coversGenerated?.length || 0} novas capas geradas.`,
         });
       } else {
+        toast({
           title: "Erro na geração",
           description: result.error || "Erro desconhecido",
           variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Erro",
         description: "Falha na comunicação com o servidor",
         variant: "destructive",
+      });
     } finally {
       setIsGenerating(false);
     }
   };
+
   return (
-    <ProtectedRoute>
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
+      
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -63,6 +68,7 @@ export default function AdminTexturas() {
           </p>
         </div>
       </div>
+
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -89,11 +95,14 @@ export default function AdminTexturas() {
                       A Gerar Capas...
                     </>
                   ) : (
+                    <>
                       <RefreshCw className="w-5 h-5 mr-2" />
                       Gerar Capas Automaticamente
+                    </>
                   )}
                 </Button>
               </div>
+
               {/* Instructions */}
               <div className="bg-[#0a0a0a] rounded-lg p-6 border border-[#333]">
                 <h3 className="text-lg font-semibold text-[#FFD700] mb-4">Como Funciona:</h3>
@@ -104,8 +113,10 @@ export default function AdminTexturas() {
                   <li>Clique no botão "Gerar Capas Automaticamente"</li>
                   <li>O sistema detecta automaticamente novas categorias e cria as capas</li>
                 </ol>
+              </div>
             </CardContent>
           </Card>
+
           {/* Results */}
           {lastResult && (
             <Card className="bg-[#111111] border-[#333]">
@@ -113,6 +124,7 @@ export default function AdminTexturas() {
                 <h3 className="text-xl font-bold text-[#FFD700] mb-4">
                   Último Resultado
                 </h3>
+                
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Categories Found */}
                   <div>
@@ -128,29 +140,45 @@ export default function AdminTexturas() {
                       ))}
                     </div>
                   </div>
+
                   {/* Generated Covers */}
+                  <div>
+                    <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
                       {lastResult.coversGenerated?.length > 0 ? (
                         <CheckCircle className="w-5 h-5 text-green-500" />
                       ) : (
                         <AlertCircle className="w-5 h-5 text-yellow-500" />
                       )}
                       Capas Geradas ({lastResult.coversGenerated?.length || 0})
+                    </h4>
+                    <div className="space-y-2">
+                      {lastResult.coversGenerated?.length > 0 ? (
                         lastResult.coversGenerated.map((cover: any) => (
                           <div key={cover.category} className="bg-[#0a0a0a] p-3 rounded border border-[#333]">
                             <div className="text-[#FFD700] font-semibold">{cover.category}</div>
                             <div className="text-xs text-gray-400">Fonte: {cover.source}</div>
                           </div>
                         ))
+                      ) : (
                         <div className="bg-[#0a0a0a] p-3 rounded border border-[#333] text-center">
                           <span className="text-gray-400">Todas as capas já existem</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
                 <div className="mt-6 p-4 bg-[#0a0a0a] rounded border border-[#333]">
                   <p className="text-sm text-gray-300">
                     <strong>Resultado:</strong> {lastResult.message}
                   </p>
+                </div>
               </CardContent>
             </Card>
           )}
+        </div>
+      </div>
+
       <Footer />
     </div>
   );

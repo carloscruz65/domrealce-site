@@ -13,7 +13,6 @@ import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 interface ProductForm {
   titulo: string;

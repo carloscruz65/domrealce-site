@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,7 @@ interface GalleryImage {
   title: string;
   description: string;
 }
+
 export default function AdminPortfolio() {
   const { toast } = useToast();
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -24,9 +24,11 @@ export default function AdminPortfolio() {
   const [selectedCategory, setSelectedCategory] = useState<string>("todas");
   const [searchTerm, setSearchTerm] = useState("");
   const [deleting, setDeleting] = useState<string[]>([]);
+
   useEffect(() => {
     fetchImages();
   }, []);
+
   const fetchImages = async () => {
     try {
       setLoading(true);
@@ -40,6 +42,7 @@ export default function AdminPortfolio() {
         title: generateTitle(filename),
         description: `Projeto realizado pela DOMREALCE - ${generateTitle(filename)}`
       }));
+      
       setImages(processedImages);
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -52,25 +55,37 @@ export default function AdminPortfolio() {
       setLoading(false);
     }
   };
+
   const getCategoryFromPath = (filename: string): string => {
     const parts = filename.split('/');
     if (parts.length >= 2) {
       return parts[1]; // portfolio/Categoria/file.jpg -> Categoria
+    }
     return "Outros";
+  };
+
   const generateTitle = (filename: string): string => {
+    const parts = filename.split('/');
     const name = parts[parts.length - 1];
     return name.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '').replace(/[_-]/g, ' ');
+  };
+
   const deleteImage = async (filename: string) => {
     if (!confirm(`Tem certeza que deseja remover a imagem "${generateTitle(filename)}"?`)) {
       return;
+    }
+
     setDeleting(prev => [...prev, filename]);
     
+    try {
       const response = await fetch('/api/admin/portfolio/delete', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ filename }),
+      });
+
       if (response.ok) {
         setImages(prev => prev.filter(img => img.filename !== filename));
         toast({
@@ -80,27 +95,40 @@ export default function AdminPortfolio() {
       } else {
         throw new Error('Falha ao remover imagem');
       }
+    } catch (error) {
       console.error('Error deleting image:', error);
+      toast({
+        title: "Erro",
         description: "Falha ao remover imagem",
+        variant: "destructive",
+      });
+    } finally {
       setDeleting(prev => prev.filter(f => f !== filename));
+    }
+  };
+
   const getCategories = () => {
     const categories = Array.from(new Set(images.map(img => img.category)));
     return ["todas", ...categories.sort()];
+  };
+
   const filteredImages = images.filter(img => {
     const matchesCategory = selectedCategory === "todas" || img.category === selectedCategory;
     const matchesSearch = img.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          img.category.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
   const getCategoryStats = () => {
     const stats: Record<string, number> = {};
     images.forEach(img => {
       stats[img.category] = (stats[img.category] || 0) + 1;
     });
     return stats;
+  };
+
   if (loading) {
     return (
-    <ProtectedRoute>
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         <Navigation />
         <div className="container mx-auto px-4 py-16 mt-16">
@@ -112,10 +140,13 @@ export default function AdminPortfolio() {
       </div>
     );
   }
+
   const stats = getCategoryStats();
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
+      
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -126,12 +157,16 @@ export default function AdminPortfolio() {
                 Voltar ao Portfólio
               </Button>
             </Link>
+          </div>
           <h1 className="text-4xl font-bold text-white mb-4">
             Administração do <span className="text-[#FFD700]">Portfólio</span>
           </h1>
           <p className="text-gray-300 text-lg">
             Gere as imagens do portfólio da DOMREALCE
           </p>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -143,15 +178,31 @@ export default function AdminPortfolio() {
             </CardContent>
           </Card>
           
+          <Card className="bg-[#111111] border-[#333]">
+            <CardContent className="p-6 text-center">
               <FolderOpen className="h-8 w-8 text-[#00d4aa] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{Object.keys(stats).length}</div>
               <div className="text-sm text-gray-400">Categorias</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-[#111111] border-[#333]">
+            <CardContent className="p-6 text-center">
               <AlertCircle className="h-8 w-8 text-[#ff6b6b] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{Math.max(...Object.values(stats), 0)}</div>
               <div className="text-sm text-gray-400">Maior Categoria</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-[#111111] border-[#333]">
+            <CardContent className="p-6 text-center">
               <Upload className="h-8 w-8 text-[#4dabf7] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">Object Storage</div>
               <div className="text-sm text-gray-400">Localização</div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Controls */}
         <Card className="bg-[#111111] border-[#333] mb-8">
           <CardHeader>
@@ -173,6 +224,7 @@ export default function AdminPortfolio() {
                 </div>
               </div>
               
+              <div>
                 <Label className="text-white mb-2 block">Categoria</Label>
                 <select
                   value={selectedCategory}
@@ -185,14 +237,19 @@ export default function AdminPortfolio() {
                     </option>
                   ))}
                 </select>
+              </div>
             </div>
           </CardContent>
         </Card>
+
         {/* Upload Info */}
+        <Card className="bg-[#111111] border-[#333] mb-8">
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
               <div className="bg-[#FFD700] p-3 rounded-lg">
                 <Upload className="h-6 w-6 text-black" />
+              </div>
+              <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Como adicionar novas imagens</h3>
                 <p className="text-gray-300 mb-4">
                   Para adicionar novas imagens ao portfólio, vá ao Object Storage do Replit e crie/use a pasta "portfolio" dentro de "public".
@@ -202,19 +259,29 @@ export default function AdminPortfolio() {
                     <strong>Estrutura recomendada:</strong><br />
                     public/portfolio/NomeCategoria/imagem.jpg
                   </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Images Grid */}
         <Card className="bg-[#111111] border-[#333]">
+          <CardHeader>
             <CardTitle className="text-[#FFD700]">
               Imagens do Portfólio 
               <Badge variant="secondary" className="ml-2 bg-[#FFD700] text-black">
                 {filteredImages.length} imagens
               </Badge>
             </CardTitle>
+          </CardHeader>
+          <CardContent>
             {filteredImages.length === 0 ? (
               <div className="text-center py-12">
                 <Image className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-400 text-lg">Nenhuma imagem encontrada</p>
                 <p className="text-gray-500 text-sm">Ajuste os filtros ou adicione imagens ao portfólio</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredImages.map((image) => (
@@ -252,8 +319,14 @@ export default function AdminPortfolio() {
                       <p className="text-gray-400 text-xs">
                         {image.filename.split('/').pop()}
                       </p>
+                    </div>
                   </div>
                 ))}
+              </div>
             )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
+}
