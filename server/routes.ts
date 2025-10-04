@@ -21,8 +21,8 @@ import {
 } from "./visual-editor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup Replit authentication (currently disabled - admin area is open)
-  // await setupAuth(app);
+  // Setup Replit authentication
+  await setupAuth(app);
   
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
@@ -39,21 +39,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage service
   const objectStorageService = new ObjectStorageService();
 
-  // Auth routes (disabled - authentication currently not enforced)
-  // app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-  //   try {
-  //     const userId = req.user.claims.sub;
-  //     const user = await storage.getUser(userId);
-  //     res.json(user);
-  //   } catch (error) {
-  //     console.error("Error fetching user:", error);
-  //     res.status(500).json({ message: "Failed to fetch user" });
-  //   }
-  // });
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
 
   // Object Storage endpoints for Visual Editor
   // Upload endpoint for getting presigned URLs
-  app.post("/api/objects/upload", async (req, res) => {
+  app.post("/api/objects/upload", isAuthenticated, async (req, res) => {
     try {
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       res.json({ uploadURL });
@@ -64,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Normalize uploaded image path
-  app.post("/api/images/normalize", async (req, res) => {
+  app.post("/api/images/normalize", isAuthenticated, async (req, res) => {
     if (!req.body.imageURL) {
       return res.status(400).json({ error: "imageURL is required" });
     }
@@ -1046,7 +1046,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/slider", async (req, res) => {
+  app.post("/api/admin/slider", isAuthenticated, async (req, res) => {
     try {
       const slideData = insertSlideSchema.parse(req.body);
       const slide = await storage.createSlide(slideData);
@@ -1057,7 +1057,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/slider/:id", async (req, res) => {
+  app.put("/api/admin/slider/:id", isAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
       const slideData = insertSlideSchema.parse(req.body);
@@ -1069,7 +1069,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/slider/:id", async (req, res) => {
+  app.delete("/api/admin/slider/:id", isAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteSlide(id);
@@ -1230,7 +1230,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // Admin Page Config routes
   // Endpoint for EditableConfigText component to save individual configurations
   // Must be BEFORE the generic /:page route to avoid conflicts
-  app.post("/api/admin/pages/:page/config", async (req, res) => {
+  app.post("/api/admin/pages/:page/config", isAuthenticated, async (req, res) => {
     try {
       const { page } = req.params;
       const { section, element, value } = req.body;
