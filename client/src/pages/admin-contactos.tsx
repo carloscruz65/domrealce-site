@@ -7,6 +7,7 @@ import { Download, Mail, Phone, Building2, Calendar, MessageSquare, FileText } f
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { type Contact } from "@shared/schema";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function AdminContactos() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -72,22 +73,20 @@ export default function AdminContactos() {
 
   const stats = getEmailStats();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white">
-        <Navigation />
-        <div className="container mx-auto px-4 py-16 mt-16">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#FFD700] mx-auto"></div>
-            <p className="mt-4 text-gray-400">A carregar contactos...</p>
+  return (
+    <ProtectedRoute>
+      {loading ? (
+        <div className="min-h-screen bg-[#0a0a0a] text-white">
+          <Navigation />
+          <div className="container mx-auto px-4 py-16 mt-16">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#FFD700] mx-auto"></div>
+              <p className="mt-4 text-gray-400">A carregar contactos...</p>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      ) : (
+        <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
       {/* Header */}
@@ -299,7 +298,9 @@ export default function AdminContactos() {
 
       </div>
 
-      <Footer />
-    </div>
+          <Footer />
+        </div>
+      )}
+    </ProtectedRoute>
   );
 }

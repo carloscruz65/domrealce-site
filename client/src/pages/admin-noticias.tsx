@@ -19,7 +19,6 @@ interface NewsForm {
   imagem: string;
   data: string;
 }
-
 export default function AdminNoticias() {
   const { toast } = useToast();
   const [noticias, setNoticias] = useState<News[]>([]);
@@ -28,11 +27,9 @@ export default function AdminNoticias() {
   const [editForm, setEditForm] = useState<NewsForm>({
     titulo: "", descricao: "", categoria: "", imagem: "", data: ""
   });
-
   useEffect(() => {
     fetchNoticias();
   }, []);
-
   const fetchNoticias = async () => {
     try {
       setLoading(true);
@@ -50,9 +47,7 @@ export default function AdminNoticias() {
       setLoading(false);
     }
   };
-
   const saveNoticia = async (noticiaData: NewsForm, noticiaId?: string) => {
-    try {
       const url = noticiaId ? `/api/admin/noticias/${noticiaId}` : '/api/admin/noticias';
       const method = noticiaId ? 'PUT' : 'POST';
       
@@ -63,8 +58,6 @@ export default function AdminNoticias() {
           ...noticiaData,
           data: new Date(noticiaData.data).toISOString()
         }),
-      });
-
       if (response.ok) {
         await fetchNoticias();
         setEditingId(null);
@@ -76,72 +69,36 @@ export default function AdminNoticias() {
       } else {
         throw new Error('Falha ao salvar notícia');
       }
-    } catch (error) {
       console.error('Error saving noticia:', error);
-      toast({
-        title: "Erro",
         description: "Falha ao salvar notícia",
-        variant: "destructive",
-      });
-    }
-  };
-
   const deleteNoticia = async (noticiaId: string) => {
     if (!confirm('Tem certeza que deseja remover esta notícia?')) return;
-
-    try {
       const response = await fetch(`/api/admin/noticias/${noticiaId}`, {
         method: 'DELETE',
-      });
-
-      if (response.ok) {
-        await fetchNoticias();
-        toast({
-          title: "Sucesso",
           description: "Notícia removida",
-        });
-      } else {
         throw new Error('Falha ao remover notícia');
-      }
-    } catch (error) {
       console.error('Error deleting noticia:', error);
-      toast({
-        title: "Erro",
         description: "Falha ao remover notícia",
-        variant: "destructive",
-      });
-    }
-  };
-
   const resetForm = () => {
     setEditForm({
       titulo: "", descricao: "", categoria: "", imagem: "", data: ""
     });
-  };
-
   const startEdit = (noticia: News) => {
     setEditingId(noticia.id);
-    setEditForm({
       titulo: noticia.titulo,
       descricao: noticia.descricao,
       categoria: noticia.categoria,
       imagem: noticia.imagem,
       data: noticia.data ? new Date(noticia.data).toISOString().split('T')[0] : ""
-    });
-  };
-
   const cancelEdit = () => {
     setEditingId(null);
     resetForm();
-  };
-
   const formatDate = (date: Date | null) => {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('pt-PT');
-  };
-
   if (loading) {
     return (
+    <ProtectedRoute>
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         <Navigation />
         <div className="container mx-auto px-4 py-16 mt-16">
@@ -153,11 +110,9 @@ export default function AdminNoticias() {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
-      
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -168,16 +123,12 @@ export default function AdminNoticias() {
                 Voltar às Notícias
               </Button>
             </Link>
-          </div>
           <h1 className="text-4xl font-bold text-white mb-4">
             Administração de <span className="text-[#FFD700]">Notícias</span>
           </h1>
           <p className="text-gray-300 text-lg">
             Gere as notícias e artigos do site
           </p>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -189,27 +140,14 @@ export default function AdminNoticias() {
             </CardContent>
           </Card>
           
-          <Card className="bg-[#111111] border-[#333]">
-            <CardContent className="p-6 text-center">
               <Calendar className="h-8 w-8 text-[#00d4aa] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">
                 {noticias.filter(n => n.data && new Date(n.data) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}
               </div>
               <div className="text-sm text-gray-400">Últimos 30 dias</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-[#111111] border-[#333]">
-            <CardContent className="p-6 text-center">
               <Tag className="h-8 w-8 text-[#4dabf7] mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">
                 {new Set(noticias.map(n => n.categoria)).size}
-              </div>
               <div className="text-sm text-gray-400">Categorias</div>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Add New News */}
         {editingId === "new" && (
           <Card className="bg-[#111111] border-[#333] mb-8">
@@ -226,35 +164,21 @@ export default function AdminNoticias() {
                   placeholder="Título da notícia"
                   className="bg-[#222] border-[#444] text-white mt-1"
                 />
-              </div>
-              <div>
                 <Label htmlFor="new-categoria" className="text-white">Categoria</Label>
-                <Input
                   id="new-categoria"
                   value={editForm.categoria}
                   onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
                   placeholder="Categoria da notícia"
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
-              <div>
                 <Label htmlFor="new-data" className="text-white">Data</Label>
-                <Input
                   id="new-data"
                   type="date"
                   value={editForm.data}
                   onChange={(e) => setEditForm({ ...editForm, data: e.target.value })}
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
-              <div>
                 <ImageUploadField
                   label="Imagem da Notícia"
                   value={editForm.imagem}
                   onChange={(value) => setEditForm({ ...editForm, imagem: value })}
                   placeholder="https://exemplo.com/noticia.jpg ou faça upload"
-                />
-              </div>
               <div className="md:col-span-2">
                 <Label htmlFor="new-descricao" className="text-white">Descrição</Label>
                 <Textarea
@@ -263,9 +187,6 @@ export default function AdminNoticias() {
                   onChange={(e) => setEditForm({ ...editForm, descricao: e.target.value })}
                   placeholder="Conteúdo da notícia"
                   rows={6}
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
               <div className="md:col-span-2 flex gap-2">
                 <Button 
                   onClick={() => saveNoticia(editForm)}
@@ -277,27 +198,15 @@ export default function AdminNoticias() {
                 <Button onClick={cancelEdit} variant="outline">
                   <X className="w-4 h-4 mr-2" />
                   Cancelar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         )}
-
         {/* Add Button */}
         {editingId !== "new" && (
-          <Card className="bg-[#111111] border-[#333] mb-8">
-            <CardContent className="p-6 text-center">
               <Button 
                 onClick={() => setEditingId("new")}
                 className="bg-[#FFD700] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Nova Notícia
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
         {/* News List */}
         <Card className="bg-[#111111] border-[#333]">
           <CardHeader>
@@ -314,7 +223,6 @@ export default function AdminNoticias() {
                 <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-400 text-lg">Nenhuma notícia encontrada</p>
                 <p className="text-gray-500 text-sm">Adicione notícias para o site</p>
-              </div>
             ) : (
               <div className="space-y-6">
                 {noticias.map((noticia) => (
@@ -330,31 +238,18 @@ export default function AdminNoticias() {
                               className="bg-[#333] border-[#444] text-white mt-1"
                             />
                           </div>
-                          <div>
                             <Label className="text-white">Categoria</Label>
-                            <Input
                               value={editForm.categoria}
                               onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
-                              className="bg-[#333] border-[#444] text-white mt-1"
-                            />
-                          </div>
-                          <div>
                             <Label className="text-white">Data</Label>
-                            <Input
                               type="date"
                               value={editForm.data}
                               onChange={(e) => setEditForm({ ...editForm, data: e.target.value })}
-                              className="bg-[#333] border-[#444] text-white mt-1"
-                            />
-                          </div>
-                          <div>
                             <ImageUploadField
                               label="Imagem da Notícia"
                               value={editForm.imagem}
                               onChange={(value) => setEditForm({ ...editForm, imagem: value })}
                               placeholder="https://exemplo.com/noticia.jpg ou faça upload"
-                            />
-                          </div>
                         </div>
                         <div>
                           <Label className="text-white">Descrição</Label>
@@ -364,7 +259,6 @@ export default function AdminNoticias() {
                             rows={4}
                             className="bg-[#333] border-[#444] text-white mt-1"
                           />
-                        </div>
                         <div className="flex gap-2">
                           <Button 
                             onClick={() => saveNoticia(editForm, noticia.id)}
@@ -376,8 +270,6 @@ export default function AdminNoticias() {
                           <Button onClick={cancelEdit} variant="outline">
                             <X className="w-4 h-4 mr-2" />
                             Cancelar
-                          </Button>
-                        </div>
                       </div>
                     ) : (
                       <div className="flex">
@@ -386,8 +278,6 @@ export default function AdminNoticias() {
                             src={noticia.imagem} 
                             alt={noticia.titulo}
                             className="w-full h-full object-cover"
-                          />
-                        </div>
                         <div className="flex-1 p-6">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -398,7 +288,6 @@ export default function AdminNoticias() {
                                 <Badge variant="secondary" className="bg-[#333] text-gray-300">
                                   <Calendar className="w-3 h-3 mr-1" />
                                   {formatDate(noticia.data)}
-                                </Badge>
                               </div>
                               <h3 className="text-white font-medium text-lg mb-2">
                                 {noticia.titulo}
@@ -415,25 +304,14 @@ export default function AdminNoticias() {
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button
-                                size="sm"
                                 variant="destructive"
                                 onClick={() => deleteNoticia(noticia.id)}
-                              >
                                 <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     )}
                   </div>
                 ))}
-              </div>
             )}
           </CardContent>
         </Card>
-      </div>
     </div>
   );
-}

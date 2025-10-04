@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,6 @@ interface ProductForm {
   categoria: string;
   destaque: boolean;
 }
-
 export default function AdminProdutos() {
   const { toast } = useToast();
   const [produtos, setProdutos] = useState<Product[]>([]);
@@ -29,11 +29,9 @@ export default function AdminProdutos() {
   const [editForm, setEditForm] = useState<ProductForm>({
     titulo: "", descricao: "", preco: "", imagem: "", categoria: "", destaque: false
   });
-
   useEffect(() => {
     fetchProdutos();
   }, []);
-
   const fetchProdutos = async () => {
     try {
       setLoading(true);
@@ -51,9 +49,7 @@ export default function AdminProdutos() {
       setLoading(false);
     }
   };
-
   const saveProduto = async (produtoData: ProductForm, produtoId?: string) => {
-    try {
       const url = produtoId ? `/api/admin/produtos/${produtoId}` : '/api/admin/produtos';
       const method = produtoId ? 'PUT' : 'POST';
       
@@ -61,8 +57,6 @@ export default function AdminProdutos() {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(produtoData),
-      });
-
       if (response.ok) {
         await fetchProdutos();
         setEditingId(null);
@@ -74,70 +68,35 @@ export default function AdminProdutos() {
       } else {
         throw new Error('Falha ao salvar produto');
       }
-    } catch (error) {
       console.error('Error saving produto:', error);
-      toast({
-        title: "Erro",
         description: "Falha ao salvar produto",
-        variant: "destructive",
-      });
-    }
-  };
-
   const deleteProduto = async (produtoId: string) => {
     if (!confirm('Tem certeza que deseja remover este produto?')) return;
-
-    try {
       const response = await fetch(`/api/admin/produtos/${produtoId}`, {
         method: 'DELETE',
-      });
-
-      if (response.ok) {
-        await fetchProdutos();
-        toast({
-          title: "Sucesso",
           description: "Produto removido",
-        });
-      } else {
         throw new Error('Falha ao remover produto');
-      }
-    } catch (error) {
       console.error('Error deleting produto:', error);
-      toast({
-        title: "Erro",
         description: "Falha ao remover produto",
-        variant: "destructive",
-      });
-    }
-  };
-
   const resetForm = () => {
     setEditForm({
       titulo: "", descricao: "", preco: "", imagem: "", categoria: "", destaque: false
     });
-  };
-
   const startEdit = (produto: Product) => {
     setEditingId(produto.id);
-    setEditForm({
       titulo: produto.titulo,
       descricao: produto.descricao,
       preco: produto.preco,
       imagem: produto.imagem,
       categoria: produto.categoria,
       destaque: produto.destaque || false
-    });
-  };
-
   const cancelEdit = () => {
     setEditingId(null);
     resetForm();
-  };
-
   const featuredCount = produtos.filter(p => p.destaque).length;
-
   if (loading) {
     return (
+    <ProtectedRoute>
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         <Navigation />
         <div className="container mx-auto px-4 py-16 mt-16">
@@ -149,11 +108,9 @@ export default function AdminProdutos() {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
-      
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -164,16 +121,12 @@ export default function AdminProdutos() {
                 Voltar à Homepage
               </Button>
             </Link>
-          </div>
           <h1 className="text-4xl font-bold text-white mb-4">
             Administração de <span className="text-[#FFD700]">Produtos</span>
           </h1>
           <p className="text-gray-300 text-lg">
             Gere os produtos em destaque da homepage
           </p>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -185,25 +138,14 @@ export default function AdminProdutos() {
             </CardContent>
           </Card>
           
-          <Card className="bg-[#111111] border-[#333]">
-            <CardContent className="p-6 text-center">
               <Star className="h-8 w-8 text-[#00d4aa] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">{featuredCount}</div>
               <div className="text-sm text-gray-400">Em Destaque</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-[#111111] border-[#333]">
-            <CardContent className="p-6 text-center">
               <Euro className="h-8 w-8 text-[#4dabf7] mx-auto mb-2" />
               <div className="text-2xl font-bold text-white">
                 {new Set(produtos.map(p => p.categoria)).size}
               </div>
               <div className="text-sm text-gray-400">Categorias</div>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Add New Product */}
         {editingId === "new" && (
           <Card className="bg-[#111111] border-[#333] mb-8">
@@ -220,37 +162,21 @@ export default function AdminProdutos() {
                   placeholder="Nome do produto"
                   className="bg-[#222] border-[#444] text-white mt-1"
                 />
-              </div>
-              <div>
                 <Label htmlFor="new-categoria" className="text-white">Categoria</Label>
-                <Input
                   id="new-categoria"
                   value={editForm.categoria}
                   onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
                   placeholder="Categoria do produto"
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
-              <div>
                 <Label htmlFor="new-preco" className="text-white">Preço</Label>
-                <Input
                   id="new-preco"
                   value={editForm.preco}
                   onChange={(e) => setEditForm({ ...editForm, preco: e.target.value })}
                   placeholder="€ 99.00"
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
-              <div>
                 <Label htmlFor="new-imagem" className="text-white">URL da Imagem</Label>
-                <Input
                   id="new-imagem"
                   value={editForm.imagem}
                   onChange={(e) => setEditForm({ ...editForm, imagem: e.target.value })}
                   placeholder="https://exemplo.com/produto.jpg"
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
               <div className="md:col-span-2">
                 <Label htmlFor="new-descricao" className="text-white">Descrição</Label>
                 <Textarea
@@ -258,17 +184,12 @@ export default function AdminProdutos() {
                   value={editForm.descricao}
                   onChange={(e) => setEditForm({ ...editForm, descricao: e.target.value })}
                   placeholder="Descrição detalhada do produto"
-                  className="bg-[#222] border-[#444] text-white mt-1"
-                />
-              </div>
               <div className="md:col-span-2 flex items-center space-x-2">
                 <Checkbox
                   id="new-destaque"
                   checked={editForm.destaque}
                   onCheckedChange={(checked) => setEditForm({ ...editForm, destaque: !!checked })}
-                />
                 <Label htmlFor="new-destaque" className="text-white">Produto em destaque na homepage</Label>
-              </div>
               <div className="md:col-span-2 flex gap-2">
                 <Button 
                   onClick={() => saveProduto(editForm)}
@@ -280,27 +201,15 @@ export default function AdminProdutos() {
                 <Button onClick={cancelEdit} variant="outline">
                   <X className="w-4 h-4 mr-2" />
                   Cancelar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         )}
-
         {/* Add Button */}
         {editingId !== "new" && (
-          <Card className="bg-[#111111] border-[#333] mb-8">
-            <CardContent className="p-6 text-center">
               <Button 
                 onClick={() => setEditingId("new")}
                 className="bg-[#FFD700] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Novo Produto
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Products List */}
         <Card className="bg-[#111111] border-[#333]">
           <CardHeader>
@@ -317,7 +226,6 @@ export default function AdminProdutos() {
                 <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-400 text-lg">Nenhum produto encontrado</p>
                 <p className="text-gray-500 text-sm">Adicione produtos para a homepage</p>
-              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {produtos.map((produto) => (
@@ -332,45 +240,24 @@ export default function AdminProdutos() {
                             className="bg-[#333] border-[#444] text-white mt-1"
                           />
                         </div>
-                        <div>
                           <Label className="text-white">Categoria</Label>
-                          <Input
                             value={editForm.categoria}
                             onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
-                            className="bg-[#333] border-[#444] text-white mt-1"
-                          />
-                        </div>
-                        <div>
                           <Label className="text-white">Preço</Label>
-                          <Input
                             value={editForm.preco}
                             onChange={(e) => setEditForm({ ...editForm, preco: e.target.value })}
-                            className="bg-[#333] border-[#444] text-white mt-1"
-                          />
-                        </div>
-                        <div>
                           <Label className="text-white">URL da Imagem</Label>
-                          <Input
                             value={editForm.imagem}
                             onChange={(e) => setEditForm({ ...editForm, imagem: e.target.value })}
-                            className="bg-[#333] border-[#444] text-white mt-1"
-                          />
-                        </div>
-                        <div>
                           <Label className="text-white">Descrição</Label>
                           <Textarea
                             value={editForm.descricao}
                             onChange={(e) => setEditForm({ ...editForm, descricao: e.target.value })}
-                            className="bg-[#333] border-[#444] text-white mt-1"
-                          />
-                        </div>
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             checked={editForm.destaque}
                             onCheckedChange={(checked) => setEditForm({ ...editForm, destaque: !!checked })}
-                          />
                           <Label className="text-white">Produto em destaque</Label>
-                        </div>
                         <div className="flex gap-2">
                           <Button 
                             onClick={() => saveProduto(editForm, produto.id)}
@@ -382,8 +269,6 @@ export default function AdminProdutos() {
                           <Button onClick={cancelEdit} variant="outline">
                             <X className="w-4 h-4 mr-2" />
                             Cancelar
-                          </Button>
-                        </div>
                       </div>
                     ) : (
                       <>
@@ -392,19 +277,16 @@ export default function AdminProdutos() {
                             src={produto.imagem} 
                             alt={produto.titulo}
                             className="w-full h-full object-cover"
-                          />
                           {produto.destaque && (
                             <Badge className="absolute top-2 right-2 bg-[#FFD700] text-black">
                               <Star className="w-3 h-3 mr-1" />
                               Destaque
                             </Badge>
                           )}
-                        </div>
                         <div className="p-6">
                           <div className="flex items-start justify-between mb-2">
                             <Badge variant="outline" className="border-[#FFD700] text-[#FFD700]">
                               {produto.categoria}
-                            </Badge>
                             <div className="flex gap-2">
                               <Button
                                 size="sm"
@@ -413,13 +295,9 @@ export default function AdminProdutos() {
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button
-                                size="sm"
                                 variant="destructive"
                                 onClick={() => deleteProduto(produto.id)}
-                              >
                                 <Trash2 className="h-4 w-4" />
-                              </Button>
                             </div>
                           </div>
                           <h3 className="text-white font-medium text-lg mb-2">
@@ -430,17 +308,12 @@ export default function AdminProdutos() {
                           </p>
                           <div className="text-[#FFD700] font-bold text-xl">
                             {produto.preco}
-                          </div>
-                        </div>
                       </>
                     )}
                   </div>
                 ))}
-              </div>
             )}
           </CardContent>
         </Card>
-      </div>
     </div>
   );
-}
