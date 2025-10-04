@@ -21,8 +21,8 @@ import {
 } from "./visual-editor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup Replit authentication to protect admin area
-  await setupAuth(app);
+  // Setup Replit authentication (currently disabled - admin area is open)
+  // await setupAuth(app);
   
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
@@ -39,21 +39,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage service
   const objectStorageService = new ObjectStorageService();
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // Auth routes (disabled - authentication currently not enforced)
+  // app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  //   try {
+  //     const userId = req.user.claims.sub;
+  //     const user = await storage.getUser(userId);
+  //     res.json(user);
+  //   } catch (error) {
+  //     console.error("Error fetching user:", error);
+  //     res.status(500).json({ message: "Failed to fetch user" });
+  //   }
+  // });
 
   // Object Storage endpoints for Visual Editor
   // Upload endpoint for getting presigned URLs
-  app.post("/api/objects/upload", isAuthenticated, async (req, res) => {
+  app.post("/api/objects/upload", async (req, res) => {
     try {
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       res.json({ uploadURL });
@@ -64,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Normalize uploaded image path
-  app.post("/api/images/normalize", isAuthenticated, async (req, res) => {
+  app.post("/api/images/normalize", async (req, res) => {
     if (!req.body.imageURL) {
       return res.status(400).json({ error: "imageURL is required" });
     }
@@ -1036,7 +1036,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // Admin API routes for managing content
   
   // Admin Slider routes
-  app.get("/api/admin/slider", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/slider", async (req, res) => {
     try {
       const slides = await storage.getSlides();
       res.json({ slides });
@@ -1046,7 +1046,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/slider", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/slider", async (req, res) => {
     try {
       const slideData = insertSlideSchema.parse(req.body);
       const slide = await storage.createSlide(slideData);
@@ -1057,7 +1057,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/slider/:id", isAuthenticated, async (req, res) => {
+  app.put("/api/admin/slider/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const slideData = insertSlideSchema.parse(req.body);
@@ -1069,7 +1069,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/slider/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/admin/slider/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteSlide(id);
@@ -1081,7 +1081,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // Admin Products routes
-  app.get("/api/admin/produtos", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/produtos", async (req, res) => {
     try {
       const produtos = await storage.getAllProducts();
       res.json({ produtos });
@@ -1091,7 +1091,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/produtos", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/produtos", async (req, res) => {
     try {
       const productData = insertProductSchema.parse(req.body);
       const produto = await storage.createProduct(productData);
@@ -1102,7 +1102,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/produtos/:id", isAuthenticated, async (req, res) => {
+  app.put("/api/admin/produtos/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const productData = insertProductSchema.parse(req.body);
@@ -1114,7 +1114,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/produtos/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/admin/produtos/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteProduct(id);
@@ -1126,7 +1126,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // Admin News routes
-  app.get("/api/admin/noticias", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/noticias", async (req, res) => {
     try {
       const noticias = await storage.getAllNews();
       res.json({ noticias });
@@ -1136,7 +1136,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/noticias", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/noticias", async (req, res) => {
     try {
       const newsData = insertNewsSchema.parse(req.body);
       const noticia = await storage.createNews(newsData);
@@ -1147,7 +1147,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/noticias/:id", isAuthenticated, async (req, res) => {
+  app.put("/api/admin/noticias/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const newsData = insertNewsSchema.parse(req.body);
@@ -1159,7 +1159,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/noticias/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/admin/noticias/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteNews(id);
@@ -1171,7 +1171,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // Admin Loja routes (specialized for store products)
-  app.get("/api/admin/loja", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/loja", async (req, res) => {
     try {
       const produtos = await storage.getAllProducts();
       // Filter products that are store-related (Papel de Parede or texture categories)
@@ -1182,7 +1182,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/loja", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/loja", async (req, res) => {
     try {
       const productData = insertProductSchema.parse(req.body);
       const produto = await storage.createProduct(productData);
@@ -1193,7 +1193,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/loja/:id", isAuthenticated, async (req, res) => {
+  app.put("/api/admin/loja/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const productData = insertProductSchema.parse(req.body);
@@ -1205,7 +1205,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/loja/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/admin/loja/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteProduct(id);
@@ -1216,8 +1216,8 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  // Admin Contacts routes (duplicate endpoint - keeping for backwards compatibility)
-  app.get("/api/admin/contacts-legacy", isAuthenticated, async (req, res) => {
+  // Admin Contacts routes
+  app.get("/api/admin/contacts", async (req, res) => {
     try {
       const contacts = await storage.getAllContacts();
       res.json({ contacts });
@@ -1230,7 +1230,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // Admin Page Config routes
   // Endpoint for EditableConfigText component to save individual configurations
   // Must be BEFORE the generic /:page route to avoid conflicts
-  app.post("/api/admin/pages/:page/config", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/pages/:page/config", async (req, res) => {
     try {
       const { page } = req.params;
       const { section, element, value } = req.body;
@@ -1261,7 +1261,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/admin/pages", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/pages", async (req, res) => {
     try {
       const { page } = req.query;
       const configs = await storage.getPageConfigs(page as string);
@@ -1272,7 +1272,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/admin/pages/:page", isAuthenticated, async (req, res) => {
+  app.get("/api/admin/pages/:page", async (req, res) => {
     try {
       const { page } = req.params;
       const configs = await storage.getPageConfigs(page);
@@ -1283,7 +1283,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/pages", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/pages", async (req, res) => {
     try {
       const configData = insertPageConfigSchema.parse(req.body);
       const config = await storage.createPageConfig(configData);
@@ -1294,7 +1294,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/pages/:id", isAuthenticated, async (req, res) => {
+  app.put("/api/admin/pages/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const configData = insertPageConfigSchema.parse(req.body);
@@ -1306,7 +1306,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/pages/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/admin/pages/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deletePageConfig(id);
@@ -1317,7 +1317,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.post("/api/admin/pages/upsert", isAuthenticated, async (req, res) => {
+  app.post("/api/admin/pages/upsert", async (req, res) => {
     try {
       const configData = insertPageConfigSchema.parse(req.body);
       const config = await storage.upsertPageConfig(configData);
@@ -1363,15 +1363,15 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // Visual Editor API routes
-  app.get("/api/editor/page/:route", isAuthenticated, getPageContent);
-  app.post("/api/editor/page", isAuthenticated, savePageContentEndpoint);
+  app.get("/api/editor/page/:route", getPageContent);
+  app.post("/api/editor/page", savePageContentEndpoint);
   
   // Media Manager API routes
-  app.get("/api/media/index", isAuthenticated, getMediaIndex);
-  app.get("/api/media/folders", isAuthenticated, getMediaFolders);
-  app.post("/api/media/sync", isAuthenticated, syncGlobalImages);
-  app.post("/api/media/upload", isAuthenticated, upload.array('files'), uploadMediaFiles);
-  app.delete("/api/media/files", isAuthenticated, deleteMediaFiles);
+  app.get("/api/media/index", getMediaIndex);
+  app.get("/api/media/folders", getMediaFolders);
+  app.post("/api/media/sync", syncGlobalImages);
+  app.post("/api/media/upload", upload.array('files'), uploadMediaFiles);
+  app.delete("/api/media/files", deleteMediaFiles);
 
   const httpServer = createServer(app);
 
