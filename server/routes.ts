@@ -1248,7 +1248,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         page,
         section,
         element,
-        type: "text", // Default type, can be enhanced later
+        type: "text" as const, // Default type, can be enhanced later
         value: String(value)
       };
 
