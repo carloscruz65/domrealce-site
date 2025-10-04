@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 
 export function useAuth() {
-  // TEMPORARY: Authentication disabled - allow admin access
-  const { data: user, isLoading } = useQuery({
+  const { data: user, isLoading, error } = useQuery({
     queryKey: ["/api/auth/user"],
     retry: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   return {
-    user: user || { id: "temp-admin", email: "admin@domrealce.com", firstName: "Admin" },
-    isLoading: false, // Always loaded
-    isAuthenticated: true, // Always authenticated for now
+    user,
+    isAuthenticated: !!user && !error,
+    isLoading,
   };
 }
