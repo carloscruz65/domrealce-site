@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(403).send("Área restrita");
     }
 
-    res.sendFile(path.resolve("public", "admin.html"));
+    res.sendFile(path.resolve("client", "public", "manuais", "admin.html"));
   });
 
   // Object storage service
