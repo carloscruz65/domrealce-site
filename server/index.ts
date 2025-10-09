@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-  
+
   // Content Security Policy
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
     "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com; " +
     "frame-src 'none';"
   );
-  
+
   next();
 });
 
