@@ -2,7 +2,16 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertContactSchema, insertProductSchema, insertNewsSchema, insertSlideSchema, insertPageConfigSchema, insertOrderSchema, type Contact, type Order } from "@shared/schema";
+import {
+  insertContactSchema,
+  insertProductSchema,
+  insertNewsSchema,
+  insertSlideSchema,
+  insertPageConfigSchema,
+  insertOrderSchema,
+  type Contact,
+  type Order
+} from "@shared/schema";
 import { sendContactEmail, sendAutoReplyEmail } from "./email";
 import { ObjectStorageService } from "./objectStorage";
 import { createIfthenPayService, type PaymentMethod } from "./ifthenpay";
@@ -10,6 +19,12 @@ import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// ✅ Recriar __dirname para ES Modules
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 import {
   getPageContent,
   savePageContentEndpoint,
