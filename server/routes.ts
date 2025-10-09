@@ -34,6 +34,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     standardHeaders: true,
     legacyHeaders: false,
   });
+  // 🔐 Proteção da rota /admin
+  app.get("/admin", (req: Request, res: Response, next: NextFunction) => {
+    if (process.env.ADMIN_MODE !== "true") {
+      return res.status(403).send("Área restrita");
+    }
+
+    res.sendFile(path.join(__dirname, "public", "admin.html"));
+  });
 
   // Object storage service
   const objectStorageService = new ObjectStorageService();
