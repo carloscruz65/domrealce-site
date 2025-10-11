@@ -1068,6 +1068,19 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     res.redirect(`/checkout?cancelled=true&orderId=${orderId}`);
   });
 
+  // 📍 Public Slider API - serves slides even with ADMIN_MODE=false
+  app.get("/api/slider", async (req, res) => {
+    try {
+      console.log("📍 /api/slider endpoint called");
+      const slides = await storage.getSlides();
+      console.log(`✅ Fetched ${slides.length} slides from storage`);
+      res.json({ slides });
+    } catch (error) {
+      console.error("❌ Error fetching public slides:", error);
+      res.status(500).json({ error: "Failed to fetch slides" });
+    }
+  });
+
   // Admin API routes for managing content
   
   // Admin Slider routes

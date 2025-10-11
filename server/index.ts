@@ -2,24 +2,12 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { protegerAdmin } from "../client/src/middleware";
-import { getSlidesFromDatabase } from "./services/slider"; // ← ajusta conforme tua estrutura
 
 const app = express();
 
 // Protege todas as rotas que começam por /admin
 app.use("/admin", protegerAdmin);
 app.use("/api/admin", protegerAdmin);
-
-// Rota pública para o slider
-app.get("/api/slider", async (req: Request, res: Response) => {
-  try {
-    const slides = await getSlidesFromDatabase(); // ← pode ser JSON, DB ou mock
-    const activeSlides = slides.filter((s) => s.active);
-    res.json({ slides: activeSlides });
-  } catch (err) {
-    res.status(500).json({ message: "Erro ao carregar slides" });
-  }
-});
 
 // Security headers
 app.use((req, res, next) => {
