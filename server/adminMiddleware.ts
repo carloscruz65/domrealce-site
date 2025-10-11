@@ -6,7 +6,8 @@ import { Request, Response, NextFunction } from "express";
  */
 export async function adminAccess(req: Request, res: Response, next: NextFunction) {
   // Development mode: Allow access on localhost for easier testing
-  if (process.env.NODE_ENV === "development" && req.hostname === "localhost") {
+  const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1" || req.hostname.startsWith("192.168.");
+  if (process.env.NODE_ENV === "development" && isLocalhost) {
     console.log("⚠️ Admin access granted via localhost in development mode");
     return next();
   }
