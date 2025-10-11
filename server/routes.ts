@@ -37,8 +37,9 @@ import {
 } from "./visual-editor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication first - TEMPORARILY DISABLED
-  // await setupAuth(app);
+  // Setup Replit authentication
+  await setupAuth(app);
+  
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -50,12 +51,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  // 🔐 Proteção da rota /admin
-  app.get("/admin", (req: Request, res: Response, next: NextFunction) => {
-    if (process.env.ADMIN_MODE !== "true") {
-      return res.status(403).send("Área restrita");
-    }
-
+  // 🔐 Proteção da rota /admin - Requer login Replit
+  app.get("/admin", isAuthenticated, (req: Request, res: Response) => {
     res.sendFile(path.resolve("client", "public", "manuais", "admin.html"));
   });
 

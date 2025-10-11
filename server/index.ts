@@ -1,12 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { protegerAdmin } from "./middleware";
 
 const app = express();
-
-// Protege rotas /admin (HTML pages) - API routes protected in routes.ts
-app.use("/admin", protegerAdmin);
 
 // Security headers
 app.use((req, res, next) => {
