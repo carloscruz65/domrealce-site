@@ -2,7 +2,11 @@
 
 This is a full-stack web application for DOMREALCE, a Portuguese visual communication and digital printing company. The application serves as a company portfolio and business website showcasing services like digital printing, vinyl cutting, vehicle wrapping, and custom signage. Built with a modern tech stack including React, Express, TypeScript, and PostgreSQL, it follows a monorepo structure with separate client and server directories.
 
-## Recent Changes (August 2025)
+## Recent Changes (October 2025)
+- **Admin Security System**: Implemented secure admin authentication with dual-mode access:
+  - Development: Localhost access allowed for testing
+  - Production: Requires Replit authentication via /api/login
+  - API protection via protegerAdmin middleware
 - **Service Detail Pages**: Created 7 comprehensive service detail pages with professional layouts:
   - Design Gráfico (/servico-design-grafico)
   - Impressão Digital (/servico-impressao-digital)
@@ -62,8 +66,15 @@ Preferred communication style: Simple, everyday language.
 - **Code Quality**: TypeScript strict mode for type safety
 
 ## Security and Authentication
+- **Admin Access Control**: Dual-mode authentication system
+  - **Development Mode** (localhost): Direct access to /admin for testing purposes
+  - **Production Mode** (Replit domain): Requires Replit OAuth authentication via /api/login
+  - Protected by `adminAccess` middleware in server/adminMiddleware.ts
+- **API Protection**: `/api/admin/*` endpoints secured by `protegerAdmin` middleware
+  - Validates user authentication before allowing admin operations
+  - Returns 403 Forbidden for unauthorized requests
 - **Session Management**: Express sessions with PostgreSQL store (connect-pg-simple)
-- **Password Handling**: Planned implementation for user authentication
+- **Replit OAuth**: Integration via openid-client for secure authentication
 - **CORS**: Configured for development and production environments
 
 # External Dependencies
