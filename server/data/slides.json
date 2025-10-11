@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "title": "Bem-vindo à DOM Realce",
+    "text": "Comunicação visual com impacto.",
+    "image": "/images/slide1.jpg",
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Papel de parede personalizado",
+    "text": "Transforme qualquer espaço.",
+    "image": "/images/slide2.jpg",
+    "active": true
+  }
+]
