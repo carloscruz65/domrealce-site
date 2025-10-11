@@ -43,17 +43,7 @@ import TermosCondicoes from "@/pages/termos-condicoes";
 import PoliticaCookies from "@/pages/politica-cookies";
 import AvisoLegal from "@/pages/aviso-legal";
 import ComoAplicarPapelParede from "@/pages/como-aplicar";
-import AdminContactos from "@/pages/admin-contactos";
-import AdminPortfolio from "@/pages/admin-portfolio";
-import AdminSlider from "@/pages/admin-slider";
-import AdminProdutos from "@/pages/admin-produtos";
-import AdminNoticias from "@/pages/admin-noticias";
-import AdminDashboard from "@/pages/admin-dashboard";
-import AdminLoja from "@/pages/admin-loja";
-import AdminPages from "@/pages/admin-pages";
-import AdminEditor from "@/pages/admin-editor";
-import AdminMedia from "@/pages/admin-media";
-import AdminEncomendas from "@/pages/admin-encomendas";
+import Admin from "@/pages/admin";
 import ServicoPeliculaSolar from "@/pages/servico-pelicula-solar";
 import DemoInterativo from "@/pages/demo-interativo";
 import VisualEditorDemo from "@/pages/visual-editor-demo";
@@ -133,16 +123,7 @@ function Router() {
         <Route path="/como-aplicar-papel-parede" component={ComoAplicarPapelParede} />
         <Route path="/carrinho" component={Carrinho} />
         <Route path="/admin/texturas" component={AdminTexturas} />
-        <Route path="/admin/contactos" component={AdminContactos} />
-        <Route path="/admin/portfolio" component={AdminPortfolio} />
-        <Route path="/admin" component={AdminDashboard} />
-        <Route path="/admin/slider" component={AdminSlider} />
-        <Route path="/admin/produtos" component={AdminProdutos} />
-        <Route path="/admin/noticias" component={AdminNoticias} />
-        <Route path="/admin/loja" component={AdminLoja} />
-        <Route path="/admin/encomendas" component={AdminEncomendas} />
-        <Route path="/admin/editor" component={AdminEditor} />
-        <Route path="/admin/media" component={AdminMedia} />
+        <Route path="/admin" component={Admin} />
         <Route path="/noticias" component={Noticias} />
         <Route path="/contactos" component={Contactos} />
         <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
