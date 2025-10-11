@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";   // ✅ Wouter SPA navigation
+import { Link } from "wouter"; // ✅ Wouter SPA navigation
 import type { Slide } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import "./Slider.css";
@@ -10,8 +10,14 @@ interface SliderResponse {
 
 export default function DynamicSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
+
   const { data, isLoading, error } = useQuery<SliderResponse>({
-    queryKey: ["/api/admin/slider"]
+    queryKey: ["/api/slider"],
+    queryFn: async () => {
+      const res = await fetch("/api/slider");
+      if (!res.ok) throw new Error("Erro ao carregar slides");
+      return res.json();
+    }
   });
 
   let activeSlides = data?.slides?.filter((slide: Slide) => slide.active) || [];
