@@ -71,19 +71,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   };
 
-  // Auth routes - TEMPORARILY DISABLED
-  /*
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+  // Auth status endpoint - check if user is authenticated
+  app.get('/api/auth/status', async (req: Request, res: Response) => {
+    // Development mode: Always authenticated on localhost
+    if (process.env.NODE_ENV === "development" && req.hostname === "localhost") {
+      return res.json({ 
+        authenticated: true, 
+        user: { name: "Dev User", mode: "development" } 
+      });
     }
+
+    // Production: Check Replit authentication
+    if (req.isAuthenticated && req.isAuthenticated()) {
+      const user = (req as any).user;
+      return res.json({ 
+        authenticated: true, 
+        user: { 
+          name: user?.claims?.name || user?.name || "Admin",
+          email: user?.claims?.email || user?.email
+        } 
+      });
+    }
+
+    // Not authenticated
+    return res.json({ authenticated: false });
   });
-  */
 
   // Object Storage endpoints for Visual Editor
   // Upload endpoint for getting presigned URLs
