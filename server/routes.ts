@@ -97,6 +97,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return res.json({ authenticated: false });
   });
 
+  // Media Management Endpoints (Protected)
+  // List all files organized by folders
+  app.get('/api/media/list', protegerAdmin, async (req: Request, res: Response) => {
+    try {
+      const files = await objectStorageService.listPublicFiles();
+      
+      // Organize files by folder structure
+      const organized: Record<string, string[]> = {};
+      
+      files.forEach(filePath => {
+        const parts = filePath.split('/');
+        if (parts.length > 1) {
+          const folder = parts[0];
+          if (!organized[folder]) {
+            organized[folder] = [];
+          }
+          organized[folder].push(filePath);
+        } else {
+          if (!organized['root']) {
+            organized['root'] = [];
+          }
+          organized['root'].push(filePath);
+        }
+      });
+      
+      res.json({ 
+        success: true, 
+        files: organized,
+        total: files.length 
+      });
+    } catch (error) {
+      console.error("Error listing media files:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to list media files" 
+      });
+    }
+  });
+
+  // Upload file to object storage
+  app.post('/api/media/upload', protegerAdmin, multer({ storage: multer.memoryStorage() }).single('file'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "No file provided" 
+        });
+      }
+
+      const category = req.body.category || 'outros';
+      const fileName = req.file.originalname;
+      const filePath = `${category}/${fileName}`;
+      
+      await objectStorageService.uploadPublicFile(
+        filePath,
+        req.file.buffer,
+        req.file.mimetype
+      );
+      
+      res.json({ 
+        success: true, 
+        filePath,
+        message: "File uploaded successfully" 
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to upload file" 
+      });
+    }
+  });
+
+  // Delete file from object storage
+  app.delete('/api/media/delete', protegerAdmin, async (req: Request, res: Response) => {
+    try {
+      const { filePath } = req.body;
+      
+      if (!filePath) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "File path is required" 
+        });
+      }
+      
+      const deleted = await objectStorageService.deletePublicFile(filePath);
+      
+      if (deleted) {
+        res.json({ 
+          success: true, 
+          message: "File deleted successfully" 
+        });
+      } else {
+        res.status(404).json({ 
+          success: false, 
+          error: "File not found" 
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to delete file" 
+      });
+    }
+  });
+
   // Object Storage endpoints for Visual Editor
   // Upload endpoint for getting presigned URLs
   app.post("/api/objects/upload", async (req, res) => {

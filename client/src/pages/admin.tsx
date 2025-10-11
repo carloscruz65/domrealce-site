@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ProtectedAdminLayout from "@/components/ProtectedAdminLayout";
+import MediaManager from "@/components/MediaManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -238,28 +239,7 @@ export default function AdminPage() {
 
             {/* Media Tab */}
             <TabsContent value="media">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Gestão de Media</CardTitle>
-                  <CardDescription>
-                    Upload e organização automática de imagens do object storage
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Módulo de media em desenvolvimento...
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Funcionalidades previstas:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Deteção automática de imagens no object storage</li>
-                      <li>Organização por pastas (produtos/, noticias/, portfolio/)</li>
-                      <li>Upload com categorização automática</li>
-                      <li>Visualização e gestão de ficheiros</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+              <MediaManager />
             </TabsContent>
           </Tabs>
         </div>
