@@ -22,6 +22,7 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { protegerAdmin } from "./middleware";
+import { adminAccess } from "./adminMiddleware";
 
 // ✅ Recriar __dirname para ES Modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -51,8 +52,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  // 🔐 Proteção da rota /admin - Requer login Replit
-  app.get("/admin", isAuthenticated, (req: Request, res: Response) => {
+  // 🔐 Proteção da rota /admin - Permite login Replit, ADMIN_MODE ou token
+  app.get("/admin", adminAccess, (req: Request, res: Response) => {
     res.sendFile(path.resolve("client", "public", "manuais", "admin.html"));
   });
 
