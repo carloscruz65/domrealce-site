@@ -5,6 +5,7 @@ import MediaManager from "@/components/MediaManager";
 import SliderManager from "@/components/SliderManager";
 import ProdutosManager from "@/components/ProdutosManager";
 import NoticiasManager from "@/components/NoticiasManager";
+import PortfolioManager from "@/components/PortfolioManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -155,27 +156,7 @@ export default function AdminPage() {
 
             {/* Portfolio Tab */}
             <TabsContent value="portfolio">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Gestão de Portfolio</CardTitle>
-                  <CardDescription>
-                    Organize imagens do portfolio por categorias
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Módulo de portfolio em desenvolvimento...
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Funcionalidades previstas:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Upload de imagens de projetos</li>
-                      <li>Organização por categorias</li>
-                      <li>Descrições e metadados</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+              <PortfolioManager />
             </TabsContent>
 
             {/* Media Tab */}

@@ -56,6 +56,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage service
   const objectStorageService = new ObjectStorageService();
 
+  // Configure multer for file uploads
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  });
+
   // Simple admin token middleware (temporary until full auth is re-enabled)
   const adminAuth = (req: any, res: any, next: any) => {
     const token = req.headers.authorization?.replace('Bearer ', '') || req.headers['x-admin-token'];
@@ -669,6 +675,55 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       console.error('Error fetching contacts:', error);
       res.status(500).json({ error: "Failed to fetch contacts" });
+    }
+  });
+
+  // Admin Portfolio - Get all images
+  app.get("/api/admin/portfolio", async (req, res) => {
+    try {
+      const files = await objectStorageService.listPublicFiles();
+      const portfolioImages = files.filter(file => 
+        /\.(jpg|jpeg|png|gif|webp)$/i.test(file) && 
+        file.startsWith('portfolio/')
+      ).map(file => ({
+        id: file,
+        url: `/public-objects/${file}`,
+        filename: file.split('/').pop(),
+        category: file.split('/')[1] || 'geral'
+      }));
+      
+      res.json(portfolioImages);
+    } catch (error) {
+      console.error('Error fetching portfolio images:', error);
+      res.status(500).json({ error: "Failed to fetch portfolio images" });
+    }
+  });
+
+  // Admin Portfolio - Upload image
+  app.post("/api/admin/portfolio", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      const category = req.body.category || 'geral';
+      const fileName = `portfolio/${category}/${Date.now()}-${req.file.originalname}`;
+      
+      await objectStorageService.uploadPublicFile(fileName, req.file.buffer, req.file.mimetype);
+      
+      res.json({ 
+        success: true, 
+        message: "Image uploaded successfully",
+        file: {
+          id: fileName,
+          url: `/public-objects/${fileName}`,
+          filename: req.file.originalname,
+          category
+        }
+      });
+    } catch (error) {
+      console.error('Error uploading portfolio image:', error);
+      res.status(500).json({ error: "Failed to upload image" });
     }
   });
 
@@ -1520,12 +1575,6 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       console.error("Error fetching page config:", error);
       res.status(500).json({ error: "Failed to fetch page config" });
     }
-  });
-
-  // Configure multer for file uploads
-  const upload = multer({ 
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
   });
 
   // Visual Editor API routes

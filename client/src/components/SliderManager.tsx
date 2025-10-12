@@ -24,9 +24,11 @@ export default function SliderManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Slide>>({});
 
-  const { data: slides, isLoading } = useQuery({
+  const { data: slidesData, isLoading } = useQuery<{ slides: Slide[] }>({
     queryKey: ['/api/admin/slider'],
   });
+  
+  const slides = slidesData?.slides || [];
 
   const createMutation = useMutation({
     mutationFn: (data: Partial<Slide>) => apiRequest('/api/admin/slider', 'POST', data),
@@ -167,7 +169,7 @@ export default function SliderManager() {
       )}
 
       <div className="grid gap-4">
-        {slides?.slides?.map((slide: Slide) => (
+        {slides?.map((slide: Slide) => (
           <Card key={slide.id} data-testid={`card-slide-${slide.id}`}>
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex-1">

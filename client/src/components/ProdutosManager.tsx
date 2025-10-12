@@ -23,7 +23,7 @@ export default function ProdutosManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Produto>>({});
 
-  const { data: produtos, isLoading } = useQuery({
+  const { data: produtos, isLoading } = useQuery<Produto[]>({
     queryKey: ['/api/admin/produtos'],
   });
 

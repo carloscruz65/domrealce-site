@@ -24,7 +24,7 @@ export default function NoticiasManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Noticia>>({});
 
-  const { data: noticias, isLoading } = useQuery({
+  const { data: noticias, isLoading } = useQuery<Noticia[]>({
     queryKey: ['/api/admin/noticias'],
   });
 
