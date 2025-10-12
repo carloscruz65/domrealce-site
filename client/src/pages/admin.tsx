@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ProtectedAdminLayout from "@/components/ProtectedAdminLayout";
 import MediaManager from "@/components/MediaManager";
+import SliderManager from "@/components/SliderManager";
+import ProdutosManager from "@/components/ProdutosManager";
+import NoticiasManager from "@/components/NoticiasManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -137,79 +140,17 @@ export default function AdminPage() {
 
             {/* Conteúdos Tab */}
             <TabsContent value="conteudos">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Gestão de Conteúdos</CardTitle>
-                  <CardDescription>
-                    Gira o slider, páginas e configurações do site
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Módulo de conteúdos em desenvolvimento...
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Funcionalidades previstas:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Gestão do slider da homepage</li>
-                      <li>Edição de textos e cores das páginas</li>
-                      <li>Configuração de SEO</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+              <SliderManager />
             </TabsContent>
 
             {/* Produtos Tab */}
             <TabsContent value="produtos">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Gestão de Produtos</CardTitle>
-                  <CardDescription>
-                    Administre produtos, canvas, texturas e encomendas
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Módulo de produtos em desenvolvimento...
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Funcionalidades previstas:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Produtos em destaque</li>
-                      <li>Gestão de quadros canvas</li>
-                      <li>Gestão de texturas papel de parede</li>
-                      <li>Visualização de encomendas</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+              <ProdutosManager />
             </TabsContent>
 
             {/* Notícias Tab */}
             <TabsContent value="noticias">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Gestão de Notícias</CardTitle>
-                  <CardDescription>
-                    Crie e edite artigos e notícias
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Módulo de notícias em desenvolvimento...
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Funcionalidades previstas:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Criar novas notícias</li>
-                      <li>Editar notícias existentes</li>
-                      <li>Upload de imagens para artigos</li>
-                      <li>Gestão de categorias</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+              <NoticiasManager />
             </TabsContent>
 
             {/* Portfolio Tab */}

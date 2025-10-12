@@ -1,0 +1,170 @@
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+
+interface Produto {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+}
+
+export default function ProdutosManager() {
+  const { toast } = useToast();
+  const [editing, setEditing] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Partial<Produto>>({});
+
+  const { data: produtos, isLoading } = useQuery({
+    queryKey: ['/api/admin/produtos'],
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: Partial<Produto>) => apiRequest('/api/admin/produtos', 'POST', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
+      toast({ title: "Produto criado com sucesso!" });
+      setFormData({});
+      setEditing(null);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Produto> }) => 
+      apiRequest(`/api/admin/produtos/${id}`, 'PUT', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
+      toast({ title: "Produto atualizado!" });
+      setFormData({});
+      setEditing(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest(`/api/admin/produtos/${id}`, 'DELETE'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
+      toast({ title: "Produto eliminado!" });
+    },
+  });
+
+  const handleSave = () => {
+    if (editing === 'new') {
+      createMutation.mutate(formData);
+    } else if (editing) {
+      updateMutation.mutate({ id: editing, data: formData });
+    }
+  };
+
+  if (isLoading) return <div className="p-4">A carregar...</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Gestão de Produtos</h2>
+          <p className="text-muted-foreground">Administrar produtos da loja</p>
+        </div>
+        {!editing && (
+          <Button onClick={() => setEditing('new')} data-testid="button-novo-produto">
+            <Plus className="mr-2 h-4 w-4" /> Novo Produto
+          </Button>
+        )}
+      </div>
+
+      {editing && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{editing === 'new' ? 'Criar Produto' : 'Editar Produto'}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Nome</Label>
+              <Input
+                value={formData.name || ''}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                data-testid="input-name"
+              />
+            </div>
+            <div>
+              <Label>Descrição</Label>
+              <Textarea
+                value={formData.description || ''}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                data-testid="input-description"
+              />
+            </div>
+            <div>
+              <Label>Preço (€)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={formData.price || 0}
+                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                data-testid="input-price"
+              />
+            </div>
+            <div>
+              <Label>URL da Imagem</Label>
+              <Input
+                value={formData.image || ''}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                data-testid="input-image"
+              />
+            </div>
+            <div>
+              <Label>Categoria</Label>
+              <Input
+                value={formData.category || ''}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                data-testid="input-category"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleSave} data-testid="button-save">
+                <Save className="mr-2 h-4 w-4" /> Guardar
+              </Button>
+              <Button variant="outline" onClick={() => { setEditing(null); setFormData({}); }} data-testid="button-cancel">
+                <X className="mr-2 h-4 w-4" /> Cancelar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid gap-4">
+        {produtos?.map((produto: Produto) => (
+          <Card key={produto.id} data-testid={`card-produto-${produto.id}`}>
+            <CardContent className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-4 flex-1">
+                {produto.image && (
+                  <img src={produto.image} alt={produto.name} className="w-16 h-16 object-cover rounded" />
+                )}
+                <div>
+                  <h3 className="font-semibold">{produto.name}</h3>
+                  <p className="text-sm text-muted-foreground">{produto.category} • €{produto.price}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => { setEditing(produto.id); setFormData(produto); }} data-testid={`button-edit-${produto.id}`}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(produto.id)} data-testid={`button-delete-${produto.id}`}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
