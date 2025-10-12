@@ -52,10 +52,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     standardHeaders: true,
     legacyHeaders: false,
   });
-  // 🔐 Proteção da rota /admin - Permite login Replit, ADMIN_MODE ou token
-  app.get("/admin", adminAccess, (req: Request, res: Response) => {
-    res.sendFile(path.resolve("client", "public", "manuais", "admin.html"));
-  });
 
   // Object storage service
   const objectStorageService = new ObjectStorageService();
@@ -74,7 +70,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth status endpoint - check if user is authenticated
   app.get('/api/auth/status', async (req: Request, res: Response) => {
     // Development mode: Always authenticated on localhost
-    if (process.env.NODE_ENV === "development" && req.hostname === "localhost") {
+    const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1" || req.hostname.startsWith("192.168.");
+    if (process.env.NODE_ENV === "development" && isLocalhost) {
       return res.json({ 
         authenticated: true, 
         user: { name: "Dev User", mode: "development" } 

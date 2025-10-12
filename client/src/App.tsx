@@ -22,7 +22,6 @@ import LojaQuadrosCanvas from "@/pages/loja-quadros-canvas";
 import LojaCanvasDetalhes from "@/pages/canvas-detalhes";
 import LojaTexturaDetalhes from "@/pages/textura-detalhes";
 import Carrinho from "@/pages/carrinho";
-import AdminTexturas from "@/pages/admin-texturas";
 import Portfolio from "@/pages/portfolio";
 import Servicos from "@/pages/servicos";
 import ServicoDesignGrafico from "@/pages/servico-design-grafico";
@@ -122,8 +121,7 @@ function Router() {
         <Route path="/loja/papel-parede/textura/:textura" component={LojaTexturaDetalhes} />
         <Route path="/como-aplicar-papel-parede" component={ComoAplicarPapelParede} />
         <Route path="/carrinho" component={Carrinho} />
-        <Route path="/admin/texturas" component={AdminTexturas} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/editor" component={Admin} />
         <Route path="/noticias" component={Noticias} />
         <Route path="/contactos" component={Contactos} />
         <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
@@ -135,8 +133,8 @@ function Router() {
         {/* Visual Editor Demo */}
         <Route path="/visual-editor-demo" component={VisualEditorDemo} />
         
-        {/* Toolbar apenas em páginas de admin */}
-        {showEditor && location.startsWith('/admin') && <VisualEditorToolbar />}
+        {/* Toolbar apenas em páginas de editor */}
+        {showEditor && location.startsWith('/editor') && <VisualEditorToolbar />}
         
         <Route component={NotFound} />
       </Switch>
