@@ -12,11 +12,11 @@ import { Plus, Edit, Trash2, Save, X } from "lucide-react";
 interface Slide {
   id: string;
   title: string;
-  subtitle: string;
-  description: string;
+  text: string;
   image: string;
-  link?: string;
-  order: number;
+  order_position: string;
+  active: boolean;
+  createdAt?: string;
 }
 
 export default function SliderManager() {
@@ -111,21 +111,12 @@ export default function SliderManager() {
               />
             </div>
             <div>
-              <Label htmlFor="subtitle">Subtítulo</Label>
-              <Input
-                id="subtitle"
-                value={formData.subtitle || ''}
-                onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                data-testid="input-subtitle"
-              />
-            </div>
-            <div>
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="text">Texto</Label>
               <Textarea
-                id="description"
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                data-testid="input-description"
+                id="text"
+                value={formData.text || ''}
+                onChange={(e) => setFormData({ ...formData, text: e.target.value })}
+                data-testid="input-text"
               />
             </div>
             <div>
@@ -138,21 +129,12 @@ export default function SliderManager() {
               />
             </div>
             <div>
-              <Label htmlFor="link">Link (opcional)</Label>
+              <Label htmlFor="order_position">Ordem</Label>
               <Input
-                id="link"
-                value={formData.link || ''}
-                onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                data-testid="input-link"
-              />
-            </div>
-            <div>
-              <Label htmlFor="order">Ordem</Label>
-              <Input
-                id="order"
+                id="order_position"
                 type="number"
-                value={formData.order || 0}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                value={formData.order_position || '1'}
+                onChange={(e) => setFormData({ ...formData, order_position: e.target.value })}
                 data-testid="input-order"
               />
             </div>
@@ -173,8 +155,8 @@ export default function SliderManager() {
           <Card key={slide.id} data-testid={`card-slide-${slide.id}`}>
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex-1">
-                <h3 className="font-semibold">{slide.title}</h3>
-                <p className="text-sm text-muted-foreground">{slide.subtitle}</p>
+                <h3 className="font-semibold">{slide.title || 'Sem título'}</h3>
+                <p className="text-sm text-muted-foreground">{slide.text?.substring(0, 60)}{slide.text?.length > 60 ? '...' : ''}</p>
               </div>
               <div className="flex gap-2">
                 <Button 

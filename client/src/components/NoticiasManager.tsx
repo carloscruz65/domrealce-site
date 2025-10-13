@@ -11,12 +11,11 @@ import { Plus, Edit, Trash2, Save, X } from "lucide-react";
 
 interface Noticia {
   id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  image: string;
-  slug: string;
-  date: string;
+  titulo: string;
+  descricao: string;
+  categoria: string;
+  imagem: string;
+  data: string;
 }
 
 export default function NoticiasManager() {
@@ -24,9 +23,11 @@ export default function NoticiasManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Noticia>>({});
 
-  const { data: noticias, isLoading } = useQuery<Noticia[]>({
+  const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
     queryKey: ['/api/admin/noticias'],
   });
+  
+  const noticias = noticiasData?.noticias || [];
 
   const createMutation = useMutation({
     mutationFn: (data: Partial<Noticia>) => apiRequest('/api/admin/noticias', 'POST', data),
@@ -90,42 +91,34 @@ export default function NoticiasManager() {
             <div>
               <Label>Título</Label>
               <Input
-                value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                data-testid="input-title"
+                value={formData.titulo || ''}
+                onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                data-testid="input-titulo"
               />
             </div>
             <div>
-              <Label>Slug (URL amigável)</Label>
+              <Label>Descrição</Label>
+              <Textarea
+                rows={4}
+                value={formData.descricao || ''}
+                onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                data-testid="input-descricao"
+              />
+            </div>
+            <div>
+              <Label>Categoria</Label>
               <Input
-                value={formData.slug || ''}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                data-testid="input-slug"
-              />
-            </div>
-            <div>
-              <Label>Resumo</Label>
-              <Textarea
-                value={formData.excerpt || ''}
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                data-testid="input-excerpt"
-              />
-            </div>
-            <div>
-              <Label>Conteúdo</Label>
-              <Textarea
-                rows={6}
-                value={formData.content || ''}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                data-testid="input-content"
+                value={formData.categoria || ''}
+                onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+                data-testid="input-categoria"
               />
             </div>
             <div>
               <Label>URL da Imagem</Label>
               <Input
-                value={formData.image || ''}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                data-testid="input-image"
+                value={formData.imagem || ''}
+                onChange={(e) => setFormData({ ...formData, imagem: e.target.value })}
+                data-testid="input-imagem"
               />
             </div>
             <div className="flex gap-2">
@@ -145,12 +138,12 @@ export default function NoticiasManager() {
           <Card key={noticia.id} data-testid={`card-noticia-${noticia.id}`}>
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-4 flex-1">
-                {noticia.image && (
-                  <img src={noticia.image} alt={noticia.title} className="w-16 h-16 object-cover rounded" />
+                {noticia.imagem && (
+                  <img src={noticia.imagem} alt={noticia.titulo} className="w-16 h-16 object-cover rounded" />
                 )}
                 <div>
-                  <h3 className="font-semibold">{noticia.title}</h3>
-                  <p className="text-sm text-muted-foreground">{noticia.excerpt?.substring(0, 80)}...</p>
+                  <h3 className="font-semibold">{noticia.titulo}</h3>
+                  <p className="text-sm text-muted-foreground">{noticia.descricao?.substring(0, 80)}{noticia.descricao?.length > 80 ? '...' : ''}</p>
                 </div>
               </div>
               <div className="flex gap-2">

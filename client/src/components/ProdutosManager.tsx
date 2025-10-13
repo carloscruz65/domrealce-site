@@ -11,11 +11,12 @@ import { Plus, Edit, Trash2, Save, X } from "lucide-react";
 
 interface Produto {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
+  titulo: string;
+  descricao: string;
+  preco: string;
+  imagem: string;
+  categoria: string;
+  destaque?: boolean;
 }
 
 export default function ProdutosManager() {
@@ -23,9 +24,11 @@ export default function ProdutosManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Produto>>({});
 
-  const { data: produtos, isLoading } = useQuery<Produto[]>({
+  const { data: produtosData, isLoading } = useQuery<{ produtos: Produto[] }>({
     queryKey: ['/api/admin/produtos'],
   });
+  
+  const produtos = produtosData?.produtos || [];
 
   const createMutation = useMutation({
     mutationFn: (data: Partial<Produto>) => apiRequest('/api/admin/produtos', 'POST', data),
@@ -87,45 +90,44 @@ export default function ProdutosManager() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Nome</Label>
+              <Label>Título</Label>
               <Input
-                value={formData.name || ''}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                data-testid="input-name"
+                value={formData.titulo || ''}
+                onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                data-testid="input-titulo"
               />
             </div>
             <div>
               <Label>Descrição</Label>
               <Textarea
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                data-testid="input-description"
+                value={formData.descricao || ''}
+                onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                data-testid="input-descricao"
               />
             </div>
             <div>
-              <Label>Preço (€)</Label>
+              <Label>Preço</Label>
               <Input
-                type="number"
-                step="0.01"
-                value={formData.price || 0}
-                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
-                data-testid="input-price"
+                value={formData.preco || ''}
+                onChange={(e) => setFormData({ ...formData, preco: e.target.value })}
+                data-testid="input-preco"
+                placeholder="Ex: A partir de €20/m²"
               />
             </div>
             <div>
               <Label>URL da Imagem</Label>
               <Input
-                value={formData.image || ''}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                data-testid="input-image"
+                value={formData.imagem || ''}
+                onChange={(e) => setFormData({ ...formData, imagem: e.target.value })}
+                data-testid="input-imagem"
               />
             </div>
             <div>
               <Label>Categoria</Label>
               <Input
-                value={formData.category || ''}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                data-testid="input-category"
+                value={formData.categoria || ''}
+                onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+                data-testid="input-categoria"
               />
             </div>
             <div className="flex gap-2">
@@ -145,12 +147,12 @@ export default function ProdutosManager() {
           <Card key={produto.id} data-testid={`card-produto-${produto.id}`}>
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-4 flex-1">
-                {produto.image && (
-                  <img src={produto.image} alt={produto.name} className="w-16 h-16 object-cover rounded" />
+                {produto.imagem && (
+                  <img src={produto.imagem} alt={produto.titulo} className="w-16 h-16 object-cover rounded" />
                 )}
                 <div>
-                  <h3 className="font-semibold">{produto.name}</h3>
-                  <p className="text-sm text-muted-foreground">{produto.category} • €{produto.price}</p>
+                  <h3 className="font-semibold">{produto.titulo}</h3>
+                  <p className="text-sm text-muted-foreground">{produto.categoria} • {produto.preco}</p>
                 </div>
               </div>
               <div className="flex gap-2">
