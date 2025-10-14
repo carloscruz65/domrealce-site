@@ -40,9 +40,11 @@ export default function EncomendasManager() {
   const { toast } = useToast();
   const [selectedOrder, setSelectedOrder] = useState<Encomenda | null>(null);
 
-  const { data: orders, isLoading } = useQuery<Encomenda[]>({
+  const { data, isLoading } = useQuery<{ orders: Encomenda[] }>({
     queryKey: ['/api/admin/orders'],
   });
+  
+  const orders = data?.orders || [];
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, estado }: { id: string; estado: string }) => 

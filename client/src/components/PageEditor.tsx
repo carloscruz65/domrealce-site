@@ -42,9 +42,11 @@ export default function PageEditor() {
   const [adding, setAdding] = useState(false);
   const [formData, setFormData] = useState<Partial<PageConfig>>({});
 
-  const { data: configs, isLoading } = useQuery<PageConfig[]>({
+  const { data, isLoading } = useQuery<{ configs: PageConfig[] }>({
     queryKey: ['/api/admin/pages'],
   });
+  
+  const configs = data?.configs || [];
 
   const createMutation = useMutation({
     mutationFn: (data: Partial<PageConfig>) => apiRequest('/api/admin/pages', 'POST', data),
