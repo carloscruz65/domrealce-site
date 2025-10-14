@@ -6,6 +6,8 @@ import SliderManager from "@/components/SliderManager";
 import ProdutosManager from "@/components/ProdutosManager";
 import NoticiasManager from "@/components/NoticiasManager";
 import PortfolioManager from "@/components/PortfolioManager";
+import EncomendasManager from "@/components/EncomendasManager";
+import PageEditor from "@/components/PageEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,14 +66,18 @@ export default function AdminPage() {
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-6 mb-8">
+            <TabsList className="grid w-full grid-cols-8 mb-8">
               <TabsTrigger value="dashboard" className="flex items-center gap-2">
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </TabsTrigger>
+              <TabsTrigger value="editor" className="flex items-center gap-2">
+                <Monitor className="h-4 w-4" />
+                Editor
+              </TabsTrigger>
               <TabsTrigger value="conteudos" className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
-                Conteúdos
+                Slider
               </TabsTrigger>
               <TabsTrigger value="produtos" className="flex items-center gap-2">
                 <Package className="h-4 w-4" />
@@ -84,6 +90,10 @@ export default function AdminPage() {
               <TabsTrigger value="portfolio" className="flex items-center gap-2">
                 <ImageIcon className="h-4 w-4" />
                 Portfolio
+              </TabsTrigger>
+              <TabsTrigger value="encomendas" className="flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4" />
+                Encomendas
               </TabsTrigger>
               <TabsTrigger value="media" className="flex items-center gap-2">
                 <FolderOpen className="h-4 w-4" />
@@ -157,6 +167,16 @@ export default function AdminPage() {
             {/* Portfolio Tab */}
             <TabsContent value="portfolio">
               <PortfolioManager />
+            </TabsContent>
+
+            {/* Encomendas Tab */}
+            <TabsContent value="encomendas">
+              <EncomendasManager />
+            </TabsContent>
+
+            {/* Editor Tab */}
+            <TabsContent value="editor">
+              <PageEditor />
             </TabsContent>
 
             {/* Media Tab */}
