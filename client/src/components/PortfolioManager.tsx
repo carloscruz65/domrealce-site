@@ -17,12 +17,16 @@ interface PortfolioImage {
 }
 
 const CATEGORIES = [
-  "geral",
-  "viaturas",
-  "interiores",
-  "exteriores",
-  "sinaletica",
-  "eventos"
+  "Autocolantes",
+  "camioes",
+  "Comerciais",
+  "Competição",
+  "Fachadas",
+  "Interiores",
+  "Lonas",
+  "Máquinas",
+  "Montras",
+  "Reclames"
 ];
 
 export default function PortfolioManager() {

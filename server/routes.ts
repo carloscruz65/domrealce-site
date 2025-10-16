@@ -59,7 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads
   const upload = multer({ 
     storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
   });
 
   // Simple admin token middleware (temporary until full auth is re-enabled)
@@ -140,7 +140,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload file to object storage
-  app.post('/api/media/upload', protegerAdmin, multer({ storage: multer.memoryStorage() }).single('file'), async (req: Request, res: Response) => {
+  app.post('/api/media/upload', protegerAdmin, multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+  }).single('file'), async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ 

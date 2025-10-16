@@ -161,6 +161,9 @@ export const insertNewsSchema = createInsertSchema(news).pick({
   categoria: true,
   imagem: true,
   data: true,
+}).extend({
+  data: z.string().optional(),
+  imagem: z.string().optional(),
 });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({
