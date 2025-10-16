@@ -48,7 +48,7 @@ export default function EncomendasManager() {
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, estado }: { id: string; estado: string }) => 
-      apiRequest(`/api/admin/orders/${id}/status`, 'PUT', { estado }),
+      apiRequest('PUT', `/api/admin/orders/${id}/status`, { estado }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/orders'] });
       toast({ title: "Estado atualizado!" });
@@ -56,7 +56,7 @@ export default function EncomendasManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/orders/${id}`, 'DELETE'),
+    mutationFn: (id: string) => apiRequest('DELETE', `/api/admin/orders/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/orders'] });
       toast({ title: "Encomenda eliminada!" });

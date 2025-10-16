@@ -62,7 +62,7 @@ export default function PortfolioManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (filename: string) => apiRequest('/api/admin/portfolio/delete', 'DELETE', { filename }),
+    mutationFn: (filename: string) => apiRequest('DELETE', '/api/admin/portfolio/delete', { filename }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/portfolio'] });
       toast({ title: "Imagem eliminada!" });

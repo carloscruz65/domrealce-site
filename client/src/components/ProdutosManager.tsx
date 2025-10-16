@@ -31,7 +31,7 @@ export default function ProdutosManager() {
   const produtos = produtosData?.produtos || [];
 
   const createMutation = useMutation({
-    mutationFn: (data: Partial<Produto>) => apiRequest('/api/admin/produtos', 'POST', data),
+    mutationFn: (data: Partial<Produto>) => apiRequest('POST', '/api/admin/produtos', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
       toast({ title: "Produto criado com sucesso!" });
@@ -42,7 +42,7 @@ export default function ProdutosManager() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Produto> }) => 
-      apiRequest(`/api/admin/produtos/${id}`, 'PUT', data),
+      apiRequest('PUT', `/api/admin/produtos/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
       toast({ title: "Produto atualizado!" });
@@ -52,7 +52,7 @@ export default function ProdutosManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/produtos/${id}`, 'DELETE'),
+    mutationFn: (id: string) => apiRequest('DELETE', `/api/admin/produtos/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/produtos'] });
       toast({ title: "Produto eliminado!" });

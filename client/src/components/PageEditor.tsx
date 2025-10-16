@@ -43,7 +43,7 @@ function ConfigEditor({ config }: { config: PageConfig }) {
 
   const updateMutation = useMutation({
     mutationFn: (newValue: string) => 
-      apiRequest(`/api/admin/pages/${config.id}`, 'PUT', {
+      apiRequest('PUT', `/api/admin/pages/${config.id}`, {
         page: config.page,
         section: config.section,
         element: config.element,
@@ -66,6 +66,7 @@ function ConfigEditor({ config }: { config: PageConfig }) {
   };
 
   const handleSave = () => {
+    console.log("🔧 A tentar guardar:", { id: config.id, value });
     updateMutation.mutate(value);
   };
 
@@ -120,7 +121,7 @@ export default function PageEditor() {
   const configs = data?.configs || [];
 
   const createMutation = useMutation({
-    mutationFn: (data: Partial<PageConfig>) => apiRequest('/api/admin/pages', 'POST', data),
+    mutationFn: (data: Partial<PageConfig>) => apiRequest('POST', '/api/admin/pages', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: "✅ Configuração criada!" });

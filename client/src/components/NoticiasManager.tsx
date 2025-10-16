@@ -30,7 +30,7 @@ export default function NoticiasManager() {
   const noticias = noticiasData?.noticias || [];
 
   const createMutation = useMutation({
-    mutationFn: (data: Partial<Noticia>) => apiRequest('/api/admin/noticias', 'POST', data),
+    mutationFn: (data: Partial<Noticia>) => apiRequest('POST', '/api/admin/noticias', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia criada com sucesso!" });
@@ -41,7 +41,7 @@ export default function NoticiasManager() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Noticia> }) => 
-      apiRequest(`/api/admin/noticias/${id}`, 'PUT', data),
+      apiRequest('PUT', `/api/admin/noticias/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia atualizada!" });
@@ -51,7 +51,7 @@ export default function NoticiasManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/noticias/${id}`, 'DELETE'),
+    mutationFn: (id: string) => apiRequest('DELETE', `/api/admin/noticias/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia eliminada!" });

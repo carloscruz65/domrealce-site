@@ -31,7 +31,7 @@ export default function SliderManager() {
   const slides = slidesData?.slides || [];
 
   const createMutation = useMutation({
-    mutationFn: (data: Partial<Slide>) => apiRequest('/api/admin/slider', 'POST', data),
+    mutationFn: (data: Partial<Slide>) => apiRequest('POST', '/api/admin/slider', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/slider'] });
       toast({ title: "Slide criado com sucesso!" });
@@ -42,7 +42,7 @@ export default function SliderManager() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Slide> }) => 
-      apiRequest(`/api/admin/slider/${id}`, 'PUT', data),
+      apiRequest('PUT', `/api/admin/slider/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/slider'] });
       toast({ title: "Slide atualizado com sucesso!" });
@@ -52,7 +52,7 @@ export default function SliderManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => apiRequest(`/api/admin/slider/${id}`, 'DELETE'),
+    mutationFn: (id: string) => apiRequest('DELETE', `/api/admin/slider/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/slider'] });
       toast({ title: "Slide eliminado com sucesso!" });

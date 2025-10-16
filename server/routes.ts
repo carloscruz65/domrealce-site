@@ -1518,11 +1518,13 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   app.put("/api/admin/pages/:id", async (req, res) => {
     try {
       const { id } = req.params;
+      console.log("📝 PUT /api/admin/pages/:id recebido:", { id, body: req.body });
       const configData = insertPageConfigSchema.parse(req.body);
       const config = await storage.updatePageConfig(id, configData);
+      console.log("✅ Config atualizada com sucesso:", config);
       res.json({ success: true, config });
     } catch (error) {
-      console.error("Error updating page config:", error);
+      console.error("❌ Error updating page config:", error);
       res.status(500).json({ error: "Failed to update page config" });
     }
   });
