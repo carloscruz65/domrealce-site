@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Plus } from "lucide-react";
+import { Save, Plus, Check } from "lucide-react";
 
 interface PageConfig {
   id: string;
@@ -36,6 +36,77 @@ const CONFIG_TYPES = [
   { value: "number", label: "Número" },
 ];
 
+function ConfigEditor({ config }: { config: PageConfig }) {
+  const { toast } = useToast();
+  const [value, setValue] = useState(config.value);
+  const [isSaved, setIsSaved] = useState(true);
+
+  const updateMutation = useMutation({
+    mutationFn: (newValue: string) => 
+      apiRequest(`/api/admin/pages/${config.id}`, 'PUT', {
+        page: config.page,
+        section: config.section,
+        element: config.element,
+        type: config.type,
+        value: newValue
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
+      toast({ title: "✅ Guardado!" });
+      setIsSaved(true);
+    },
+    onError: () => {
+      toast({ title: "❌ Erro ao guardar", variant: "destructive" });
+    }
+  });
+
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+    setIsSaved(false);
+  };
+
+  const handleSave = () => {
+    updateMutation.mutate(value);
+  };
+
+  return (
+    <div className="flex items-center gap-2 p-2 border rounded-lg">
+      <Label className="w-32 capitalize font-medium">{config.element}</Label>
+      {config.type === 'text' ? (
+        <Textarea
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+          className="flex-1"
+          data-testid={`input-${config.element}`}
+        />
+      ) : (
+        <Input
+          type={config.type === 'color' ? 'color' : config.type === 'number' ? 'number' : 'text'}
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+          className={config.type === 'color' ? 'w-20 h-10' : 'flex-1'}
+          data-testid={`input-${config.element}`}
+        />
+      )}
+      <Button
+        onClick={handleSave}
+        disabled={isSaved || updateMutation.isPending}
+        size="sm"
+        variant={isSaved ? "outline" : "default"}
+        data-testid={`button-save-${config.element}`}
+      >
+        {updateMutation.isPending ? (
+          "..."
+        ) : isSaved ? (
+          <Check className="h-4 w-4 text-green-500" />
+        ) : (
+          <><Save className="h-4 w-4 mr-1" /> Guardar</>
+        )}
+      </Button>
+    </div>
+  );
+}
+
 export default function PageEditor() {
   const { toast } = useToast();
   const [selectedPage, setSelectedPage] = useState("home");
@@ -52,31 +123,18 @@ export default function PageEditor() {
     mutationFn: (data: Partial<PageConfig>) => apiRequest('/api/admin/pages', 'POST', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
-      toast({ title: "Configuração criada!" });
+      toast({ title: "✅ Configuração criada!" });
       setFormData({});
       setAdding(false);
     },
+    onError: () => {
+      toast({ title: "❌ Erro ao criar", variant: "destructive" });
+    }
   });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<PageConfig> }) => 
-      apiRequest(`/api/admin/pages/${id}`, 'PUT', data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
-      toast({ title: "Configuração atualizada!" });
-    },
-  });
-
-  const handleSaveConfig = (config: PageConfig, newValue: string) => {
-    updateMutation.mutate({
-      id: config.id,
-      data: { ...config, value: newValue }
-    });
-  };
 
   const handleCreateConfig = () => {
     if (!formData.page || !formData.section || !formData.element || !formData.type || !formData.value) {
-      toast({ title: "Preencha todos os campos", variant: "destructive" });
+      toast({ title: "⚠️ Preencha todos os campos", variant: "destructive" });
       return;
     }
     createMutation.mutate(formData);
@@ -98,7 +156,7 @@ export default function PageEditor() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Editor Visual de Páginas</h2>
-          <p className="text-muted-foreground">Editar textos, cores e espaçamentos</p>
+          <p className="text-muted-foreground">Editar textos, cores e espaçamentos das páginas</p>
         </div>
         <Button onClick={() => setAdding(!adding)} data-testid="button-add-config">
           <Plus className="mr-2 h-4 w-4" /> Nova Configuração
@@ -115,7 +173,7 @@ export default function PageEditor() {
               <div>
                 <Label>Página</Label>
                 <Select value={formData.page} onValueChange={(v) => setFormData({ ...formData, page: v })}>
-                  <SelectTrigger>
+                  <SelectTrigger data-testid="select-page">
                     <SelectValue placeholder="Selecione a página" />
                   </SelectTrigger>
                   <SelectContent>
@@ -128,7 +186,7 @@ export default function PageEditor() {
               <div>
                 <Label>Tipo</Label>
                 <Select value={formData.type} onValueChange={(v) => setFormData({ ...formData, type: v })}>
-                  <SelectTrigger>
+                  <SelectTrigger data-testid="select-type">
                     <SelectValue placeholder="Tipo de configuração" />
                   </SelectTrigger>
                   <SelectContent>
@@ -146,6 +204,7 @@ export default function PageEditor() {
                   placeholder="Ex: hero, features, cta"
                   value={formData.section || ''}
                   onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                  data-testid="input-section"
                 />
               </div>
               <div>
@@ -154,6 +213,7 @@ export default function PageEditor() {
                   placeholder="Ex: title, subtitle, bgColor"
                   value={formData.element || ''}
                   onChange={(e) => setFormData({ ...formData, element: e.target.value })}
+                  data-testid="input-element"
                 />
               </div>
             </div>
@@ -163,17 +223,24 @@ export default function PageEditor() {
                 <Textarea 
                   value={formData.value || ''}
                   onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                  data-testid="input-value"
                 />
               ) : (
                 <Input 
                   type={formData.type === 'color' ? 'color' : formData.type === 'number' ? 'number' : 'text'}
                   value={formData.value || ''}
                   onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                  data-testid="input-value"
                 />
               )}
             </div>
-            <Button onClick={handleCreateConfig} data-testid="button-save-config">
-              <Save className="mr-2 h-4 w-4" /> Guardar
+            <Button 
+              onClick={handleCreateConfig} 
+              disabled={createMutation.isPending}
+              data-testid="button-create-config"
+            >
+              <Save className="mr-2 h-4 w-4" /> 
+              {createMutation.isPending ? "A criar..." : "Criar Configuração"}
             </Button>
           </CardContent>
         </Card>
@@ -187,36 +254,28 @@ export default function PageEditor() {
         </TabsList>
 
         {PAGES.map(page => (
-          <TabsContent key={page.value} value={page.value}>
-            {Object.entries(groupedConfigs).map(([section, sectionConfigs]) => (
-              <Card key={section} className="mb-4">
-                <CardHeader>
-                  <CardTitle className="capitalize">{section}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {sectionConfigs.map((config) => (
-                    <div key={config.id} className="flex items-center gap-4">
-                      <Label className="w-40 capitalize">{config.element}</Label>
-                      {config.type === 'text' ? (
-                        <Textarea
-                          defaultValue={config.value}
-                          onBlur={(e) => handleSaveConfig(config, e.target.value)}
-                          className="flex-1"
-                        />
-                      ) : (
-                        <Input
-                          type={config.type === 'color' ? 'color' : config.type === 'number' ? 'number' : 'text'}
-                          defaultValue={config.value}
-                          onBlur={(e) => handleSaveConfig(config, e.target.value)}
-                          className={config.type === 'color' ? 'w-20 h-10' : 'flex-1'}
-                        />
-                      )}
-                      <span className="text-xs text-muted-foreground">{config.type}</span>
-                    </div>
-                  ))}
+          <TabsContent key={page.value} value={page.value} className="space-y-4">
+            {Object.keys(groupedConfigs).length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center text-muted-foreground">
+                  <p>Nenhuma configuração disponível para esta página.</p>
+                  <p className="text-sm mt-2">Clique em "Nova Configuração" para adicionar.</p>
                 </CardContent>
               </Card>
-            ))}
+            ) : (
+              Object.entries(groupedConfigs).map(([section, sectionConfigs]) => (
+                <Card key={section}>
+                  <CardHeader>
+                    <CardTitle className="capitalize">{section}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {sectionConfigs.map((config) => (
+                      <ConfigEditor key={config.id} config={config} />
+                    ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </TabsContent>
         ))}
       </Tabs>
