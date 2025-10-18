@@ -52,7 +52,9 @@ export const news = pgTable("news", {
   titulo: text("titulo").notNull(),
   descricao: text("descricao").notNull(),
   categoria: text("categoria").notNull(),
-  imagem: text("imagem").notNull(),
+  imagem: text("imagem").notNull(), // Imagem principal (compatibilidade)
+  imagens: text("imagens").array().default([]), // Galeria de imagens
+  tipoGaleria: text("tipo_galeria").default("single"), // single, slide, grid, before-after
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -160,10 +162,14 @@ export const insertNewsSchema = createInsertSchema(news).pick({
   descricao: true,
   categoria: true,
   imagem: true,
+  imagens: true,
+  tipoGaleria: true,
   data: true,
 }).extend({
   data: z.string().optional(),
   imagem: z.string().optional(),
+  imagens: z.array(z.string()).optional().default([]),
+  tipoGaleria: z.enum(["single", "slide", "grid", "before-after"]).optional().default("single"),
 });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({
