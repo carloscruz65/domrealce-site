@@ -1363,7 +1363,14 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   app.post("/api/admin/noticias", async (req, res) => {
     try {
       const newsData = insertNewsSchema.parse(req.body);
-      const noticia = await storage.createNews(newsData);
+      
+      // Convert data string to Date if provided
+      const processedData = {
+        ...newsData,
+        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : new Date()
+      };
+      
+      const noticia = await storage.createNews(processedData as any);
       res.json({ success: true, noticia });
     } catch (error) {
       console.error("Error creating news:", error);
@@ -1375,7 +1382,14 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     try {
       const { id } = req.params;
       const newsData = insertNewsSchema.parse(req.body);
-      const noticia = await storage.updateNews(id, newsData);
+      
+      // Convert data string to Date if provided
+      const processedData = {
+        ...newsData,
+        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : undefined
+      };
+      
+      const noticia = await storage.updateNews(id, processedData as any);
       res.json({ success: true, noticia });
     } catch (error) {
       console.error("Error updating news:", error);
