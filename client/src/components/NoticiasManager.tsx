@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, Save, X, ImagePlus, Images, Grid3x3, ArrowLeftRight } from "lucide-react";
+import ImageUploader from "@/components/ImageUploader";
 
 interface Noticia {
   id: string;
@@ -247,18 +248,12 @@ export default function NoticiasManager() {
               
               {/* Imagem única para tipo "single" */}
               {formData.tipoGaleria === "single" && (
-                <div>
-                  <Label>URL da Imagem de Destaque *</Label>
-                  <Input
-                    value={formData.imagem || ''}
-                    onChange={(e) => setFormData({ ...formData, imagem: e.target.value })}
-                    placeholder="https://exemplo.com/imagem.jpg"
-                    data-testid="input-imagem"
-                  />
-                  {formData.imagem && (
-                    <img src={formData.imagem} alt="Preview" className="mt-2 w-full max-w-md h-48 object-cover rounded" />
-                  )}
-                </div>
+                <ImageUploader
+                  label="Imagem de Destaque *"
+                  value={formData.imagem || ''}
+                  onChange={(url) => setFormData({ ...formData, imagem: url })}
+                  folder="noticias"
+                />
               )}
 
               {/* Galeria para outros tipos */}
@@ -269,17 +264,22 @@ export default function NoticiasManager() {
                     {formData.tipoGaleria === "before-after" && " (Exatamente 2 imagens)"}
                     {formData.tipoGaleria && " *"}
                   </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      value={novaImagem}
-                      onChange={(e) => setNovaImagem(e.target.value)}
-                      placeholder="https://exemplo.com/imagem.jpg"
-                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), adicionarImagem())}
-                    />
-                    <Button type="button" onClick={adicionarImagem} variant="outline">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  
+                  <ImageUploader
+                    label=""
+                    value={novaImagem}
+                    onChange={(url) => {
+                      if (url) {
+                        const imagens = formData.imagens || [];
+                        setFormData({ 
+                          ...formData, 
+                          imagens: [...imagens, url] 
+                        });
+                        setNovaImagem("");
+                      }
+                    }}
+                    folder="noticias/galeria"
+                  />
                   
                   {/* Preview das imagens */}
                   {formData.imagens && formData.imagens.length > 0 && (
