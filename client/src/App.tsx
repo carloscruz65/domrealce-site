@@ -122,6 +122,7 @@ function Router() {
         <Route path="/como-aplicar-papel-parede" component={ComoAplicarPapelParede} />
         <Route path="/carrinho" component={Carrinho} />
         <Route path="/editor" component={Admin} />
+        <Route path="/admin" component={Admin} />
         <Route path="/noticias" component={Noticias} />
         <Route path="/contactos" component={Contactos} />
         <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
