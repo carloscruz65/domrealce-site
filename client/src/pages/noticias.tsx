@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import type { News } from "@shared/schema";
+import NewsGallery from "@/components/NewsGallery";
 
 // ✅ Dados agora vêm da API real!
 
@@ -168,19 +169,17 @@ export default function Noticias() {
               {noticiasFiltradas.map((noticia) => (
                 <Card key={noticia.id} className="overflow-hidden hover-lift border-border bg-card mt-12">
                 <div className="md:flex">
-                  {/* Imagem */}
-                  <div className="md:w-1/3">
-                    <div className="aspect-video md:aspect-square bg-muted relative overflow-hidden">
-                      <img 
-                        src={noticia.imagem} 
-                        alt={noticia.titulo}
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/20 via-transparent to-brand-turquoise/20"></div>
-                      {/* Badge de destaque */}
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-brand-coral text-white font-semibold">🔥 NOVO</Badge>
-                      </div>
+                  {/* Galeria de Imagens */}
+                  <div className="md:w-1/3 relative">
+                    <NewsGallery 
+                      tipoGaleria={noticia.tipoGaleria as any || "single"}
+                      imagem={noticia.imagem}
+                      imagens={noticia.imagens || []}
+                      titulo={noticia.titulo}
+                    />
+                    {/* Badge de destaque */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <Badge className="bg-brand-coral text-white font-semibold">🔥 NOVO</Badge>
                     </div>
                   </div>
 
