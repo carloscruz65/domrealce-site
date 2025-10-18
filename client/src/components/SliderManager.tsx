@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+import ImageUploader from "@/components/ImageUploader";
 
 interface Slide {
   id: string;
@@ -119,15 +120,12 @@ export default function SliderManager() {
                 data-testid="input-text"
               />
             </div>
-            <div>
-              <Label htmlFor="image">URL da Imagem</Label>
-              <Input
-                id="image"
-                value={formData.image || ''}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                data-testid="input-image"
-              />
-            </div>
+            <ImageUploader
+              label="Imagem do Slide"
+              value={formData.image || ''}
+              onChange={(url) => setFormData({ ...formData, image: url })}
+              folder="slider"
+            />
             <div>
               <Label htmlFor="order_position">Ordem</Label>
               <Input

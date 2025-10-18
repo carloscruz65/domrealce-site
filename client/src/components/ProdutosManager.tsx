@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+import ImageUploader from "@/components/ImageUploader";
 
 interface Produto {
   id: string;
@@ -114,14 +115,12 @@ export default function ProdutosManager() {
                 placeholder="Ex: A partir de €20/m²"
               />
             </div>
-            <div>
-              <Label>URL da Imagem</Label>
-              <Input
-                value={formData.imagem || ''}
-                onChange={(e) => setFormData({ ...formData, imagem: e.target.value })}
-                data-testid="input-imagem"
-              />
-            </div>
+            <ImageUploader
+              label="Imagem do Produto"
+              value={formData.imagem || ''}
+              onChange={(url) => setFormData({ ...formData, imagem: url })}
+              folder="produtos"
+            />
             <div>
               <Label>Categoria</Label>
               <Input
