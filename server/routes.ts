@@ -226,7 +226,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/objects/images", async (req, res) => {
     try {
       const folder = req.query.folder as string | undefined;
+      console.log(`📁 Listing images from folder: "${folder}"`);
       const images = await objectStorageService.listPublicFilesWithMetadata(folder);
+      console.log(`✅ Found ${images.length} images`);
       res.json({ images });
     } catch (error) {
       console.error("Error listing images:", error);

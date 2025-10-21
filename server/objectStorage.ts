@@ -87,7 +87,9 @@ export class ObjectStorageService {
   // List files with full metadata (for new image browser)
   async listPublicFilesWithMetadata(folder?: string): Promise<Array<{ name: string; url: string; size: number; updated: string }>> {
     const searchPaths = this.getPublicObjectSearchPaths();
+    console.log(`🔍 Search paths:`, searchPaths);
     if (searchPaths.length === 0) {
+      console.log('❌ No search paths configured');
       return [];
     }
 
@@ -97,17 +99,23 @@ export class ObjectStorageService {
 
     // Build prefix based on folder
     const prefix = folder ? `${objectName}/${folder}/` : `${objectName}/`;
+    console.log(`🔍 Listing files with prefix: "${prefix}"`);
 
     try {
       const [files] = await bucket.getFiles({ prefix });
+      console.log(`📦 Found ${files.length} total files in storage`);
       
-      return files
+      const imageFiles = files
         .filter(file => {
           // Filter only image files
           const name = file.name.toLowerCase();
-          return name.endsWith('.jpg') || name.endsWith('.jpeg') || 
+          const isImage = name.endsWith('.jpg') || name.endsWith('.jpeg') || 
                  name.endsWith('.png') || name.endsWith('.gif') || 
                  name.endsWith('.webp') || name.endsWith('.svg');
+          if (isImage) {
+            console.log(`✅ Image file found: ${file.name}`);
+          }
+          return isImage;
         })
         .map(file => {
           const metadata = file.metadata;
@@ -119,8 +127,11 @@ export class ObjectStorageService {
             updated: metadata.updated || new Date().toISOString()
           };
         });
+      
+      console.log(`🖼️ Returning ${imageFiles.length} image files`);
+      return imageFiles;
     } catch (error) {
-      console.error('Error listing files:', error);
+      console.error('❌ Error listing files:', error);
       return [];
     }
   }
