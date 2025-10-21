@@ -60,6 +60,9 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
             const timestamp = Date.now();
             const fileName = `${folder}/${timestamp}-${file.name}`;
             
+            // Salvar o fileName para usar depois
+            (file as any).uploadPath = fileName;
+            
             // Obter URL de upload do backend
             const response = await fetch('/api/objects/upload', {
               method: 'POST',
@@ -68,7 +71,8 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
             });
             
             if (!response.ok) {
-              throw new Error('Erro ao obter URL de upload');
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Erro ao obter URL de upload');
             }
             
             const { uploadURL } = await response.json();
@@ -85,16 +89,18 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
       })
       .on("complete", (result) => {
         if (result.successful && result.successful.length > 0) {
-          // Extrair URL pública da resposta
+          // Construir URL pública baseada no caminho do arquivo
           const uploadedFile = result.successful[0];
-          const publicUrl = uploadedFile.uploadURL?.split('?')[0] || uploadedFile.uploadURL;
-          onChange(publicUrl || '');
-          setUrlInput(publicUrl || '');
+          const uploadPath = (uploadedFile as any).uploadPath;
+          const publicUrl = `/public-objects/${uploadPath}`;
+          console.log('✅ Upload concluído:', publicUrl);
+          onChange(publicUrl);
+          setUrlInput(publicUrl);
         }
         setShowUploadModal(false);
       })
       .on("upload-error", (file, error, response) => {
-        console.error("Upload error:", error, response);
+        console.error("❌ Erro no upload:", error, response);
       })
   );
 

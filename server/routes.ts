@@ -214,10 +214,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Upload endpoint for getting presigned URLs
   app.post("/api/objects/upload", async (req, res) => {
     try {
-      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      const { fileName } = req.body;
+      if (!fileName) {
+        return res.status(400).json({ error: "fileName is required" });
+      }
+      
+      console.log(`📤 Generating upload URL for: ${fileName}`);
+      const uploadURL = await objectStorageService.getPublicUploadURL(fileName);
+      console.log(`✅ Upload URL generated successfully`);
       res.json({ uploadURL });
     } catch (error) {
-      console.error("Error getting upload URL:", error);
+      console.error("❌ Error getting upload URL:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
