@@ -222,6 +222,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // List images from object storage
+  app.get("/api/objects/images", async (req, res) => {
+    try {
+      const folder = req.query.folder as string | undefined;
+      const images = await objectStorageService.listPublicFiles(folder);
+      res.json({ images });
+    } catch (error) {
+      console.error("Error listing images:", error);
+      res.status(500).json({ error: "Failed to list images" });
+    }
+  });
+
   // Normalize uploaded image path
   app.post("/api/images/normalize", async (req, res) => {
     if (!req.body.imageURL) {

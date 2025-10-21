@@ -55,6 +55,46 @@ export class ObjectStorageService {
     return paths;
   }
 
+  // List all files in a specific folder (or all public files if no folder specified)
+  async listPublicFiles(folder?: string): Promise<Array<{ name: string; url: string; size: number; updated: string }>> {
+    const searchPaths = this.getPublicObjectSearchPaths();
+    if (searchPaths.length === 0) {
+      return [];
+    }
+
+    const firstPath = searchPaths[0];
+    const { bucketName, objectName } = parseObjectPath(firstPath);
+    const bucket = objectStorageClient.bucket(bucketName);
+
+    // Build prefix based on folder
+    const prefix = folder ? `${objectName}/${folder}/` : `${objectName}/`;
+
+    try {
+      const [files] = await bucket.getFiles({ prefix });
+      
+      return files
+        .filter(file => {
+          // Filter only image files
+          const name = file.name.toLowerCase();
+          return name.endsWith('.jpg') || name.endsWith('.jpeg') || 
+                 name.endsWith('.png') || name.endsWith('.gif') || 
+                 name.endsWith('.webp') || name.endsWith('.svg');
+        })
+        .map(file => {
+          const metadata = file.metadata;
+          return {
+            name: file.name.split('/').pop() || file.name,
+            url: `https://storage.googleapis.com/${bucketName}/${file.name}`,
+            size: parseInt(metadata.size || '0'),
+            updated: metadata.updated || new Date().toISOString()
+          };
+        });
+    } catch (error) {
+      console.error('Error listing files:', error);
+      return [];
+    }
+  }
+
   // Search for a public object from the search paths.
   async searchPublicObject(filePath: string): Promise<File | null> {
     for (const searchPath of this.getPublicObjectSearchPaths()) {
@@ -107,26 +147,6 @@ export class ObjectStorageService {
     }
   }
 
-  // List all files in the public directory
-  async listPublicFiles(): Promise<string[]> {
-    const files: string[] = [];
-    for (const searchPath of this.getPublicObjectSearchPaths()) {
-      const { bucketName, objectName } = parseObjectPath(searchPath);
-      const bucket = objectStorageClient.bucket(bucketName);
-      
-      const [fileList] = await bucket.getFiles({
-        prefix: objectName + '/',
-      });
-      
-      fileList.forEach(file => {
-        const relativePath = file.name.replace(objectName + '/', '');
-        if (relativePath && !relativePath.endsWith('/')) {
-          files.push(relativePath);
-        }
-      });
-    }
-    return files;
-  }
 
   // Get upload URL for public files
   async getPublicUploadURL(filePath: string): Promise<string> {
