@@ -227,8 +227,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const folder = req.query.folder as string | undefined;
       console.log(`📁 Listing images from folder: "${folder}"`);
-      const images = await objectStorageService.listPublicFilesWithMetadata(folder);
-      console.log(`✅ Found ${images.length} images`);
+      
+      // Get all files first
+      const allFiles = await objectStorageService.listPublicFiles();
+      console.log(`📦 Total files in storage: ${allFiles.length}`);
+      
+      // Filter by folder and image extensions
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+      const filteredFiles = allFiles.filter(filePath => {
+        const matchesFolder = !folder || filePath.startsWith(`${folder}/`);
+        const isImage = imageExtensions.some(ext => filePath.toLowerCase().endsWith(ext));
+        return matchesFolder && isImage;
+      });
+      
+      console.log(`🖼️ Filtered to ${filteredFiles.length} images`);
+      
+      // Convert to metadata format
+      const images = filteredFiles.map(filePath => ({
+        name: filePath.split('/').pop() || filePath,
+        url: `/public-objects/${filePath}`,
+        size: 0,
+        updated: new Date().toISOString()
+      }));
+      
+      console.log(`✅ Returning ${images.length} images`);
       res.json({ images });
     } catch (error) {
       console.error("Error listing images:", error);
