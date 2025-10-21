@@ -222,11 +222,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // List images from object storage
+  // List images from object storage with metadata
   app.get("/api/objects/images", async (req, res) => {
     try {
       const folder = req.query.folder as string | undefined;
-      const images = await objectStorageService.listPublicFiles(folder);
+      const images = await objectStorageService.listPublicFilesWithMetadata(folder);
       res.json({ images });
     } catch (error) {
       console.error("Error listing images:", error);

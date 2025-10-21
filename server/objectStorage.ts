@@ -55,8 +55,37 @@ export class ObjectStorageService {
     return paths;
   }
 
-  // List all files in a specific folder (or all public files if no folder specified)
-  async listPublicFiles(folder?: string): Promise<Array<{ name: string; url: string; size: number; updated: string }>> {
+  // List file paths only (for legacy code)
+  async listPublicFiles(folder?: string): Promise<string[]> {
+    const searchPaths = this.getPublicObjectSearchPaths();
+    if (searchPaths.length === 0) {
+      return [];
+    }
+
+    const firstPath = searchPaths[0];
+    const { bucketName, objectName } = parseObjectPath(firstPath);
+    const bucket = objectStorageClient.bucket(bucketName);
+
+    // Build prefix based on folder
+    const prefix = folder ? `${objectName}/${folder}/` : `${objectName}/`;
+
+    try {
+      const [files] = await bucket.getFiles({ prefix });
+      
+      return files
+        .filter(file => !file.name.endsWith('/')) // Exclude directories
+        .map(file => {
+          // Remove the base object path to get relative path
+          return file.name.replace(`${objectName}/`, '');
+        });
+    } catch (error) {
+      console.error('Error listing files:', error);
+      return [];
+    }
+  }
+
+  // List files with full metadata (for new image browser)
+  async listPublicFilesWithMetadata(folder?: string): Promise<Array<{ name: string; url: string; size: number; updated: string }>> {
     const searchPaths = this.getPublicObjectSearchPaths();
     if (searchPaths.length === 0) {
       return [];
@@ -82,9 +111,10 @@ export class ObjectStorageService {
         })
         .map(file => {
           const metadata = file.metadata;
+          const relativePath = file.name.replace(`${objectName}/`, '');
           return {
             name: file.name.split('/').pop() || file.name,
-            url: `https://storage.googleapis.com/${bucketName}/${file.name}`,
+            url: `/public-objects/${relativePath}`,
             size: parseInt(metadata.size || '0'),
             updated: metadata.updated || new Date().toISOString()
           };
