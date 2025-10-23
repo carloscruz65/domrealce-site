@@ -278,7 +278,7 @@ export default function NoticiasManager() {
                         setNovaImagem("");
                       }
                     }}
-                    folder="noticias/galeria"
+                    folder="noticias"
                   />
                   
                   {/* Preview das imagens */}

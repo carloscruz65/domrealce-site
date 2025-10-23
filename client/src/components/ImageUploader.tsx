@@ -96,11 +96,26 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
           console.log('✅ Upload concluído:', publicUrl);
           onChange(publicUrl);
           setUrlInput(publicUrl);
+          setShowUploadModal(false);
+        } else if (result.failed && result.failed.length > 0) {
+          console.error("❌ Upload falhou:", result.failed);
+          const error = result.failed[0].error;
+          alert(`Erro no upload: ${error || 'Erro desconhecido'}`);
         }
-        setShowUploadModal(false);
       })
       .on("upload-error", (file, error, response) => {
-        console.error("❌ Erro no upload:", error, response);
+        console.error("❌ Erro no upload:", {
+          fileName: file?.name,
+          error: error,
+          response: response
+        });
+      })
+      .on("upload-success", (file, response) => {
+        console.log("✅ Upload bem-sucedido:", {
+          fileName: file?.name,
+          status: response?.status,
+          uploadURL: response?.uploadURL
+        });
       })
   );
 
