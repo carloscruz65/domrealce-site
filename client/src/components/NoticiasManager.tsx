@@ -112,10 +112,18 @@ export default function NoticiasManager() {
       return;
     }
 
+    // Preparar dados para envio
+    const dataToSave = { ...formData };
+    
+    // Se não é tipo "single", usar a primeira imagem do array como imagem principal
+    if (formData.tipoGaleria !== "single" && formData.imagens && formData.imagens.length > 0) {
+      dataToSave.imagem = formData.imagens[0];
+    }
+
     if (editing === 'new') {
-      createMutation.mutate(formData);
+      createMutation.mutate(dataToSave);
     } else if (editing) {
-      updateMutation.mutate({ id: editing, data: formData });
+      updateMutation.mutate({ id: editing, data: dataToSave });
     }
   };
 
