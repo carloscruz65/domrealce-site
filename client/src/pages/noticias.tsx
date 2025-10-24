@@ -82,6 +82,51 @@ export default function Noticias() {
     filtrarNoticias();
   }, [filtroCategoria, termoPesquisa]);
 
+  // Atualizar meta tags Open Graph para redes sociais
+  useEffect(() => {
+    if (noticias.length > 0) {
+      const primeiraNoticia = noticias[0];
+      const imagemNoticia = primeiraNoticia.imagens?.[0] || primeiraNoticia.imagem || '';
+      
+      // Atualizar meta tags Open Graph
+      const updateMetaTag = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      const updateMetaName = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="${name}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      // Open Graph tags
+      updateMetaTag('og:title', 'Notícias DOMREALCE - Projectos de Comunicação Visual');
+      updateMetaTag('og:description', primeiraNoticia.descricao.slice(0, 160));
+      updateMetaTag('og:image', imagemNoticia);
+      updateMetaTag('og:url', window.location.href);
+      updateMetaTag('og:type', 'article');
+
+      // Twitter tags
+      updateMetaName('twitter:card', 'summary_large_image');
+      updateMetaName('twitter:title', 'Notícias DOMREALCE - Projectos de Comunicação Visual');
+      updateMetaName('twitter:description', primeiraNoticia.descricao.slice(0, 160));
+      updateMetaName('twitter:image', imagemNoticia);
+
+      // Atualizar título da página
+      document.title = 'Notícias e Novidades | DOMREALCE Lisboa';
+    }
+  }, [noticias]);
+
   return (
     <div className="bg-background text-foreground min-h-screen">
       <Navigation />
