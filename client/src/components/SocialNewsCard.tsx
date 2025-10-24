@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Calendar, Clock, ChevronLeft, ChevronRight, Facebook, Instagram, Linkedin, Share2, Heart, X } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Calendar, Clock, ChevronLeft, ChevronRight, Facebook, Instagram, Linkedin, Share2, Heart } from "lucide-react";
 import type { News } from "@shared/schema";
 
 interface SocialNewsCardProps {
@@ -13,7 +13,6 @@ interface SocialNewsCardProps {
 
 export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps) {
   const [indiceImagem, setIndiceImagem] = useState(0);
-  const [verMais, setVerMais] = useState(false);
   const [curtido, setCurtido] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
 
@@ -46,6 +45,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
       <Card 
         className="overflow-hidden bg-black border border-gray-800 hover:border-brand-yellow/50 transition-all cursor-pointer group"
         onClick={() => setModalAberto(true)}
+        data-testid={`card-noticia-${noticia.id}`}
       >
         {/* Galeria de Imagens - Topo, mais retangular */}
         {imagens.length > 0 && (
@@ -82,7 +82,6 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
 
         {/* Conteúdo Compacto */}
         <div className="p-4">
-
           {/* Data e Equipe */}
           <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
             <div className="flex items-center gap-1">
@@ -117,6 +116,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                   setCurtido(!curtido);
                 }}
                 className={`flex items-center gap-1 ${curtido ? 'text-red-500' : ''}`}
+                data-testid={`button-like-${noticia.id}`}
               >
                 <Heart className={`h-3.5 w-3.5 ${curtido ? 'fill-current' : ''}`} />
                 <span>{Math.floor(Math.random() * 50) + (curtido ? 1 : 0)}</span>
@@ -130,6 +130,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                 e.stopPropagation();
                 setModalAberto(true);
               }}
+              data-testid={`button-vermais-${noticia.id}`}
             >
               Ver Mais
             </Button>
@@ -140,6 +141,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
       {/* Modal - Visualização Expandida */}
       <Dialog open={modalAberto} onOpenChange={setModalAberto}>
         <DialogContent className="max-w-4xl bg-black border-gray-800 text-white p-0 overflow-hidden">
+          <DialogTitle className="sr-only">{noticia.titulo}</DialogTitle>
           <div className="max-h-[90vh] overflow-y-auto">
             {/* Imagem Grande com Controles */}
             {imagens.length > 0 && (
@@ -158,6 +160,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                         variant="ghost"
                         onClick={imagemAnterior}
                         className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12"
+                        data-testid="button-previous-image"
                       >
                         <ChevronLeft className="h-8 w-8" />
                       </Button>
@@ -166,6 +169,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                         variant="ghost"
                         onClick={proximaImagem}
                         className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12"
+                        data-testid="button-next-image"
                       >
                         <ChevronRight className="h-8 w-8" />
                       </Button>
@@ -180,6 +184,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                                 ? 'bg-brand-yellow w-8 h-2 rounded-full'
                                 : 'bg-gray-600 hover:bg-gray-400 w-2 h-2 rounded-full'
                             }`}
+                            data-testid={`button-indicator-${index}`}
                           />
                         ))}
                       </div>
@@ -246,6 +251,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                     size="sm"
                     onClick={() => onShare?.('facebook')}
                     className="text-blue-400 hover:bg-blue-500/10"
+                    data-testid="button-share-facebook"
                   >
                     <Facebook className="h-5 w-5" />
                   </Button>
@@ -254,6 +260,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                     size="sm"
                     onClick={() => onShare?.('instagram')}
                     className="text-pink-400 hover:bg-pink-500/10"
+                    data-testid="button-share-instagram"
                   >
                     <Instagram className="h-5 w-5" />
                   </Button>
@@ -262,6 +269,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                     size="sm"
                     onClick={() => onShare?.('linkedin')}
                     className="text-blue-300 hover:bg-blue-500/10"
+                    data-testid="button-share-linkedin"
                   >
                     <Linkedin className="h-5 w-5" />
                   </Button>
@@ -278,6 +286,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                       }
                     }}
                     className="text-gray-400 hover:bg-gray-700"
+                    data-testid="button-share-generic"
                   >
                     <Share2 className="h-5 w-5" />
                   </Button>
@@ -289,6 +298,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                 className="w-full mt-6 bg-gradient-to-r from-brand-yellow to-brand-coral text-black hover:opacity-90 font-semibold shadow-lg h-12"
                 size="lg"
                 onClick={() => window.open('https://domrealce.pt', '_blank')}
+                data-testid="button-visit-website"
               >
                 Visite o nosso site
               </Button>
