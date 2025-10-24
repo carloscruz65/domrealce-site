@@ -14,10 +14,9 @@ export default function NoticiaDetalhes() {
   const noticiaId = params?.id;
   const [indiceImagem, setIndiceImagem] = useState(0);
 
-  // Buscar todas as notícias
+  // Buscar todas as notícias da API pública
   const { data: noticias = [], isLoading } = useQuery<News[]>({
-    queryKey: ['/api/admin/noticias'],
-    select: (data: any) => data.noticias || data
+    queryKey: ['/api/news/all']
   });
 
   // Encontrar a notícia específica
