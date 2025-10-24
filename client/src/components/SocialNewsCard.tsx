@@ -59,7 +59,7 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
         className="overflow-hidden bg-black border border-gray-800 hover:border-brand-yellow/50 transition-all cursor-pointer group"
         onClick={() => setModalAberto(true)}
       >
-        {/* NOVO: Título antes da imagem */}
+        {/* Título e Categoria antes da imagem */}
         <div className="p-4 pb-0">
           <Badge className="bg-brand-yellow text-black font-semibold mb-2">
             {noticia.categoria}
@@ -150,10 +150,21 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
         </div>
       </Card>
 
-      {/* Modal (inalterado) */}
+      {/* Modal */}
       <Dialog open={modalAberto} onOpenChange={setModalAberto}>
         <DialogContent className="max-w-4xl bg-black border-gray-800 text-white p-0 overflow-hidden">
           <div className="max-h-[90vh] overflow-y-auto">
+
+            {/* Título e Categoria antes da Imagem */}
+            <div className="p-8 pb-0">
+              <Badge className="bg-brand-yellow text-black font-semibold px-4 py-1 mb-3">
+                {noticia.categoria}
+              </Badge>
+              <h1 className="text-3xl md:text-4xl font-heading font-bold mb-6 text-white leading-tight">
+                {noticia.titulo}
+              </h1>
+            </div>
+
             {/* Imagem Grande com Controles */}
             {imagens.length > 0 && (
               <div className="relative bg-gray-900 group">
@@ -188,19 +199,97 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
               </div>
             )}
 
-            {/* Conteúdo Expandido (inalterado) */}
+            {/* Conteúdo Expandido */}
             <div className="p-8">
-              <div className="flex items-start justify-between mb-4">
-                <Badge className="bg-brand-yellow text-black font-semibold px-4 py-1">
-                  {noticia.categoria}
+              <div className="flex items-center gap-4 text-sm text-gray-400 mb-6 pb-6 border-b border-gray-800">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-brand-turquoise" />
+                  <span className="font-medium text-white">Equipa DOMREALCE</span>
+                </div>
+                <div className="h-4 w-px bg-gray-700"></div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-brand-coral" />
+                  <span className="text-white">
+                    {noticia.data ? formatarData(noticia.data) : "Recente"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Descrição Completa */}
+              <div className="prose prose-invert max-w-none mb-6">
+                <p className="text-base leading-relaxed text-gray-300">
+                  {descricaoCompleta}
+                </p>
+              </div>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mb-6 pb-6 border-b border-gray-800">
+                <Badge variant="outline" className="border-brand-yellow/30 text-brand-yellow">
+                  #{noticia.categoria.toLowerCase().replace(/\s+/g, "")}
+                </Badge>
+                <Badge variant="outline" className="border-brand-turquoise/30 text-brand-turquoise">
+                  #domrealce
+                </Badge>
+                <Badge variant="outline" className="border-brand-coral/30 text-brand-coral">
+                  #comunicacaovisual
                 </Badge>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-white leading-tight">
-                {noticia.titulo}
-              </h1>
+              {/* Partilha Social */}
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-400">Partilhar:</span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onShare?.("facebook")}
+                    className="text-blue-400 hover:bg-blue-500/10"
+                  >
+                    <Facebook className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onShare?.("instagram")}
+                    className="text-pink-400 hover:bg-pink-500/10"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onShare?.("linkedin")}
+                    className="text-blue-300 hover:bg-blue-500/10"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator.share({
+                          title: noticia.titulo,
+                          text: descricaoPreview,
+                          url: window.location.href,
+                        });
+                      }
+                    }}
+                    className="text-gray-400 hover:bg-gray-700"
+                  >
+                    <Share2 className="h-5 w-5" />
+                  </Button>
+                </div>
+              </div>
 
-              {/* ... resto do modal igual */}
+              {/* CTA */}
+              <Button
+                className="w-full mt-6 bg-gradient-to-r from-brand-yellow to-brand-coral text-black hover:opacity-90 font-semibold shadow-lg h-12"
+                size="lg"
+                onClick={() => window.open("https://domrealce.com", "_blank")}
+              >
+                Visite o nosso site
+              </Button>
             </div>
           </div>
         </DialogContent>
