@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { ogMetaMiddleware } from "./ogMiddleware";
 
 const app = express();
 
@@ -64,6 +65,9 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
     throw err;
   });
+
+  // Middleware para meta tags Open Graph (antes do Vite/Static)
+  app.use(ogMetaMiddleware);
 
   if (app.get("env") === "development") {
     await setupVite(app, server);
