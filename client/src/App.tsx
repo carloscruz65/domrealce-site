@@ -37,6 +37,7 @@ import PedidoConfirmado from "@/pages/pedido-confirmado";
 import InstrucoesPagamento from "@/pages/pagamento";
 import TesteCores from "@/pages/teste-cores";
 import Noticias from "@/pages/noticias";
+import NoticiaDetalhes from "@/pages/noticia-detalhes";
 import PoliticaPrivacidade from "@/pages/politica-privacidade";
 import TermosCondicoes from "@/pages/termos-condicoes";
 import PoliticaCookies from "@/pages/politica-cookies";
@@ -124,6 +125,7 @@ function Router() {
         <Route path="/editor" component={Admin} />
         <Route path="/admin" component={Admin} />
         <Route path="/noticias" component={Noticias} />
+        <Route path="/noticia/:id" component={NoticiaDetalhes} />
         <Route path="/contactos" component={Contactos} />
         <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
         <Route path="/termos-condicoes" component={TermosCondicoes} />
