@@ -2,15 +2,12 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Share2, Facebook, Instagram, Linkedin, Search, Filter, Eye, Heart, MessageCircle, ArrowRight, Loader2 } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import type { News } from "@shared/schema";
-import NewsGallery from "@/components/NewsGallery";
+import SocialNewsCard from "@/components/SocialNewsCard";
 
 // ✅ Dados agora vêm da API real!
 
@@ -163,135 +160,20 @@ export default function Noticias() {
             </div>
           )}
 
-          {/* Lista de Notícias */}
+          {/* Lista de Notícias - Novo Layout para Redes Sociais */}
           {!isLoading && !error && (
-            <div className="grid gap-8">
+            <div className="grid gap-12 max-w-4xl mx-auto">
               {noticiasFiltradas.map((noticia) => (
-                <Card key={noticia.id} className="overflow-hidden hover-lift border-border bg-card mt-12">
-                <div className="md:flex">
-                  {/* Galeria de Imagens */}
-                  <div className="md:w-1/3 relative">
-                    <NewsGallery 
-                      tipoGaleria={noticia.tipoGaleria as any || "single"}
-                      imagem={noticia.imagem}
-                      imagens={noticia.imagens || []}
-                      titulo={noticia.titulo}
-                    />
-                    {/* Badge de destaque */}
-                    <div className="absolute top-4 left-4 z-10">
-                      <Badge className="bg-brand-coral text-white font-semibold">🔥 NOVO</Badge>
-                    </div>
-                  </div>
-
-                  {/* Conteúdo */}
-                  <div className="md:w-2/3 p-6">
-                    <CardHeader className="p-0 mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="secondary" className="bg-brand-yellow/10 text-brand-yellow border-brand-yellow/20">
-                          {noticia.categoria}
-                        </Badge>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Eye size={14} />
-                            {Math.floor(Math.random() * 50) + 1}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Heart size={14} />
-                            {Math.floor(Math.random() * 10)}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MessageCircle size={14} />
-                            {Math.floor(Math.random() * 5)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <CardTitle className="text-2xl mb-2 hover:text-brand-turquoise transition-colors cursor-pointer">
-                        {noticia.titulo}
-                      </CardTitle>
-
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Calendar size={14} />
-                          {noticia.data ? new Date(noticia.data).toLocaleDateString('pt-PT') : 'N/A'}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock size={14} />
-                          Equipa DOMREALCE
-                        </div>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="p-0">
-                      <CardDescription className="text-base mb-4 leading-relaxed">
-                        {noticia.descricao.slice(0, 150)}...
-                      </CardDescription>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge variant="outline" className="text-xs">
-                          #{noticia.categoria.toLowerCase()}
-                        </Badge>
-                      </div>
-
-                      {/* Acções */}
-                      <div className="flex items-center justify-between">
-                        <Button 
-                          asChild
-                          variant="outline" 
-                          className="border-brand-coral text-brand-coral hover:bg-brand-coral hover:text-white font-semibold shadow-sm"
-                        >
-                          <Link href="/servicos">
-                            🌟 Descobrir Agora
-                          </Link>
-                        </Button>
-
-                        {/* Partilha Social */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground mr-2">Partilhar:</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => partilharFacebook(noticia)}
-                            className="text-blue-600 hover:bg-blue-600/10"
-                          >
-                            <Facebook size={16} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={partilharInstagram}
-                            className="text-pink-600 hover:bg-pink-600/10"
-                          >
-                            <Instagram size={16} />
-                          </Button>
-                          <Button
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => partilharLinkedin(noticia)}
-                            className="text-blue-700 hover:bg-blue-700/10"
-                          >
-                            <Linkedin size={16} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigator.share?.({
-                              title: noticia.titulo,
-                              text: noticia.descricao.slice(0, 100),
-                              url: window.location.href + '#' + noticia.id
-                            })}
-                            className="text-muted-foreground hover:bg-muted"
-                          >
-                            <Share2 size={16} />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                <SocialNewsCard
+                  key={noticia.id}
+                  noticia={noticia}
+                  onShare={(platform) => {
+                    if (platform === 'facebook') partilharFacebook(noticia);
+                    else if (platform === 'instagram') partilharInstagram();
+                    else if (platform === 'linkedin') partilharLinkedin(noticia);
+                  }}
+                />
+              ))}
 
             {/* Mensagem quando não há resultados */}
             {noticiasFiltradas.length === 0 && (
