@@ -47,7 +47,7 @@ export async function ogMetaMiddleware(req: Request, res: Response, next: NextFu
       ? imagemNoticia 
       : `${req.protocol}://${req.get('host')}${imagemNoticia}`;
 
-    // Substituir/adicionar meta tags Open Graph
+    // Substituir/adicionar meta tags Open Graph - COMPLETAS para Facebook
     const ogTags = `
     <!-- Open Graph / Facebook - Notícia Individual -->
     <meta property="og:type" content="article" />
@@ -55,10 +55,15 @@ export async function ogMetaMiddleware(req: Request, res: Response, next: NextFu
     <meta property="og:title" content="${titulo}" />
     <meta property="og:description" content="${descricao}" />
     <meta property="og:image" content="${imagem}" />
+    <meta property="og:image:secure_url" content="${imagem.replace('http://', 'https://')}" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="${titulo}" />
     <meta property="og:locale" content="pt_PT" />
     <meta property="og:site_name" content="DOMREALCE" />
+    <meta property="article:published_time" content="${noticia.data || new Date().toISOString()}" />
+    <meta property="article:author" content="DOMREALCE" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -83,7 +88,10 @@ export async function ogMetaMiddleware(req: Request, res: Response, next: NextFu
     // Inserir as meta tags antes do </head>
     html = html.replace('</head>', `${ogTags}</head>`);
 
-    console.log('✅ OG Middleware: Meta tags injetadas para:', titulo);
+    console.log('✅ OG Middleware: Meta tags injetadas');
+    console.log('   - Título:', titulo);
+    console.log('   - Imagem:', imagem);
+    console.log('   - URL:', url);
 
     // Enviar o HTML modificado
     res.setHeader('Content-Type', 'text/html');
