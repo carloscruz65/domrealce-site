@@ -15,10 +15,9 @@ export default function Noticias() {
   const [filtroCategoria, setFiltroCategoria] = useState("Todas");
   const [termoPesquisa, setTermoPesquisa] = useState("");
 
-  // Buscar notícias da API
+  // Buscar notícias da API pública
   const { data: noticias = [], isLoading, error } = useQuery<News[]>({
-    queryKey: ['/api/admin/noticias'],
-    select: (data: any) => data.noticias || data
+    queryKey: ['/api/news/all']
   });
 
   // Gerar categorias dinamicamente dos dados da API

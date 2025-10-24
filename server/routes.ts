@@ -940,6 +940,17 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
+  // Endpoint público para todas as notícias (sem autenticação)
+  app.get("/api/news/all", async (req, res) => {
+    try {
+      const news = await storage.getAllNews();
+      res.json(news);
+    } catch (error) {
+      console.error("Error fetching all news:", error);
+      res.status(500).json({ error: "Failed to fetch all news" });
+    }
+  });
+
   // Orders management routes
   app.post("/api/orders", async (req, res) => {
     try {
