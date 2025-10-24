@@ -160,9 +160,9 @@ export default function Noticias() {
             </div>
           )}
 
-          {/* Lista de Notícias - Novo Layout para Redes Sociais */}
+          {/* Lista de Notícias - Grid de 4 Colunas */}
           {!isLoading && !error && (
-            <div className="grid gap-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {noticiasFiltradas.map((noticia) => (
                 <SocialNewsCard
                   key={noticia.id}
