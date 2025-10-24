@@ -57,6 +57,9 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
               
+              {/* Gradiente para legibilidade do título */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+              
               {imagens.length > 1 && (
                 <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-semibold">
                   {indiceImagem + 1}/{imagens.length}
@@ -68,16 +71,17 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
               >
                 {noticia.categoria}
               </Badge>
+
+              {/* Título sobreposto na imagem */}
+              <h2 className="absolute bottom-3 left-3 right-3 text-base font-bold text-white line-clamp-2 group-hover:text-brand-yellow transition-colors drop-shadow-lg">
+                {noticia.titulo}
+              </h2>
             </div>
           </div>
         )}
 
         {/* Conteúdo Compacto */}
         <div className="p-4">
-          {/* Título - Uma linha */}
-          <h2 className="text-base font-bold text-white mb-2 line-clamp-1 group-hover:text-brand-yellow transition-colors">
-            {noticia.titulo}
-          </h2>
 
           {/* Data e Equipe */}
           <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
@@ -284,8 +288,9 @@ export default function SocialNewsCard({ noticia, onShare }: SocialNewsCardProps
               <Button 
                 className="w-full mt-6 bg-gradient-to-r from-brand-yellow to-brand-coral text-black hover:opacity-90 font-semibold shadow-lg h-12"
                 size="lg"
+                onClick={() => window.open('https://domrealce.pt', '_blank')}
               >
-                Saber Mais Sobre Este Projeto
+                Visite o nosso site
               </Button>
             </div>
           </div>

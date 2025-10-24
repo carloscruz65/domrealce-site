@@ -162,55 +162,71 @@ export default function Noticias() {
 
           {/* Lista de Notícias - Grid de 4 Colunas */}
           {!isLoading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {noticiasFiltradas.map((noticia) => (
-                <SocialNewsCard
-                  key={noticia.id}
-                  noticia={noticia}
-                  onShare={(platform) => {
-                    if (platform === 'facebook') partilharFacebook(noticia);
-                    else if (platform === 'instagram') partilharInstagram();
-                    else if (platform === 'linkedin') partilharLinkedin(noticia);
-                  }}
-                />
-              ))}
-
-            {/* Mensagem quando não há resultados */}
-            {noticiasFiltradas.length === 0 && (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl font-heading font-semibold mb-2">Nenhum resultado encontrado</h3>
-              <p className="text-muted-foreground mb-6">
-                Tente ajustar os filtros ou termo de pesquisa
-              </p>
-              <Button 
-                onClick={() => {
-                  setFiltroCategoria("Todas");
-                  setTermoPesquisa("");
-                }}
-                className="bg-brand-yellow text-brand-dark hover:bg-brand-yellow/90"
-              >
-                Limpar Filtros
-              </Button>
-            </div>
-            )}
-
-            {/* Paginação (simulada) */}
-            {noticiasFiltradas.length > 0 && (
-            <div className="flex justify-center items-center gap-4 mt-16">
-              <Button variant="outline" disabled>Anterior</Button>
-              <div className="flex gap-2">
-                <Button variant="default" className="bg-brand-yellow text-brand-dark">1</Button>
-                <Button variant="outline">2</Button>
-                <Button variant="outline">3</Button>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {noticiasFiltradas.map((noticia) => (
+                  <SocialNewsCard
+                    key={noticia.id}
+                    noticia={noticia}
+                    onShare={(platform) => {
+                      if (platform === 'facebook') partilharFacebook(noticia);
+                      else if (platform === 'instagram') partilharInstagram();
+                      else if (platform === 'linkedin') partilharLinkedin(noticia);
+                    }}
+                  />
+                ))}
               </div>
-              <Button variant="outline">Próxima</Button>
-            </div>
-          )}
-          </div>
+
+              {/* Mensagem quando não há resultados */}
+              {noticiasFiltradas.length === 0 && (
+                <div className="text-center py-16 col-span-full">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <h3 className="text-2xl font-heading font-semibold mb-2">Nenhum resultado encontrado</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Tente ajustar os filtros ou termo de pesquisa
+                  </p>
+                  <Button 
+                    onClick={() => {
+                      setFiltroCategoria("Todas");
+                      setTermoPesquisa("");
+                    }}
+                    className="bg-brand-yellow text-brand-dark hover:bg-brand-yellow/90"
+                  >
+                    Limpar Filtros
+                  </Button>
+                </div>
+              )}
+            </>
         )}
         </div>
       </section>
+
+      {/* Paginação - Parte Inferior da Página */}
+      {!isLoading && !error && noticiasFiltradas.length > 0 && (
+        <section className="py-8 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center items-center gap-4">
+              <Button variant="outline" disabled className="border-gray-700 text-gray-400">
+                Anterior
+              </Button>
+              <div className="flex gap-2">
+                <Button variant="default" className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
+                  1
+                </Button>
+                <Button variant="outline" className="border-gray-700 text-gray-400 hover:bg-gray-800">
+                  2
+                </Button>
+                <Button variant="outline" className="border-gray-700 text-gray-400 hover:bg-gray-800">
+                  3
+                </Button>
+              </div>
+              <Button variant="outline" className="border-gray-700 text-gray-400 hover:bg-gray-800">
+                Próxima
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Call to Action */}
       <section className="py-16 bg-black">
