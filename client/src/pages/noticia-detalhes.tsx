@@ -230,7 +230,7 @@ export default function NoticiaDetalhes() {
 
           {/* Conteúdo */}
           <div className="prose prose-invert prose-lg max-w-none mb-8">
-            <p className="text-lg leading-relaxed text-gray-300">
+            <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
               {noticia.descricao}
             </p>
           </div>
