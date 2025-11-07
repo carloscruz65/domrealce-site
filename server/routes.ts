@@ -484,18 +484,6 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  // File upload endpoint - simplified for direct uploads
-  app.post("/api/objects/upload", async (req, res) => {
-    try {
-      // Simple placeholder for upload URL - the actual upload will be handled by the client differently
-      const uploadURL = `http://localhost:5000/api/upload-direct`;
-      res.json({ uploadURL });
-    } catch (error) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: "Failed to get upload URL" });
-    }
-  });
-
   // Bulk upload endpoint for texture covers
   app.post("/api/upload-textures", async (req, res) => {
     try {

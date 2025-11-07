@@ -40,12 +40,10 @@ export default function ServiceGalleryEditor({ serviceId, serviceName, onBack }:
   // Save mutation
   const saveMutation = useMutation({
     mutationFn: async (updatedImages: GalleryImage[]) => {
-      return await apiRequest<{ success: boolean; gallery: any }>(
+      return await apiRequest(
+        "PUT",
         `/api/admin/service-galleries/${serviceId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({ images: updatedImages }),
-        }
+        { images: updatedImages }
       );
     },
     onSuccess: () => {
@@ -187,6 +185,18 @@ export default function ServiceGalleryEditor({ serviceId, serviceName, onBack }:
                       onChange={(url) => handleUpdateImage(index, "src", url)}
                       folder="servicos"
                     />
+                    {image.src && (
+                      <div className="mt-2 border rounded-lg overflow-hidden bg-muted">
+                        <img 
+                          src={image.src} 
+                          alt={image.alt || "Preview"} 
+                          className="w-full h-48 object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = "https://via.placeholder.com/400x300?text=Erro+ao+carregar+imagem";
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-4">
                     <div className="space-y-2">
