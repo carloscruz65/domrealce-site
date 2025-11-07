@@ -201,7 +201,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Object Storage endpoints for Visual Editor
-  // Upload endpoint for getting presigned URLs
+  // Direct file upload endpoint (recommended)
+  app.post("/api/objects/upload-file", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      const folder = req.body.folder || 'uploads';
+      const timestamp = Date.now();
+      const fileName = `${folder}/${timestamp}-${req.file.originalname}`;
+      
+      console.log(`📤 Uploading file: ${fileName}`);
+      
+      await objectStorageService.uploadPublicFile(
+        fileName,
+        req.file.buffer,
+        req.file.mimetype
+      );
+      
+      const publicUrl = `/public-objects/${fileName}`;
+      console.log(`✅ Upload successful: ${publicUrl}`);
+      
+      res.json({ 
+        success: true,
+        url: publicUrl,
+        fileName: req.file.originalname
+      });
+    } catch (error) {
+      console.error("❌ Error uploading file:", error);
+      res.status(500).json({ error: "Failed to upload file" });
+    }
+  });
+
+  // Upload endpoint for getting presigned URLs (fallback for AwsS3 plugin)
   app.post("/api/objects/upload", async (req, res) => {
     try {
       const { fileName } = req.body;

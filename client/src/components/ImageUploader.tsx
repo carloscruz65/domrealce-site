@@ -9,7 +9,6 @@ import Uppy from "@uppy/core";
 import { DashboardModal } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import AwsS3 from "@uppy/aws-s3";
 
 interface ImageUploaderProps {
   value?: string;
@@ -42,7 +41,7 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
 
   const storageImages = storageData?.images || [];
 
-  // Configurar Uppy para upload
+  // Configurar Uppy para upload direto via backend
   const [uppy] = useState(() =>
     new Uppy({
       restrictions: {
@@ -52,75 +51,62 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
       },
       autoProceed: false,
     })
-      .use(AwsS3, {
-        shouldUseMultipart: false,
-        getUploadParameters: async (file) => {
-          try {
-            // Gerar nome de arquivo único
-            const timestamp = Date.now();
-            const fileName = `${folder}/${timestamp}-${file.name}`;
-            
-            // Salvar o fileName para usar depois
-            (file as any).uploadPath = fileName;
-            
-            // Obter URL de upload do backend
-            const response = await fetch('/api/objects/upload', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileName })
-            });
-            
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || 'Erro ao obter URL de upload');
-            }
-            
-            const { uploadURL } = await response.json();
-            
-            return {
-              method: 'PUT' as const,
-              url: uploadURL,
-              headers: {
-                'Content-Type': file.type || 'application/octet-stream',
-              },
-            };
-          } catch (error) {
-            console.error('Erro ao obter parâmetros de upload:', error);
-            throw error;
-          }
-        },
+      .on("file-added", () => {
+        console.log('📁 Ficheiro adicionado ao Uppy');
       })
-      .on("complete", (result) => {
-        if (result.successful && result.successful.length > 0) {
-          // Construir URL pública baseada no caminho do arquivo
-          const uploadedFile = result.successful[0];
-          const uploadPath = (uploadedFile as any).uploadPath;
-          const publicUrl = `/public-objects/${uploadPath}`;
-          console.log('✅ Upload concluído:', publicUrl);
+      .on("upload", () => {
+        console.log('📤 A iniciar upload...');
+      })
+      .on("upload-success", (file, response) => {
+        console.log("✅ Upload bem-sucedido:", response);
+        if (response && response.body && response.body.url) {
+          const publicUrl = response.body.url;
           onChange(publicUrl);
           setUrlInput(publicUrl);
           setShowUploadModal(false);
-        } else if (result.failed && result.failed.length > 0) {
-          console.error("❌ Upload falhou:", result.failed);
-          const error = result.failed[0].error;
-          alert(`Erro no upload: ${error || 'Erro desconhecido'}`);
         }
       })
-      .on("upload-error", (file, error, response) => {
-        console.error("❌ Erro no upload:", {
-          fileName: file?.name,
-          error: error,
-          response: response
-        });
+      .on("upload-error", (file, error) => {
+        console.error("❌ Erro no upload:", error);
+        alert(`Erro no upload: ${error?.message || 'Erro desconhecido'}`);
       })
-      .on("upload-success", (file, response) => {
-        console.log("✅ Upload bem-sucedido:", {
-          fileName: file?.name,
-          status: response?.status,
-          uploadURL: response?.uploadURL
-        });
+      .on("complete", (result) => {
+        console.log('🏁 Upload completo:', result);
       })
   );
+
+  // Custom upload handler
+  useEffect(() => {
+    const handleUpload = async (_uploadID: string, files: any[]) => {
+      for (const file of files) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file.data);
+          formData.append('folder', folder);
+
+          const response = await fetch('/api/objects/upload-file', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Upload failed');
+          }
+
+          const data = await response.json();
+          uppy.emit('upload-success', file, { body: data, status: 200 });
+        } catch (error) {
+          uppy.emit('upload-error', file, error as Error);
+        }
+      }
+    };
+
+    uppy.on('upload', handleUpload);
+    return () => {
+      uppy.off('upload', handleUpload);
+    };
+  }, [uppy, folder]);
 
   const handleUrlSubmit = () => {
     onChange(urlInput);
