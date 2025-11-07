@@ -214,7 +214,7 @@ export const insertServiceGallerySchema = createInsertSchema(serviceGalleries).p
 }).extend({
   serviceId: z.string().min(1, "ID do serviço é obrigatório"),
   images: z.array(z.object({
-    src: z.string().url("URL da imagem inválida"),
+    src: z.string().min(1, "URL da imagem é obrigatória"),
     alt: z.string(),
     title: z.string(),
   })).min(1, "Deve ter pelo menos uma imagem"),
