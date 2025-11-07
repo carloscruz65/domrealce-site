@@ -169,7 +169,7 @@ export default function Servicos() {
       />
 
       {/* Services Grid */}
-      <section className="pt-0 pb-8">
+      <section className="pt-8 pb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
