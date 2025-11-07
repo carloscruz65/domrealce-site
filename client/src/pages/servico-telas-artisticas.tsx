@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -159,41 +161,60 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
     }
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80",
+      alt: "Tela artística em sala moderna",
+      title: "Arte Contemporânea"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+      alt: "Canvas com fotografia em preto e branco",
+      title: "Fotografia Artística"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80",
+      alt: "Tela com paisagem natural",
+      title: "Paisagens Naturais"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=800&q=80",
+      alt: "Canvas abstrato colorido",
+      title: "Arte Abstrata"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1578926314433-e2789279f4aa?w=800&q=80",
+      alt: "Tela decorativa em quarto",
+      title: "Decoração Personalizada"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&q=80",
+      alt: "Tela artística premium",
+      title: "Qualidade Premium"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-purple-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-purple-600 text-white mb-6">
-              <Image className="w-4 h-4 mr-2" />
-              Telas Artísticas Premium
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-purple-400">Transforme Fotografias</span>
-              <br />
-              <span className="text-white">em Obras de Arte</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Impressão artística em canvas de alta qualidade. Transforme as suas memórias 
-              mais preciosas ou criações artísticas em telas duradouras e elegantes.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-purple-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Criar Minha Tela</Link>
-              </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Exemplos
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        badge="Telas Artísticas Premium"
+        badgeIcon={<Image className="w-4 h-4 mr-2" />}
+        title="Transforme Fotografias"
+        subtitle="em Obras de Arte"
+        description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
+        backgroundTexture="linear-gradient(135deg, rgba(138, 43, 226, 0.1) 25%, transparent 25%, transparent 50%, rgba(138, 43, 226, 0.1) 50%, rgba(138, 43, 226, 0.1) 75%, transparent 75%, transparent)"
+        gradientOverlay="from-black/95 via-purple-900/30 to-black/95"
+        primaryCta={{
+          text: "Criar Minha Tela",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Contactar",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Features Grid */}
       <section className="pt-0 pb-8 bg-gray-900/50">
@@ -391,6 +412,8 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
           </div>
         </div>
       </section>
+
+      <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
       <section className="pt-0 pb-8 bg-gradient-to-r from-purple-600/10 via-brand-coral/10 to-brand-yellow/10">

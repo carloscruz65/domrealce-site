@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -135,41 +137,60 @@ export default function ServicoDecoracaoViaturas() {
     }
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=800&q=80",
+      alt: "Car wrapping profissional",
+      title: "Wrapping Completo"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1542362567-b07e54358753?w=800&q=80",
+      alt: "Viatura comercial decorada",
+      title: "Publicidade Móvel"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80",
+      alt: "Carro com vinil personalizado",
+      title: "Personalização Premium"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80",
+      alt: "Aplicação de vinil em veículo",
+      title: "Aplicação Profissional"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80",
+      alt: "Frota de viaturas decoradas",
+      title: "Frotas Comerciais"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=800&q=80",
+      alt: "Detalhe de wrapping automotivo",
+      title: "Detalhes Perfeitos"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-orange-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-orange-600 text-white mb-6">
-              <Car className="w-4 h-4 mr-2" />
-              Decoração de Viaturas
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-orange-400">Transforme a Sua Viatura</span>
-              <br />
-              <span className="text-white">numa Obra de Arte</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas 
-              até publicidade móvel para o seu negócio. Qualidade profissional garantida.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-orange-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Transformar Minha Viatura</Link>
-              </Button>
-              <Button asChild variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Contactar</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        badge="Decoração de Viaturas"
+        badgeIcon={<Car className="w-4 h-4 mr-2" />}
+        title="Transforme a Sua Viatura"
+        subtitle="numa Obra de Arte"
+        description="Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas até publicidade móvel para o seu negócio. Qualidade profissional garantida."
+        backgroundTexture="linear-gradient(60deg, rgba(255, 165, 0, 0.08) 25%, transparent 25%, transparent 50%, rgba(255, 165, 0, 0.08) 50%, rgba(255, 165, 0, 0.08) 75%, transparent 75%, transparent)"
+        gradientOverlay="from-black/95 via-orange-900/20 to-black/95"
+        primaryCta={{
+          text: "Transformar Minha Viatura",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Contactar",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Vehicle Types Grid */}
       <section className="pt-8 pb-8 bg-gray-900/50">
@@ -384,6 +405,8 @@ export default function ServicoDecoracaoViaturas() {
           </div>
         </div>
       </section>
+
+      <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-orange-600/10 via-brand-coral/10 to-brand-yellow/10">

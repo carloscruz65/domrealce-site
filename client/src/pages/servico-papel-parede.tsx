@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -150,38 +152,60 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
     "Suporte técnico especializado"
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=800&q=80",
+      alt: "Papel de parede decorativo moderno",
+      title: "Texturas Modernas"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80",
+      alt: "Papel de parede com padrões geométricos",
+      title: "Padrões Geométricos"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80",
+      alt: "Papel de parede floral elegante",
+      title: "Designs Florais"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=800&q=80",
+      alt: "Papel de parede texturizado",
+      title: "Texturas Premium"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80",
+      alt: "Papel de parede para quarto",
+      title: "Ambientes Acolhedores"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=800&q=80",
+      alt: "Papel de parede artístico",
+      title: "Arte na Parede"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-orange-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-brand-coral text-white mb-6">
-              <Wallpaper className="w-4 h-4 mr-2" />
-              Papel de Parede Premium
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-brand-coral">Grande Variedade de Texturas</span>
-              <br />
-              <span className="text-white">em Catálogo Interativo</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Descubra a maior coleção de papéis de parede em Portugal. 
-              Catálogo interativo com visualização em tamanho real e múltiplas categorias diferentes.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-brand-coral to-brand-yellow text-white font-bold px-8 py-6 text-lg">
-                <Link href="/loja/papel-parede">Explorar Catálogo de Texturas</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        badge="Papel de Parede Premium"
+        badgeIcon={<Wallpaper className="w-4 h-4 mr-2" />}
+        title="Grande Variedade de Texturas"
+        subtitle="em Catálogo Interativo"
+        description="Descubra a maior coleção de papéis de parede em Portugal. Catálogo interativo com visualização em tamanho real e múltiplas categorias diferentes."
+        backgroundTexture="linear-gradient(45deg, rgba(255, 127, 80, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 127, 80, 0.1) 75%, rgba(255, 127, 80, 0.1)), linear-gradient(45deg, rgba(255, 127, 80, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 127, 80, 0.1) 75%, rgba(255, 127, 80, 0.1))"
+        gradientOverlay="from-black/95 via-black/90 to-black/95"
+        primaryCta={{
+          text: "Explorar Catálogo de Texturas",
+          href: "/loja/papel-parede"
+        }}
+        secondaryCta={{
+          text: "Contactar",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Features Grid */}
       <section className="pt-0 pb-8 bg-gray-900/50">
@@ -545,6 +569,8 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
           </div>
         </div>
       </section>
+
+      <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
       <section className="pt-0 pb-8 bg-gradient-to-r from-brand-coral/10 via-brand-yellow/10 to-brand-turquoise/10">

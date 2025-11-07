@@ -1,20 +1,18 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { 
   Palette, 
   CheckCircle, 
   Star, 
   ArrowRight, 
-  Zap, 
   Target, 
   Layers,
-  MousePointer,
   Eye,
-  Smartphone,
   Monitor,
   FileImage
 } from "lucide-react";
@@ -90,41 +88,53 @@ export default function ServicoDesignGrafico() {
     "Suporte técnico contínuo"
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+      alt: "Design de logótipo profissional",
+      title: "Identidade Visual Corporativa"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&q=80",
+      alt: "Material publicitário criativo",
+      title: "Material Publicitário"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=800&q=80",
+      alt: "Design de branding",
+      title: "Branding Completo"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&q=80",
+      alt: "Maquete de design",
+      title: "Maquetes 3D"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1609921212029-bb5a28e60960?w=800&q=80",
+      alt: "Design gráfico moderno",
+      title: "Design Moderno"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=800&q=80",
+      alt: "Papelaria corporativa",
+      title: "Papelaria Corporativa"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-gray-900 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-brand-yellow text-black mb-6">
-              <Palette className="w-4 h-4 mr-2" />
-              Design Gráfico Profissional
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-brand-yellow">Identidade Visual</span>
-              <br />
-              <span className="text-white">que Marca Diferença</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Criamos designs únicos e memoráveis que comunicam a essência da sua marca. 
-              Com 40 anos de experiência, transformamos ideias em identidades visuais poderosas.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Iniciar Meu Projeto</Link>
-              </Button>
-              <Button asChild variant="outline" className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Contactar</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section com novo componente */}
+      <ServiceHero
+        badge="Design Gráfico Profissional"
+        badgeIcon={<Palette className="w-4 h-4 mr-2" />}
+        title="Identidade Visual"
+        subtitle="que Marca Diferença"
+        description="Criamos designs únicos e memoráveis que comunicam a essência da sua marca. Com 40 anos de experiência, transformamos ideias em identidades visuais poderosas."
+        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.05) 25%, rgba(255, 215, 0, 0.05) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.05) 75%)"
+        portfolioButton={true}
+      />
 
       {/* Features Grid */}
       <section className="pt-8 pb-8 bg-gray-900/50">
@@ -242,6 +252,14 @@ export default function ServicoDesignGrafico() {
           </div>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <ServiceGallery
+        title="Nossos Trabalhos em Design Gráfico"
+        description="Veja alguns exemplos de projetos de identidade visual que criámos para os nossos clientes"
+        images={galleryImages}
+        columns={3}
+      />
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-brand-yellow/10 via-brand-turquoise/10 to-brand-coral/10">

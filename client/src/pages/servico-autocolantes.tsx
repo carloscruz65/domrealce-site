@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -125,41 +127,60 @@ export default function ServicoAutocolantes() {
     }
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1611532736579-6b16e2b50449?w=800&q=80",
+      alt: "Autocolantes personalizados coloridos",
+      title: "Designs Personalizados"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
+      alt: "Autocolantes com corte de contorno",
+      title: "Corte de Precisão"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1606660265514-358ebbadc80d?w=800&q=80",
+      alt: "Vinil autocolante em superfície",
+      title: "Vinil de Qualidade"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1569025690938-a00729c9e1f9?w=800&q=80",
+      alt: "Autocolantes decorativos criativos",
+      title: "Criatividade Sem Limites"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1572375992501-4b0892d50c69?w=800&q=80",
+      alt: "Etiquetas profissionais",
+      title: "Etiquetas Comerciais"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1611926653670-e0f5b1d46118?w=800&q=80",
+      alt: "Autocolantes aplicados em montra",
+      title: "Aplicações Profissionais"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-green-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-green-600 text-white mb-6">
-              <Sticker className="w-4 h-4 mr-2" />
-              Autocolantes Profissionais
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-green-400">Autocolantes e Etiquetas</span>
-              <br />
-              <span className="text-white">com Corte de Contorno</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Tecnologia de corte digital de precisão para criar autocolantes únicos. 
-              Desde etiquetas simples até designs complexos com formas personalizadas.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-green-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Criar Autocolantes</Link>
-              </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Materiais
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        badge="Autocolantes Profissionais"
+        badgeIcon={<Sticker className="w-4 h-4 mr-2" />}
+        title="Autocolantes e Etiquetas"
+        subtitle="com Corte de Contorno"
+        description="Tecnologia de corte digital de precisão para criar autocolantes únicos. Desde etiquetas simples até designs complexos com formas personalizadas."
+        backgroundTexture="repeating-linear-gradient(45deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.05) 10px, transparent 10px, transparent 20px)"
+        gradientOverlay="from-black/95 via-black/90 to-black/95"
+        primaryCta={{
+          text: "Criar Autocolantes",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Ver Materiais",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Features Grid */}
       <section className="pt-8 pb-8 bg-gray-900/50">
@@ -362,6 +383,8 @@ export default function ServicoAutocolantes() {
           </div>
         </div>
       </section>
+
+      <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
       <section className="pt-0 pb-8 bg-gradient-to-r from-green-600/10 via-brand-turquoise/10 to-brand-yellow/10">

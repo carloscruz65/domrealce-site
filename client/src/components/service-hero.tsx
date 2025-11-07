@@ -99,7 +99,7 @@ export default function ServiceHero({
               asChild 
               className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold px-8 py-6 text-lg hover:scale-105 transition-transform"
             >
-              <Link href={primaryCta.href}>
+              <Link href={primaryCta.href} data-testid="button-primary-cta">
                 {primaryCta.text}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
@@ -110,7 +110,7 @@ export default function ServiceHero({
               variant="outline" 
               className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg"
             >
-              <Link href={secondaryCta.href}>{secondaryCta.text}</Link>
+              <Link href={secondaryCta.href} data-testid="button-secondary-cta">{secondaryCta.text}</Link>
             </Button>
             
             {portfolioButton && (
@@ -119,7 +119,7 @@ export default function ServiceHero({
                 variant="outline" 
                 className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
               >
-                <Link href="/portfolio">
+                <Link href="/portfolio" data-testid="button-portfolio">
                   <Eye className="w-5 h-5 mr-2" />
                   Ver Portfólio
                 </Link>

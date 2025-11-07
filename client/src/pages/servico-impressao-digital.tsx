@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -102,41 +104,53 @@ export default function ServicoImpressaoDigital() {
     }
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=800&q=80",
+      alt: "Impressão digital em vinil",
+      title: "Vinil Autocolante"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1560264280-88b68371db39?w=800&q=80",
+      alt: "Lona publicitária impressa",
+      title: "Lona Publicitária"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&q=80",
+      alt: "Impressão grande formato",
+      title: "Grande Formato"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1605289355680-75fb41239154?w=800&q=80",
+      alt: "Decoração de montra",
+      title: "Decoração de Montras"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?w=800&q=80",
+      alt: "Material promocional impresso",
+      title: "Material Promocional"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1581094794329-c8112c4e5190?w=800&q=80",
+      alt: "Sinalética comercial",
+      title: "Sinalética"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-blue-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-brand-turquoise text-black mb-6">
-              <Printer className="w-4 h-4 mr-2" />
-              Impressão Digital Profissional
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-brand-turquoise">Impressão Digital</span>
-              <br />
-              <span className="text-white">de Grande Formato</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Tecnologia de impressão digital de última geração para projetos de grande impacto. 
-              Qualidade fotográfica em materiais resistentes e duradouros.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-brand-turquoise to-brand-blue text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Solicitar Orçamento</Link>
-              </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Materiais
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section com novo componente */}
+      <ServiceHero
+        badge="Impressão Digital Profissional"
+        badgeIcon={<Printer className="w-4 h-4 mr-2" />}
+        title="Impressão Digital"
+        subtitle="de Grande Formato"
+        description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
+        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(32, 178, 170, 0.05) 25%, rgba(32, 178, 170, 0.05) 50%, transparent 50%, transparent 75%, rgba(32, 178, 170, 0.05) 75%)"
+        portfolioButton={true}
+      />
 
       {/* Features Grid */}
       <section className="pt-0 pb-8 bg-gray-900/50">
@@ -303,6 +317,14 @@ export default function ServicoImpressaoDigital() {
           </div>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <ServiceGallery
+        title="Trabalhos em Impressão Digital"
+        description="Exemplos de projetos de impressão digital de grande formato realizados para os nossos clientes"
+        images={galleryImages}
+        columns={3}
+      />
 
       {/* CTA Section */}
       <section className="pt-0 pb-8 bg-gradient-to-r from-brand-turquoise/10 via-brand-blue/10 to-brand-coral/10">

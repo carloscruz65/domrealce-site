@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -141,41 +143,60 @@ export default function ServicoEspacosComerciais() {
     }
   ];
 
+  const galleryImages = [
+    {
+      src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
+      alt: "Loja com sinalização moderna",
+      title: "Sinalização Comercial"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1567016546367-3bf8c0e89d41?w=800&q=80",
+      alt: "Montra de loja atrativa",
+      title: "Montras Criativas"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1555421689-d68471e189f2?w=800&q=80",
+      alt: "Espaço comercial moderno",
+      title: "Ambientes Profissionais"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=800&q=80",
+      alt: "Reclame luminoso de loja",
+      title: "Reclames LED"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80",
+      alt: "Interior de loja com branding",
+      title: "Branding Interior"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80",
+      alt: "Fachada comercial decorada",
+      title: "Fachadas Profissionais"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-blue-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-blue-600 text-white mb-6">
-              <Building className="w-4 h-4 mr-2" />
-              Espaços Comerciais Premium
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-blue-400">Transforme o Seu</span>
-              <br />
-              <span className="text-white">Espaço Comercial</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Soluções completas de sinalização e decoração para espaços comerciais. 
-              Desde montras atrativas até reclames luminosos que destacam o seu negócio.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Transformar Meu Espaço</Link>
-              </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Projetos
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        badge="Espaços Comerciais Premium"
+        badgeIcon={<Building className="w-4 h-4 mr-2" />}
+        title="Transforme o Seu"
+        subtitle="Espaço Comercial"
+        description="Soluções completas de sinalização e decoração para espaços comerciais. Desde montras atrativas até reclames luminosos que destacam o seu negócio."
+        backgroundTexture="linear-gradient(120deg, rgba(59, 130, 246, 0.08) 30%, transparent 30%, transparent 70%, rgba(147, 51, 234, 0.08) 70%)"
+        gradientOverlay="from-black/95 via-blue-900/20 to-black/95"
+        primaryCta={{
+          text: "Transformar Meu Espaço",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Ver Projetos",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Services Grid */}
       <section className="pt-0 pb-8 bg-gray-900/50">
@@ -387,6 +408,8 @@ export default function ServicoEspacosComerciais() {
           </div>
         </div>
       </section>
+
+      <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
       <section className="pt-0 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-coral/10">
