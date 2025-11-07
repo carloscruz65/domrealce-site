@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Car, 
   CheckCircle, 
@@ -137,7 +138,7 @@ export default function ServicoDecoracaoViaturas() {
     }
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=800&q=80",
       alt: "Car wrapping profissional",
@@ -169,6 +170,11 @@ export default function ServicoDecoracaoViaturas() {
       title: "Detalhes Perfeitos"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'decoracao-viaturas'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

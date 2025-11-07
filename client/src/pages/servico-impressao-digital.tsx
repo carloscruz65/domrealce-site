@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Printer, 
   CheckCircle, 
@@ -104,7 +105,7 @@ export default function ServicoImpressaoDigital() {
     }
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=800&q=80",
       alt: "Impressão digital em vinil",
@@ -136,6 +137,11 @@ export default function ServicoImpressaoDigital() {
       title: "Sinalética"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'impressao-digital'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Sticker, 
   CheckCircle, 
@@ -127,7 +128,7 @@ export default function ServicoAutocolantes() {
     }
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1611532736579-6b16e2b50449?w=800&q=80",
       alt: "Autocolantes personalizados coloridos",
@@ -159,6 +160,11 @@ export default function ServicoAutocolantes() {
       title: "Aplicações Profissionais"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'autocolantes'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

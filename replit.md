@@ -2,7 +2,18 @@
 
 This is a full-stack web application for DOMREALCE, a Portuguese visual communication and digital printing company. The application serves as a company portfolio and business website showcasing services like digital printing, vinyl cutting, vehicle wrapping, and custom signage. Built with a modern tech stack including React, Express, TypeScript, and PostgreSQL, it follows a monorepo structure with separate client and server directories.
 
-## Recent Changes (October 2025)
+## Recent Changes (November 2025)
+- **Service Gallery Management System**: Complete backend and admin interface for managing service page galleries
+  - Database schema: serviceGalleries table with serviceId and JSON images array
+  - API endpoints: GET /api/service-galleries/:id (public), GET/PUT /api/admin/service-galleries (protected)
+  - Admin interface: New "Serviços" tab with ServiceGalleryEditor component for each of 7 services
+  - All service pages load images dynamically from backend with fallback to defaults
+  - Integrated with ImageUploader for cloud storage uploads via Replit Object Storage
+  - Service IDs: design-grafico, impressao-digital, papel-parede, telas-artisticas, autocolantes, decoracao-viaturas, espacos-comerciais
+- **Security Hardening**: Removed insecure adminAuth middleware and migrated all admin endpoints to use protegerAdmin
+  - Fixed critical security vulnerability where admin endpoints were effectively unauthenticated
+  - All /api/admin/* routes now properly protected in production
+  - Affected endpoints: service galleries, orders management (GET/PUT/DELETE)
 - **Admin Security System**: Implemented secure admin authentication with dual-mode access:
   - Development: Localhost access allowed for testing
   - Production: Requires Replit authentication via /api/login

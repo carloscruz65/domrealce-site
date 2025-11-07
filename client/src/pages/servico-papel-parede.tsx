@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Wallpaper, 
   CheckCircle, 
@@ -152,7 +153,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
     "Suporte técnico especializado"
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=800&q=80",
       alt: "Papel de parede decorativo moderno",
@@ -184,6 +185,11 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       title: "Arte na Parede"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'papel-parede'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

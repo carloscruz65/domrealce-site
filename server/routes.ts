@@ -9,6 +9,7 @@ import {
   insertSlideSchema,
   insertPageConfigSchema,
   insertOrderSchema,
+  insertServiceGallerySchema,
   type Contact,
   type Order
 } from "@shared/schema";
@@ -61,17 +62,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     storage: multer.memoryStorage(),
     limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
   });
-
-  // Simple admin token middleware (temporary until full auth is re-enabled)
-  const adminAuth = (req: any, res: any, next: any) => {
-    const token = req.headers.authorization?.replace('Bearer ', '') || req.headers['x-admin-token'];
-    // For development, allow simple token or skip auth entirely
-    if (process.env.NODE_ENV === 'development' || token === process.env.ADMIN_TOKEN || !token) {
-      next();
-    } else {
-      res.status(401).json({ error: 'Unauthorized' });
-    }
-  };
 
   // Auth status endpoint - check if user is authenticated
   app.get('/api/auth/status', async (req: Request, res: Response) => {
@@ -963,7 +953,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/admin/orders", adminAuth, async (req, res) => {
+  app.get("/api/admin/orders", protegerAdmin, async (req, res) => {
     try {
       const orders = await storage.getAllOrders();
       res.json({ orders });
@@ -1001,7 +991,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/orders/:id", adminAuth, async (req, res) => {
+  app.put("/api/admin/orders/:id", protegerAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -1013,7 +1003,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.put("/api/admin/orders/:id/status", adminAuth, async (req, res) => {
+  app.put("/api/admin/orders/:id/status", protegerAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       const { estado, estadoPagamento } = req.body;
@@ -1025,7 +1015,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.delete("/api/admin/orders/:id", adminAuth, async (req, res) => {
+  app.delete("/api/admin/orders/:id", protegerAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteOrder(id);
@@ -1505,6 +1495,53 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       console.error("Error deleting loja product:", error);
       res.status(500).json({ error: "Failed to delete loja product" });
+    }
+  });
+
+  // Service Galleries routes
+  // Public endpoint - get gallery for a specific service
+  app.get("/api/service-galleries/:serviceId", async (req, res) => {
+    try {
+      const { serviceId } = req.params;
+      const gallery = await storage.getServiceGallery(serviceId);
+      
+      if (gallery) {
+        res.json({ images: gallery.images });
+      } else {
+        // Return empty array if gallery doesn't exist yet
+        res.json({ images: [] });
+      }
+    } catch (error) {
+      console.error("Error fetching service gallery:", error);
+      res.status(500).json({ error: "Failed to fetch service gallery" });
+    }
+  });
+
+  // Admin endpoint - list all service galleries
+  app.get("/api/admin/service-galleries", async (req, res) => {
+    try {
+      const galleries = await storage.getAllServiceGalleries();
+      res.json({ galleries });
+    } catch (error) {
+      console.error("Error fetching service galleries:", error);
+      res.status(500).json({ error: "Failed to fetch service galleries" });
+    }
+  });
+
+  // Admin endpoint - update/create service gallery
+  app.put("/api/admin/service-galleries/:serviceId", async (req, res) => {
+    try {
+      const { serviceId } = req.params;
+      const galleryData = insertServiceGallerySchema.parse({
+        serviceId,
+        images: req.body.images
+      });
+      
+      const gallery = await storage.upsertServiceGallery(galleryData);
+      res.json({ success: true, gallery });
+    } catch (error) {
+      console.error("Error updating service gallery:", error);
+      res.status(500).json({ error: "Failed to update service gallery" });
     }
   });
 

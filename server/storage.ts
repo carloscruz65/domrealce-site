@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, users, contacts, products, news, slides, pageConfigs, orders } from "@shared/schema";
+import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, type ServiceGallery, type InsertServiceGallery, users, contacts, products, news, slides, pageConfigs, orders, serviceGalleries } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -42,6 +42,10 @@ export interface IStorage {
   updateOrder(id: string, order: Partial<InsertOrder>): Promise<Order>;
   updateOrderStatus(id: string, estado: string, estadoPagamento?: string): Promise<Order>;
   deleteOrder(id: string): Promise<boolean>;
+  // Service galleries management
+  getServiceGallery(serviceId: string): Promise<ServiceGallery | undefined>;
+  getAllServiceGalleries(): Promise<ServiceGallery[]>;
+  upsertServiceGallery(gallery: InsertServiceGallery): Promise<ServiceGallery>;
 }
 
 export class MemStorage implements IStorage {
@@ -52,6 +56,7 @@ export class MemStorage implements IStorage {
   private slides: Map<string, Slide>;
   private pageConfigs: Map<string, PageConfig>;
   private orders: Map<string, Order>;
+  private serviceGalleries: Map<string, ServiceGallery>;
 
   constructor() {
     this.users = new Map();
@@ -61,6 +66,7 @@ export class MemStorage implements IStorage {
     this.slides = new Map();
     this.pageConfigs = new Map();
     this.orders = new Map();
+    this.serviceGalleries = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -384,6 +390,41 @@ export class MemStorage implements IStorage {
   async deleteOrder(id: string): Promise<boolean> {
     return this.orders.delete(id);
   }
+
+  // Service galleries methods
+  async getServiceGallery(serviceId: string): Promise<ServiceGallery | undefined> {
+    return Array.from(this.serviceGalleries.values()).find(
+      gallery => gallery.serviceId === serviceId
+    );
+  }
+
+  async getAllServiceGalleries(): Promise<ServiceGallery[]> {
+    return Array.from(this.serviceGalleries.values());
+  }
+
+  async upsertServiceGallery(insertGallery: InsertServiceGallery): Promise<ServiceGallery> {
+    const existingGallery = await this.getServiceGallery(insertGallery.serviceId);
+    
+    if (existingGallery) {
+      const updatedGallery: ServiceGallery = {
+        ...existingGallery,
+        ...insertGallery,
+        updatedAt: new Date(),
+      };
+      this.serviceGalleries.set(existingGallery.id, updatedGallery);
+      return updatedGallery;
+    } else {
+      const id = randomUUID();
+      const newGallery: ServiceGallery = {
+        ...insertGallery,
+        id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.serviceGalleries.set(id, newGallery);
+      return newGallery;
+    }
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -594,6 +635,31 @@ export class DatabaseStorage implements IStorage {
   async deleteOrder(id: string): Promise<boolean> {
     const result = await db.delete(orders).where(eq(orders.id, id));
     return result.rowCount !== null && result.rowCount > 0;
+  }
+
+  // Service galleries methods
+  async getServiceGallery(serviceId: string): Promise<ServiceGallery | undefined> {
+    const [gallery] = await db.select().from(serviceGalleries).where(eq(serviceGalleries.serviceId, serviceId));
+    return gallery;
+  }
+
+  async getAllServiceGalleries(): Promise<ServiceGallery[]> {
+    return await db.select().from(serviceGalleries);
+  }
+
+  async upsertServiceGallery(insertGallery: InsertServiceGallery): Promise<ServiceGallery> {
+    const [gallery] = await db
+      .insert(serviceGalleries)
+      .values(insertGallery)
+      .onConflictDoUpdate({
+        target: serviceGalleries.serviceId,
+        set: {
+          images: insertGallery.images,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return gallery;
   }
 }
 

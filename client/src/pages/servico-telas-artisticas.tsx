@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Image, 
   CheckCircle, 
@@ -161,7 +162,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
     }
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80",
       alt: "Tela artística em sala moderna",
@@ -193,6 +194,11 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       title: "Qualidade Premium"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'telas-artisticas'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">

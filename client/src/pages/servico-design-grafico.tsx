@@ -5,6 +5,7 @@ import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Palette, 
   CheckCircle, 
@@ -88,7 +89,7 @@ export default function ServicoDesignGrafico() {
     "Suporte técnico contínuo"
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
       alt: "Design de logótipo profissional",
@@ -120,6 +121,11 @@ export default function ServicoDesignGrafico() {
       title: "Papelaria Corporativa"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'design-grafico'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

@@ -1,9 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Palette, Printer, Wallpaper, Image, Sticker, Car, Building, Shield } from "lucide-react";
+import { ArrowRight, Palette, Printer, Wallpaper, Image, Sticker, Car, Building, Shield, Zap } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
 
 interface Service {
   id: string;
@@ -147,20 +148,25 @@ export default function Servicos() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Nossos <span className="text-brand-yellow">Serviços</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-              Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, 
-              desde impressão digital até decoração de espaços comerciais.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section com ServiceHero */}
+      <ServiceHero
+        badge="40 Anos de Experiência"
+        badgeIcon={<Zap className="w-4 h-4 mr-2" />}
+        title="Nossos Serviços"
+        subtitle="Soluções Completas em Comunicação Visual"
+        description="Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, desde impressão digital até decoração de espaços comerciais."
+        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 100%)"
+        gradientOverlay="from-black/95 via-black/90 to-black/95"
+        portfolioButton={true}
+        primaryCta={{
+          text: "Solicitar Orçamento",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Ver Portfolio",
+          href: "/portfolio"
+        }}
+      />
 
       {/* Services Grid */}
       <section className="pt-0 pb-8">

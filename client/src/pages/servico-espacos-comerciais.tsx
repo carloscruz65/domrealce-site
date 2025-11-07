@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Building, 
   CheckCircle, 
@@ -143,7 +144,7 @@ export default function ServicoEspacosComerciais() {
     }
   ];
 
-  const galleryImages = [
+  const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
       alt: "Loja com sinalização moderna",
@@ -175,6 +176,11 @@ export default function ServicoEspacosComerciais() {
       title: "Fachadas Profissionais"
     }
   ];
+
+  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
+    queryKey: ['/api/service-galleries', 'espacos-comerciais'],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">

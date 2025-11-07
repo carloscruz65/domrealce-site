@@ -82,6 +82,14 @@ export const pageConfigs = pgTable("page_configs", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const serviceGalleries = pgTable("service_galleries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  serviceId: text("service_id").notNull().unique(), // design-grafico, impressao-digital, etc.
+  images: jsonb("images").notNull(), // Array de { src, alt, title }
+  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   numeroEncomenda: text("numero_encomenda").notNull().unique(),
@@ -200,6 +208,18 @@ export const insertPageConfigSchema = createInsertSchema(pageConfigs).pick({
   metadata: z.string().optional(),
 });
 
+export const insertServiceGallerySchema = createInsertSchema(serviceGalleries).pick({
+  serviceId: true,
+  images: true,
+}).extend({
+  serviceId: z.string().min(1, "ID do serviço é obrigatório"),
+  images: z.array(z.object({
+    src: z.string().url("URL da imagem inválida"),
+    alt: z.string(),
+    title: z.string(),
+  })).min(1, "Deve ter pelo menos uma imagem"),
+});
+
 export const insertOrderSchema = createInsertSchema(orders).pick({
   numeroEncomenda: true,
   clienteNome: true,
@@ -256,5 +276,7 @@ export type InsertSlide = z.infer<typeof insertSlideSchema>;
 export type Slide = typeof slides.$inferSelect;
 export type InsertPageConfig = z.infer<typeof insertPageConfigSchema>;
 export type PageConfig = typeof pageConfigs.$inferSelect;
+export type InsertServiceGallery = z.infer<typeof insertServiceGallerySchema>;
+export type ServiceGallery = typeof serviceGalleries.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;

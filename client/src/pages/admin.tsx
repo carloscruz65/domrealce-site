@@ -8,6 +8,7 @@ import NoticiasManager from "@/components/NoticiasManager";
 import PortfolioManager from "@/components/PortfolioManager";
 import EncomendasManager from "@/components/EncomendasManager";
 import PageEditor from "@/components/PageEditor";
+import ServiceGalleryEditor from "@/components/ServiceGalleryEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,11 +23,27 @@ import {
   Monitor,
   Users,
   Store,
-  ShoppingCart
+  ShoppingCart,
+  Briefcase
 } from "lucide-react";
+
+const serviceNames: Record<string, string> = {
+  'design-grafico': 'Design Gráfico',
+  'impressao-digital': 'Impressão Digital',
+  'papel-parede': 'Papel de Parede',
+  'telas-artisticas': 'Telas Artísticas',
+  'autocolantes': 'Autocolantes',
+  'decoracao-viaturas': 'Decoração de Viaturas',
+  'espacos-comerciais': 'Espaços Comerciais'
+};
+
+function getServiceName(serviceId: string): string {
+  return serviceNames[serviceId] || serviceId;
+}
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [selectedService, setSelectedService] = useState<string | null>(null);
 
   const { data: authStatus } = useQuery<{ authenticated: boolean; user?: { name: string } }>({
     queryKey: ["/api/auth/status"],
@@ -66,7 +83,7 @@ export default function AdminPage() {
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-8 mb-8">
+            <TabsList className="grid w-full grid-cols-9 mb-8">
               <TabsTrigger value="dashboard" className="flex items-center gap-2">
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
@@ -90,6 +107,10 @@ export default function AdminPage() {
               <TabsTrigger value="portfolio" className="flex items-center gap-2">
                 <ImageIcon className="h-4 w-4" />
                 Portfolio
+              </TabsTrigger>
+              <TabsTrigger value="servicos" className="flex items-center gap-2">
+                <Briefcase className="h-4 w-4" />
+                Serviços
               </TabsTrigger>
               <TabsTrigger value="encomendas" className="flex items-center gap-2">
                 <ShoppingCart className="h-4 w-4" />
@@ -146,6 +167,13 @@ export default function AdminPage() {
                   onClick={() => setActiveTab("media")}
                   color="text-purple-400"
                 />
+                <DashboardCard
+                  title="Galerias de Serviços"
+                  description="Edite as galerias de imagens dos 7 serviços"
+                  icon={Briefcase}
+                  onClick={() => setActiveTab("servicos")}
+                  color="text-orange-400"
+                />
               </div>
             </TabsContent>
 
@@ -167,6 +195,29 @@ export default function AdminPage() {
             {/* Portfolio Tab */}
             <TabsContent value="portfolio">
               <PortfolioManager />
+            </TabsContent>
+
+            {/* Serviços Tab */}
+            <TabsContent value="servicos">
+              {selectedService ? (
+                <div>
+                  <Button 
+                    variant="outline" 
+                    className="mb-4" 
+                    onClick={() => setSelectedService(null)}
+                    data-testid="button-back-services"
+                  >
+                    ← Voltar à Lista de Serviços
+                  </Button>
+                  <ServiceGalleryEditor 
+                    serviceId={selectedService} 
+                    serviceName={getServiceName(selectedService)}
+                    onBack={() => setSelectedService(null)}
+                  />
+                </div>
+              ) : (
+                <ServicesGalleryList onSelectService={setSelectedService} />
+              )}
             </TabsContent>
 
             {/* Encomendas Tab */}
@@ -213,5 +264,50 @@ function DashboardCard({ title, description, icon: Icon, onClick, color }: Dashb
         <CardDescription>{description}</CardDescription>
       </CardHeader>
     </Card>
+  );
+}
+
+interface ServicesGalleryListProps {
+  onSelectService: (serviceId: string) => void;
+}
+
+function ServicesGalleryList({ onSelectService }: ServicesGalleryListProps) {
+  const services = [
+    { id: 'design-grafico', name: 'Design Gráfico', description: 'Criação de identidade visual e materiais gráficos' },
+    { id: 'impressao-digital', name: 'Impressão Digital', description: 'Impressão de alta qualidade em diversos materiais' },
+    { id: 'papel-parede', name: 'Papel de Parede', description: 'Grande variedade de texturas em catálogo interativo' },
+    { id: 'telas-artisticas', name: 'Telas Artísticas', description: 'Transforme fotografias em obras de arte' },
+    { id: 'autocolantes', name: 'Autocolantes', description: 'Autocolantes personalizados com corte de contorno' },
+    { id: 'decoracao-viaturas', name: 'Decoração de Viaturas', description: 'Car wrapping e personalização de frotas' },
+    { id: 'espacos-comerciais', name: 'Espaços Comerciais', description: 'Sinalização e decoração para negócios' }
+  ];
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold mb-6">Galerias de Serviços</h2>
+      <p className="text-muted-foreground mb-8">
+        Selecione um serviço para editar a galeria de imagens
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {services.map((service) => (
+          <Card 
+            key={service.id}
+            className="cursor-pointer hover:shadow-lg transition-all hover:scale-105"
+            onClick={() => onSelectService(service.id)}
+            data-testid={`card-service-${service.id}`}
+          >
+            <CardHeader>
+              <CardTitle>{service.name}</CardTitle>
+              <CardDescription>{service.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" data-testid={`button-edit-${service.id}`}>
+                Editar Galeria
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 }
