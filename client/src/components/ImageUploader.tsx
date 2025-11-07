@@ -80,6 +80,9 @@ export default function ImageUploader({ value, onChange, label = "Imagem", folde
             return {
               method: 'PUT' as const,
               url: uploadURL,
+              headers: {
+                'Content-Type': file.type || 'application/octet-stream',
+              },
             };
           } catch (error) {
             console.error('Erro ao obter parâmetros de upload:', error);
