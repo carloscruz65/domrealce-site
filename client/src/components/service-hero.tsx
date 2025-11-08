@@ -108,13 +108,16 @@ export default function ServiceHero({
       </section>
     );
   }
-  const backgroundStyle = backgroundImage
+  // Encode image URL to handle spaces and special characters
+  const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
+  
+  const backgroundStyle = encodedBackgroundImage
     ? {
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url("${encodedBackgroundImage}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        ...(backgroundColor && { backgroundColor }),
+        backgroundColor: backgroundColor || "#1a1a1a",
         ...(customHeight && { minHeight: customHeight }),
       }
     : backgroundTexture
@@ -122,11 +125,11 @@ export default function ServiceHero({
         backgroundImage: backgroundTexture,
         backgroundSize: "200px 200px",
         backgroundRepeat: "repeat",
-        ...(backgroundColor && { backgroundColor }),
+        backgroundColor: backgroundColor || "#1a1a1a",
         ...(customHeight && { minHeight: customHeight }),
       }
     : {
-        ...(backgroundColor && { backgroundColor }),
+        backgroundColor: backgroundColor || "#1a1a1a",
         ...(customHeight && { minHeight: customHeight }),
       };
 
