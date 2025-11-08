@@ -147,8 +147,9 @@ export default function ServicoImpressaoDigital() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section com novo componente */}
+      {/* Hero Section - Dynamic from backend */}
       <ServiceHero
+        serviceId="impressao-digital"
         badge="Impressão Digital Profissional"
         badgeIcon={<Printer className="w-4 h-4 mr-2" />}
         title="Impressão Digital"

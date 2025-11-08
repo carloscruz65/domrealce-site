@@ -2,16 +2,22 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowRight, Eye } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface ServiceHeroProps {
-  badge: string;
-  badgeIcon: React.ReactNode;
-  title: string;
+  serviceId?: string;
+  badge?: string;
+  badgeIcon?: React.ReactNode;
+  title?: string;
   subtitle?: string;
-  description: string;
+  description?: string;
   backgroundImage?: string;
   backgroundTexture?: string;
   gradientOverlay?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  overlayOpacity?: string;
+  height?: string;
   primaryCta?: {
     text: string;
     href: string;
@@ -23,39 +29,106 @@ interface ServiceHeroProps {
   portfolioButton?: boolean;
 }
 
+interface HeroData {
+  badge?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  backgroundImage?: string;
+  backgroundTexture?: string;
+  gradientOverlay?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  overlayOpacity?: string;
+  height?: string;
+  primaryCtaText?: string;
+  primaryCtaHref?: string;
+  secondaryCtaText?: string;
+  secondaryCtaHref?: string;
+}
+
 export default function ServiceHero({
-  badge,
+  serviceId,
+  badge: propBadge,
   badgeIcon,
-  title,
-  subtitle,
-  description,
-  backgroundImage,
-  backgroundTexture,
-  gradientOverlay = "from-black/40 via-black/20 to-transparent",
-  primaryCta = {
+  title: propTitle,
+  subtitle: propSubtitle,
+  description: propDescription,
+  backgroundImage: propBackgroundImage,
+  backgroundTexture: propBackgroundTexture,
+  gradientOverlay: propGradientOverlay = "from-black/40 via-black/20 to-transparent",
+  backgroundColor: propBackgroundColor,
+  textColor: propTextColor,
+  overlayOpacity: propOverlayOpacity,
+  height: propHeight,
+  primaryCta: propPrimaryCta = {
     text: "Iniciar Meu Projeto",
     href: "/contactos#formulario"
   },
-  secondaryCta = {
+  secondaryCta: propSecondaryCta = {
     text: "Contactar",
     href: "/contactos#formulario"
   },
   portfolioButton = true
 }: ServiceHeroProps) {
+  const { data: heroData, isLoading } = useQuery<HeroData>({
+    queryKey: ['/api/service-heroes', serviceId],
+    enabled: !!serviceId,
+  });
+
+  const badge = heroData?.badge || propBadge || "";
+  const title = heroData?.title || propTitle || "";
+  const subtitle = heroData?.subtitle || propSubtitle;
+  const description = heroData?.description || propDescription || "";
+  const backgroundImage = heroData?.backgroundImage || propBackgroundImage;
+  const backgroundTexture = heroData?.backgroundTexture || propBackgroundTexture;
+  const gradientOverlay = heroData?.gradientOverlay || propGradientOverlay;
+  const backgroundColor = heroData?.backgroundColor || propBackgroundColor;
+  const textColor = heroData?.textColor || propTextColor;
+  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0.5";
+  const customHeight = heroData?.height || propHeight;
+
+  const primaryCta = {
+    text: heroData?.primaryCtaText || propPrimaryCta.text,
+    href: heroData?.primaryCtaHref || propPrimaryCta.href,
+  };
+
+  const secondaryCta = {
+    text: heroData?.secondaryCtaText || propSecondaryCta.text,
+    href: heroData?.secondaryCtaHref || propSecondaryCta.href,
+  };
+
+  if (serviceId && isLoading) {
+    return (
+      <section className="relative pt-32 pb-20 flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow mx-auto mb-4"></div>
+          <p className="text-gray-400">A carregar hero...</p>
+        </div>
+      </section>
+    );
+  }
   const backgroundStyle = backgroundImage
     ? {
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
+        ...(backgroundColor && { backgroundColor }),
+        ...(customHeight && { minHeight: customHeight }),
       }
     : backgroundTexture
     ? {
         backgroundImage: backgroundTexture,
         backgroundSize: "200px 200px",
-        backgroundRepeat: "repeat"
+        backgroundRepeat: "repeat",
+        ...(backgroundColor && { backgroundColor }),
+        ...(customHeight && { minHeight: customHeight }),
       }
-    : {};
+    : {
+        ...(backgroundColor && { backgroundColor }),
+        ...(customHeight && { minHeight: customHeight }),
+      };
 
   return (
     <section 
@@ -63,7 +136,10 @@ export default function ServiceHero({
       style={backgroundStyle}
     >
       {/* Overlay Gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`} />
+      <div 
+        className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`}
+        style={{ opacity: parseFloat(overlayOpacity) }}
+      />
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-20">
@@ -75,22 +151,30 @@ export default function ServiceHero({
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <Badge className="bg-brand-yellow text-black mb-6 text-base px-4 py-2">
-            {badgeIcon}
-            {badge}
-          </Badge>
+          {badge && (
+            <Badge className="bg-brand-yellow text-black mb-6 text-base px-4 py-2">
+              {badgeIcon}
+              {badge}
+            </Badge>
+          )}
           
-          <h1 className="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight">
-            <span className="text-brand-yellow">{title}</span>
+          <h1 
+            className="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight"
+            style={textColor ? { color: textColor } : undefined}
+          >
+            <span className={textColor ? "" : "text-brand-yellow"}>{title}</span>
             {subtitle && (
               <>
                 <br />
-                <span className="text-white">{subtitle}</span>
+                <span className={textColor ? "" : "text-white"}>{subtitle}</span>
               </>
             )}
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
+          <p 
+            className="text-xl md:text-2xl mb-10 leading-relaxed max-w-3xl mx-auto"
+            style={textColor ? { color: textColor, opacity: 0.9 } : { color: "#d1d5db" }}
+          >
             {description}
           </p>
           

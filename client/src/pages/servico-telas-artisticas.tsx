@@ -205,6 +205,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       <Navigation />
       
       <ServiceHero
+        serviceId="telas-artisticas"
         badge="Telas Artísticas Premium"
         badgeIcon={<Image className="w-4 h-4 mr-2" />}
         title="Transforme Fotografias"

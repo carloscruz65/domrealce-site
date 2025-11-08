@@ -131,8 +131,9 @@ export default function ServicoDesignGrafico() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section com novo componente */}
+      {/* Hero Section - Dynamic from backend */}
       <ServiceHero
+        serviceId="design-grafico"
         badge="Design Gráfico Profissional"
         badgeIcon={<Palette className="w-4 h-4 mr-2" />}
         title="Identidade Visual"

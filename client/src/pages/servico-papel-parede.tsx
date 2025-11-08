@@ -196,6 +196,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       <Navigation />
       
       <ServiceHero
+        serviceId="papel-parede"
         badge="Papel de Parede Premium"
         badgeIcon={<Wallpaper className="w-4 h-4 mr-2" />}
         title="Grande Variedade de Texturas"

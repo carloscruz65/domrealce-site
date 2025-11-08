@@ -1,6 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
+import ServiceHero from "@/components/service-hero";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -163,37 +164,24 @@ export default function ServicoDecoracaoViaturas() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-orange-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-orange-600 text-white mb-6">
-              <Car className="w-4 h-4 mr-2" />
-              Decoração de Viaturas
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-orange-400">Transforme a Sua Viatura</span>
-              <br />
-              <span className="text-white">numa Obra de Arte</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas 
-              até publicidade móvel para o seu negócio. Qualidade profissional garantida.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-orange-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Transformar Minha Viatura</Link>
-              </Button>
-              <Button asChild variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Contactar</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section - Dynamic from backend */}
+      <ServiceHero
+        serviceId="decoracao-viaturas"
+        badge="Decoração de Viaturas"
+        badgeIcon={<Car className="w-4 h-4 mr-2" />}
+        title="Transforme a Sua Viatura"
+        subtitle="numa Obra de Arte"
+        description="Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas até publicidade móvel para o seu negócio. Qualidade profissional garantida."
+        gradientOverlay="from-black via-orange-900/20 to-black"
+        primaryCta={{
+          text: "Transformar Minha Viatura",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Contactar",
+          href: "/contactos#formulario"
+        }}
+      />
 
       {/* Vehicle Types Grid */}
       <section className="pt-0 pb-8 bg-gray-900/50">

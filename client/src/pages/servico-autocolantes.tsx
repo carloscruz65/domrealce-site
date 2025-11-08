@@ -171,6 +171,7 @@ export default function ServicoAutocolantes() {
       <Navigation />
       
       <ServiceHero
+        serviceId="autocolantes"
         badge="Autocolantes Profissionais"
         badgeIcon={<Sticker className="w-4 h-4 mr-2" />}
         title="Autocolantes e Etiquetas"

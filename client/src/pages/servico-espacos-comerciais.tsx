@@ -187,6 +187,7 @@ export default function ServicoEspacosComerciais() {
       <Navigation />
       
       <ServiceHero
+        serviceId="espacos-comerciais"
         badge="Espaços Comerciais Premium"
         badgeIcon={<Building className="w-4 h-4 mr-2" />}
         title="Transforme o Seu"
@@ -199,7 +200,7 @@ export default function ServicoEspacosComerciais() {
           href: "/contactos#formulario"
         }}
         secondaryCta={{
-          text: "Ver Projetos",
+          text: "Contactar",
           href: "/contactos#formulario"
         }}
       />
