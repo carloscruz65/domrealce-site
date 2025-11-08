@@ -201,7 +201,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
   const galleryImages = galleryData?.images || defaultImages;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
       
       <ServiceHero

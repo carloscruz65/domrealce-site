@@ -128,7 +128,7 @@ export default function ServicoDesignGrafico() {
   const galleryImages = galleryData?.images || defaultImages;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
       
       {/* Hero Section - Dynamic from backend */}

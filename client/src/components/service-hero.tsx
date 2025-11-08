@@ -100,7 +100,7 @@ export default function ServiceHero({
 
   if (serviceId && isLoading) {
     return (
-      <section className="relative pt-32 pb-20 flex items-center justify-center bg-black">
+      <section className="relative pt-32 pb-20 flex items-center justify-center bg-transparent">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow mx-auto mb-4"></div>
           <p className="text-gray-400">A carregar hero...</p>

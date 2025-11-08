@@ -161,7 +161,7 @@ export default function ServicoDecoracaoViaturas() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
       
       {/* Hero Section - Dynamic from backend */}

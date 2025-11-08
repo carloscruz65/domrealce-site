@@ -145,7 +145,7 @@ const services: Service[] = [
 
 export default function Servicos() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
       
       {/* Hero Section - Dynamic from backend */}
