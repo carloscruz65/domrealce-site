@@ -3,6 +3,16 @@
 This is a full-stack web application for DOMREALCE, a Portuguese visual communication and digital printing company. The application serves as a company portfolio and business website showcasing services like digital printing, vinyl cutting, vehicle wrapping, and custom signage. Built with a modern tech stack including React, Express, TypeScript, and PostgreSQL, it follows a monorepo structure with separate client and server directories.
 
 ## Recent Changes (November 2025)
+- **Hero Editor System for Service Pages** (Production-Ready): Complete dynamic hero editing system
+  - Database schema: service_heroes table with all customizable fields (badge, title, subtitle, description, images, backgroundColor, textColor, overlayOpacity, height, CTA buttons)
+  - API endpoints: GET /api/service-heroes/:serviceId (public), PUT /api/admin/service-heroes/:serviceId (protected by protegerAdmin)
+  - HeroEditor component in admin with tabbed interface (Conteúdo/Imagem/Cores/Layout) for comprehensive editing
+  - ServiceHero component loads dynamic content from backend via React Query with automatic fallback to defaults
+  - All 7 service pages integrated: design-grafico, impressao-digital, papel-parede, telas-artisticas, autocolantes, decoracao-viaturas, espacos-comerciais
+  - Admin interface includes Gallery/Hero sub-tabs for each service in the "Serviços" section
+  - Image uploads via Replit Object Storage to "public/servicos/" folder
+  - Round-trip tested: edit in admin → save → immediate reflection on service pages
+  - Type-safe across entire stack with Drizzle schema, Zod validation, and TypeScript types
 - **Service Gallery Management System**: Complete backend and admin interface for managing service page galleries
   - Database schema: serviceGalleries table with serviceId and JSON images array
   - API endpoints: GET /api/service-galleries/:id (public), GET/PUT /api/admin/service-galleries (protected)
