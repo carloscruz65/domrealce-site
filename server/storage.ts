@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, type ServiceGallery, type InsertServiceGallery, users, contacts, products, news, slides, pageConfigs, orders, serviceGalleries } from "@shared/schema";
+import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, type ServiceGallery, type InsertServiceGallery, type ServiceHero, type InsertServiceHero, users, contacts, products, news, slides, pageConfigs, orders, serviceGalleries, serviceHeros } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -46,6 +46,10 @@ export interface IStorage {
   getServiceGallery(serviceId: string): Promise<ServiceGallery | undefined>;
   getAllServiceGalleries(): Promise<ServiceGallery[]>;
   upsertServiceGallery(gallery: InsertServiceGallery): Promise<ServiceGallery>;
+  // Service heroes management
+  getServiceHero(serviceId: string): Promise<ServiceHero | undefined>;
+  getAllServiceHeroes(): Promise<ServiceHero[]>;
+  upsertServiceHero(hero: InsertServiceHero): Promise<ServiceHero>;
 }
 
 export class MemStorage implements IStorage {
@@ -57,6 +61,7 @@ export class MemStorage implements IStorage {
   private pageConfigs: Map<string, PageConfig>;
   private orders: Map<string, Order>;
   private serviceGalleries: Map<string, ServiceGallery>;
+  private serviceHeroes: Map<string, ServiceHero>;
 
   constructor() {
     this.users = new Map();
@@ -67,6 +72,7 @@ export class MemStorage implements IStorage {
     this.pageConfigs = new Map();
     this.orders = new Map();
     this.serviceGalleries = new Map();
+    this.serviceHeroes = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -425,6 +431,41 @@ export class MemStorage implements IStorage {
       return newGallery;
     }
   }
+
+  // Service heroes methods
+  async getServiceHero(serviceId: string): Promise<ServiceHero | undefined> {
+    return Array.from(this.serviceHeroes.values()).find(
+      hero => hero.serviceId === serviceId
+    );
+  }
+
+  async getAllServiceHeroes(): Promise<ServiceHero[]> {
+    return Array.from(this.serviceHeroes.values());
+  }
+
+  async upsertServiceHero(insertHero: InsertServiceHero): Promise<ServiceHero> {
+    const existingHero = await this.getServiceHero(insertHero.serviceId);
+    
+    if (existingHero) {
+      const updatedHero: ServiceHero = {
+        ...existingHero,
+        ...insertHero,
+        updatedAt: new Date(),
+      };
+      this.serviceHeroes.set(existingHero.id, updatedHero);
+      return updatedHero;
+    } else {
+      const id = randomUUID();
+      const newHero: ServiceHero = {
+        ...insertHero,
+        id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.serviceHeroes.set(id, newHero);
+      return newHero;
+    }
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -660,6 +701,31 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return gallery;
+  }
+
+  // Service heroes methods
+  async getServiceHero(serviceId: string): Promise<ServiceHero | undefined> {
+    const [hero] = await db.select().from(serviceHeros).where(eq(serviceHeros.serviceId, serviceId));
+    return hero;
+  }
+
+  async getAllServiceHeroes(): Promise<ServiceHero[]> {
+    return await db.select().from(serviceHeros);
+  }
+
+  async upsertServiceHero(insertHero: InsertServiceHero): Promise<ServiceHero> {
+    const [hero] = await db
+      .insert(serviceHeros)
+      .values(insertHero)
+      .onConflictDoUpdate({
+        target: serviceHeros.serviceId,
+        set: {
+          ...insertHero,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return hero;
   }
 }
 

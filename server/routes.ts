@@ -10,6 +10,7 @@ import {
   insertPageConfigSchema,
   insertOrderSchema,
   insertServiceGallerySchema,
+  insertServiceHeroSchema,
   type Contact,
   type Order
 } from "@shared/schema";
@@ -1563,6 +1564,53 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       console.error("Error updating service gallery:", error);
       res.status(500).json({ error: "Failed to update service gallery" });
+    }
+  });
+
+  // Service Heroes routes
+  // Public endpoint - get hero for a specific service
+  app.get("/api/service-heroes/:serviceId", async (req, res) => {
+    try {
+      const { serviceId } = req.params;
+      const hero = await storage.getServiceHero(serviceId);
+      
+      if (hero) {
+        res.json(hero);
+      } else {
+        // Return null if hero doesn't exist yet
+        res.json(null);
+      }
+    } catch (error) {
+      console.error("Error fetching service hero:", error);
+      res.status(500).json({ error: "Failed to fetch service hero" });
+    }
+  });
+
+  // Admin endpoint - list all service heroes
+  app.get("/api/admin/service-heroes", async (req, res) => {
+    try {
+      const heroes = await storage.getAllServiceHeroes();
+      res.json({ heroes });
+    } catch (error) {
+      console.error("Error fetching service heroes:", error);
+      res.status(500).json({ error: "Failed to fetch service heroes" });
+    }
+  });
+
+  // Admin endpoint - update/create service hero
+  app.put("/api/admin/service-heroes/:serviceId", async (req, res) => {
+    try {
+      const { serviceId } = req.params;
+      const heroData = insertServiceHeroSchema.parse({
+        serviceId,
+        ...req.body
+      });
+      
+      const hero = await storage.upsertServiceHero(heroData);
+      res.json({ success: true, hero });
+    } catch (error) {
+      console.error("Error updating service hero:", error);
+      res.status(500).json({ error: "Failed to update service hero" });
     }
   });
 
