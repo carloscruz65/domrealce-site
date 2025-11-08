@@ -135,18 +135,22 @@ export default function ServiceHero({
       className="relative pt-32 pb-20 overflow-hidden"
       style={backgroundStyle}
     >
-      {/* Overlay Gradient */}
-      <div 
-        className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`}
-        style={{ opacity: parseFloat(overlayOpacity) }}
-      />
+      {/* Overlay Gradient - Only render if overlayOpacity > 0 */}
+      {parseFloat(overlayOpacity) > 0 && (
+        <div 
+          className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`}
+          style={{ opacity: parseFloat(overlayOpacity) }}
+        />
+      )}
       
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-brand-yellow/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-turquoise/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-brand-coral/10 rounded-full blur-3xl animate-pulse delay-2000" />
-      </div>
+      {/* Animated Background Elements - Only render if overlayOpacity > 0 */}
+      {parseFloat(overlayOpacity) > 0 && (
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-brand-yellow/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-turquoise/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-brand-coral/10 rounded-full blur-3xl animate-pulse delay-2000" />
+        </div>
+      )}
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
@@ -213,8 +217,10 @@ export default function ServiceHero({
         </div>
       </div>
 
-      {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
+      {/* Bottom Fade - Only render if overlayOpacity > 0 */}
+      {parseFloat(overlayOpacity) > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
+      )}
     </section>
   );
 }
