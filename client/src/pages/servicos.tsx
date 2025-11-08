@@ -157,7 +157,6 @@ export default function Servicos() {
         description="Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, desde impressão digital até decoração de espaços comerciais."
         backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 100%)"
         gradientOverlay="from-black/95 via-black/90 to-black/95"
-        portfolioButton={true}
         primaryCta={{
           text: "Solicitar Orçamento",
           href: "/contactos#formulario"
