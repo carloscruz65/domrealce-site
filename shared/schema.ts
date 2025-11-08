@@ -90,6 +90,24 @@ export const serviceGalleries = pgTable("service_galleries", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const serviceHeros = pgTable("service_heroes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  serviceId: text("service_id").notNull().unique(), // design-grafico, impressao-digital, etc.
+  badge: text("badge"),
+  title: text("title").notNull(),
+  subtitle: text("subtitle"),
+  description: text("description"),
+  backgroundImage: text("background_image"),
+  backgroundTexture: text("background_texture"),
+  gradientOverlay: text("gradient_overlay"),
+  primaryCtaText: text("primary_cta_text"),
+  primaryCtaHref: text("primary_cta_href"),
+  secondaryCtaText: text("secondary_cta_text"),
+  secondaryCtaHref: text("secondary_cta_href"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   numeroEncomenda: text("numero_encomenda").notNull().unique(),
@@ -220,6 +238,34 @@ export const insertServiceGallerySchema = createInsertSchema(serviceGalleries).p
   })).min(1, "Deve ter pelo menos uma imagem"),
 });
 
+export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
+  serviceId: true,
+  badge: true,
+  title: true,
+  subtitle: true,
+  description: true,
+  backgroundImage: true,
+  backgroundTexture: true,
+  gradientOverlay: true,
+  primaryCtaText: true,
+  primaryCtaHref: true,
+  secondaryCtaText: true,
+  secondaryCtaHref: true,
+}).extend({
+  serviceId: z.string().min(1, "ID do serviço é obrigatório"),
+  title: z.string().min(1, "Título é obrigatório"),
+  badge: z.string().optional(),
+  subtitle: z.string().optional(),
+  description: z.string().optional(),
+  backgroundImage: z.string().optional(),
+  backgroundTexture: z.string().optional(),
+  gradientOverlay: z.string().optional(),
+  primaryCtaText: z.string().optional(),
+  primaryCtaHref: z.string().optional(),
+  secondaryCtaText: z.string().optional(),
+  secondaryCtaHref: z.string().optional(),
+});
+
 export const insertOrderSchema = createInsertSchema(orders).pick({
   numeroEncomenda: true,
   clienteNome: true,
@@ -278,5 +324,7 @@ export type InsertPageConfig = z.infer<typeof insertPageConfigSchema>;
 export type PageConfig = typeof pageConfigs.$inferSelect;
 export type InsertServiceGallery = z.infer<typeof insertServiceGallerySchema>;
 export type ServiceGallery = typeof serviceGalleries.$inferSelect;
+export type InsertServiceHero = z.infer<typeof insertServiceHeroSchema>;
+export type ServiceHero = typeof serviceHeros.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
