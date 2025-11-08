@@ -13,19 +13,17 @@ interface ServiceHeroProps {
   description?: string;
   backgroundImage?: string;
   backgroundTexture?: string;
+  /** Se usar classes Tailwind (from-/via-/to-), aplica gradiente Tailwind; se for CSS (ex: 'linear-gradient(...)'), aplica via style.background */
   gradientOverlay?: string;
+  /** Cor sólida do overlay (ex: 'rgba(0,0,0,0.6)', '#000000') */
+  overlayColor?: string;
   backgroundColor?: string;
   textColor?: string;
+  /** Opacidade do overlay, como string numérica. Renderiza overlay apenas se > 0. */
   overlayOpacity?: string;
   height?: string;
-  primaryCta?: {
-    text: string;
-    href: string;
-  };
-  secondaryCta?: {
-    text: string;
-    href: string;
-  };
+  primaryCta?: { text: string; href: string };
+  secondaryCta?: { text: string; href: string };
   portfolioButton?: boolean;
 }
 
@@ -37,6 +35,7 @@ interface HeroData {
   backgroundImage?: string;
   backgroundTexture?: string;
   gradientOverlay?: string;
+  overlayColor?: string;        // <- NOVO
   backgroundColor?: string;
   textColor?: string;
   overlayOpacity?: string;
@@ -57,25 +56,21 @@ export default function ServiceHero({
   backgroundImage: propBackgroundImage,
   backgroundTexture: propBackgroundTexture,
   gradientOverlay: propGradientOverlay = "from-transparent via-transparent to-transparent",
+  overlayColor: propOverlayColor, // <- NOVO
   backgroundColor: propBackgroundColor,
   textColor: propTextColor,
   overlayOpacity: propOverlayOpacity,
   height: propHeight,
-  primaryCta: propPrimaryCta = {
-    text: "Iniciar Meu Projeto",
-    href: "/contactos#formulario"
-  },
-  secondaryCta: propSecondaryCta = {
-    text: "Contactar",
-    href: "/contactos#formulario"
-  },
-  portfolioButton = true
+  primaryCta: propPrimaryCta = { text: "Iniciar Meu Projeto", href: "/contactos#formulario" },
+  secondaryCta: propSecondaryCta = { text: "Contactar", href: "/contactos#formulario" },
+  portfolioButton = true,
 }: ServiceHeroProps) {
   const { data: heroData, isLoading } = useQuery<HeroData>({
-    queryKey: ['/api/service-heroes', serviceId],
+    queryKey: ["/api/service-heroes", serviceId],
     enabled: !!serviceId,
   });
 
+  // ---------- Dados efetivos (backend sobrescreve props se vierem) ----------
   const badge = heroData?.badge || propBadge || "";
   const title = heroData?.title || propTitle || "";
   const subtitle = heroData?.subtitle || propSubtitle;
@@ -83,9 +78,10 @@ export default function ServiceHero({
   const backgroundImage = heroData?.backgroundImage || propBackgroundImage;
   const backgroundTexture = heroData?.backgroundTexture || propBackgroundTexture;
   const gradientOverlay = heroData?.gradientOverlay || propGradientOverlay;
+  const overlayColor = heroData?.overlayColor || propOverlayColor; // <- NOVO
   const backgroundColor = heroData?.backgroundColor || propBackgroundColor;
   const textColor = heroData?.textColor || propTextColor;
-  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0";
+  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0"; // padrão seguro: sem overlay
   const customHeight = heroData?.height || propHeight;
 
   const primaryCta = {
@@ -102,16 +98,17 @@ export default function ServiceHero({
     return (
       <section className="relative pt-32 pb-20 flex items-center justify-center bg-transparent">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow mx-auto mb-4" />
           <p className="text-gray-400">A carregar hero...</p>
         </div>
       </section>
     );
   }
-  // Encode image URL to handle spaces and special characters
+
+  // ---------- Background (imagem | textura | cor) ----------
   const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
-  
-  const backgroundStyle = encodedBackgroundImage
+
+  const backgroundStyle: React.CSSProperties = encodedBackgroundImage
     ? {
         backgroundImage: `url("${encodedBackgroundImage}")`,
         backgroundSize: "cover",
@@ -133,21 +130,37 @@ export default function ServiceHero({
         ...(customHeight && { minHeight: customHeight }),
       };
 
+  // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
+  const overlayIsVisible = parseFloat(overlayOpacity || "0") > 0;
+
+  // Heurística: se a string do gradientOverlay tem classes tailwind de gradiente, usamos Tailwind;
+  // Caso contrário, tratamos o valor como CSS em style.background (ou caímos para overlayColor).
+  const looksLikeTailwindGradient =
+    !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
+
   return (
-    <section 
-      className="relative pt-32 pb-20 overflow-hidden"
-      style={backgroundStyle}
-    >
-      {/* Overlay Gradient - Only render if overlayOpacity > 0 */}
-      {parseFloat(overlayOpacity) > 0 && (
-        <div 
-          className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`}
-          style={{ opacity: parseFloat(overlayOpacity) }}
-        />
-      )}
-      
-      {/* Animated Background Elements - Only render if overlayOpacity > 0 */}
-      {parseFloat(overlayOpacity) > 0 && (
+    <section className="relative pt-32 pb-20 overflow-hidden" style={backgroundStyle}>
+      {/* Overlay */}
+      {overlayIsVisible &&
+        (looksLikeTailwindGradient ? (
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${gradientOverlay}`}
+            style={{ opacity: parseFloat(overlayOpacity) }}
+          />
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                // prioridade: overlayColor sólido -> gradientOverlay como CSS -> fallback preto 60%
+                overlayColor || gradientOverlay || "rgba(0,0,0,0.6)",
+              opacity: parseFloat(overlayOpacity),
+            }}
+          />
+        ))}
+
+      {/* Elementos de fundo animados (apenas se overlay ativo) */}
+      {overlayIsVisible && (
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-72 h-72 bg-brand-yellow/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-turquoise/10 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -155,7 +168,7 @@ export default function ServiceHero({
         </div>
       )}
 
-      {/* Content */}
+      {/* Conteúdo */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {badge && (
@@ -164,8 +177,8 @@ export default function ServiceHero({
               {badge}
             </Badge>
           )}
-          
-          <h1 
+
+          <h1
             className="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight"
             style={textColor ? { color: textColor } : undefined}
           >
@@ -177,17 +190,17 @@ export default function ServiceHero({
               </>
             )}
           </h1>
-          
-          <p 
+
+          <p
             className="text-xl md:text-2xl mb-10 leading-relaxed max-w-3xl mx-auto"
             style={textColor ? { color: textColor, opacity: 0.9 } : { color: "#d1d5db" }}
           >
             {description}
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
-            <Button 
-              asChild 
+            <Button
+              asChild
               className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold px-8 py-6 text-lg hover:scale-105 transition-transform"
             >
               <Link href={primaryCta.href} data-testid="button-primary-cta">
@@ -195,19 +208,21 @@ export default function ServiceHero({
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            
-            <Button 
-              asChild 
-              variant="outline" 
+
+            <Button
+              asChild
+              variant="outline"
               className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg"
             >
-              <Link href={secondaryCta.href} data-testid="button-secondary-cta">{secondaryCta.text}</Link>
+              <Link href={secondaryCta.href} data-testid="button-secondary-cta">
+                {secondaryCta.text}
+              </Link>
             </Button>
-            
+
             {portfolioButton && (
-              <Button 
-                asChild 
-                variant="outline" 
+              <Button
+                asChild
+                variant="outline"
                 className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
               >
                 <Link href="/portfolio" data-testid="button-portfolio">
@@ -220,8 +235,8 @@ export default function ServiceHero({
         </div>
       </div>
 
-      {/* Bottom Fade - Only render if overlayOpacity > 0 */}
-      {parseFloat(overlayOpacity) > 0 && (
+      {/* Fade inferior (apenas se overlay ativo) */}
+      {overlayIsVisible && (
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
       )}
     </section>
