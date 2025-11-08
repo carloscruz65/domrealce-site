@@ -172,7 +172,8 @@ export default function ServicoDecoracaoViaturas() {
         title="Transforme a Sua Viatura"
         subtitle="numa Obra de Arte"
         description="Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas até publicidade móvel para o seu negócio. Qualidade profissional garantida."
-        gradientOverlay="from-black via-orange-900/20 to-black"
+        gradientOverlay="from-black/60 via-orange-900/15 to-black/60"
+        overlayOpacity="0.55"
         primaryCta={{
           text: "Transformar Minha Viatura",
           href: "/contactos#formulario"
