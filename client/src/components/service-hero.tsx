@@ -56,7 +56,7 @@ export default function ServiceHero({
   description: propDescription,
   backgroundImage: propBackgroundImage,
   backgroundTexture: propBackgroundTexture,
-  gradientOverlay: propGradientOverlay = "from-black/40 via-black/20 to-transparent",
+  gradientOverlay: propGradientOverlay = "from-transparent via-transparent to-transparent",
   backgroundColor: propBackgroundColor,
   textColor: propTextColor,
   overlayOpacity: propOverlayOpacity,
@@ -85,7 +85,7 @@ export default function ServiceHero({
   const gradientOverlay = heroData?.gradientOverlay || propGradientOverlay;
   const backgroundColor = heroData?.backgroundColor || propBackgroundColor;
   const textColor = heroData?.textColor || propTextColor;
-  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0.5";
+  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0";
   const customHeight = heroData?.height || propHeight;
 
   const primaryCta = {
