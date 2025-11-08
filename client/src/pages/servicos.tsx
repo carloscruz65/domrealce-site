@@ -148,15 +148,17 @@ export default function Servicos() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
       
-      {/* Hero Section com ServiceHero */}
+      {/* Hero Section - Dynamic from backend */}
       <ServiceHero
+        serviceId="servicos"
         badge="40 Anos de Experiência"
         badgeIcon={<Zap className="w-4 h-4 mr-2" />}
         title="Nossos Serviços"
         subtitle="Soluções Completas em Comunicação Visual"
         description="Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, desde impressão digital até decoração de espaços comerciais."
         backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 100%)"
-        gradientOverlay="from-black/95 via-black/90 to-black/95"
+        gradientOverlay="from-black/70 via-black/50 to-black/70"
+        overlayOpacity="0.6"
         primaryCta={{
           text: "Solicitar Orçamento",
           href: "/contactos#formulario"
