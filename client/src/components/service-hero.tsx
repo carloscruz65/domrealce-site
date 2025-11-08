@@ -31,7 +31,7 @@ export default function ServiceHero({
   description,
   backgroundImage,
   backgroundTexture,
-  gradientOverlay = "from-black/90 via-black/80 to-black/90",
+  gradientOverlay = "from-black/40 via-black/20 to-transparent",
   primaryCta = {
     text: "Iniciar Meu Projeto",
     href: "/contactos#formulario"
