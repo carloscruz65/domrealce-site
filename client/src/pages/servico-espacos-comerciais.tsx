@@ -194,8 +194,8 @@ export default function ServicoEspacosComerciais() {
         subtitle="Espaço Comercial"
         description="Soluções completas de sinalização e decoração para espaços comerciais. Desde montras atrativas até reclames luminosos que destacam o seu negócio."
         backgroundTexture="linear-gradient(120deg, rgba(59, 130, 246, 0.08) 30%, transparent 30%, transparent 70%, rgba(147, 51, 234, 0.08) 70%)"
-        gradientOverlay="from-black/70 via-blue-900/15 to-black/70"
-        overlayOpacity="0.65"
+        gradientOverlay="from-black via-blue-900/10 to-transparent"
+        overlayOpacity="0.4"
         primaryCta={{
           text: "Transformar Meu Espaço",
           href: "/contactos#formulario"
