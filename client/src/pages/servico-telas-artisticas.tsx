@@ -212,8 +212,8 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         subtitle="em Obras de Arte"
         description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
         backgroundTexture="linear-gradient(135deg, rgba(138, 43, 226, 0.1) 25%, transparent 25%, transparent 50%, rgba(138, 43, 226, 0.1) 50%, rgba(138, 43, 226, 0.1) 75%, transparent 75%, transparent)"
-        gradientOverlay="from-black via-purple-900/10 to-transparent"
-        overlayOpacity="0.4"
+        gradientOverlay="from-black/20 via-transparent to-transparent"
+        overlayOpacity="0.15"
         primaryCta={{
           text: "Criar Minha Tela",
           href: "/contactos#formulario"
