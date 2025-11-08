@@ -156,9 +156,9 @@ export default function Servicos() {
         title="Nossos Serviços"
         subtitle="Soluções Completas em Comunicação Visual"
         description="Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, desde impressão digital até decoração de espaços comerciais."
-        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 100%)"
-        gradientOverlay="from-black/30 via-transparent to-transparent"
-        overlayOpacity="0.2"
+        backgroundTexture="linear-gradient(45deg, transparent 0%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 0%, transparent 0%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 0%)"
+        gradientOverlay="from-black/0 via-transparent to-transparent"
+        overlayOpacity="0.0"
         primaryCta={{
           text: "Solicitar Orçamento",
           href: "/contactos#formulario"
