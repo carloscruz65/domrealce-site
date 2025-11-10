@@ -140,7 +140,7 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden flex items-center" style={backgroundStyle}>
+    <section className="relative pt-32 pb-0 overflow-hidden flex items-center" style={backgroundStyle}>
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
