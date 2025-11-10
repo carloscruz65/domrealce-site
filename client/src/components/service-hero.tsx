@@ -193,7 +193,7 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="text-xl md:text-2xl mb-10 leading-relaxed max-w-3xl mx-auto"
+            className="text-xl md:text-2xl mb-6 leading-relaxed max-w-3xl mx-auto"
             style={textColor ? { color: textColor, opacity: 0.9 } : { color: "#d1d5db" }}
           >
             {description}
