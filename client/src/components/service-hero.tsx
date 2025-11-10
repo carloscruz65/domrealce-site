@@ -114,8 +114,9 @@ export default function ServiceHero({
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundAttachment: "scroll",
         backgroundColor: backgroundColor || "#1a1a1a",
-        ...(customHeight && { minHeight: customHeight }),
+        minHeight: customHeight || "70vh",
       }
     : backgroundTexture
     ? {
@@ -123,11 +124,11 @@ export default function ServiceHero({
         backgroundSize: "200px 200px",
         backgroundRepeat: "repeat",
         backgroundColor: backgroundColor || "#1a1a1a",
-        ...(customHeight && { minHeight: customHeight }),
+        minHeight: customHeight || "70vh",
       }
     : {
         backgroundColor: backgroundColor || "#1a1a1a",
-        ...(customHeight && { minHeight: customHeight }),
+        minHeight: customHeight || "70vh",
       };
 
   // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
@@ -139,7 +140,7 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden" style={backgroundStyle}>
+    <section className="relative pt-32 pb-20 overflow-hidden flex items-center" style={backgroundStyle}>
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
