@@ -116,7 +116,7 @@ export default function ServiceHero({
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "scroll",
         backgroundColor: backgroundColor || "#1a1a1a",
-        minHeight: customHeight || "70vh",
+        minHeight: customHeight || "auto",
       }
     : backgroundTexture
     ? {
@@ -124,11 +124,11 @@ export default function ServiceHero({
         backgroundSize: "200px 200px",
         backgroundRepeat: "repeat",
         backgroundColor: backgroundColor || "#1a1a1a",
-        minHeight: customHeight || "70vh",
+        minHeight: customHeight || "auto",
       }
     : {
         backgroundColor: backgroundColor || "#1a1a1a",
-        minHeight: customHeight || "70vh",
+        minHeight: customHeight || "auto",
       };
 
   // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
@@ -140,7 +140,7 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   return (
-    <section className="relative pt-32 pb-0 overflow-hidden flex items-center" style={backgroundStyle}>
+    <section className="relative pt-24 md:pt-28 pb-8 md:pb-12 overflow-hidden flex items-start md:items-center" style={backgroundStyle}>
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
@@ -173,14 +173,14 @@ export default function ServiceHero({
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {badge && (
-            <Badge className="bg-brand-yellow text-black mb-6 text-base px-4 py-2">
+            <Badge className="bg-brand-yellow text-black mb-4 text-base px-4 py-2">
               {badgeIcon}
               {badge}
             </Badge>
           )}
 
           <h1
-            className="text-5xl md:text-7xl font-heading font-bold mb-6 leading-tight"
+            className="text-5xl md:text-7xl font-heading font-bold mb-4 leading-tight"
             style={textColor ? { color: textColor } : undefined}
           >
             <span className={textColor ? "" : "text-brand-yellow"}>{title}</span>
@@ -193,7 +193,7 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="text-xl md:text-2xl mb-6 leading-relaxed max-w-3xl mx-auto"
+            className="text-xl md:text-2xl mb-4 leading-relaxed max-w-3xl mx-auto"
             style={textColor ? { color: textColor, opacity: 0.9 } : { color: "#d1d5db" }}
           >
             {description}
