@@ -111,7 +111,7 @@ export default function ServiceHero({
   const backgroundStyle: React.CSSProperties = encodedBackgroundImage
     ? {
         backgroundImage: `url("${encodedBackgroundImage}")`,
-        backgroundSize: "cover",
+        backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "scroll",
