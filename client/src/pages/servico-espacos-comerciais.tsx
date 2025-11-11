@@ -206,7 +206,7 @@ export default function ServicoEspacosComerciais() {
       />
 
       {/* Services Grid */}
-      <section className="pt-0 pb-8 bg-gray-900/50">
+      <section className="pt-8 pb-8 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -242,7 +242,7 @@ export default function ServicoEspacosComerciais() {
       </section>
 
       {/* Sectors Section */}
-      <section className="pt-0 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -278,7 +278,7 @@ export default function ServicoEspacosComerciais() {
       </section>
 
       {/* Materials Section */}
-      <section className="pt-0 pb-8 bg-gray-900/30">
+      <section className="pt-8 pb-8 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -419,7 +419,7 @@ export default function ServicoEspacosComerciais() {
       <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
-      <section className="pt-0 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-coral/10">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-coral/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Destacar o Seu</span> <span className="text-blue-400">Negócio?</span>

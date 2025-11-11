@@ -160,7 +160,7 @@ export default function ServicoImpressaoDigital() {
       />
 
       {/* Features Grid */}
-      <section className="pt-0 pb-8 bg-gray-900/50">
+      <section className="pt-8 pb-8 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -188,7 +188,7 @@ export default function ServicoImpressaoDigital() {
       </section>
 
       {/* Materials Section */}
-      <section className="pt-0 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -334,7 +334,7 @@ export default function ServicoImpressaoDigital() {
       />
 
       {/* CTA Section */}
-      <section className="pt-0 pb-8 bg-gradient-to-r from-brand-turquoise/10 via-brand-blue/10 to-brand-coral/10">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-brand-turquoise/10 via-brand-blue/10 to-brand-coral/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Imprimir o Seu</span> <span className="text-brand-turquoise">Projeto?</span>

@@ -220,7 +220,7 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       {/* Services Section */}
-      <section className="pt-0 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -258,7 +258,7 @@ export default function ServicoDecoracaoViaturas() {
 
 
       {/* Materials Section */}
-      <section className="pt-0 pb-8 bg-gray-900/30">
+      <section className="pt-8 pb-8 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -407,7 +407,7 @@ export default function ServicoDecoracaoViaturas() {
       />
 
       {/* CTA Section */}
-      <section className="pt-0 pb-8 bg-gradient-to-r from-orange-600/10 via-brand-coral/10 to-brand-yellow/10">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-orange-600/10 via-brand-coral/10 to-brand-yellow/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Transformar a Sua</span> <span className="text-orange-400">Viatura?</span>
