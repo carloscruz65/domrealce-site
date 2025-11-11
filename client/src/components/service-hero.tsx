@@ -107,9 +107,16 @@ export default function ServiceHero({
 
   // ---------- Background (imagem | textura | cor) ----------
   const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
-  const hasBackgroundImage = !!encodedBackgroundImage;
 
-  const backgroundStyle: React.CSSProperties = backgroundTexture
+  const backgroundStyle: React.CSSProperties = encodedBackgroundImage
+    ? {
+        backgroundImage: `url("${encodedBackgroundImage}")`,
+        backgroundSize: "contain",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
+      }
+    : backgroundTexture
     ? {
         backgroundImage: backgroundTexture,
         backgroundSize: "200px 200px",
@@ -130,27 +137,15 @@ export default function ServiceHero({
 
   return (
     <section 
-      className="relative overflow-hidden" 
+      className="relative w-full overflow-hidden"
       style={{
         ...backgroundStyle,
-        minHeight: customHeight || "auto",
+        aspectRatio: "21 / 9",
+        minHeight: "400px",
       }}
     >
-      {/* Imagem de fundo como <img> real para responsividade automática */}
-      {hasBackgroundImage && (
-        <img
-          src={encodedBackgroundImage}
-          alt=""
-          className="w-full h-full object-contain"
-          style={{
-            display: "block",
-            backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-          }}
-        />
-      )}
-
-      {/* Container absoluto para overlay e conteúdo */}
-      <div className={`${hasBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-8 md:pb-12"} flex items-start md:items-center`}>
+      {/* Container para overlay e conteúdo */}
+      <div className="absolute inset-0 flex items-center justify-center">
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
@@ -180,18 +175,24 @@ export default function ServiceHero({
       )}
 
       {/* Conteúdo */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="container mx-auto px-4 relative z-10 w-full">
+        <div className="max-w-5xl mx-auto text-center">
           {badge && (
-            <Badge className="bg-brand-yellow text-black mb-4 text-base px-4 py-2">
+            <Badge 
+              className="bg-brand-yellow text-black mb-2 px-3 py-1"
+              style={{ fontSize: "clamp(0.75rem, 2vw, 1rem)" }}
+            >
               {badgeIcon}
               {badge}
             </Badge>
           )}
 
           <h1
-            className="text-5xl md:text-7xl font-heading font-bold mb-4 leading-tight"
-            style={textColor ? { color: textColor } : undefined}
+            className="font-heading font-bold mb-2 leading-tight"
+            style={{
+              fontSize: "clamp(1.5rem, 4vw, 3.5rem)",
+              color: textColor,
+            }}
           >
             <span className={textColor ? "" : "text-brand-yellow"}>{title}</span>
             {subtitle && (
@@ -203,27 +204,39 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="text-xl md:text-2xl mb-4 leading-relaxed max-w-3xl mx-auto"
-            style={textColor ? { color: textColor, opacity: 0.9 } : { color: "#d1d5db" }}
+            className="mb-3 leading-relaxed max-w-3xl mx-auto"
+            style={{
+              fontSize: "clamp(0.875rem, 2vw, 1.25rem)",
+              color: textColor || "#d1d5db",
+              opacity: textColor ? 0.9 : 1,
+            }}
           >
             {description}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center flex-wrap">
             <Button
               asChild
-              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold px-8 py-6 text-lg hover:scale-105 transition-transform"
+              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform"
+              style={{
+                fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
+                padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+              }}
             >
               <Link href={primaryCta.href} data-testid="button-primary-cta">
                 {primaryCta.text}
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
 
             <Button
               asChild
               variant="outline"
-              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black px-8 py-6 text-lg"
+              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black"
+              style={{
+                fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
+                padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+              }}
             >
               <Link href={secondaryCta.href} data-testid="button-secondary-cta">
                 {secondaryCta.text}
@@ -234,10 +247,14 @@ export default function ServiceHero({
               <Button
                 asChild
                 variant="outline"
-                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
+                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                style={{
+                  fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
+                  padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+                }}
               >
                 <Link href="/portfolio" data-testid="button-portfolio">
-                  <Eye className="w-5 h-5 mr-2" />
+                  <Eye className="w-4 h-4 mr-2" />
                   Ver Portfólio
                 </Link>
               </Button>
