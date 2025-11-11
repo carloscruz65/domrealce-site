@@ -120,7 +120,10 @@ export default function ServiceHero({
     <section 
       className="relative w-full"
       style={{
-        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
+        backgroundColor: backgroundColor || "transparent",
+        backgroundImage: backgroundTexture || undefined,
+        backgroundSize: backgroundTexture ? "200px 200px" : undefined,
+        backgroundRepeat: backgroundTexture ? "repeat" : undefined,
       }}
     >
       {/* Imagem do hero - altura automática para responsividade */}

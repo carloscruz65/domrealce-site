@@ -156,7 +156,8 @@ export default function Servicos() {
         title="Nossos Serviços"
         subtitle="Soluções Completas em Comunicação Visual"
         description="Com 40 anos de experiência, oferecemos soluções completas em comunicação visual e publicidade, desde impressão digital até decoração de espaços comerciais."
-        backgroundTexture="linear-gradient(45deg, transparent 0%, rgba(255, 215, 0, 0.03) 25%, rgba(255, 215, 0, 0.03) 50%, transparent 0%, transparent 0%, rgba(255, 215, 0, 0.03) 75%, rgba(255, 215, 0, 0.03) 0%)"
+        backgroundTexture="repeating-linear-gradient(45deg, #1a1a1a 0px, #1a1a1a 2px, #2a2a2a 2px, #2a2a2a 4px), repeating-linear-gradient(-45deg, #1a1a1a 0px, #1a1a1a 2px, #2a2a2a 2px, #2a2a2a 4px)"
+        backgroundColor="#0a0a0a"
         gradientOverlay="from-black/0 via-transparent to-transparent"
         overlayOpacity="0.0"
         primaryCta={{
