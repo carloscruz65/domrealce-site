@@ -108,25 +108,6 @@ export default function ServiceHero({
   // ---------- Background (imagem | textura | cor) ----------
   const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
 
-  const backgroundStyle: React.CSSProperties = encodedBackgroundImage
-    ? {
-        backgroundImage: `url("${encodedBackgroundImage}")`,
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-      }
-    : backgroundTexture
-    ? {
-        backgroundImage: backgroundTexture,
-        backgroundSize: "200px 200px",
-        backgroundRepeat: "repeat",
-        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-      }
-    : {
-        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-      };
-
   // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
   const overlayIsVisible = parseFloat(overlayOpacity || "0") > 0;
 
@@ -137,14 +118,25 @@ export default function ServiceHero({
 
   return (
     <section 
-      className="relative w-full overflow-hidden"
+      className="relative w-full"
       style={{
-        ...backgroundStyle,
-        aspectRatio: "21 / 9",
-        minHeight: "400px",
+        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
       }}
     >
-      {/* Container para overlay e conteúdo */}
+      {/* Imagem do hero - altura automática para responsividade */}
+      {encodedBackgroundImage && (
+        <img
+          src={encodedBackgroundImage}
+          alt={title}
+          className="w-full h-auto object-contain"
+          style={{
+            display: "block",
+            minHeight: "400px",
+          }}
+        />
+      )}
+
+      {/* Container absoluto para overlay e conteúdo - cobre APENAS a imagem */}
       <div className="absolute inset-0 flex items-center justify-center">
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
@@ -175,12 +167,12 @@ export default function ServiceHero({
       )}
 
       {/* Conteúdo */}
-      <div className="container mx-auto px-4 relative z-10 w-full">
+      <div className="container mx-auto px-2 sm:px-4 relative z-10 w-full">
         <div className="max-w-5xl mx-auto text-center">
           {badge && (
             <Badge 
-              className="bg-brand-yellow text-black mb-2 px-3 py-1"
-              style={{ fontSize: "clamp(0.75rem, 2vw, 1rem)" }}
+              className="bg-brand-yellow text-black mb-1 px-2 py-1"
+              style={{ fontSize: "clamp(0.625rem, 1.5vw, 0.875rem)" }}
             >
               {badgeIcon}
               {badge}
@@ -188,9 +180,9 @@ export default function ServiceHero({
           )}
 
           <h1
-            className="font-heading font-bold mb-2 leading-tight"
+            className="font-heading font-bold mb-1 leading-tight px-2"
             style={{
-              fontSize: "clamp(1.5rem, 4vw, 3.5rem)",
+              fontSize: "clamp(1.25rem, 3.5vw, 3.5rem)",
               color: textColor,
             }}
           >
@@ -204,9 +196,9 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="mb-3 leading-relaxed max-w-3xl mx-auto"
+            className="mb-2 leading-snug max-w-3xl mx-auto px-2"
             style={{
-              fontSize: "clamp(0.875rem, 2vw, 1.25rem)",
+              fontSize: "clamp(0.75rem, 1.75vw, 1.125rem)",
               color: textColor || "#d1d5db",
               opacity: textColor ? 0.9 : 1,
             }}
@@ -214,28 +206,28 @@ export default function ServiceHero({
             {description}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-2 justify-center items-center flex-wrap px-2">
             <Button
               asChild
-              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform"
+              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform w-full sm:w-auto"
               style={{
-                fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
-                padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+                fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
+                padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
               }}
             >
               <Link href={primaryCta.href} data-testid="button-primary-cta">
                 {primaryCta.text}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
               </Link>
             </Button>
 
             <Button
               asChild
               variant="outline"
-              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black"
+              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black w-full sm:w-auto"
               style={{
-                fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
-                padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+                fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
+                padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
               }}
             >
               <Link href={secondaryCta.href} data-testid="button-secondary-cta">
@@ -247,14 +239,14 @@ export default function ServiceHero({
               <Button
                 asChild
                 variant="outline"
-                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black"
+                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black w-full sm:w-auto"
                 style={{
-                  fontSize: "clamp(0.875rem, 1.5vw, 1.125rem)",
-                  padding: "clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem)",
+                  fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
+                  padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
                 }}
               >
                 <Link href="/portfolio" data-testid="button-portfolio">
-                  <Eye className="w-4 h-4 mr-2" />
+                  <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                   Ver Portfólio
                 </Link>
               </Button>
