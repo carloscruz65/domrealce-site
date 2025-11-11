@@ -107,28 +107,17 @@ export default function ServiceHero({
 
   // ---------- Background (imagem | textura | cor) ----------
   const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
+  const hasBackgroundImage = !!encodedBackgroundImage;
 
-  const backgroundStyle: React.CSSProperties = encodedBackgroundImage
-    ? {
-        backgroundImage: `url("${encodedBackgroundImage}")`,
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "scroll",
-        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-        minHeight: customHeight || "auto",
-      }
-    : backgroundTexture
+  const backgroundStyle: React.CSSProperties = backgroundTexture
     ? {
         backgroundImage: backgroundTexture,
         backgroundSize: "200px 200px",
         backgroundRepeat: "repeat",
         backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-        minHeight: customHeight || "auto",
       }
     : {
         backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
-        minHeight: customHeight || "auto",
       };
 
   // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
@@ -140,7 +129,28 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   return (
-    <section className="relative pt-24 md:pt-28 pb-8 md:pb-12 overflow-hidden flex items-start md:items-center" style={backgroundStyle}>
+    <section 
+      className="relative overflow-hidden" 
+      style={{
+        ...backgroundStyle,
+        minHeight: customHeight || "auto",
+      }}
+    >
+      {/* Imagem de fundo como <img> real para responsividade automática */}
+      {hasBackgroundImage && (
+        <img
+          src={encodedBackgroundImage}
+          alt=""
+          className="w-full h-full object-contain"
+          style={{
+            display: "block",
+            backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
+          }}
+        />
+      )}
+
+      {/* Container absoluto para overlay e conteúdo */}
+      <div className={`${hasBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-8 md:pb-12"} flex items-start md:items-center`}>
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
@@ -240,6 +250,7 @@ export default function ServiceHero({
       {overlayIsVisible && (
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
       )}
+      </div>
     </section>
   );
 }
