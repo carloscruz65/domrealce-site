@@ -136,8 +136,8 @@ export default function ServiceHero({
         />
       )}
 
-      {/* Container absoluto para overlay e conteúdo - cobre APENAS a imagem */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Container para overlay e conteúdo - absoluto se houver imagem, relativo se não */}
+      <div className={`${encodedBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-12 md:pb-16"} flex items-center justify-center`}>
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (
