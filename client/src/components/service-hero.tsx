@@ -115,7 +115,7 @@ export default function ServiceHero({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "scroll",
-        backgroundColor: backgroundColor || "#1a1a1a",
+        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
         minHeight: customHeight || "auto",
       }
     : backgroundTexture
@@ -123,11 +123,11 @@ export default function ServiceHero({
         backgroundImage: backgroundTexture,
         backgroundSize: "200px 200px",
         backgroundRepeat: "repeat",
-        backgroundColor: backgroundColor || "#1a1a1a",
+        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
         minHeight: customHeight || "auto",
       }
     : {
-        backgroundColor: backgroundColor || "#1a1a1a",
+        backgroundColor: backgroundColor || "rgba(17, 24, 39, 0.5)",
         minHeight: customHeight || "auto",
       };
 
