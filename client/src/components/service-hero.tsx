@@ -206,32 +206,33 @@ export default function ServiceHero({
             {description}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-2 justify-center items-center flex-wrap px-2">
+          <div className="flex flex-row gap-1 sm:gap-2 justify-center items-center flex-wrap px-1 sm:px-2">
             <Button
               asChild
-              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform w-full sm:w-auto"
+              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform flex-1 sm:flex-none"
               style={{
-                fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
-                padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
+                fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
+                padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
               }}
             >
-              <Link href={primaryCta.href} data-testid="button-primary-cta">
-                {primaryCta.text}
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+              <Link href={primaryCta.href} data-testid="button-primary-cta" className="whitespace-nowrap overflow-hidden text-ellipsis">
+                <span className="hidden sm:inline">{primaryCta.text}</span>
+                <span className="sm:hidden">Projeto</span>
+                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 inline" />
               </Link>
             </Button>
 
             <Button
               asChild
               variant="outline"
-              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black w-full sm:w-auto"
+              className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black flex-1 sm:flex-none"
               style={{
-                fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
-                padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
+                fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
+                padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
               }}
             >
-              <Link href={secondaryCta.href} data-testid="button-secondary-cta">
-                {secondaryCta.text}
+              <Link href={secondaryCta.href} data-testid="button-secondary-cta" className="whitespace-nowrap">
+                Contactar
               </Link>
             </Button>
 
@@ -239,15 +240,16 @@ export default function ServiceHero({
               <Button
                 asChild
                 variant="outline"
-                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black w-full sm:w-auto"
+                className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black flex-1 sm:flex-none"
                 style={{
-                  fontSize: "clamp(0.75rem, 1.25vw, 1rem)",
-                  padding: "clamp(0.375rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem)",
+                  fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
+                  padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
                 }}
               >
-                <Link href="/portfolio" data-testid="button-portfolio">
-                  <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                  Ver Portfólio
+                <Link href="/portfolio" data-testid="button-portfolio" className="whitespace-nowrap">
+                  <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 inline" />
+                  <span className="hidden sm:inline">Ver Portfólio</span>
+                  <span className="sm:hidden">Portfolio</span>
                 </Link>
               </Button>
             )}
