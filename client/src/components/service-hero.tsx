@@ -120,10 +120,11 @@ export default function ServiceHero({
     <section 
       className="relative w-full"
       style={{
-        backgroundColor: backgroundColor || "transparent",
-        backgroundImage: backgroundTexture || undefined,
-        backgroundSize: backgroundTexture ? "200px 200px" : undefined,
-        backgroundRepeat: backgroundTexture ? "repeat" : undefined,
+        // Apenas aplica background se houver textura OU cor E não houver imagem
+        backgroundColor: encodedBackgroundImage ? "transparent" : (backgroundColor || "transparent"),
+        backgroundImage: encodedBackgroundImage ? undefined : (backgroundTexture || undefined),
+        backgroundSize: (backgroundTexture && !encodedBackgroundImage) ? "200px 200px" : undefined,
+        backgroundRepeat: (backgroundTexture && !encodedBackgroundImage) ? "repeat" : undefined,
       }}
     >
       {/* Imagem do hero - altura automática para responsividade */}
@@ -134,7 +135,6 @@ export default function ServiceHero({
           className="w-full h-auto object-contain"
           style={{
             display: "block",
-            minHeight: "400px",
           }}
         />
       )}
