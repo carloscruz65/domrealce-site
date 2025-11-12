@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ImageUploader from "@/components/ImageUploader";
-import { Save, ArrowLeft, Image as ImageIcon, Type, Palette, Maximize2 } from "lucide-react";
+import { Save, ArrowLeft, Image as ImageIcon, Type, Palette, Maximize2, Smartphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 
@@ -27,6 +27,15 @@ interface HeroData {
   primaryCtaHref?: string;
   secondaryCtaText?: string;
   secondaryCtaHref?: string;
+  mobileTitleSize?: string;
+  mobileDescSize?: string;
+  mobileBadgeSize?: string;
+  mobileSpacing?: string;
+  mobileButtonLabels?: {
+    primary?: string;
+    secondary?: string;
+    portfolio?: string;
+  };
 }
 
 interface HeroEditorProps {
@@ -143,7 +152,7 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
       </div>
 
       <Tabs defaultValue="content" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="content" data-testid="tab-content">
             <Type className="h-4 w-4 mr-2" />
             Conteúdo
@@ -159,6 +168,10 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
           <TabsTrigger value="layout" data-testid="tab-layout">
             <Maximize2 className="h-4 w-4 mr-2" />
             Layout
+          </TabsTrigger>
+          <TabsTrigger value="mobile" data-testid="tab-mobile">
+            <Smartphone className="h-4 w-4 mr-2" />
+            Mobile
           </TabsTrigger>
         </TabsList>
 
@@ -392,6 +405,139 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
                 />
                 <p className="text-xs text-muted-foreground">
                   Valores válidos: px, vh, %, rem. Deixe vazio para usar o padrão.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="mobile" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Responsividade Mobile (320px-375px)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-900 dark:text-blue-100">
+                  <strong>Controle total da responsividade mobile!</strong> Ajuste tamanhos de fonte e espaçamentos para garantir que todo o conteúdo cabe em ecrãs pequenos (320px-375px).
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="mobileTitleSize">Tamanho Título Mobile</Label>
+                  <Input
+                    id="mobileTitleSize"
+                    value={heroData.mobileTitleSize || ""}
+                    onChange={(e) => handleUpdateField("mobileTitleSize", e.target.value)}
+                    placeholder="Ex: 1rem, 0.9rem"
+                    data-testid="input-mobile-title-size"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Padrão: clamp(1rem, 3.5vw, 3.5rem)
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mobileDescSize">Tamanho Descrição Mobile</Label>
+                  <Input
+                    id="mobileDescSize"
+                    value={heroData.mobileDescSize || ""}
+                    onChange={(e) => handleUpdateField("mobileDescSize", e.target.value)}
+                    placeholder="Ex: 0.625rem, 0.7rem"
+                    data-testid="input-mobile-desc-size"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Padrão: clamp(0.625rem, 1.75vw, 1.125rem)
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mobileBadgeSize">Tamanho Badge Mobile</Label>
+                  <Input
+                    id="mobileBadgeSize"
+                    value={heroData.mobileBadgeSize || ""}
+                    onChange={(e) => handleUpdateField("mobileBadgeSize", e.target.value)}
+                    placeholder="Ex: 0.5rem, 0.6rem"
+                    data-testid="input-mobile-badge-size"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Padrão: clamp(0.5rem, 1.5vw, 0.875rem)
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="mobileSpacing">Espaçamento Mobile</Label>
+                <select
+                  id="mobileSpacing"
+                  value={heroData.mobileSpacing || "compact"}
+                  onChange={(e) => handleUpdateField("mobileSpacing", e.target.value)}
+                  className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                  data-testid="select-mobile-spacing"
+                >
+                  <option value="compact">Compacto (mb-0.5, mb-1)</option>
+                  <option value="normal">Normal (mb-2, mb-4)</option>
+                </select>
+                <p className="text-xs text-muted-foreground">
+                  Compacto reduz margens entre elementos para economizar espaço vertical
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-base font-semibold">Labels dos Botões em Mobile</Label>
+                <p className="text-sm text-muted-foreground -mt-2">
+                  Use textos curtos para botões em mobile (ex: "Projeto" em vez de "Iniciar Meu Projeto")
+                </p>
+                
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="mobilePrimaryLabel">Botão Primário</Label>
+                    <Input
+                      id="mobilePrimaryLabel"
+                      value={heroData.mobileButtonLabels?.primary || ""}
+                      onChange={(e) => {
+                        const labels = { ...heroData.mobileButtonLabels, primary: e.target.value };
+                        setHeroData({ ...heroData, mobileButtonLabels: labels });
+                      }}
+                      placeholder="Ex: Projeto"
+                      data-testid="input-mobile-primary-label"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mobileSecondaryLabel">Botão Secundário</Label>
+                    <Input
+                      id="mobileSecondaryLabel"
+                      value={heroData.mobileButtonLabels?.secondary || ""}
+                      onChange={(e) => {
+                        const labels = { ...heroData.mobileButtonLabels, secondary: e.target.value };
+                        setHeroData({ ...heroData, mobileButtonLabels: labels });
+                      }}
+                      placeholder="Ex: Contactar"
+                      data-testid="input-mobile-secondary-label"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mobilePortfolioLabel">Botão Portfolio</Label>
+                    <Input
+                      id="mobilePortfolioLabel"
+                      value={heroData.mobileButtonLabels?.portfolio || ""}
+                      onChange={(e) => {
+                        const labels = { ...heroData.mobileButtonLabels, portfolio: e.target.value };
+                        setHeroData({ ...heroData, mobileButtonLabels: labels });
+                      }}
+                      placeholder="Ex: Portfolio"
+                      data-testid="input-mobile-portfolio-label"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg">
+                <p className="text-sm text-amber-900 dark:text-amber-100">
+                  <strong>Dica:</strong> Deixe os campos vazios para usar os valores padrão responsivos. Preencha apenas se precisar de controle total para um serviço específico.
                 </p>
               </div>
             </CardContent>

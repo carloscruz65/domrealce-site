@@ -108,6 +108,14 @@ export const serviceHeros = pgTable("service_heroes", {
   primaryCtaHref: text("primary_cta_href"),
   secondaryCtaText: text("secondary_cta_text"),
   secondaryCtaHref: text("secondary_cta_href"),
+  
+  // Mobile responsive settings
+  mobileTitleSize: text("mobile_title_size"), // e.g. "1rem", "0.9rem"
+  mobileDescSize: text("mobile_desc_size"), // e.g. "0.625rem", "0.7rem"
+  mobileBadgeSize: text("mobile_badge_size"), // e.g. "0.5rem", "0.6rem"
+  mobileSpacing: text("mobile_spacing"), // e.g. "compact", "normal"
+  mobileButtonLabels: jsonb("mobile_button_labels"), // { primary: "Projeto", secondary: "Contacto", portfolio: "Portfólio" }
+  
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -259,6 +267,11 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
   primaryCtaHref: true,
   secondaryCtaText: true,
   secondaryCtaHref: true,
+  mobileTitleSize: true,
+  mobileDescSize: true,
+  mobileBadgeSize: true,
+  mobileSpacing: true,
+  mobileButtonLabels: true,
 }).extend({
   serviceId: z.string().min(1, "ID do serviço é obrigatório"),
   title: z.string().min(1, "Título é obrigatório"),
@@ -276,6 +289,15 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
   primaryCtaHref: z.string().nullish(),
   secondaryCtaText: z.string().nullish(),
   secondaryCtaHref: z.string().nullish(),
+  mobileTitleSize: z.string().nullish(),
+  mobileDescSize: z.string().nullish(),
+  mobileBadgeSize: z.string().nullish(),
+  mobileSpacing: z.enum(["compact", "normal"]).nullish(),
+  mobileButtonLabels: z.object({
+    primary: z.string().optional(),
+    secondary: z.string().optional(),
+    portfolio: z.string().optional(),
+  }).nullish(),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).pick({

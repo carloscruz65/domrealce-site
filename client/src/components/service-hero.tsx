@@ -35,7 +35,7 @@ interface HeroData {
   backgroundImage?: string;
   backgroundTexture?: string;
   gradientOverlay?: string;
-  overlayColor?: string;        // <- NOVO
+  overlayColor?: string;
   backgroundColor?: string;
   textColor?: string;
   overlayOpacity?: string;
@@ -44,6 +44,15 @@ interface HeroData {
   primaryCtaHref?: string;
   secondaryCtaText?: string;
   secondaryCtaHref?: string;
+  mobileTitleSize?: string;
+  mobileDescSize?: string;
+  mobileBadgeSize?: string;
+  mobileSpacing?: string;
+  mobileButtonLabels?: {
+    primary?: string;
+    secondary?: string;
+    portfolio?: string;
+  };
 }
 
 export default function ServiceHero({
@@ -92,6 +101,24 @@ export default function ServiceHero({
   const secondaryCta = {
     text: heroData?.secondaryCtaText || propSecondaryCta.text,
     href: heroData?.secondaryCtaHref || propSecondaryCta.href,
+  };
+
+  // Mobile responsive settings
+  const mobileTitleSize = heroData?.mobileTitleSize || "clamp(1rem, 3.5vw, 3.5rem)";
+  const mobileDescSize = heroData?.mobileDescSize || "clamp(0.625rem, 1.75vw, 1.125rem)";
+  const mobileBadgeSize = heroData?.mobileBadgeSize || "clamp(0.5rem, 1.5vw, 0.875rem)";
+  const mobileSpacing = heroData?.mobileSpacing || "compact";
+  const mobileButtonLabels = heroData?.mobileButtonLabels || {
+    primary: "Projeto",
+    secondary: "Contactar",
+    portfolio: "Portfolio"
+  };
+
+  // Spacing classes based on mobileSpacing
+  const spacing = {
+    badgeMb: mobileSpacing === "compact" ? "mb-0.5" : "mb-2",
+    titleMb: mobileSpacing === "compact" ? "mb-0.5" : "mb-2",
+    descMb: mobileSpacing === "compact" ? "mb-1" : "mb-4",
   };
 
   if (serviceId && isLoading) {
@@ -174,8 +201,8 @@ export default function ServiceHero({
         <div className="max-w-5xl mx-auto text-center">
           {badge && (
             <Badge 
-              className="bg-brand-yellow text-black mb-0.5 px-1.5 py-0.5"
-              style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.875rem)" }}
+              className={`bg-brand-yellow text-black ${spacing.badgeMb} px-1.5 py-0.5`}
+              style={{ fontSize: mobileBadgeSize }}
             >
               {badgeIcon}
               {badge}
@@ -183,9 +210,9 @@ export default function ServiceHero({
           )}
 
           <h1
-            className="font-heading font-bold mb-0.5 leading-tight px-1"
+            className={`font-heading font-bold ${spacing.titleMb} leading-tight px-1`}
             style={{
-              fontSize: "clamp(1rem, 3.5vw, 3.5rem)",
+              fontSize: mobileTitleSize,
               color: textColor,
             }}
           >
@@ -199,9 +226,9 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="mb-1 leading-tight max-w-3xl mx-auto px-1"
+            className={`${spacing.descMb} leading-tight max-w-3xl mx-auto px-1`}
             style={{
-              fontSize: "clamp(0.625rem, 1.75vw, 1.125rem)",
+              fontSize: mobileDescSize,
               color: textColor || "#d1d5db",
               opacity: textColor ? 0.9 : 1,
             }}
@@ -220,7 +247,7 @@ export default function ServiceHero({
             >
               <Link href={primaryCta.href} data-testid="button-primary-cta" className="whitespace-nowrap overflow-hidden text-ellipsis">
                 <span className="hidden sm:inline">{primaryCta.text}</span>
-                <span className="sm:hidden">Projeto</span>
+                <span className="sm:hidden">{mobileButtonLabels.primary}</span>
                 <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 inline" />
               </Link>
             </Button>
@@ -235,7 +262,8 @@ export default function ServiceHero({
               }}
             >
               <Link href={secondaryCta.href} data-testid="button-secondary-cta" className="whitespace-nowrap">
-                Contactar
+                <span className="hidden sm:inline">{secondaryCta.text}</span>
+                <span className="sm:hidden">{mobileButtonLabels.secondary}</span>
               </Link>
             </Button>
 
@@ -252,7 +280,7 @@ export default function ServiceHero({
                 <Link href="/portfolio" data-testid="button-portfolio" className="whitespace-nowrap">
                   <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 inline" />
                   <span className="hidden sm:inline">Ver Portfólio</span>
-                  <span className="sm:hidden">Portfolio</span>
+                  <span className="sm:hidden">{mobileButtonLabels.portfolio}</span>
                 </Link>
               </Button>
             )}
