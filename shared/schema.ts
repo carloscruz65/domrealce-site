@@ -115,6 +115,8 @@ export const serviceHeros = pgTable("service_heroes", {
   mobileBadgeSize: text("mobile_badge_size"), // e.g. "0.5rem", "0.6rem"
   mobileSpacing: text("mobile_spacing"), // e.g. "compact", "normal"
   mobileButtonLabels: jsonb("mobile_button_labels"), // { primary: "Projeto", secondary: "Contacto", portfolio: "Portfólio" }
+  mobileHeight: text("mobile_height"), // e.g. "500px", "60vh" - altura mínima em mobile
+  mobileContentAlign: text("mobile_content_align"), // e.g. "top", "center", "bottom" - alinhamento vertical do conteúdo
   
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -272,6 +274,8 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
   mobileBadgeSize: true,
   mobileSpacing: true,
   mobileButtonLabels: true,
+  mobileHeight: true,
+  mobileContentAlign: true,
 }).extend({
   serviceId: z.string().min(1, "ID do serviço é obrigatório"),
   title: z.string().min(1, "Título é obrigatório"),
@@ -298,6 +302,8 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
     secondary: z.string().optional(),
     portfolio: z.string().optional(),
   }).nullish(),
+  mobileHeight: z.string().nullish(),
+  mobileContentAlign: z.enum(["top", "center", "bottom"]).nullish(),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).pick({

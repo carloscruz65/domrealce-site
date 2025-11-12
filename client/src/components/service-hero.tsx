@@ -53,6 +53,8 @@ interface HeroData {
     secondary?: string;
     portfolio?: string;
   };
+  mobileHeight?: string;
+  mobileContentAlign?: string;
 }
 
 export default function ServiceHero({
@@ -113,6 +115,8 @@ export default function ServiceHero({
     secondary: "Contactar",
     portfolio: "Portfolio"
   };
+  const mobileHeight = heroData?.mobileHeight; // Optional min-height for mobile
+  const mobileContentAlign = heroData?.mobileContentAlign || "center"; // top/center/bottom
 
   // Spacing classes based on mobileSpacing
   const spacing = {
@@ -120,6 +124,11 @@ export default function ServiceHero({
     titleMb: mobileSpacing === "compact" ? "mb-0.5" : "mb-2",
     descMb: mobileSpacing === "compact" ? "mb-1" : "mb-4",
   };
+
+  // Alignment classes based on mobileContentAlign
+  const alignmentClass = mobileContentAlign === "top" ? "items-start" : 
+                        mobileContentAlign === "bottom" ? "items-end" : 
+                        "items-center";
 
   if (serviceId && isLoading) {
     return (
@@ -167,7 +176,12 @@ export default function ServiceHero({
       )}
 
       {/* Container para overlay e conteúdo - absoluto se houver imagem, relativo se não */}
-      <div className={`${encodedBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-12 md:pb-16"} flex items-center justify-center`}>
+      <div 
+        className={`${encodedBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-12 md:pb-16"} flex justify-center ${alignmentClass}`}
+        style={{
+          minHeight: mobileHeight ? `max(${mobileHeight}, 100%)` : undefined
+        }}
+      >
       {/* Overlay - z-1 para ficar ACIMA da imagem de fundo */}
       {overlayIsVisible &&
         (looksLikeTailwindGradient ? (

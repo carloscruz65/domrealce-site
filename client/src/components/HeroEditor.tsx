@@ -36,6 +36,8 @@ interface HeroData {
     secondary?: string;
     portfolio?: string;
   };
+  mobileHeight?: string;
+  mobileContentAlign?: string;
 }
 
 interface HeroEditorProps {
@@ -532,6 +534,40 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
                       data-testid="input-mobile-portfolio-label"
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4 mt-6">
+                <div className="space-y-2">
+                  <Label htmlFor="mobileHeight">Altura Mínima em Mobile</Label>
+                  <Input
+                    id="mobileHeight"
+                    value={heroData.mobileHeight || ""}
+                    onChange={(e) => handleUpdateField("mobileHeight", e.target.value)}
+                    placeholder="Ex: 500px, 60vh, 100%"
+                    data-testid="input-mobile-height"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    ⚠️ IMPORTANTE: Use isto para garantir que a imagem tenha altura suficiente em mobile (ex: "600px", "70vh")
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mobileContentAlign">Alinhamento Vertical do Conteúdo</Label>
+                  <select
+                    id="mobileContentAlign"
+                    value={heroData.mobileContentAlign || "center"}
+                    onChange={(e) => handleUpdateField("mobileContentAlign", e.target.value)}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                    data-testid="select-mobile-content-align"
+                  >
+                    <option value="top">Topo (items-start)</option>
+                    <option value="center">Centro (items-center)</option>
+                    <option value="bottom">Baixo (items-end)</option>
+                  </select>
+                  <p className="text-xs text-muted-foreground">
+                    ⚠️ IMPORTANTE: Use "bottom" se o texto estiver cortado no topo da imagem
+                  </p>
                 </div>
               </div>
 
