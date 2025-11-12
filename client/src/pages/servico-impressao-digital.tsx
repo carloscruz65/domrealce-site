@@ -155,7 +155,6 @@ export default function ServicoImpressaoDigital() {
         title="Impressão Digital"
         subtitle="de Grande Formato"
         description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
-        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(32, 178, 170, 0.05) 25%, rgba(32, 178, 170, 0.05) 50%, transparent 50%, transparent 75%, rgba(32, 178, 170, 0.05) 75%)"
         portfolioButton={true}
       />
 

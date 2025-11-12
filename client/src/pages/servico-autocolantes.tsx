@@ -177,7 +177,6 @@ export default function ServicoAutocolantes() {
         title="Autocolantes e Etiquetas"
         subtitle="com Corte de Contorno"
         description="Tecnologia de corte digital de precisão para criar autocolantes únicos. Desde etiquetas simples até designs complexos com formas personalizadas."
-        backgroundTexture="repeating-linear-gradient(45deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.05) 10px, transparent 10px, transparent 20px)"
         overlayOpacity="0"
         primaryCta={{
           text: "Criar Autocolantes",

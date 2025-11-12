@@ -139,7 +139,6 @@ export default function ServicoDesignGrafico() {
         title="Identidade Visual"
         subtitle="que Marca Diferença"
         description="Criamos designs únicos e memoráveis que comunicam a essência da sua marca. Com 40 anos de experiência, transformamos ideias em identidades visuais poderosas."
-        backgroundTexture="linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.05) 25%, rgba(255, 215, 0, 0.05) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.05) 75%)"
         portfolioButton={true}
       />
 

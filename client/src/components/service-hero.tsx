@@ -174,8 +174,8 @@ export default function ServiceHero({
         <div className="max-w-5xl mx-auto text-center">
           {badge && (
             <Badge 
-              className="bg-brand-yellow text-black mb-1 px-2 py-1"
-              style={{ fontSize: "clamp(0.625rem, 1.5vw, 0.875rem)" }}
+              className="bg-brand-yellow text-black mb-0.5 px-1.5 py-0.5"
+              style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.875rem)" }}
             >
               {badgeIcon}
               {badge}
@@ -183,9 +183,9 @@ export default function ServiceHero({
           )}
 
           <h1
-            className="font-heading font-bold mb-1 leading-tight px-2"
+            className="font-heading font-bold mb-0.5 leading-tight px-1"
             style={{
-              fontSize: "clamp(1.25rem, 3.5vw, 3.5rem)",
+              fontSize: "clamp(1rem, 3.5vw, 3.5rem)",
               color: textColor,
             }}
           >
@@ -199,9 +199,9 @@ export default function ServiceHero({
           </h1>
 
           <p
-            className="mb-2 leading-snug max-w-3xl mx-auto px-2"
+            className="mb-1 leading-tight max-w-3xl mx-auto px-1"
             style={{
-              fontSize: "clamp(0.75rem, 1.75vw, 1.125rem)",
+              fontSize: "clamp(0.625rem, 1.75vw, 1.125rem)",
               color: textColor || "#d1d5db",
               opacity: textColor ? 0.9 : 1,
             }}

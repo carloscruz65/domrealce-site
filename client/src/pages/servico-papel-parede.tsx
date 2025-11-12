@@ -202,7 +202,6 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         title="Grande Variedade de Texturas"
         subtitle="em Catálogo Interativo"
         description="Descubra a maior coleção de papéis de parede em Portugal. Catálogo interativo com visualização em tamanho real e múltiplas categorias diferentes."
-        backgroundTexture="linear-gradient(45deg, rgba(255, 127, 80, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 127, 80, 0.1) 75%, rgba(255, 127, 80, 0.1)), linear-gradient(45deg, rgba(255, 127, 80, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 127, 80, 0.1) 75%, rgba(255, 127, 80, 0.1))"
         overlayOpacity="0"
         primaryCta={{
           text: "Explorar Catálogo de Texturas",

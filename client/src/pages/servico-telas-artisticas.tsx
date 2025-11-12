@@ -211,7 +211,6 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         title="Transforme Fotografias"
         subtitle="em Obras de Arte"
         description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
-        backgroundTexture="linear-gradient(135deg, rgba(138, 43, 226, 0.1) 25%, transparent 25%, transparent 50%, rgba(138, 43, 226, 0.1) 50%, rgba(138, 43, 226, 0.1) 75%, transparent 75%, transparent)"
         overlayOpacity="0"
         primaryCta={{
           text: "Criar Minha Tela",
