@@ -159,7 +159,7 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   // Min-height: mobile vs desktop
-  const minHeightValue = mobileHeight || height || "600px";
+  const minHeightValue = mobileHeight || customHeight || "600px";
 
   return (
     <section 
