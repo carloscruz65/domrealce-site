@@ -1,5 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,6 @@ import {
   Zap,
   Award
 } from "lucide-react";
-// Imagem agora vem do object storage
 
 export default function ServicoPeliculasProtecaoSolar() {
   const benefits = [
@@ -113,37 +113,23 @@ export default function ServicoPeliculasProtecaoSolar() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-black via-blue-900/20 to-black">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-blue-600 text-white mb-6">
-              <Shield className="w-4 h-4 mr-2" />
-              Películas de Proteção Solar
-            </Badge>
-            
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              <span className="text-blue-400">Proteção Solar</span>
-              <br />
-              <span className="text-white">Inteligente</span>
-            </h1>
-            
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Películas de proteção solar para interior e exterior que reduzem o calor, 
-              protegem dos raios UV e proporcionam privacidade mantendo a luminosidade natural.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
-                <Link href="/contactos#formulario">Solicitar Avaliação</Link>
-              </Button>
-              <Button variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-                Ver Benefícios
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        serviceId="peliculas-protecao-solar"
+        badge="Películas de Proteção Solar"
+        badgeIcon={<Shield className="w-4 h-4 mr-2" />}
+        title="Proteção Solar"
+        subtitle="Inteligente"
+        description="Películas de proteção solar para interior e exterior que reduzem o calor, protegem dos raios UV e proporcionam privacidade mantendo a luminosidade natural."
+        overlayOpacity="0"
+        primaryCta={{
+          text: "Solicitar Avaliação",
+          href: "/contactos#formulario"
+        }}
+        secondaryCta={{
+          text: "Ver Benefícios",
+          href: "#beneficios"
+        }}
+      />
 
       {/* Benefits Grid */}
       <section className="pt-8 pb-8 bg-gray-900/50">

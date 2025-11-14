@@ -35,7 +35,8 @@ const serviceNames: Record<string, string> = {
   'telas-artisticas': 'Telas Artísticas',
   'autocolantes': 'Autocolantes',
   'decoracao-viaturas': 'Decoração de Viaturas',
-  'espacos-comerciais': 'Espaços Comerciais'
+  'espacos-comerciais': 'Espaços Comerciais',
+  'peliculas-protecao-solar': 'Películas de Proteção Solar'
 };
 
 function getServiceName(serviceId: string): string {
@@ -296,7 +297,8 @@ function ServicesGalleryList({ onSelectService }: ServicesGalleryListProps) {
     { id: 'telas-artisticas', name: 'Telas Artísticas', description: 'Transforme fotografias em obras de arte' },
     { id: 'autocolantes', name: 'Autocolantes', description: 'Autocolantes personalizados com corte de contorno' },
     { id: 'decoracao-viaturas', name: 'Decoração de Viaturas', description: 'Car wrapping e personalização de frotas' },
-    { id: 'espacos-comerciais', name: 'Espaços Comerciais', description: 'Sinalização e decoração para negócios' }
+    { id: 'espacos-comerciais', name: 'Espaços Comerciais', description: 'Sinalização e decoração para negócios' },
+    { id: 'peliculas-protecao-solar', name: 'Películas de Proteção Solar', description: 'Proteção UV e controlo térmico para vidros' }
   ];
 
   return (
