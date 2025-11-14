@@ -158,34 +158,26 @@ export default function ServiceHero({
   const looksLikeTailwindGradient =
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
+  // Min-height: mobile vs desktop
+  const minHeightValue = mobileHeight || height || "600px";
+
   return (
     <section 
-      className="relative w-full"
+      className="relative w-full pt-24 md:pt-28 pb-12 md:pb-16 flex justify-center"
       style={{
+        minHeight: minHeightValue,
         backgroundColor: encodedBackgroundImage ? "transparent" : (backgroundColor || "transparent"),
-        backgroundImage: encodedBackgroundImage ? undefined : (backgroundTexture || undefined),
-        backgroundSize: (backgroundTexture && !encodedBackgroundImage) ? "200px 200px" : undefined,
-        backgroundRepeat: (backgroundTexture && !encodedBackgroundImage) ? "repeat" : undefined,
+        backgroundImage: encodedBackgroundImage 
+          ? `url("${encodedBackgroundImage}")`
+          : (backgroundTexture || undefined),
+        backgroundSize: encodedBackgroundImage ? "cover" : (backgroundTexture ? "200px 200px" : undefined),
+        backgroundPosition: encodedBackgroundImage ? "center" : undefined,
+        backgroundRepeat: encodedBackgroundImage ? "no-repeat" : (backgroundTexture ? "repeat" : undefined),
       }}
     >
-      {/* Imagem do hero - altura automática para responsividade */}
-      {encodedBackgroundImage && (
-        <img
-          src={encodedBackgroundImage}
-          alt={title}
-          className="w-full h-auto object-contain"
-          style={{
-            display: "block",
-          }}
-        />
-      )}
-
       {/* Container para overlay e conteúdo */}
       <div 
-        className={`${encodedBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-12 md:pb-16"} flex justify-center ${alignmentClass}`}
-        style={{
-          minHeight: mobileHeight ? `max(${mobileHeight}, 100%)` : undefined
-        }}
+        className={`absolute inset-0 flex justify-center ${alignmentClass}`}
       >
         {/* Overlay */}
         {overlayIsVisible &&
