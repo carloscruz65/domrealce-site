@@ -159,50 +159,37 @@ export default function ServiceHero({
     !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
 
   return (
-    <section 
-      className="relative w-full"
-      style={{
-        backgroundColor: encodedBackgroundImage ? "transparent" : (backgroundColor || "transparent"),
-        backgroundImage: encodedBackgroundImage ? undefined : (backgroundTexture || undefined),
-        backgroundSize: (backgroundTexture && !encodedBackgroundImage) ? "200px 200px" : undefined,
-        backgroundRepeat: (backgroundTexture && !encodedBackgroundImage) ? "repeat" : undefined,
-      }}
-    >
+        <section 
+          className="relative w-full overflow-hidden"
+          style={{ minHeight: "550px" }}
+        >
       {/* Imagem do hero - altura automática para responsividade */}
-      {encodedBackgroundImage && (
-        <img
-          src={encodedBackgroundImage}
-          alt={title}
-          className="w-full h-auto object-contain"
-          style={{
-            display: "block",
-          }}
-        />
-      )}
+        {encodedBackgroundImage && (
+          <img
+            src={encodedBackgroundImage}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
 
       {/* Container para overlay e conteúdo */}
-      <div 
-        className={`${encodedBackgroundImage ? "absolute inset-0" : "relative pt-24 md:pt-28 pb-12 md:pb-16"} flex justify-center ${alignmentClass}`}
-        style={{
-          minHeight: mobileHeight ? `max(${mobileHeight}, 100%)` : undefined
-        }}
-      >
-        {/* Overlay */}
-        {overlayIsVisible &&
-          (looksLikeTailwindGradient ? (
+          {/* Container para overlay e conteúdo */}
+          <div 
+            className="relative flex justify-center items-center pt-24 md:pt-28 pb-12 md:pb-16 z-10"
+            style={{
+              minHeight: mobileHeight || customHeight || "500px",
+            }}
+          >
+          {/* Overlay */}
+          {overlayIsVisible && (
             <div
-              className={`absolute inset-0 z-1 bg-gradient-to-br ${gradientOverlay}`}
-              style={{ opacity: parseFloat(overlayOpacity) }}
-            />
-          ) : (
-            <div
-              className="absolute inset-0 z-1"
+              className="absolute inset-0 z-0"
               style={{
-                background: overlayColor || gradientOverlay || "rgba(0,0,0,0.6)",
+                background: overlayColor || "rgba(0,0,0,0.5)",
                 opacity: parseFloat(overlayOpacity),
               }}
             />
-          ))}
+          )}
         {/* Conteúdo */}
         <div className="container mx-auto px-2 sm:px-4 relative z-10 w-full">
           <div className="max-w-5xl mx-auto text-center">
