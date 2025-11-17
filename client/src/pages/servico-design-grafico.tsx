@@ -170,6 +170,14 @@ export default function ServicoDesignGrafico() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <ServiceGallery
+        title="Nossos Trabalhos em Design Gráfico"
+        description="Veja alguns exemplos de projetos de identidade visual que criámos para os nossos clientes"
+        images={galleryImages}
+        columns={3}
+      />
+
       {/* Process Section */}
       <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
@@ -259,13 +267,7 @@ export default function ServicoDesignGrafico() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <ServiceGallery
-        title="Nossos Trabalhos em Design Gráfico"
-        description="Veja alguns exemplos de projetos de identidade visual que criámos para os nossos clientes"
-        images={galleryImages}
-        columns={3}
-      />
+     
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-brand-yellow/10 via-brand-turquoise/10 to-brand-coral/10">

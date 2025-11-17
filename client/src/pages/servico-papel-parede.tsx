@@ -241,9 +241,9 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
+      <ServiceGallery images={galleryImages} />
 
-
-      {/* Process Section */}
+{/* Process Section */}
       <section className="py-16 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -576,7 +576,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      <ServiceGallery images={galleryImages} />
+      
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-brand-coral/10 via-brand-yellow/10 to-brand-turquoise/10">

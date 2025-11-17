@@ -216,6 +216,8 @@ export default function ServicoAutocolantes() {
         </div>
       </section>
 
+      <ServiceGallery images={galleryImages} />
+
       {/* Materials Section */}
       <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
@@ -390,7 +392,7 @@ export default function ServicoAutocolantes() {
         </div>
       </section>
 
-      <ServiceGallery images={galleryImages} />
+      
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-green-600/10 via-brand-turquoise/10 to-brand-yellow/10">

@@ -240,6 +240,8 @@ export default function ServicoEspacosComerciais() {
         </div>
       </section>
 
+      <ServiceGallery images={galleryImages} />
+
       {/* Sectors Section */}
       <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">

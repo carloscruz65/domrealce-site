@@ -186,6 +186,14 @@ export default function ServicoImpressaoDigital() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <ServiceGallery
+        title="Trabalhos em Impressão Digital"
+        description="Exemplos de projetos de impressão digital de grande formato realizados para os nossos clientes"
+        images={galleryImages}
+        columns={3}
+      />
+
       {/* Materials Section */}
       <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
@@ -324,13 +332,7 @@ export default function ServicoImpressaoDigital() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <ServiceGallery
-        title="Trabalhos em Impressão Digital"
-        description="Exemplos de projetos de impressão digital de grande formato realizados para os nossos clientes"
-        images={galleryImages}
-        columns={3}
-      />
+      
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-brand-turquoise/10 via-brand-blue/10 to-brand-coral/10">

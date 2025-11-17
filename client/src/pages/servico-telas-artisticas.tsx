@@ -250,6 +250,8 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
+      <ServiceGallery images={galleryImages} />
+
       {/* Sizes Section */}
       <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
@@ -419,7 +421,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      <ServiceGallery images={galleryImages} />
+      
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-purple-600/10 via-brand-coral/10 to-brand-yellow/10">

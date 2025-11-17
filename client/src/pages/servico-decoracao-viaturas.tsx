@@ -219,6 +219,13 @@ export default function ServicoDecoracaoViaturas() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <ServiceGallery
+        title="Galeria de Trabalhos"
+        description="Veja alguns dos nossos projetos de decoração de viaturas"
+        images={galleryImages}
+      />
+
       {/* Services Section */}
       <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4">
@@ -399,12 +406,7 @@ export default function ServicoDecoracaoViaturas() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <ServiceGallery
-        title="Galeria de Trabalhos"
-        description="Veja alguns dos nossos projetos de decoração de viaturas"
-        images={galleryImages}
-      />
+     
 
       {/* CTA Section */}
       <section className="pt-8 pb-8 bg-gradient-to-r from-orange-600/10 via-brand-coral/10 to-brand-yellow/10">
