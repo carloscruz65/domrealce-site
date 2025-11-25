@@ -4,6 +4,9 @@ import ServicesSection from "@/components/services-section";
 import PortfolioSection from "@/components/portfolio-section";
 import NewsSection from "@/components/news-section";
 import Footer from "@/components/footer";
+import Testimonials from "@/components/testimonials";
+import CredibilityBadges from "@/components/credibility-badges";
+import SocialLinks from "@/components/social-links";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
 import ClientLogos from "@/components/ClientLogos";
@@ -30,8 +33,31 @@ export default function Home() {
       
       <ServicesSection />
       <PortfolioSection />
+      
+      {/* Credibility Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-black to-gray-900">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold font-heading mb-2">
+              Porque <span className="text-brand-yellow">confiar</span> em nós
+            </h2>
+          </div>
+          <CredibilityBadges />
+        </div>
+      </section>
+
+      <Testimonials />
       <NewsSection />
       <ClientLogos />
+      
+      {/* Social & Contact Section */}
+      <section className="py-12 px-4 bg-gray-900 border-t border-gray-800">
+        <div className="container mx-auto text-center">
+          <p className="text-gray-400 mb-6">Siga-nos nas redes sociais e fique atualizado</p>
+          <SocialLinks orientation="horizontal" />
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

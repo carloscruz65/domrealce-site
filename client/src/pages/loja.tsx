@@ -6,6 +6,9 @@ import { Star, ShoppingCart, Settings } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import CredibilityBadges from "@/components/credibility-badges";
+import PaymentMethods from "@/components/payment-methods";
+import SocialLinks from "@/components/social-links";
 // Imagens agora vêm do object storage
 
 interface Product {
