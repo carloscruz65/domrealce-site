@@ -75,7 +75,7 @@ export default function Testimonials({ testimonials = defaultTestimonials, autoP
   const testimonial = testimonials[current];
 
   return (
-    <section className="py-16 px-4 bg-black">
+    <section className="py-16 px-4 bg-black border-t border-gray-900">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold font-heading mb-3">
@@ -85,7 +85,7 @@ export default function Testimonials({ testimonials = defaultTestimonials, autoP
         </div>
 
         <div className="relative">
-          <Card className="bg-gray-900 border-brand-yellow/20 min-h-[300px] flex items-center" data-testid="testimonial-card">
+          <Card className="bg-transparent border border-gray-700 min-h-[280px] flex items-center" data-testid="testimonial-card">
             <CardContent className="p-8 w-full">
               {/* Rating Stars */}
               <div className="flex gap-1 mb-4" data-testid="testimonial-rating">

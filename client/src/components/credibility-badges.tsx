@@ -68,20 +68,22 @@ export default function CredibilityBadges({ badges = defaultBadges, layout = 'gr
     <div className={containerClass} data-testid="credibility-badges">
       {badges.map((badge) => {
         const Icon = iconMap[badge.icon];
-        const colorClass = colorMap[badge.color || 'yellow'];
+        const colorClass = badge.color === 'yellow' ? 'text-brand-yellow' : 
+                          badge.color === 'turquoise' ? 'text-brand-turquoise' : 
+                          badge.color === 'red' ? 'text-brand-red' : 'text-brand-yellow';
         
         return (
           <Card
             key={badge.id}
-            className="bg-gray-900/50 border-gray-800 hover:border-brand-yellow/30 transition-all duration-300"
+            className="bg-transparent border border-gray-700 hover:border-gray-600 transition-all duration-300"
             data-testid={`badge-${badge.id}`}
           >
             <CardContent className="p-6 text-center">
-              <Icon className={`w-10 h-10 ${colorClass} mx-auto mb-3`} />
-              <h3 className="font-semibold text-white mb-2 text-lg" data-testid={`badge-title-${badge.id}`}>
+              <Icon className={`w-8 h-8 ${colorClass} mx-auto mb-3`} />
+              <h3 className="font-semibold text-white mb-2" data-testid={`badge-title-${badge.id}`}>
                 {badge.title}
               </h3>
-              <p className="text-gray-400 text-sm" data-testid={`badge-description-${badge.id}`}>
+              <p className="text-gray-300 text-sm" data-testid={`badge-description-${badge.id}`}>
                 {badge.description}
               </p>
             </CardContent>

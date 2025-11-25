@@ -128,23 +128,19 @@
 
 @layer utilities {
   .gradient-border {
-    background: linear-gradient(45deg, var(--brand-yellow), var(--brand-red), var(--brand-turquoise), var(--brand-green));
-    padding: 2px;
-    border-radius: 12px;
+    background: var(--brand-yellow);
+    padding: 1px;
+    border-radius: 8px;
   }
 
   .gradient-border-inner {
     background: var(--brand-dark);
-    border-radius: 10px;
+    border-radius: 8px;
     height: 100%;
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg,
-        hsla(50, 100%, 60%, 0.1) 0%,
-        hsla(0, 85%, 50%, 0.1) 25%,
-        hsla(180, 70%, 50%, 0.1) 50%,
-        hsla(120, 60%, 40%, 0.1) 100%);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   /* Cores do logótipo DOMREALCE */
@@ -160,13 +156,6 @@
     color: var(--brand-turquoise);
   }
 
-  .text-brand-green {
-    color: var(--brand-green);
-  }
-
-  .text-brand-dark-red {
-    color: var(--brand-dark-red);
-  }
 
   .text-brand-dark {
     color: var(--brand-dark);
@@ -197,13 +186,6 @@
     background-color: var(--brand-turquoise);
   }
 
-  .bg-brand-green {
-    background-color: var(--brand-green);
-  }
-
-  .bg-brand-dark-red {
-    background-color: var(--brand-dark-red);
-  }
 
   .bg-brand-dark {
     background-color: var(--brand-dark);
@@ -234,13 +216,6 @@
     border-color: var(--brand-turquoise);
   }
 
-  .border-brand-green {
-    border-color: var(--brand-green);
-  }
-
-  .border-brand-dark-red {
-    border-color: var(--brand-dark-red);
-  }
 
   .border-brand-dark {
     border-color: var(--brand-dark);
@@ -259,13 +234,13 @@
     border-color: var(--brand-blue);
   }
 
-  /* Gradientes usando as cores do logótipo */
+  /* Cores sólidas em vez de gradientes */
   .bg-gradient-logo {
-    background: linear-gradient(135deg, var(--brand-yellow), var(--brand-red), var(--brand-turquoise));
+    background: var(--brand-yellow);
   }
 
   .bg-gradient-logo-hover:hover {
-    background: linear-gradient(135deg, var(--brand-red), var(--brand-turquoise), var(--brand-green));
+    background: var(--brand-yellow);
     transition: background 0.3s ease;
   }
 }

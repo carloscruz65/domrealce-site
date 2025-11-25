@@ -35,7 +35,7 @@ export default function Home() {
       <PortfolioSection />
       
       {/* Credibility Section */}
-      <section className="py-16 px-4 bg-gradient-to-b from-black to-gray-900">
+      <section className="py-16 px-4 bg-black border-t border-gray-900">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-2">
