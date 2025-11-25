@@ -183,7 +183,7 @@ export default function Sobre() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
+            <Button asChild className="bg-brand-yellow text-black font-bold">
               <Link href="/contactos#formulario">Contactar-nos</Link>
             </Button>
             <Button asChild variant="outline" className="border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black">

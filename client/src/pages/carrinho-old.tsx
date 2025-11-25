@@ -184,7 +184,7 @@ export default function Carrinho() {
               Adicione algumas texturas fantásticas ao seu carrinho!
             </p>
             <Link href="/loja/papel-parede">
-              <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold">
+              <Button className="bg-brand-yellow text-black font-bold">
                 Ver Texturas
               </Button>
             </Link>

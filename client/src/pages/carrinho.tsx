@@ -173,7 +173,7 @@ export default function Carrinho() {
               Adicione produtos à sua compra para continuar.
             </p>
             <Link href="/loja">
-              <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold">
+              <Button className="bg-brand-yellow text-black font-bold">
                 Ver Loja
               </Button>
             </Link>

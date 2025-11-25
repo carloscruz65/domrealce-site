@@ -283,7 +283,7 @@ export default function DemoInterativo() {
 
           <div className="space-y-4">
             <Link href="/loja">
-              <Button className="bg-gradient-to-r from-[#e84b5e] to-[#d63951] hover:from-[#d63951] hover:to-[#c02d42] text-white text-lg px-8 py-3 mr-4">
+              <Button className="bg-brand-red hover:opacity-90 text-white text-lg px-8 py-3 mr-4">
                 Visite Nossa Loja
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>

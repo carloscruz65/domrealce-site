@@ -202,7 +202,7 @@ export default function Servicos() {
                       </ul>
                       
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
+                        <Button asChild className="bg-brand-yellow text-black font-bold">
                           <Link href="/contactos#formulario">Solicitar Orçamento</Link>
                         </Button>
                         <Button asChild variant="outline" className="border-[#333] text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700]">
@@ -233,7 +233,7 @@ export default function Servicos() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
+            <Button asChild className="bg-brand-yellow text-black font-bold">
               <Link href="/contactos#formulario">Iniciar Meu Projeto</Link>
             </Button>
             <Button asChild variant="outline" className="border-[#20B2AA] text-[#20B2AA] hover:bg-[#20B2AA] hover:text-black">
