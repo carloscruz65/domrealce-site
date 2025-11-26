@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { DynamicGallery } from "@/components/dynamic-gallery";
@@ -6,6 +7,7 @@ import { MessageCircle } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Portfolio() {
+  useScrollAnimation();
   return (
     <div className="min-h-screen bg-background">
       <Navigation />

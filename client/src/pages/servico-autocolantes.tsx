@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 export default function ServicoAutocolantes() {
+  useScrollAnimation();
   const features = [
     {
       icon: <Scissors className="w-6 h-6" />,
@@ -290,7 +292,7 @@ export default function ServicoAutocolantes() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -323,7 +325,7 @@ export default function ServicoAutocolantes() {
       </section>
 
       {/* Specs Section */}
-      <section className="py-16 bg-gray-900/50">
+      <section data-scroll className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">

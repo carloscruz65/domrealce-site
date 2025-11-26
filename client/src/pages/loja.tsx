@@ -34,6 +34,7 @@ const categories = [
 ];
 
 export default function Loja() {
+  useScrollAnimation();
   // Simplified - only Papel de Parede category available
 
   const getStatusBadge = (status: string) => {
@@ -96,7 +97,7 @@ export default function Loja() {
       </section>
 
       {/* Main Category Section */}
-      <section className="py-0">
+      <section data-scroll className="py-0">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4 text-[#FFD700]">
@@ -178,7 +179,7 @@ export default function Loja() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-black">
+      <section data-scroll className="py-16 px-4 bg-black">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">

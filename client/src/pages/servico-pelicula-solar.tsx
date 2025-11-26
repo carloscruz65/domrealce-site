@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import {
 import { Link } from "wouter";
 
 export default function ServicoPeliculaSolar() {
+  useScrollAnimation();
   const benefits = [
     {
       icon: Sun,
@@ -124,7 +126,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-[#111111]">
+      <section data-scroll className="py-20 bg-[#111111]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -155,7 +157,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* Services Section */}
-      <section className="py-20">
+      <section data-scroll className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -191,7 +193,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* Process Section */}
-      <section className="py-20 bg-[#111111]">
+      <section data-scroll className="py-20 bg-[#111111]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -221,7 +223,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* Specifications Section */}
-      <section className="py-20">
+      <section data-scroll className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
@@ -284,7 +286,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#FFD700]/10 to-[#00d4aa]/10">
+      <section data-scroll className="py-20 bg-gradient-to-r from-[#FFD700]/10 to-[#00d4aa]/10">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">

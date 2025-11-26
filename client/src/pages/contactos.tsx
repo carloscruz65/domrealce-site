@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GoogleMap from "@/components/GoogleMap";
@@ -14,6 +15,7 @@ import { Shield, Upload, FileText, X } from "lucide-react";
 // Imagem agora vem do object storage
 
 export default function Contactos() {
+  useScrollAnimation();
   const { toast } = useToast();
 
   // Fetch Google Maps API key
@@ -180,7 +182,7 @@ export default function Contactos() {
       </section>
 
       {/* Contact Information and Form Section */}
-      <section className="py-12 bg-black/90">
+      <section data-scroll className="py-12 bg-black/90">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
@@ -399,7 +401,7 @@ export default function Contactos() {
       </section>
 
       {/* Motivational Quote Section */}
-      <section className="py-12 bg-gradient-to-b from-black/90 to-black">
+      <section data-scroll className="py-12 bg-gradient-to-b from-black/90 to-black">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <p className="text-2xl md:text-3xl font-italic text-white/90">

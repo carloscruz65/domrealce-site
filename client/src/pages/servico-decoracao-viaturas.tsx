@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
@@ -39,6 +40,7 @@ const defaultImages = [
 ];
 
 export default function ServicoDecoracaoViaturas() {
+  useScrollAnimation();
   const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
     queryKey: ['/api/service-galleries', 'decoracao-viaturas'],
   });
@@ -304,7 +306,7 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -337,7 +339,7 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       {/* Warranty Section */}
-      <section className="py-16 bg-gray-900/50">
+      <section data-scroll className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">

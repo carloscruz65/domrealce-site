@@ -31,7 +31,7 @@ export default function ServiceGallery({
   }[columns];
 
   return (
-    <section className="py-16 bg-gray-900/30">
+    <section data-scroll className="py-16 bg-gray-900/30">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">

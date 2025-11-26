@@ -223,7 +223,7 @@ export default function Servicos() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 bg-[#111111]">
+      <section data-scroll className="py-16 px-4 bg-[#111111]">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
             Pronto para dar vida ao seu projeto?

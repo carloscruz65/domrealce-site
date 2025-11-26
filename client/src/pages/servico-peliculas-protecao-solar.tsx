@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 
 export default function ServicoPeliculasProtecaoSolar() {
+  useScrollAnimation();
   const benefits = [
     {
       icon: <Sun className="w-6 h-6" />,
@@ -160,7 +162,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Película Espelhada Section */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -222,7 +224,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Applications Section */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -257,7 +259,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-gray-900/50">
+      <section data-scroll className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -290,7 +292,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Warranty Section */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">

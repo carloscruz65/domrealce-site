@@ -11,6 +11,7 @@ import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
 import ClientLogos from "@/components/ClientLogos";
 import { EditableConfigText } from "@/components/EditableConfigText";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 export default function Home() {
   const { getConfig, isLoading } = usePageConfig("home");
@@ -35,7 +36,7 @@ export default function Home() {
       <PortfolioSection />
       
       {/* Credibility Section */}
-      <section className="py-16 px-4 bg-black border-t border-gray-900">
+      <section data-scroll className="py-16 px-4 bg-black border-t border-gray-900">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-2">
@@ -51,7 +52,7 @@ export default function Home() {
       <ClientLogos />
       
       {/* Social & Contact Section */}
-      <section className="py-12 px-4 bg-gray-900 border-t border-gray-800">
+      <section data-scroll className="py-12 px-4 bg-gray-900 border-t border-gray-800">
         <div className="container mx-auto text-center">
           <p className="text-gray-400 mb-6">Siga-nos nas redes sociais e fique atualizado</p>
           <SocialLinks orientation="horizontal" />

@@ -177,7 +177,7 @@ export default function LojaQuadrosCanvas() {
       </section>
 
       {/* Categories Grid */}
-      <section className="py-4">
+      <section data-scroll className="py-4">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold mb-8 text-center">
@@ -230,7 +230,7 @@ export default function LojaQuadrosCanvas() {
       </section>
 
       {/* Size Guide Section */}
-      <section className="py-16 bg-[#111111]">
+      <section data-scroll className="py-16 bg-[#111111]">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-8">

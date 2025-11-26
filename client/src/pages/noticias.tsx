@@ -247,7 +247,7 @@ export default function Noticias() {
 
       {/* Paginação - Parte Inferior da Página */}
       {!isLoading && !error && noticiasFiltradas.length > 0 && (
-        <section className="py-8 border-t border-border">
+        <section data-scroll className="py-8 border-t border-border">
           <div className="container mx-auto px-4">
             <div className="flex justify-center items-center gap-4">
               <Button variant="outline" disabled className="border-gray-700 text-gray-400">
@@ -273,7 +273,7 @@ export default function Noticias() {
       )}
 
       {/* Call to Action */}
-      <section className="py-16 bg-black">
+      <section data-scroll className="py-16 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-heading font-bold mb-4">
             Tem um projeto em mente?

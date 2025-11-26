@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -9,6 +10,7 @@ import { EditableConfigText } from "@/components/EditableConfigText";
 // Imagens agora vêm do object storage
 
 export default function Sobre() {
+  useScrollAnimation();
   const { getConfig, isLoading, updateConfig } = usePageConfig('about');
 
   // Get content from config or use defaults
@@ -157,7 +159,7 @@ export default function Sobre() {
       </section>
 
       {/* Company Approach Section */}
-      <section className="py-16 px-4 bg-[#0a0a0a]">
+      <section data-scroll className="py-16 px-4 bg-[#0a0a0a]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <div className="space-y-6 text-gray-300">
@@ -175,7 +177,7 @@ export default function Sobre() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 bg-black">
+      <section data-scroll className="py-16 px-4 bg-black">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Pronto para trabalhar connosco?</h2>
           <p className="text-gray-300 mb-8 text-lg">

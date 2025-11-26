@@ -1,3 +1,4 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -28,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ServicoPapelParede() {
+  useScrollAnimation();
   const [formData, setFormData] = useState({
     largura: '',
     altura: '',
@@ -244,7 +246,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       <ServiceGallery images={galleryImages} />
 
 {/* Process Section */}
-      <section className="py-16 bg-gray-900/30">
+      <section data-scroll className="py-16 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -333,7 +335,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       </section>
 
       {/* Orçamento Personalizado */}
-      <section className="py-16 bg-gray-900/30">
+      <section data-scroll className="py-16 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
