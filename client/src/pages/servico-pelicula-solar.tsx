@@ -316,6 +316,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       <ScrollToTop />
+      <ScrollToTop />
       <Footer />
     </div>
   );

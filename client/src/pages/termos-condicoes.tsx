@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 
 export default function TermosCondicoes() {
   return (
@@ -170,6 +172,7 @@ export default function TermosCondicoes() {
         </div>
       </div>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

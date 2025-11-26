@@ -30,7 +30,7 @@ export default function ScrollToTop() {
         <button
           onClick={scrollToTop}
           data-testid="scroll-to-top-button"
-          className="fixed bottom-8 right-8 bg-brand-yellow text-black p-3 rounded-full hover:opacity-90 transition-opacity duration-300 z-40 shadow-lg"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-brand-yellow text-black p-3 rounded-full hover:opacity-90 transition-opacity duration-300 z-40 shadow-lg"
           aria-label="Voltar para o topo"
         >
           <ChevronUp size={24} />

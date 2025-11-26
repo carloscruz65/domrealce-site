@@ -1,10 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { ArrowRight, Palette, Printer, Wallpaper, Image, Sticker, Car, Building, Shield, Zap } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import ServiceHero from "@/components/service-hero";
+import ScrollToTop from "@/components/scroll-to-top";
 
 interface Service {
   id: string;
@@ -243,6 +248,7 @@ export default function Servicos() {
         </div>
       </section>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

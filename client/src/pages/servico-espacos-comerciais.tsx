@@ -450,6 +450,7 @@ export default function ServicoEspacosComerciais() {
       </section>
 
       <ScrollToTop />
+      <ScrollToTop />
       <Footer />
     </div>
   );

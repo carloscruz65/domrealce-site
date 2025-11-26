@@ -300,6 +300,7 @@ export default function ServicoDesignGrafico() {
       </section>
 
       <ScrollToTop />
+      <ScrollToTop />
       <Footer />
     </div>
   );

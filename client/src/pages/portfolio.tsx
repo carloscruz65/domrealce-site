@@ -1,8 +1,12 @@
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import { DynamicGallery } from "@/components/dynamic-gallery";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { MessageCircle } from "lucide-react";
 import { Link } from "wouter";
 
@@ -55,6 +59,7 @@ export default function Portfolio() {
         </div>
       </section>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import ScrollToTop from "@/components/scroll-to-top";
 import { toast } from '@/hooks/use-toast';
 
 export default function TesteCores() {
@@ -183,6 +184,7 @@ ${customCSS ? Object.entries(parseCustomCSS(customCSS)).map(([k, v]) => `  ${k}:
           </ul>
         </div>
       </div>
-    </div>
+          <ScrollToTop />
+</div>
   );
 }

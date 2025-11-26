@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Badge } from "@/components/ui/badge";
+import ScrollToTop from "@/components/scroll-to-top";
 import { ShoppingCart, ArrowLeft, Ruler, Euro } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ScrollToTop from "@/components/scroll-to-top";
 import { useToast } from "@/hooks/use-toast";
 import { SEOHead } from "@/components/seo-head";
+import ScrollToTop from "@/components/scroll-to-top";
 
 interface CanvasCover {
   name: string;
@@ -268,6 +275,7 @@ export default function LojaQuadrosCanvas() {
       </section>
 
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

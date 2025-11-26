@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent } from "@/components/ui/card";
+import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import { CheckCircle, Package, Mail, Phone, Home } from "lucide-react";
 import { Link } from "wouter";
 
@@ -111,6 +115,7 @@ export default function PedidoConfirmado() {
         </div>
       </div>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

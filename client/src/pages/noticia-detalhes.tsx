@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Badge } from "@/components/ui/badge";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Calendar, Clock, ChevronLeft, ChevronRight, Facebook, Instagram, Linkedin, Share2, ArrowLeft } from "lucide-react";
 import type { News } from "@shared/schema";
 
@@ -127,6 +131,7 @@ export default function NoticiaDetalhes() {
             Voltar para Notícias
           </Button>
         </div>
+      <ScrollToTop />
         <Footer />
       </div>
     );
@@ -318,6 +323,7 @@ export default function NoticiaDetalhes() {
         </div>
       </article>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

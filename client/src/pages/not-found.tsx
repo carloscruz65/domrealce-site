@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import ScrollToTop from "@/components/scroll-to-top";
 import { AlertCircle } from "lucide-react";
 
 export default function NotFound() {
@@ -16,6 +17,7 @@ export default function NotFound() {
           </p>
         </CardContent>
       </Card>
-    </div>
+          <ScrollToTop />
+</div>
   );
 }

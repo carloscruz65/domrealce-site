@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent } from "@/components/ui/card";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Badge } from "@/components/ui/badge";
+import ScrollToTop from "@/components/scroll-to-top";
 import { ArrowLeft, ShoppingCart, Trash2, Sparkles, Plus, Minus } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 import { useToast } from "@/hooks/use-toast";
 
 // Use unified CartItem from schema that supports both types
@@ -772,6 +778,7 @@ export default function Carrinho() {
         </div>
       </div>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );

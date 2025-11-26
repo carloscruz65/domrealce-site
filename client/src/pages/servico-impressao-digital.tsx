@@ -365,6 +365,7 @@ export default function ServicoImpressaoDigital() {
       </section>
 
       <ScrollToTop />
+      <ScrollToTop />
       <Footer />
     </div>
   );

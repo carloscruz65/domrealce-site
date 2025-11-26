@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
+import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 
 export default function PoliticaPrivacidade() {
   return (
@@ -107,6 +109,7 @@ export default function PoliticaPrivacidade() {
         </div>
       </div>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );
