@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
 import ServiceGallery from "@/components/service-gallery";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -149,6 +150,10 @@ export default function ServicoImpressaoDigital() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
+      <Breadcrumbs items={[
+        { label: "Serviços", href: "/servicos" },
+        { label: "Impressão Digital" }
+      ]} />
       
       {/* Hero Section - Dynamic from backend */}
       <ServiceHero

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
 import { EditableConfigText } from "@/components/EditableConfigText";
@@ -36,6 +37,7 @@ export default function Sobre() {
         canonicalUrl="https://www.domrealce.com/sobre"
       />
       <Navigation />
+      <Breadcrumbs items={[{ label: "Sobre Nós" }]} />
 
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-4">

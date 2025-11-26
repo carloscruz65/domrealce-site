@@ -2,6 +2,7 @@ import ScrollToTop from "@/components/scroll-to-top";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { DynamicGallery } from "@/components/dynamic-gallery";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
@@ -12,6 +13,7 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
+      <Breadcrumbs items={[{ label: "Portfólio" }]} />
       
       {/* Header Completo */}
       <section className=" from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">

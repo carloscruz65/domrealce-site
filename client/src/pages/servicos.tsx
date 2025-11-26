@@ -5,6 +5,7 @@ import { ArrowRight, Palette, Printer, Wallpaper, Image, Sticker, Car, Building,
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import ServiceHero from "@/components/service-hero";
 
 interface Service {
@@ -148,6 +149,7 @@ export default function Servicos() {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
+      <Breadcrumbs items={[{ label: "Serviços" }]} />
       
       {/* Hero Section - Dynamic from backend */}
       <ServiceHero

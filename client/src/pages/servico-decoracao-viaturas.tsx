@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
 import ServiceHero from "@/components/service-hero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -166,6 +167,10 @@ export default function ServicoDecoracaoViaturas() {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
+      <Breadcrumbs items={[
+        { label: "Serviços", href: "/servicos" },
+        { label: "Decoração de Viaturas" }
+      ]} />
       
       {/* Hero Section - Dynamic from backend */}
       <ServiceHero
