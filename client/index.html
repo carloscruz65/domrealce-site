@@ -28,6 +28,17 @@
     <meta name="twitter:description" content="Especialista em comunicação visual, impressão digital e papel de parede com 40 anos de experiência em Lisboa, Portugal." />
     <meta name="twitter:image" content="https://www.domrealce.com/og-image.jpg" />
     
+    <!-- Critical CSS (above-the-fold) for faster LCP -->
+    <style>
+      :root{--brand-yellow:hsl(50,100%,60%);--brand-red:hsl(0,85%,50%);--brand-turquoise:hsl(180,70%,50%);--brand-dark:hsl(0,0%,0%);--brand-white:hsl(0,0%,100%)}
+      *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid}
+      html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:Inter,system-ui,sans-serif;scroll-behavior:smooth}
+      body{margin:0;background:#000;color:#fff;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+      #root{min-height:100vh}
+      .container{width:100%;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem}
+      @media(min-width:1024px){.container{max-width:1280px}}
+    </style>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

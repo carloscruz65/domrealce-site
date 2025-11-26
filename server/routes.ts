@@ -1431,9 +1431,10 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const newsData = insertNewsSchema.parse(req.body);
       
       // Convert data string to Date if provided
+      const dataValue = newsData.data;
       const processedData = {
         ...newsData,
-        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : new Date()
+        data: dataValue ? new Date(dataValue as any) : new Date()
       };
       
       const noticia = await storage.createNews(processedData as any);
@@ -1450,9 +1451,10 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const newsData = insertNewsSchema.parse(req.body);
       
       // Convert data string to Date if provided
+      const dataValue = newsData.data;
       const processedData = {
         ...newsData,
-        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : undefined
+        data: dataValue ? new Date(dataValue as any) : undefined
       };
       
       const noticia = await storage.updateNews(id, processedData as any);
@@ -1646,7 +1648,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         page,
         section,
         element,
-        type: "text", // Default type, can be enhanced later
+        type: "text" as const, // Default type, can be enhanced later
         value: String(value)
       };
 

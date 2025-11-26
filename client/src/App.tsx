@@ -1,4 +1,6 @@
-import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-react";
+// @ts-ignore - Plasmic loader types
+import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader";
+// @ts-ignore - Local Plasmic config
 import { PLASMIC } from "./Plasmic-ini";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";

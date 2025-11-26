@@ -5,6 +5,19 @@ import { ogMetaMiddleware } from "./ogMiddleware";
 
 const app = express();
 
+// Performance: Preload hints for critical resources
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // Add Link header for critical CSS preload (helps reduce LCP)
+  if (req.url === '/' || !req.url.startsWith('/api')) {
+    res.setHeader('Link', [
+      '<https://fonts.googleapis.com>; rel=preconnect',
+      '<https://fonts.gstatic.com>; rel=preconnect; crossorigin',
+      '</assets/index.css>; rel=preload; as=style'
+    ].join(', '));
+  }
+  next();
+});
+
 // Cache headers for static assets and SEO
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff2?|ttf|eot)$/)) {
