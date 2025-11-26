@@ -55,11 +55,14 @@ export default function Navigation() {
     }`}>
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3" aria-label="Ir para a página inicial">
             <img 
               src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
               alt="DOMREALCE Logo" 
               className="h-14 w-auto"
+              width="56"
+              height="56"
+              loading="eager"
             />
           </Link>
           
