@@ -197,7 +197,7 @@ export default function ServicoDesignGrafico() {
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+                  <div className="w-16 h-16 bg-white rounded-full flex border-2 border-white items-center justify-center text-black font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
