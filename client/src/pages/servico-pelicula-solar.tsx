@@ -91,7 +91,7 @@ export default function ServicoPeliculaSolar() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#FFD700]/10 via-[#00d4aa]/5 to-[#4dabf7]/10 pt-32 pb-20">
+      <section className="relative bg-black pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="outline" className="mb-6 border-[#FFD700] text-[#FFD700] bg-[#FFD700]/10">
@@ -99,7 +99,7 @@ export default function ServicoPeliculaSolar() {
               Proteção Solar Residencial
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[#FFD700] via-[#00d4aa] to-[#4dabf7] bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-brand-yellow">
               Película de Proteção Solar
             </h1>
             
@@ -287,7 +287,7 @@ export default function ServicoPeliculaSolar() {
       </section>
 
       {/* CTA Section */}
-      <section data-scroll className="py-20 bg-gradient-to-r from-[#FFD700]/10 to-[#00d4aa]/10">
+      <section data-scroll className="py-20 bg-black">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
