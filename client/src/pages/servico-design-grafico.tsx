@@ -1,3 +1,4 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -298,6 +299,7 @@ export default function ServicoDesignGrafico() {
         </div>
       </section>
 
+      <ScrollToTop />
       <Footer />
     </div>
   );
