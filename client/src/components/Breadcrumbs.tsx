@@ -34,7 +34,7 @@ export default function Breadcrumbs({ items, className = "" }: BreadcrumbsProps)
   return (
     <nav 
       aria-label="Breadcrumb" 
-      className={`bg-gray-900/50 py-3 ${className}`}
+      className={`bg-gray-900 py-3 mt-16 ${className}`}
     >
       <div className="container mx-auto px-4">
         <ol 
