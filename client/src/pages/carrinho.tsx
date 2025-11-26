@@ -443,7 +443,7 @@ export default function Carrinho() {
                   
                   <Link href="/checkout">
                     <Button 
-                      className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3"
+                      className="w-full bg-brand-yellow text-black font-bold py-3"
                       data-testid="button-finalizar-compra"
                     >
                       Finalizar Compra
