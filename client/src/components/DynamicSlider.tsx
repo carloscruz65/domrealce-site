@@ -81,7 +81,6 @@ export default function DynamicSlider() {
             height={1080}
             loading="eager"
             decoding="async"
-            style={{ contentVisibility: 'auto' }}
           />
           <div className="text-overlay">
             <h1>Realce sua marca com criatividade e alta definição</h1>
@@ -111,7 +110,6 @@ export default function DynamicSlider() {
             height={1080}
             loading={index === 0 ? "eager" : "lazy"}
             decoding="async"
-            style={{ contentVisibility: index === 0 ? 'auto' : 'hidden' }}
           />
           <div className="text-overlay">
             <h1>{slide.title}</h1>
