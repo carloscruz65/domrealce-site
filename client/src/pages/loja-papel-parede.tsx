@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Eye } from "lucide-react";
@@ -77,7 +76,6 @@ export default function LojaPapelParede() {
             </Link>
           </div>
         </div>
-      <ScrollToTop />
         <Footer />
       </div>
     );
@@ -183,7 +181,6 @@ export default function LojaPapelParede() {
         </div>
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

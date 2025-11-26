@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -22,7 +20,6 @@ import {
 } from "lucide-react";
 
 export default function ServicoPeliculasProtecaoSolar() {
-  useScrollAnimation();
   const benefits = [
     {
       icon: <Sun className="w-6 h-6" />,
@@ -163,7 +160,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Película Espelhada Section */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -212,7 +209,7 @@ export default function ServicoPeliculasProtecaoSolar() {
                   </div>
                 </div>
                 
-                <Button asChild className="bg-brand-yellow text-lg font-bold">
+                <Button asChild className="bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold px-8 py-6 text-lg">
                   <Link href="/contactos#formulario">
                     Solicitar Orçamento
                     <ArrowRight className="w-5 h-5 ml-2" />
@@ -225,7 +222,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Applications Section */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -260,7 +257,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Process Section */}
-      <section data-scroll className="py-16 bg-gray-900/50">
+      <section className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -275,7 +272,7 @@ export default function ServicoPeliculasProtecaoSolar() {
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-white rounded-full flex border-2 border-white items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-brand-turquoise rounded-full flex items-center justify-center text-white font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
@@ -293,7 +290,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* Warranty Section */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -363,7 +360,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-yellow/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Economizar com</span> <span className="text-blue-400">Proteção Solar?</span>
@@ -374,7 +371,7 @@ export default function ServicoPeliculasProtecaoSolar() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-lg font-bold">
+            <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
               <Link href="/contactos#formulario">
                 Avaliação Gratuita
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -389,7 +386,6 @@ export default function ServicoPeliculasProtecaoSolar() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -1431,10 +1431,9 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const newsData = insertNewsSchema.parse(req.body);
       
       // Convert data string to Date if provided
-      const dataValue = newsData.data;
       const processedData = {
         ...newsData,
-        data: dataValue ? new Date(dataValue as any) : new Date()
+        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : new Date()
       };
       
       const noticia = await storage.createNews(processedData as any);
@@ -1451,10 +1450,9 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const newsData = insertNewsSchema.parse(req.body);
       
       // Convert data string to Date if provided
-      const dataValue = newsData.data;
       const processedData = {
         ...newsData,
-        data: dataValue ? new Date(dataValue as any) : undefined
+        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : undefined
       };
       
       const noticia = await storage.updateNews(id, processedData as any);
@@ -1648,7 +1646,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         page,
         section,
         element,
-        type: "text" as const, // Default type, can be enhanced later
+        type: "text", // Default type, can be enhanced later
         value: String(value)
       };
 
@@ -1768,108 +1766,6 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   app.post("/api/media/sync", syncGlobalImages);
   app.post("/api/media/upload", upload.array('files'), uploadMediaFiles);
   app.delete("/api/media/files", deleteMediaFiles);
-
-  // SEO Routes: Sitemap.xml
-  app.get("/sitemap.xml", (req: Request, res: Response) => {
-    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://domrealce.com</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servicos</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-design-grafico</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-impressao-digital</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-papel-parede</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-telas-artisticas</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-autocolantes</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-decoracao-viaturas</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-espacos-comerciais</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/servico-peliculas-protecao-solar</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/portfolio</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/contactos</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://domrealce.com/loja</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-</urlset>`;
-    res.type('application/xml').send(sitemapXml);
-  });
-
-  // SEO Routes: Robots.txt
-  app.get("/robots.txt", (req: Request, res: Response) => {
-    const robotsTxt = `User-agent: *
-Allow: /
-Allow: /api/public/*
-Disallow: /admin
-Disallow: /api/admin/*
-Disallow: /api/auth/*
-Disallow: /carrinho
-Disallow: /checkout
-
-Sitemap: https://domrealce.com/sitemap.xml
-Request-rate: 1 request per second`;
-    res.type('text/plain').send(robotsTxt);
-  });
 
   const httpServer = createServer(app);
 

@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -185,7 +184,7 @@ export default function Carrinho() {
               Adicione algumas texturas fantásticas ao seu carrinho!
             </p>
             <Link href="/loja/papel-parede">
-              <Button className="bg-brand-yellow text-black font-bold">
+              <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold">
                 Ver Texturas
               </Button>
             </Link>
@@ -594,7 +593,7 @@ export default function Carrinho() {
                       // Redirecionar para checkout
                       window.location.href = '/checkout';
                     }}
-                    className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90 mb-4"
+                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 mb-4"
                     disabled={cartItems.length === 0}
                     data-testid="button-checkout"
                   >
@@ -726,7 +725,7 @@ export default function Carrinho() {
                   
                   <Button
                     type="submit"
-                    className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90"
+                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90"
                   >
                     Solicitar Orçamento
                   </Button>
@@ -773,7 +772,6 @@ export default function Carrinho() {
         </div>
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

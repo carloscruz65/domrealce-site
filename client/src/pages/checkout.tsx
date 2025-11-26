@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -831,7 +830,7 @@ export default function Checkout() {
                 <Button
                   onClick={handleFinalizarPedido}
                   disabled={isProcessing || cartItems.length === 0}
-                  className="w-full bg-brand-yellow text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
+                  className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
                 >
                   {isProcessing
                     ? "A processar..."
@@ -843,7 +842,6 @@ export default function Checkout() {
         </div>
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

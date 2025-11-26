@@ -55,14 +55,11 @@ export default function Navigation() {
     }`}>
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3" aria-label="Ir para a página inicial">
+          <Link href="/" className="flex items-center space-x-3">
             <img 
               src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
               alt="DOMREALCE Logo" 
               className="h-14 w-auto"
-              width="56"
-              height="56"
-              loading="eager"
             />
           </Link>
           
@@ -149,10 +146,10 @@ export default function Navigation() {
             {/* Cart Button */}
             <Link 
               href="/carrinho" 
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-2 bg-brand-yellow ${
+              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-2 bg-gradient-to-r from-brand-coral to-brand-turquoise hover:from-brand-turquoise hover:to-brand-coral ${
                 location === "/carrinho" 
                   ? "text-black" 
-                  : "text-black hover:opacity-90"
+                  : "text-black hover:text-black"
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -257,7 +254,7 @@ export default function Navigation() {
               {/* Cart Button Mobile */}
               <Link 
                 href="/carrinho" 
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left flex items-center gap-2 bg-brand-yellow ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left flex items-center gap-2 bg-gradient-to-r from-brand-coral to-brand-turquoise hover:from-brand-turquoise hover:to-brand-coral ${
                   location === "/carrinho" 
                     ? "text-black" 
                     : "text-black hover:text-black"

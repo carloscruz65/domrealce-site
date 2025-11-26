@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Palette, Printer, Wallpaper, Image, Sticker, Car, Building, Shield, Zap } from "lucide-react";
@@ -31,7 +30,7 @@ const services: Service[] = [
       "Material publicitário"
     ],
     icon: <Palette className="w-8 h-8" />,
-    color: "FFD700]FFA500]",
+    color: "from-[#FFD700] to-[#FFA500]",
     detailsLink: "/servico-design-grafico"
   },
   {
@@ -46,7 +45,7 @@ const services: Service[] = [
       "Acabamentos profissionais"
     ],
     icon: <Printer className="w-8 h-8" />,
-    color: "20B2AA]4169E1]",
+    color: "from-[#20B2AA] to-[#4169E1]",
     detailsLink: "/servico-impressao-digital"
   },
   {
@@ -61,7 +60,7 @@ const services: Service[] = [
       "Medidas personalizadas"
     ],
     icon: <Wallpaper className="w-8 h-8" />,
-    color: "FF6347]FFD700]",
+    color: "from-[#FF6347] to-[#FFD700]",
     detailsLink: "/servico-papel-parede"
   },
   {
@@ -76,7 +75,7 @@ const services: Service[] = [
       "Resistente ao tempo"
     ],
     icon: <Image className="w-8 h-8" />,
-    color: "9370DB]FF6347]",
+    color: "from-[#9370DB] to-[#FF6347]",
     detailsLink: "/servico-telas-artisticas"
   },
   {
@@ -91,7 +90,7 @@ const services: Service[] = [
       "Resistentes a intempéries"
     ],
     icon: <Sticker className="w-8 h-8" />,
-    color: "32CD32]20B2AA]",
+    color: "from-[#32CD32] to-[#20B2AA]",
     detailsLink: "/servico-autocolantes"
   },
   {
@@ -107,7 +106,7 @@ const services: Service[] = [
       "Viaturas de competição"
     ],
     icon: <Car className="w-8 h-8" />,
-    color: "FFD700]FF6347]",
+    color: "from-[#FFD700] to-[#FF6347]",
     detailsLink: "/servico-decoracao-viaturas"
   },
   {
@@ -123,7 +122,7 @@ const services: Service[] = [
       "Fachadas comerciais"
     ],
     icon: <Building className="w-8 h-8" />,
-    color: "4169E1]9370DB]",
+    color: "from-[#4169E1] to-[#9370DB]",
     detailsLink: "/servico-espacos-comerciais"
   },
   {
@@ -139,7 +138,7 @@ const services: Service[] = [
       "Conforto térmico"
     ],
     icon: <Shield className="w-8 h-8" />,
-    color: "FFA500]FFD700]",
+    color: "from-[#FFA500] to-[#FFD700]",
     detailsLink: "/servico-peliculas-protecao-solar"
   }
 ];
@@ -180,10 +179,8 @@ export default function Servicos() {
               <Card key={service.id} className="bg-[#111111] border-[#333] hover:border-[#FFD700] transition-all duration-300 group">
                 <CardContent className="p-4 sm:p-6 md:p-8">
                   <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0 border-2 border-white shadow-md">
-                      <span style={{color: "black"}}>
-                        {service.icon}
-                      </span>
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center text-black flex-shrink-0`}>
+                      {service.icon}
                     </div>
                     
                     <div className="flex-1 min-w-0 w-full">
@@ -205,7 +202,7 @@ export default function Servicos() {
                       </ul>
                       
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <Button asChild className="bg-brand-yellow text-black font-bold">
+                        <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
                           <Link href="/contactos#formulario">Solicitar Orçamento</Link>
                         </Button>
                         <Button asChild variant="outline" className="border-[#333] text-gray-300 hover:border-[#FFD700] hover:text-[#FFD700]">
@@ -226,7 +223,7 @@ export default function Servicos() {
       </section>
 
       {/* CTA Section */}
-      <section data-scroll className="py-16 px-4 bg-[#111111]">
+      <section className="py-16 px-4 bg-[#111111]">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
             Pronto para dar vida ao seu projeto?
@@ -236,7 +233,7 @@ export default function Servicos() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-black font-bold">
+            <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
               <Link href="/contactos#formulario">Iniciar Meu Projeto</Link>
             </Button>
             <Button asChild variant="outline" className="border-[#20B2AA] text-[#20B2AA] hover:bg-[#20B2AA] hover:text-black">
@@ -246,7 +243,6 @@ export default function Servicos() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -37,7 +37,7 @@ export default function DemoInterativo() {
       duration: 3000,
       component: (
         <div className="text-center space-y-6">
-          <div className="bg-brand-yellow text-transparent font-bold">
+          <div className="bg-gradient-to-r from-[#e84b5e] to-[#4dabf7] bg-clip-text text-transparent">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">DOMREALCE</h1>
             <p className="text-xl md:text-2xl text-white">Comunicação Visual & Impressão Digital</p>
           </div>
@@ -264,7 +264,7 @@ export default function DemoInterativo() {
               href="https://instagram.com/domrealce" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-2 p-4f58529]dd2a7b]8134af] rounded-lg hover:opacity-80 transition-opacity"
+              className="flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg hover:opacity-80 transition-opacity"
             >
               <Instagram className="h-8 w-8 text-white" />
               <span className="text-white text-sm">Instagram</span>
@@ -283,7 +283,7 @@ export default function DemoInterativo() {
 
           <div className="space-y-4">
             <Link href="/loja">
-              <Button className="bg-brand-red hover:opacity-90 text-white text-lg px-8 py-3 mr-4">
+              <Button className="bg-gradient-to-r from-[#e84b5e] to-[#d63951] hover:from-[#d63951] hover:to-[#c02d42] text-white text-lg px-8 py-3 mr-4">
                 Visite Nossa Loja
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
@@ -372,7 +372,7 @@ export default function DemoInterativo() {
             {/* Progress Bar */}
             <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
               <div 
-                className="bg-brand-yellow"
+                className="bg-gradient-to-r from-[#e84b5e] to-[#4dabf7] h-2 rounded-full transition-all duration-100"
                 style={{ width: `${(currentStep / (demoSteps.length - 1)) * 100 + (progress / demoSteps.length)}%` }}
               />
             </div>

@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -30,7 +28,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ServicoPapelParede() {
-  useScrollAnimation();
   const [formData, setFormData] = useState({
     largura: '',
     altura: '',
@@ -247,7 +244,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       <ServiceGallery images={galleryImages} />
 
 {/* Process Section */}
-      <section data-scroll className="py-16 bg-gray-900/30">
+      <section className="py-16 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -262,7 +259,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-white rounded-full flex border-2 border-white items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-brand-coral to-brand-yellow rounded-full flex items-center justify-center text-white font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
@@ -336,7 +333,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       </section>
 
       {/* Orçamento Personalizado */}
-      <section data-scroll className="py-16 bg-gray-900/30">
+      <section className="py-16 bg-gray-900/30">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -534,7 +531,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
                       />
                     </div>
 
-                    <Button type="submit" className="w-full bg-brand-yellow text-white">
+                    <Button type="submit" className="w-full bg-gradient-to-r from-brand-coral to-brand-yellow text-white">
                       <Calculator className="w-4 h-4 mr-2" />
                       Solicitar Orçamento
                     </Button>
@@ -582,7 +579,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-brand-coral/10 via-brand-yellow/10 to-brand-turquoise/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Transformar o Seu</span> <span className="text-brand-coral">Espaço?</span>
@@ -593,7 +590,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-lg font-bold">
+            <Button asChild className="bg-gradient-to-r from-brand-coral to-brand-yellow text-white font-bold px-8 py-6 text-lg">
               <Link href="/contactos#formulario">
                 Agendar Consulta
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -608,7 +605,6 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

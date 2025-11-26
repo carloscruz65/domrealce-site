@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -383,7 +382,6 @@ export default function LojaCanvasDetalhes() {
         </div>
       )}
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

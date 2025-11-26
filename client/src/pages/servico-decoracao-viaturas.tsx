@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
@@ -41,7 +39,6 @@ const defaultImages = [
 ];
 
 export default function ServicoDecoracaoViaturas() {
-  useScrollAnimation();
   const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
     queryKey: ['/api/service-galleries', 'decoracao-viaturas'],
   });
@@ -307,7 +304,7 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       {/* Process Section */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -322,7 +319,7 @@ export default function ServicoDecoracaoViaturas() {
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-white rounded-full flex border-2 border-white items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-brand-coral rounded-full flex items-center justify-center text-white font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
@@ -340,7 +337,7 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       {/* Warranty Section */}
-      <section data-scroll className="py-16 bg-gray-900/50">
+      <section className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -412,7 +409,7 @@ export default function ServicoDecoracaoViaturas() {
      
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-orange-600/10 via-brand-coral/10 to-brand-yellow/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Transformar a Sua</span> <span className="text-orange-400">Viatura?</span>
@@ -423,7 +420,7 @@ export default function ServicoDecoracaoViaturas() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-gradient-to-r from-orange-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
               <Link href="/contactos#formulario">
                 Solicitar Orçamento
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -438,7 +435,6 @@ export default function ServicoDecoracaoViaturas() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

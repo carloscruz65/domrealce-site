@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -11,7 +9,6 @@ import { EditableConfigText } from "@/components/EditableConfigText";
 // Imagens agora vêm do object storage
 
 export default function Sobre() {
-  useScrollAnimation();
   const { getConfig, isLoading, updateConfig } = usePageConfig('about');
 
   // Get content from config or use defaults
@@ -122,7 +119,7 @@ export default function Sobre() {
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#FFD700] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16FFD700]20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#FFD700] to-[#20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">⭐</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#FFD700]">Qualidade</h3>
@@ -134,7 +131,7 @@ export default function Sobre() {
 
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#20B2AA] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-1620B2AA]4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#20B2AA] to-[#4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">⏰</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#20B2AA]">Pontualidade</h3>
@@ -146,7 +143,7 @@ export default function Sobre() {
 
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#FF6347] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16FF6347]FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#FF6347] to-[#FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">🤝</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#FF6347]">Honestidade</h3>
@@ -160,7 +157,7 @@ export default function Sobre() {
       </section>
 
       {/* Company Approach Section */}
-      <section data-scroll className="py-16 px-4 bg-[#0a0a0a]">
+      <section className="py-16 px-4 bg-[#0a0a0a]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <div className="space-y-6 text-gray-300">
@@ -168,7 +165,7 @@ export default function Sobre() {
               <p className="text-lg">{companyText2}</p>
             </div>
 
-            <div className="FFD700]20B2AA] p-8 rounded-lg mt-12">
+            <div className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] p-8 rounded-lg mt-12">
               <blockquote className="text-xl font-bold text-black italic">
                 "{companyQuote}"
               </blockquote>
@@ -178,7 +175,7 @@ export default function Sobre() {
       </section>
 
       {/* CTA Section */}
-      <section data-scroll className="py-16 px-4 bg-black">
+      <section className="py-16 px-4 bg-black">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Pronto para trabalhar connosco?</h2>
           <p className="text-gray-300 mb-8 text-lg">
@@ -186,7 +183,7 @@ export default function Sobre() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-black font-bold">
+            <Button asChild className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90 transition-opacity">
               <Link href="/contactos#formulario">Contactar-nos</Link>
             </Button>
             <Button asChild variant="outline" className="border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black">
@@ -196,7 +193,6 @@ export default function Sobre() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

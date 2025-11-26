@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -174,7 +173,7 @@ export default function Carrinho() {
               Adicione produtos à sua compra para continuar.
             </p>
             <Link href="/loja">
-              <Button className="bg-brand-yellow text-black font-bold">
+              <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold">
                 Ver Loja
               </Button>
             </Link>
@@ -443,7 +442,7 @@ export default function Carrinho() {
                   
                   <Link href="/checkout">
                     <Button 
-                      className="w-full bg-brand-yellow text-black font-bold py-3"
+                      className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3"
                       data-testid="button-finalizar-compra"
                     >
                       Finalizar Compra
@@ -462,7 +461,6 @@ export default function Carrinho() {
         )}
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { useState } from "react";
@@ -29,7 +28,7 @@ export default function Contactos() {
       </section>
 
       {/* Contact Information */}
-      <section data-scroll className="py-4 bg-black/90">
+      <section className="py-4 bg-black/90">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-4 mb-6">
             <div className="text-center p-2">
@@ -55,7 +54,7 @@ export default function Contactos() {
       </section>
 
       {/* Simple Contact Form */}
-      <section data-scroll className="py-4 bg-black">
+      <section className="py-4 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-xl mx-auto">
             <h2 className="text-2xl font-heading font-bold mb-4 text-center">
@@ -92,7 +91,7 @@ export default function Contactos() {
               
               <button 
                 type="submit"
-                className="w-full px-6 py-3 from-brand-yellow to-brand-coral text-black font-semibold rounded-lg hover:shadow-xl transition-all duration-300"
+                className="w-full px-6 py-3 bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold rounded-lg hover:shadow-xl transition-all duration-300"
               >
                 Enviar Mensagem
               </button>
@@ -102,7 +101,7 @@ export default function Contactos() {
       </section>
 
       {/* Location Info with Map */}
-      <section data-scroll className="py-4 bg-black/50">
+      <section className="py-4 bg-black/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-4">
             <h2 className="text-2xl font-heading font-bold mb-2">
@@ -144,7 +143,7 @@ export default function Contactos() {
       </section>
 
       {/* Experience Section */}
-      <section data-scroll className="py-6 bg-black">
+      <section className="py-6 bg-black">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-xl font-semibold text-brand-yellow mb-3">Atendimento Personalizado</h3>
@@ -158,7 +157,6 @@ export default function Contactos() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

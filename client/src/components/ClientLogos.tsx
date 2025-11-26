@@ -102,7 +102,7 @@ export default function ClientLogos() {
 
   if (isLoading) {
     return (
-      <section data-scroll className="py-16 px-4 bg-[#0a0a0a]">
+      <section className="py-16 px-4 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto text-center">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -115,7 +115,7 @@ export default function ClientLogos() {
   }
 
   return (
-    <section data-scroll className="py-16 bg-[#0a0a0a] w-full">
+    <section className="py-16 bg-[#0a0a0a] w-full">
       {/* Título */}
       <div className="text-center mb-12 px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">

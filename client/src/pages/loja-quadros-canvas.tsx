@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
@@ -144,7 +143,7 @@ export default function LojaQuadrosCanvas() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="20B2AA]/104169E1]/5FF6347]/10 py-20 mt-16">
+      <section className="bg-gradient-to-br from-[#20B2AA]/10 via-[#4169E1]/5 to-[#FF6347]/10 py-20 mt-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Link href="/loja" className="inline-flex items-center gap-2 text-[#20B2AA] hover:text-white mb-6 transition-colors">
@@ -178,7 +177,7 @@ export default function LojaQuadrosCanvas() {
       </section>
 
       {/* Categories Grid */}
-      <section data-scroll className="py-4">
+      <section className="py-4">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold mb-8 text-center">
@@ -231,7 +230,7 @@ export default function LojaQuadrosCanvas() {
       </section>
 
       {/* Size Guide Section */}
-      <section data-scroll className="py-16 bg-[#111111]">
+      <section className="py-16 bg-[#111111]">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-2xl font-bold mb-8">
@@ -269,7 +268,6 @@ export default function LojaQuadrosCanvas() {
       </section>
 
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

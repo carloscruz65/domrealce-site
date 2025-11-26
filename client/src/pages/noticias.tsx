@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -132,7 +131,7 @@ export default function Noticias() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className=" from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
+      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-4">
@@ -248,7 +247,7 @@ export default function Noticias() {
 
       {/* Paginação - Parte Inferior da Página */}
       {!isLoading && !error && noticiasFiltradas.length > 0 && (
-        <section data-scroll className="py-8 border-t border-border">
+        <section className="py-8 border-t border-border">
           <div className="container mx-auto px-4">
             <div className="flex justify-center items-center gap-4">
               <Button variant="outline" disabled className="border-gray-700 text-gray-400">
@@ -274,7 +273,7 @@ export default function Noticias() {
       )}
 
       {/* Call to Action */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-heading font-bold mb-4">
             Tem um projeto em mente?
@@ -292,7 +291,6 @@ export default function Noticias() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

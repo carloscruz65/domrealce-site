@@ -1,4 +1,5 @@
-/* Google Fonts carregado via preload no HTML para melhor performance */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,20 +43,30 @@
   --font-mono: Menlo, monospace;
   --radius: 0.75rem;
 
-  /* DOMREALCE Brand Colors */
+  /* DOMREALCE Brand Colors - Extraídas do logótipo */
   --brand-yellow: hsl(50, 100%, 60%);
+  /* Amarelo do "DOM" */
   --brand-red: hsl(0, 85%, 50%);
+  /* Vermelho do "REALCE" */
   --brand-turquoise: hsl(180, 70%, 50%);
+  /* Azul turquesa do círculo */
   --brand-green: hsl(120, 60%, 40%);
+  /* Verde do círculo */
   --brand-dark-red: hsl(0, 70%, 30%);
+  /* Vermelho escuro do círculo */
   --brand-dark: hsl(0, 0%, 0%);
+  /* Preto para texto */
   --brand-white: hsl(0, 0%, 100%);
+  /* Branco para fundos */
 
-  /* Alias para compatibilidade */
+  /* Alias para manter compatibilidade com código existente */
   --brand-coral: var(--brand-red);
+  /* Coral = Vermelho */
   --brand-blue: var(--brand-turquoise);
+  /* Azul = Turquesa */
 }
 
+/* Ajuste de cores para Toast (força texto preto) */
 [data-sonner-toast] {
   background-color: #ffffff !important;
   border: 2px solid #000000 !important;
@@ -132,6 +143,7 @@
     background: rgba(255, 255, 255, 0.02);
   }
 
+  /* Cores do logótipo DOMREALCE */
   .text-brand-yellow {
     color: var(--brand-yellow);
   }
@@ -144,6 +156,7 @@
     color: var(--brand-turquoise);
   }
 
+
   .text-brand-dark {
     color: var(--brand-dark);
   }
@@ -152,6 +165,7 @@
     color: var(--brand-white);
   }
 
+  /* Compatibilidade com código existente */
   .text-brand-coral {
     color: var(--brand-coral);
   }
@@ -172,6 +186,7 @@
     background-color: var(--brand-turquoise);
   }
 
+
   .bg-brand-dark {
     background-color: var(--brand-dark);
   }
@@ -180,6 +195,7 @@
     background-color: var(--brand-white);
   }
 
+  /* Compatibilidade com código existente */
   .bg-brand-coral {
     background-color: var(--brand-coral);
   }
@@ -200,6 +216,7 @@
     border-color: var(--brand-turquoise);
   }
 
+
   .border-brand-dark {
     border-color: var(--brand-dark);
   }
@@ -208,6 +225,7 @@
     border-color: var(--brand-white);
   }
 
+  /* Compatibilidade com código existente */
   .border-brand-coral {
     border-color: var(--brand-coral);
   }
@@ -216,21 +234,24 @@
     border-color: var(--brand-blue);
   }
 
+  /* Cores sólidas em vez de gradientes */
   .bg-gradient-logo {
     background: var(--brand-yellow);
   }
 
   .bg-gradient-logo-hover:hover {
     background: var(--brand-yellow);
-    transition: background 0.15s ease;
+    transition: background 0.3s ease;
   }
 }
 
+/* Advanced Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -242,6 +263,7 @@
     opacity: 0;
     transform: translateX(50px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -253,16 +275,56 @@
     opacity: 0;
     transform: translateX(-50px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(51, 217, 178, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(51, 217, 178, 0.6);
+  }
+}
+
 @keyframes pulse-brand {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -273,22 +335,48 @@
     opacity: 0;
     transform: scale(0.8);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
+@keyframes bounce-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Animation Classes */
 .animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .animate-slideInRight {
-  animation: slideInRight 0.2s ease-out forwards;
+  animation: slideInRight 0.8s ease-out forwards;
 }
 
 .animate-slideInLeft {
-  animation: slideInLeft 0.2s ease-out forwards;
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
 }
 
 .animate-pulse-brand {
@@ -299,6 +387,40 @@
   animation: scale-in 0.5s ease-out forwards;
 }
 
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* WhatsApp FAB specific animations */
+.animate-whatsapp-pulse {
+  animation: whatsapp-pulse 2s ease-in-out infinite;
+}
+
+/* 3D Transform Effects */
+.transform-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.tilt-hover:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.02);
+}
+
+/* Mouse tracking effect */
+.mouse-track {
+  transition: transform 0.1s ease-out;
+}
+
+/* Parallax effects */
+.parallax-slow {
+  transition: transform 0.3s ease-out;
+}
+
+.parallax-fast {
+  transition: transform 0.2s ease-out;
+}
+
+/* Cursor visibility fixes */
 * {
   cursor: inherit !important;
 }
@@ -307,6 +429,7 @@ body {
   cursor: auto !important;
 }
 
+/* Cursor específico para elementos interativos */
 button,
 a,
 [role="button"],
@@ -315,6 +438,7 @@ a,
   cursor: pointer !important;
 }
 
+/* Cursor de texto para inputs */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -322,14 +446,16 @@ textarea {
   cursor: text !important;
 }
 
+/* Garante cursor visível em imagens clicáveis */
 img[data-clickable],
 .hover-lift img,
 .group img {
   cursor: pointer !important;
 }
 
+/* Hover states with enhanced effects */
 .hover-lift {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hover-lift:hover {
@@ -338,29 +464,208 @@ img[data-clickable],
 }
 
 .hover-tilt {
-  transition: all 0.15s ease;
+  transition: all 0.3s ease;
 }
 
 .hover-tilt:hover {
   transform: perspective(1000px) rotateX(2deg) rotateY(2deg) scale(1.02);
 }
 
-@keyframes whatsapp-pulse {
-  0%, 100% {
-    transform: scale(1);
+/* Intersection Observer animations - DISABLED to fix visibility */
+.scroll-animate {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-animate.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-animate-left {
+  opacity: 1;
+  transform: translateX(0px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-animate-left.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-animate-right {
+  opacity: 1;
+  transform: translateX(0px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-animate-right.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Gradient animation */
+.gradient-animate {
+  background-size: 400% 400%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
   }
+
   50% {
-    transform: scale(1.1);
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-.animate-whatsapp-pulse {
+/* DOMREALCE: Performance & SEO Enhancements */
+
+/* Smooth scrolling and performance optimizations */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Font display optimization */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-display: swap;
+}
+
+/* Image rendering optimizations */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Hero overlay utility classes */
+.hero-overlay {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  z-index: -1;
+}
+
+.hero-overlay-light::after {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.1));
+}
+
+.hero-overlay-dark::after {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+}
+
+/* Enhanced WhatsApp FAB animations */
+@keyframes whatsapp-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+  }
+}
+
+/* DOMREALCE: Hero Slider Specific Styles */
+.duration-600 {
+  transition-duration: 600ms;
+}
+
+/* Hero slider image optimization */
+.hero-slider-img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Smooth fade transitions for slider */
+.slider-fade {
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Controls hover effects */
+.slider-control {
+  backdrop-filter: blur(4px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider-control:hover {
+  transform: scale(1.05);
+}
+
+/* DOMREALCE: Performance utils */
+.below-the-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+}
+
+/* DOMREALCE: Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+}
+
+.skip-link:focus {
+  transform: translateY(0%);
+}
+
+.whatsapp-pulse {
   animation: whatsapp-pulse 2s ease-in-out infinite;
 }
 
-/* Ensure white circles for process steps */
-.w-16.h-16.bg-white.rounded-full {
-  background-color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+/* Performance optimization for transforms */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Fade in animation for lazy loaded images */
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-in.loaded {
+  opacity: 1;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
 }

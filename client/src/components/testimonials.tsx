@@ -75,7 +75,7 @@ export default function Testimonials({ testimonials = defaultTestimonials, autoP
   const testimonial = testimonials[current];
 
   return (
-    <section data-scroll className="py-16 px-4 bg-black border-t border-gray-900">
+    <section className="py-16 px-4 bg-black border-t border-gray-900">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold font-heading mb-3">

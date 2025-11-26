@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
 import DynamicSlider from "@/components/DynamicSlider";
 import ServicesSection from "@/components/services-section";
@@ -23,7 +22,7 @@ export default function Home() {
     >
       <SEOHead
         title="Comunicação Visual e Impressão Digital ! Portugal"
-        description="DOMREALCE - Especialista em comunicação visual, impressão digital, papel de parede, decoração de viaturas e sinalética comercial. 40 anos de experiência em Paredes."
+        description="DOMREALCE - Especialista em comunicação visual, impressão digital, papel de parede, decoração de viaturas e sinalética comercial. 40 anos de experiência em Lisboa."
         keywords="comunicação visual, impressão digital, papel de parede, decoração viaturas, sinalética, publicidade, Portugal, DOMREALCE"
         canonicalUrl="https://www.domrealce.com/"
       />
@@ -36,7 +35,7 @@ export default function Home() {
       <PortfolioSection />
       
       {/* Credibility Section */}
-      <section data-scroll className="py-16 px-4 bg-black border-t border-gray-900">
+      <section className="py-16 px-4 bg-black border-t border-gray-900">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-2">
@@ -52,14 +51,13 @@ export default function Home() {
       <ClientLogos />
       
       {/* Social & Contact Section */}
-      <section data-scroll className="py-12 px-4 bg-gray-900 border-t border-gray-800">
+      <section className="py-12 px-4 bg-gray-900 border-t border-gray-800">
         <div className="container mx-auto text-center">
           <p className="text-gray-400 mb-6">Siga-nos nas redes sociais e fique atualizado</p>
           <SocialLinks orientation="horizontal" />
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

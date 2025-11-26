@@ -5,31 +5,6 @@ import { ogMetaMiddleware } from "./ogMiddleware";
 
 const app = express();
 
-// Performance: Preload hints for critical resources
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // Add Link header for critical CSS preload (helps reduce LCP)
-  if (req.url === '/' || !req.url.startsWith('/api')) {
-    res.setHeader('Link', [
-      '<https://fonts.googleapis.com>; rel=preconnect',
-      '<https://fonts.gstatic.com>; rel=preconnect; crossorigin',
-      '</assets/index.css>; rel=preload; as=style'
-    ].join(', '));
-  }
-  next();
-});
-
-// Cache headers for static assets and SEO
-app.use((req: Request, res: Response, next: NextFunction) => {
-  if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff2?|ttf|eot)$/)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-  } else if (req.url === '/sitemap.xml' || req.url === '/robots.txt') {
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-  } else {
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-  }
-  next();
-});
-
 // Security headers
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");

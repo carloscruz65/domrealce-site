@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
@@ -184,7 +183,6 @@ ${customCSS ? Object.entries(parseCustomCSS(customCSS)).map(([k, v]) => `  ${k}:
           </ul>
         </div>
       </div>
-          <ScrollToTop />
-</div>
+    </div>
   );
 }

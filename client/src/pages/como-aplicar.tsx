@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle, AlertCircle, Download } from "lucide-react";
@@ -133,7 +132,7 @@ export default function ComoAplicarPapelParede() {
         </Card>
 
         {/* Aplicação Profissional */}
-        <Card className="FFD700]/1020B2AA]/10 border-[#FFD700]">
+        <Card className="bg-gradient-to-r from-[#FFD700]/10 to-[#20B2AA]/10 border-[#FFD700]">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold text-[#FFD700] mb-4">
               🔧 Aplicação Profissional Recomendada
@@ -160,7 +159,6 @@ export default function ComoAplicarPapelParede() {
 
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

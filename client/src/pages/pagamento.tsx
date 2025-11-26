@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
@@ -339,7 +338,6 @@ export default function InstrucoesPagamento() {
           </Button>
         </div>
       </div>
-          <ScrollToTop />
-</div>
+    </div>
   );
 }

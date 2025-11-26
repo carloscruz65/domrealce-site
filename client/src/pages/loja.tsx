@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,7 @@ export default function Loja() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className=" from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
+      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -97,7 +96,7 @@ export default function Loja() {
       </section>
 
       {/* Main Category Section */}
-      <section data-scroll className="py-0">
+      <section className="py-0">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4 text-[#FFD700]">
@@ -179,11 +178,11 @@ export default function Loja() {
       </section>
 
       {/* Features Section */}
-      <section data-scroll className="py-16 px-4 bg-black">
+      <section className="py-16 px-4 bg-black">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16FFD700]20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#FFD700] to-[#20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Settings className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-[#FFD700]">Personalização Gratuita</h3>
@@ -193,7 +192,7 @@ export default function Loja() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-1620B2AA]4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#20B2AA] to-[#4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
                 <span className="text-2xl">🚚</span>
               </div>
               <h3 className="text-xl font-bold mb-2 text-[#20B2AA]">Envio Rápido</h3>
@@ -203,7 +202,7 @@ export default function Loja() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16FF6347]FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#FF6347] to-[#FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Star className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-[#FF6347]">Qualidade Garantida</h3>
@@ -215,7 +214,6 @@ export default function Loja() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -117,7 +117,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="text-white font-heading font-semibold mb-2">Fale connosco via WhatsApp</h4>
-              <p className="text-black/100">Resposta rápida e atendimento personalizado</p>
+              <p className="text-white/80">Resposta rápida e atendimento personalizado</p>
             </div>
             <a 
               href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."

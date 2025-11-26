@@ -1,4 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -72,7 +71,7 @@ export default function PedidoConfirmado() {
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/loja/papel-parede">
-                    <Button className="bg-brand-yellow text-black font-bold">
+                    <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90">
                       Continuar a Comprar
                     </Button>
                   </Link>
@@ -112,7 +111,6 @@ export default function PedidoConfirmado() {
         </div>
       </div>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

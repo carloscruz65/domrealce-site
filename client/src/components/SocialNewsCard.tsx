@@ -48,7 +48,7 @@ export default function SocialNewsCard({ noticia }: SocialNewsCardProps) {
               />
               
               {/* Gradiente para legibilidade do título */}
-              <div className="absolute inset-0 from-black via-black/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
               
               {imagens.length > 1 && (
                 <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-semibold">
@@ -116,7 +116,7 @@ export default function SocialNewsCard({ noticia }: SocialNewsCardProps) {
 
             <Button
               size="sm"
-              className=" from-brand-yellow to-brand-coral text-black hover:opacity-90 text-xs h-7 px-3"
+              className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black hover:opacity-90 text-xs h-7 px-3"
               onClick={(e) => {
                 e.preventDefault();
                 window.location.href = `/noticia/${noticia.id}`;

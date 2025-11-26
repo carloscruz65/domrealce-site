@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -23,7 +21,6 @@ import {
 } from "lucide-react";
 
 export default function ServicoEspacosComerciais() {
-  useScrollAnimation();
   const services = [
     {
       icon: <Store className="w-8 h-8" />,
@@ -318,7 +315,7 @@ export default function ServicoEspacosComerciais() {
       </section>
 
       {/* Process Section */}
-      <section data-scroll className="py-16 bg-black">
+      <section className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -333,7 +330,7 @@ export default function ServicoEspacosComerciais() {
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-white rounded-full flex border-2 border-white items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-brand-turquoise rounded-full flex items-center justify-center text-white font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
@@ -351,7 +348,7 @@ export default function ServicoEspacosComerciais() {
       </section>
 
       {/* Benefits Section */}
-      <section data-scroll className="py-16 bg-gray-900/50">
+      <section className="py-16 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -423,7 +420,7 @@ export default function ServicoEspacosComerciais() {
       <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-black">
+      <section className="pt-8 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-coral/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Destacar o Seu</span> <span className="text-blue-400">Negócio?</span>
@@ -434,7 +431,7 @@ export default function ServicoEspacosComerciais() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-yellow text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
               <Link href="/contactos#formulario">
                 Solicitar Visita Gratuita
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -449,7 +446,6 @@ export default function ServicoEspacosComerciais() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -54,7 +54,7 @@ export default function PortfolioSection() {
                 alt={product.titulo} 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
               />
-              <div className="absolute inset-0 from-black/80 to-transparent group-hover:from-black/60 transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent group-hover:from-black/60 transition-all duration-300"></div>
               <div className="absolute bottom-0 left-0 p-6 group-hover:translate-y-0 transition-transform duration-300">
                 <h4 className={`text-xl font-heading font-semibold mb-2 ${titleColors[index % titleColors.length]} group-hover:animate-pulse-brand`}>
                   {product.titulo}

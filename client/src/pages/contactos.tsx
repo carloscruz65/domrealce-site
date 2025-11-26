@@ -1,5 +1,3 @@
-import ScrollToTop from "@/components/scroll-to-top";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GoogleMap from "@/components/GoogleMap";
@@ -16,7 +14,6 @@ import { Shield, Upload, FileText, X } from "lucide-react";
 // Imagem agora vem do object storage
 
 export default function Contactos() {
-  useScrollAnimation();
   const { toast } = useToast();
 
   // Fetch Google Maps API key
@@ -183,7 +180,7 @@ export default function Contactos() {
       </section>
 
       {/* Contact Information and Form Section */}
-      <section data-scroll className="py-12 bg-black/90">
+      <section className="py-12 bg-black/90">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
@@ -382,7 +379,7 @@ export default function Contactos() {
                     <button
                       type="submit"
                       disabled={submitMutation.isPending}
-                      className="w-full from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {submitMutation.isPending ? (
                         <>
@@ -402,7 +399,7 @@ export default function Contactos() {
       </section>
 
       {/* Motivational Quote Section */}
-      <section data-scroll className="py-12 from-black/90 to-black">
+      <section className="py-12 bg-gradient-to-b from-black/90 to-black">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <p className="text-2xl md:text-3xl font-italic text-white/90">
@@ -413,7 +410,6 @@ export default function Contactos() {
         </div>
       </section>
 
-      <ScrollToTop />
       <Footer />
     </div>
   );
