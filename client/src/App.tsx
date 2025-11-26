@@ -144,7 +144,7 @@ function Router() {
 }
 
 function App() {
-  useLazyImages();
+  // useLazyImages(); // Temporariamente desativado
 
   // Detectar se está rodando no Replit
   const isReplitPreview = typeof window !== 'undefined' && 
