@@ -15,28 +15,23 @@ interface Service {
   detailsLink?: string;
 }
 
-  const services: Service[] = [
-    {
-      id: "design-grafico",
-      title: "Design Gráfico",
-      description: "Criação e desenvolvimento de identidade visual completa",
-      features: [
-        "Desenho vectorial",
-        "Maquetes 3D",
-        "Imagem corporativa",
-        "Logótipos únicos",
-        "Tratamento de imagens",
-        "Material publicitário"
-      ],
-      icon: (
-        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#FFD700] to-[#FFA500] flex items-center justify-center">
-          <Palette className="w-8 h-8 text-white" />
-        </div>
-      ),
-      color: "from-[#FFD700] to-[#FFA500]",
-      detailsLink: "/servico-design-grafico"
-    },
-  ];
+const services: Service[] = [
+  {
+    id: "design-grafico",
+    title: "Design Gráfico",
+    description: "Criação e desenvolvimento de identidade visual completa",
+    features: [
+      "Desenho vectorial",
+      "Maquetes 3D",
+      "Imagem corporativa",
+      "Logótipos únicos",
+      "Tratamento de imagens",
+      "Material publicitário"
+    ],
+    icon: <Palette className="w-8 h-8" />,
+    color: "from-[#FFD700] to-[#FFA500]",
+    detailsLink: "/servico-design-grafico"
+  },
   {
     id: "impressao-digital",
     title: "Impressão Digital",

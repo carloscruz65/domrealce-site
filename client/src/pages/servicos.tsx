@@ -180,8 +180,10 @@ export default function Servicos() {
               <Card key={service.id} className="bg-[#111111] border-[#333] hover:border-[#FFD700] transition-all duration-300 group">
                 <CardContent className="p-4 sm:p-6 md:p-8">
                   <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 ${service.color} rounded-xl flex items-center justify-center text-black flex-shrink-0`}>
-                      {service.icon}
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0 border-2 border-white shadow-md">
+                      <span style={{color: "black"}}>
+                        {service.icon}
+                      </span>
                     </div>
                     
                     <div className="flex-1 min-w-0 w-full">
