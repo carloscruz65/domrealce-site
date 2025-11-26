@@ -4,7 +4,6 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
 import ServiceGallery from "@/components/service-gallery";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -198,10 +197,6 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
-      <Breadcrumbs items={[
-        { label: "Serviços", href: "/servicos" },
-        { label: "Papel de Parede" }
-      ]} />
       
       <ServiceHero
         serviceId="papel-parede"

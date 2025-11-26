@@ -4,7 +4,6 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
 import ServiceGallery from "@/components/service-gallery";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -134,10 +133,6 @@ export default function ServicoDesignGrafico() {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Navigation />
-      <Breadcrumbs items={[
-        { label: "Serviços", href: "/servicos" },
-        { label: "Design Gráfico" }
-      ]} />
       
       {/* Hero Section - Dynamic from backend */}
       <ServiceHero
@@ -202,7 +197,7 @@ export default function ServicoDesignGrafico() {
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-white rounded-full border-3 border-white flex items-center justify-center shadow-lg text-black font-bold text-xl">
+                  <div style="width: 64px; height: 64px; background-color: white; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);" className="text-black font-bold text-xl">
                     {step.step}
                   </div>
                 </div>

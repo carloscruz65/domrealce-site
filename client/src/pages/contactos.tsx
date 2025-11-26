@@ -2,7 +2,6 @@ import ScrollToTop from "@/components/scroll-to-top";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import GoogleMap from "@/components/GoogleMap";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -116,7 +115,6 @@ export default function Contactos() {
   return (
     <div className="min-h-screen bg-black">
       <Navigation />
-      <Breadcrumbs items={[{ label: "Contactos" }]} />
       {/* Hero Section with Background Image - No spacing */}
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat bg-black"
