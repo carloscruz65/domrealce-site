@@ -338,7 +338,7 @@ export default function ServicoImpressaoDigital() {
       
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-gradient-to-r from-brand-turquoise/10 via-brand-blue/10 to-brand-coral/10">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Imprimir o Seu</span> <span className="text-brand-turquoise">Projeto?</span>
@@ -349,7 +349,7 @@ export default function ServicoImpressaoDigital() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-brand-turquoise to-brand-blue text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-brand-yellow text-lg font-bold">
               <Link href="/contactos#formulario">
                 Solicitar Orçamento
                 <ArrowRight className="w-5 h-5 ml-2" />

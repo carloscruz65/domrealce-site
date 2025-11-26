@@ -423,7 +423,7 @@ export default function ServicoEspacosComerciais() {
       <ServiceGallery images={galleryImages} />
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-coral/10">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Destacar o Seu</span> <span className="text-blue-400">Negócio?</span>
@@ -434,7 +434,7 @@ export default function ServicoEspacosComerciais() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-brand-yellow text-white font-bold px-8 py-6 text-lg">
               <Link href="/contactos#formulario">
                 Solicitar Visita Gratuita
                 <ArrowRight className="w-5 h-5 ml-2" />

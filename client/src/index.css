@@ -241,7 +241,7 @@
 
   .bg-gradient-logo-hover:hover {
     background: var(--brand-yellow);
-    transition: background 0.3s ease;
+    transition: background 0.15s ease;
   }
 }
 
@@ -282,7 +282,7 @@
   }
 }
 
-@keyframes float {
+/* /* DISABLED */} @keyframes float_old {
 
   0%,
   100% {
@@ -294,7 +294,7 @@
   }
 }
 
-@keyframes float-slow {
+/* /* DISABLED */} @keyframes float_slow_old {
 
   0%,
   100% {
@@ -402,12 +402,12 @@
   transition: transform 0.3s ease;
 }
 
-.tilt-hover:hover {
+/* .tilt-hover:hover { */
   transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.02);
 }
 
 /* Mouse tracking effect */
-.mouse-track {
+/* .mouse-track { */
   transition: transform 0.1s ease-out;
 }
 
@@ -455,7 +455,7 @@ img[data-clickable],
 
 /* Hover states with enhanced effects */
 .hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: none cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hover-lift:hover {
@@ -464,7 +464,7 @@ img[data-clickable],
 }
 
 .hover-tilt {
-  transition: all 0.3s ease;
+  transition: none ease;
 }
 
 .hover-tilt:hover {
@@ -475,7 +475,7 @@ img[data-clickable],
 .scroll-animate {
   opacity: 1;
   transform: translateY(0px);
-  transition: all 0.6s ease-out;
+  transition: none ease-out;
 }
 
 .scroll-animate.in-view {
@@ -486,7 +486,7 @@ img[data-clickable],
 .scroll-animate-left {
   opacity: 1;
   transform: translateX(0px);
-  transition: all 0.8s ease-out;
+  transition: none ease-out;
 }
 
 .scroll-animate-left.in-view {
@@ -497,7 +497,7 @@ img[data-clickable],
 .scroll-animate-right {
   opacity: 1;
   transform: translateX(0px);
-  transition: all 0.8s ease-out;
+  transition: none ease-out;
 }
 
 .scroll-animate-right.in-view {
@@ -600,7 +600,7 @@ img {
 /* Controls hover effects */
 .slider-control {
   backdrop-filter: blur(4px);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: none cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slider-control:hover {

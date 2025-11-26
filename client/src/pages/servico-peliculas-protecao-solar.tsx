@@ -212,7 +212,7 @@ export default function ServicoPeliculasProtecaoSolar() {
                   </div>
                 </div>
                 
-                <Button asChild className="bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold px-8 py-6 text-lg">
+                <Button asChild className="bg-brand-yellow text-lg font-bold">
                   <Link href="/contactos#formulario">
                     Solicitar Orçamento
                     <ArrowRight className="w-5 h-5 ml-2" />
@@ -363,7 +363,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-gradient-to-r from-blue-600/10 via-brand-turquoise/10 to-brand-yellow/10">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Economizar com</span> <span className="text-blue-400">Proteção Solar?</span>
@@ -374,7 +374,7 @@ export default function ServicoPeliculasProtecaoSolar() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-blue-600 to-brand-turquoise text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-brand-yellow text-lg font-bold">
               <Link href="/contactos#formulario">
                 Avaliação Gratuita
                 <ArrowRight className="w-5 h-5 ml-2" />

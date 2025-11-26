@@ -37,7 +37,7 @@ export default function DemoInterativo() {
       duration: 3000,
       component: (
         <div className="text-center space-y-6">
-          <div className="bg-gradient-to-r from-[#e84b5e] to-[#4dabf7] bg-clip-text text-transparent">
+          <div className="bg-brand-yellow text-transparent font-bold">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">DOMREALCE</h1>
             <p className="text-xl md:text-2xl text-white">Comunicação Visual & Impressão Digital</p>
           </div>
@@ -372,7 +372,7 @@ export default function DemoInterativo() {
             {/* Progress Bar */}
             <div className="w-full bg-gray-700 rounded-full h-2 mb-4">
               <div 
-                className="bg-gradient-to-r from-[#e84b5e] to-[#4dabf7] h-2 rounded-full transition-all duration-100"
+                className="bg-brand-yellow"
                 style={{ width: `${(currentStep / (demoSteps.length - 1)) * 100 + (progress / demoSteps.length)}%` }}
               />
             </div>

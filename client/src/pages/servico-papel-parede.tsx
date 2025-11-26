@@ -534,7 +534,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
                       />
                     </div>
 
-                    <Button type="submit" className="w-full bg-gradient-to-r from-brand-coral to-brand-yellow text-white">
+                    <Button type="submit" className="w-full bg-brand-yellow text-white">
                       <Calculator className="w-4 h-4 mr-2" />
                       Solicitar Orçamento
                     </Button>
@@ -582,7 +582,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       
 
       {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-gradient-to-r from-brand-coral/10 via-brand-yellow/10 to-brand-turquoise/10">
+      <section className="pt-8 pb-8 bg-black">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
             <span className="text-white">Pronto para Transformar o Seu</span> <span className="text-brand-coral">Espaço?</span>
@@ -593,7 +593,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-brand-coral to-brand-yellow text-white font-bold px-8 py-6 text-lg">
+            <Button asChild className="bg-brand-yellow text-lg font-bold">
               <Link href="/contactos#formulario">
                 Agendar Consulta
                 <ArrowRight className="w-5 h-5 ml-2" />
