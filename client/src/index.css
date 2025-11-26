@@ -358,3 +358,10 @@ img[data-clickable],
 .animate-whatsapp-pulse {
   animation: whatsapp-pulse 2s ease-in-out infinite;
 }
+
+/* Ensure white circles for process steps */
+.w-16.h-16.bg-white.rounded-full {
+  background-color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
