@@ -264,7 +264,7 @@ export default function DemoInterativo() {
               href="https://instagram.com/domrealce" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex flex-col items-center gap-2 p-4 bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg hover:opacity-80 transition-opacity"
+              className="flex flex-col items-center gap-2 p-4f58529]dd2a7b]8134af] rounded-lg hover:opacity-80 transition-opacity"
             >
               <Instagram className="h-8 w-8 text-white" />
               <span className="text-white text-sm">Instagram</span>

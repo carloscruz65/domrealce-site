@@ -594,7 +594,7 @@ export default function Carrinho() {
                       // Redirecionar para checkout
                       window.location.href = '/checkout';
                     }}
-                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 mb-4"
+                    className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90 mb-4"
                     disabled={cartItems.length === 0}
                     data-testid="button-checkout"
                   >
@@ -726,7 +726,7 @@ export default function Carrinho() {
                   
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90"
+                    className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90"
                   >
                     Solicitar Orçamento
                   </Button>

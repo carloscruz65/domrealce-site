@@ -122,7 +122,7 @@ export default function Sobre() {
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#FFD700] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#FFD700] to-[#20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-16FFD700]20B2AA] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">⭐</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#FFD700]">Qualidade</h3>
@@ -134,7 +134,7 @@ export default function Sobre() {
 
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#20B2AA] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#20B2AA] to-[#4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-1620B2AA]4169E1] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">⏰</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#20B2AA]">Pontualidade</h3>
@@ -146,7 +146,7 @@ export default function Sobre() {
 
             <Card className="bg-[#0a0a0a] border-[#333] hover:border-[#FF6347] transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#FF6347] to-[#FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-16 h-16FF6347]FFD700] rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl">🤝</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-[#FF6347]">Honestidade</h3>
@@ -168,7 +168,7 @@ export default function Sobre() {
               <p className="text-lg">{companyText2}</p>
             </div>
 
-            <div className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] p-8 rounded-lg mt-12">
+            <div className="FFD700]20B2AA] p-8 rounded-lg mt-12">
               <blockquote className="text-xl font-bold text-black italic">
                 "{companyQuote}"
               </blockquote>

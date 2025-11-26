@@ -92,7 +92,7 @@ export default function Contactos() {
               
               <button 
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold rounded-lg hover:shadow-xl transition-all duration-300"
+                className="w-full px-6 py-3 from-brand-yellow to-brand-coral text-black font-semibold rounded-lg hover:shadow-xl transition-all duration-300"
               >
                 Enviar Mensagem
               </button>

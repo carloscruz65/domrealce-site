@@ -183,7 +183,7 @@ export default function ServiceHero({
         {overlayIsVisible &&
           (looksLikeTailwindGradient ? (
             <div
-              className={`absolute inset-0 z-1 bg-gradient-to-br ${gradientOverlay}`}
+              className={`absolute inset-0 z-1 ${gradientOverlay}`}
               style={{ opacity: parseFloat(overlayOpacity) }}
             />
           ) : (
@@ -238,7 +238,7 @@ export default function ServiceHero({
             <div className="flex flex-row gap-1 sm:gap-2 justify-center items-center flex-wrap px-1 sm:px-2">
               <Button
                 asChild
-                className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform flex-1 sm:flex-none"
+                className=" from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform flex-1 sm:flex-none"
                 style={{
                   fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
                   padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
@@ -289,7 +289,7 @@ export default function ServiceHero({
 
         {/* Fade inferior (apenas se overlay ativo) */}
         {overlayIsVisible && (
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 from-black/50 to-transparent" />
         )}
       </div>
     </section>

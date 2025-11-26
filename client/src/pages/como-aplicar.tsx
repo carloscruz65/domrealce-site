@@ -133,7 +133,7 @@ export default function ComoAplicarPapelParede() {
         </Card>
 
         {/* Aplicação Profissional */}
-        <Card className="bg-gradient-to-r from-[#FFD700]/10 to-[#20B2AA]/10 border-[#FFD700]">
+        <Card className="FFD700]/1020B2AA]/10 border-[#FFD700]">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold text-[#FFD700] mb-4">
               🔧 Aplicação Profissional Recomendada

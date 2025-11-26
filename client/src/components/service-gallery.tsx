@@ -61,7 +61,7 @@ export default function ServiceGallery({
                 />
                 
                 {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
+                <div className="absolute inset-0 from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
                   {image.title && (
                     <span className="text-white font-semibold text-lg">
                       {image.title}
@@ -96,7 +96,7 @@ export default function ServiceGallery({
                 className="w-full h-auto max-h-[90vh] object-contain"
               />
               {selectedImage.title && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                <div className="absolute bottom-0 left-0 right-0 from-black/90 to-transparent p-6">
                   <h3 className="text-white text-2xl font-semibold">
                     {selectedImage.title}
                   </h3>

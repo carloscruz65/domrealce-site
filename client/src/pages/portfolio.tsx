@@ -14,7 +14,7 @@ export default function Portfolio() {
       <Navigation />
       
       {/* Header Completo */}
-      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
+      <section className=" from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -36,7 +36,7 @@ export default function Portfolio() {
       </section>
 
       {/* Contacto Rápido */}
-      <section className="bg-gradient-to-r from-brand-turquoise/10 to-brand-yellow/10 py-8">
+      <section className=" from-brand-turquoise/10 to-brand-yellow/10 py-8">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

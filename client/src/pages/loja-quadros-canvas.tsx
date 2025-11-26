@@ -144,7 +144,7 @@ export default function LojaQuadrosCanvas() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#20B2AA]/10 via-[#4169E1]/5 to-[#FF6347]/10 py-20 mt-16">
+      <section className="20B2AA]/104169E1]/5FF6347]/10 py-20 mt-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <Link href="/loja" className="inline-flex items-center gap-2 text-[#20B2AA] hover:text-white mb-6 transition-colors">

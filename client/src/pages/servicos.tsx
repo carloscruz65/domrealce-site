@@ -31,7 +31,7 @@ const services: Service[] = [
       "Material publicitário"
     ],
     icon: <Palette className="w-8 h-8" />,
-    color: "from-[#FFD700] to-[#FFA500]",
+    color: "FFD700]FFA500]",
     detailsLink: "/servico-design-grafico"
   },
   {
@@ -46,7 +46,7 @@ const services: Service[] = [
       "Acabamentos profissionais"
     ],
     icon: <Printer className="w-8 h-8" />,
-    color: "from-[#20B2AA] to-[#4169E1]",
+    color: "20B2AA]4169E1]",
     detailsLink: "/servico-impressao-digital"
   },
   {
@@ -61,7 +61,7 @@ const services: Service[] = [
       "Medidas personalizadas"
     ],
     icon: <Wallpaper className="w-8 h-8" />,
-    color: "from-[#FF6347] to-[#FFD700]",
+    color: "FF6347]FFD700]",
     detailsLink: "/servico-papel-parede"
   },
   {
@@ -76,7 +76,7 @@ const services: Service[] = [
       "Resistente ao tempo"
     ],
     icon: <Image className="w-8 h-8" />,
-    color: "from-[#9370DB] to-[#FF6347]",
+    color: "9370DB]FF6347]",
     detailsLink: "/servico-telas-artisticas"
   },
   {
@@ -91,7 +91,7 @@ const services: Service[] = [
       "Resistentes a intempéries"
     ],
     icon: <Sticker className="w-8 h-8" />,
-    color: "from-[#32CD32] to-[#20B2AA]",
+    color: "32CD32]20B2AA]",
     detailsLink: "/servico-autocolantes"
   },
   {
@@ -107,7 +107,7 @@ const services: Service[] = [
       "Viaturas de competição"
     ],
     icon: <Car className="w-8 h-8" />,
-    color: "from-[#FFD700] to-[#FF6347]",
+    color: "FFD700]FF6347]",
     detailsLink: "/servico-decoracao-viaturas"
   },
   {
@@ -123,7 +123,7 @@ const services: Service[] = [
       "Fachadas comerciais"
     ],
     icon: <Building className="w-8 h-8" />,
-    color: "from-[#4169E1] to-[#9370DB]",
+    color: "4169E1]9370DB]",
     detailsLink: "/servico-espacos-comerciais"
   },
   {
@@ -139,7 +139,7 @@ const services: Service[] = [
       "Conforto térmico"
     ],
     icon: <Shield className="w-8 h-8" />,
-    color: "from-[#FFA500] to-[#FFD700]",
+    color: "FFA500]FFD700]",
     detailsLink: "/servico-peliculas-protecao-solar"
   }
 ];
@@ -180,7 +180,7 @@ export default function Servicos() {
               <Card key={service.id} className="bg-[#111111] border-[#333] hover:border-[#FFD700] transition-all duration-300 group">
                 <CardContent className="p-4 sm:p-6 md:p-8">
                   <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center text-black flex-shrink-0`}>
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 ${service.color} rounded-xl flex items-center justify-center text-black flex-shrink-0`}>
                       {service.icon}
                     </div>
                     

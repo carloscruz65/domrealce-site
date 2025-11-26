@@ -12,7 +12,7 @@ export default function VisualEditorDemo() {
         {/* Hero Section - Editável */}
         <EditableElement 
           id="hero-section" 
-          className="relative py-24 px-4 bg-gradient-to-r from-[#0a0a0a] to-[#1a1a1a]"
+          className="relative py-24 px-40a0a0a]1a1a1a]"
         >
           <div className="container mx-auto text-center">
             <EditableElement 
@@ -23,7 +23,7 @@ export default function VisualEditorDemo() {
               <InlineTextEditor
                 elementId="hero-title"
                 initialText="Editor Visual DOMREALCE"
-                className="bg-gradient-to-r from-[#FFD700] to-[#FFA500] bg-clip-text text-transparent"
+                className="FFD700]FFA500] bg-clip-text text-transparent"
               />
             </EditableElement>
             

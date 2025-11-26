@@ -22,7 +22,7 @@ export default function NewsGallery({ tipoGaleria = "single", imagem, imagens = 
           alt={titulo}
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/20 via-transparent to-brand-turquoise/20"></div>
+        <div className="absolute inset-0 from-brand-yellow/20 via-transparent to-brand-turquoise/20"></div>
       </div>
     );
   }
@@ -44,7 +44,7 @@ export default function NewsGallery({ tipoGaleria = "single", imagem, imagens = 
           alt={`${titulo} - Imagem ${indiceAtual + 1}`}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/20 via-transparent to-brand-turquoise/20"></div>
+        <div className="absolute inset-0 from-brand-yellow/20 via-transparent to-brand-turquoise/20"></div>
         
         {/* Controles de navegação */}
         {imagens.length > 1 && (

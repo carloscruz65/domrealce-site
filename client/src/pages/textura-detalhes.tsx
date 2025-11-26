@@ -289,7 +289,7 @@ export default function LojaTexturaDetalhes() {
                   <Button 
                     onClick={handleAddToCart}
                     disabled={!selectedTexture}
-                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
+                    className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
                     data-testid="button-add-to-cart"
                   >
                     <ShoppingCart className="w-5 h-5 mr-2" />
@@ -421,7 +421,7 @@ export default function LojaTexturaDetalhes() {
                       <div className="space-y-3">
                         <Button 
                           onClick={handleAddToCart}
-                          className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90"
+                          className="w-fullFFD700]20B2AA] text-black font-bold py-3 hover:opacity-90"
                         >
                           <ShoppingCart className="w-5 h-5 mr-2" />
                           Adicionar ao Carrinho

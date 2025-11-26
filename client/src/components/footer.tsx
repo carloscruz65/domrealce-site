@@ -113,7 +113,7 @@ export default function Footer() {
         </div>
 
         {/* WhatsApp CTA */}
-        <div className="bg-gradient-to-r from-brand-turquoise to-brand-blue rounded-2xl p-6 mb-8">
+        <div className=" from-brand-turquoise to-brand-blue rounded-2xl p-6 mb-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="text-black font-heading font-semibold mb-2">Fale connosco via WhatsApp</h4>
