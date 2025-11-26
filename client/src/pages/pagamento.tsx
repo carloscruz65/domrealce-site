@@ -1,6 +1,6 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import {
   Card,
   CardContent,
@@ -9,9 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Label } from "@/components/ui/label";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Copy, CheckCircle, Clock, MapPin, CreditCard, CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";

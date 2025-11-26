@@ -439,7 +439,6 @@ export default function ServicoDecoracaoViaturas() {
       </section>
 
       <ScrollToTop />
-      <ScrollToTop />
       <Footer />
     </div>
   );

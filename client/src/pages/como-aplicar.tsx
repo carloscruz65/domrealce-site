@@ -1,13 +1,10 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent } from "@/components/ui/card";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { ArrowLeft, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 
 export default function ComoAplicarPapelParede() {
   return (

@@ -390,7 +390,6 @@ export default function ServicoPeliculasProtecaoSolar() {
       </section>
 
       <ScrollToTop />
-      <ScrollToTop />
       <Footer />
     </div>
   );

@@ -1,12 +1,10 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { ArrowLeft, Eye } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 
 
 

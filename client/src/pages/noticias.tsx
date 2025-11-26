@@ -1,19 +1,14 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Input } from "@/components/ui/input";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Search, Filter, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import ScrollToTop from "@/components/scroll-to-top";
 import { useQuery } from "@tanstack/react-query";
 import type { News } from "@shared/schema";
 import SocialNewsCard from "@/components/SocialNewsCard";
-import ScrollToTop from "@/components/scroll-to-top";
 
 // ✅ Dados agora vêm da API real!
 

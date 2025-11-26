@@ -1,12 +1,9 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Input } from "@/components/ui/input";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Label } from "@/components/ui/label";
-import ScrollToTop from "@/components/scroll-to-top";
 import {
   Select,
   SelectContent,
@@ -15,11 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import {
   ShoppingCart,
   CreditCard,

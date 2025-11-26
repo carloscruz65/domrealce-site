@@ -1,18 +1,13 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Card, CardContent } from "@/components/ui/card";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import { SEOHead } from "@/components/seo-head";
-import ScrollToTop from "@/components/scroll-to-top";
 import { usePageConfig } from "@/hooks/use-page-config";
 import { EditableConfigText } from "@/components/EditableConfigText";
-import ScrollToTop from "@/components/scroll-to-top";
 // Imagens agora vêm do object storage
 
 export default function Sobre() {

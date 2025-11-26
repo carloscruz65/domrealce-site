@@ -1,10 +1,8 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import GoogleMap from "@/components/GoogleMap";
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -13,9 +11,7 @@ import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ObjectUploader } from "@/components/ObjectUploader";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Shield, Upload, FileText, X } from "lucide-react";
 // Imagem agora vem do object storage
 

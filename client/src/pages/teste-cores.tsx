@@ -1,6 +1,6 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import ScrollToTop from "@/components/scroll-to-top";
 import { toast } from '@/hooks/use-toast';
 
 export default function TesteCores() {

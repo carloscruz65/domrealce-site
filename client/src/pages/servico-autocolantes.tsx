@@ -425,7 +425,6 @@ export default function ServicoAutocolantes() {
       </section>
 
       <ScrollToTop />
-      <ScrollToTop />
       <Footer />
     </div>
   );

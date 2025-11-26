@@ -1,28 +1,17 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import DynamicSlider from "@/components/DynamicSlider";
-import ScrollToTop from "@/components/scroll-to-top";
 import ServicesSection from "@/components/services-section";
-import ScrollToTop from "@/components/scroll-to-top";
 import PortfolioSection from "@/components/portfolio-section";
-import ScrollToTop from "@/components/scroll-to-top";
 import NewsSection from "@/components/news-section";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import Testimonials from "@/components/testimonials";
-import ScrollToTop from "@/components/scroll-to-top";
 import CredibilityBadges from "@/components/credibility-badges";
-import ScrollToTop from "@/components/scroll-to-top";
 import SocialLinks from "@/components/social-links";
-import ScrollToTop from "@/components/scroll-to-top";
 import { SEOHead } from "@/components/seo-head";
-import ScrollToTop from "@/components/scroll-to-top";
 import { usePageConfig } from "@/hooks/use-page-config";
 import ClientLogos from "@/components/ClientLogos";
-import ScrollToTop from "@/components/scroll-to-top";
 import { EditableConfigText } from "@/components/EditableConfigText";
-import ScrollToTop from "@/components/scroll-to-top";
 
 export default function Home() {
   const { getConfig, isLoading } = usePageConfig("home");

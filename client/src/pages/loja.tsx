@@ -1,22 +1,15 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Badge } from "@/components/ui/badge";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Star, ShoppingCart, Settings } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import CredibilityBadges from "@/components/credibility-badges";
-import ScrollToTop from "@/components/scroll-to-top";
 import PaymentMethods from "@/components/payment-methods";
-import ScrollToTop from "@/components/scroll-to-top";
 import SocialLinks from "@/components/social-links";
-import ScrollToTop from "@/components/scroll-to-top";
 // Imagens agora vêm do object storage
 
 interface Product {

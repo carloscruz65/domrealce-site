@@ -1,7 +1,6 @@
+import ScrollToTop from "@/components/scroll-to-top";
 import Navigation from "@/components/navigation";
-import ScrollToTop from "@/components/scroll-to-top";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
@@ -9,9 +8,7 @@ import { insertContactSchema, type InsertContact } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ObjectUploader } from "@/components/ObjectUploader";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Button } from "@/components/ui/button";
-import ScrollToTop from "@/components/scroll-to-top";
 import { Shield, Upload } from "lucide-react";
 
 export default function Contactos() {

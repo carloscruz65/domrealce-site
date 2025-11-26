@@ -454,7 +454,6 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
       </section>
 
       <ScrollToTop />
-      <ScrollToTop />
       <Footer />
     </div>
   );
