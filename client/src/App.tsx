@@ -1,5 +1,6 @@
-import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-react";
-import { PLASMIC } from "./Plasmic-ini";
+// Plasmic temporariamente desabilitado para evitar erros de importação
+// import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-react";
+// import { PLASMIC } from "./Plasmic-ini";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
