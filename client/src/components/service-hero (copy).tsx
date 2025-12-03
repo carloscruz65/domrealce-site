@@ -63,20 +63,14 @@ export default function ServiceHero({
   description: propDescription,
   backgroundImage: propBackgroundImage,
   backgroundTexture: propBackgroundTexture,
-  gradientOverlay: propGradientOverlay,
-  overlayColor: propOverlayColor,
+  gradientOverlay: propGradientOverlay = "from-transparent via-transparent to-transparent",
+  overlayColor: propOverlayColor, 
   backgroundColor: propBackgroundColor,
   textColor: propTextColor,
   overlayOpacity: propOverlayOpacity,
   height: propHeight,
-  primaryCta: propPrimaryCta = {
-    text: "Iniciar meu projeto",
-    href: "/contactos#formulario",
-  },
-  secondaryCta: propSecondaryCta = {
-    text: "Contactar",
-    href: "/contactos#formulario",
-  },
+  primaryCta: propPrimaryCta = { text: "Iniciar Meu Projeto", href: "/contactos#formulario" },
+  secondaryCta: propSecondaryCta = { text: "Contactar", href: "/contactos#formulario" },
   portfolioButton = true,
 }: ServiceHeroProps) {
   const { data: heroData, isLoading, error } = useQuery<HeroData>({
@@ -91,17 +85,11 @@ export default function ServiceHero({
   const description = heroData?.description || propDescription || "";
   const backgroundImage = heroData?.backgroundImage || propBackgroundImage;
   const backgroundTexture = heroData?.backgroundTexture || propBackgroundTexture;
-
-  // Mesmo que venha "gradientOverlay" do backend, vamos usar apenas como cor de fallback,
-  // sem aplicar classes de gradiente.
-  const overlayColor =
-    heroData?.overlayColor || propOverlayColor || heroData?.gradientOverlay || propGradientOverlay;
-
-  const backgroundColor =
-    heroData?.backgroundColor || propBackgroundColor || "#000000";
+  const gradientOverlay = heroData?.gradientOverlay || propGradientOverlay;
+  const overlayColor = heroData?.overlayColor || propOverlayColor; 
+  const backgroundColor = heroData?.backgroundColor || propBackgroundColor;
   const textColor = heroData?.textColor || propTextColor;
-  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0";
-
+  const overlayOpacity = heroData?.overlayOpacity || propOverlayOpacity || "0"; 
   const customHeight = heroData?.height || propHeight;
 
   const primaryCta = {
@@ -115,33 +103,29 @@ export default function ServiceHero({
   };
 
   // Mobile responsive settings
-  const mobileTitleSize =
-    heroData?.mobileTitleSize || "clamp(1rem, 3.5vw, 3.5rem)";
-  const mobileDescSize =
-    heroData?.mobileDescSize || "clamp(0.625rem, 1.75vw, 1.125rem)";
-  const mobileBadgeSize =
-    heroData?.mobileBadgeSize || "clamp(0.5rem, 1.5vw, 0.875rem)";
+  const mobileTitleSize = heroData?.mobileTitleSize || "clamp(1rem, 3.5vw, 3.5rem)";
+  const mobileDescSize = heroData?.mobileDescSize || "clamp(0.625rem, 1.75vw, 1.125rem)";
+  const mobileBadgeSize = heroData?.mobileBadgeSize || "clamp(0.5rem, 1.5vw, 0.875rem)";
   const mobileSpacing = heroData?.mobileSpacing || "compact";
   const mobileButtonLabels = heroData?.mobileButtonLabels || {
     primary: "Projeto",
     secondary: "Contactar",
-    portfolio: "Portfólio",
+    portfolio: "Portfolio"
   };
-  const mobileHeight = heroData?.mobileHeight;
-  const mobileContentAlign = heroData?.mobileContentAlign || "center";
+  const mobileHeight = heroData?.mobileHeight; 
+  const mobileContentAlign = heroData?.mobileContentAlign || "center"; 
 
+  // Spacing classes based on mobileSpacing
   const spacing = {
     badgeMb: mobileSpacing === "compact" ? "mb-0.5" : "mb-2",
     titleMb: mobileSpacing === "compact" ? "mb-0.5" : "mb-2",
     descMb: mobileSpacing === "compact" ? "mb-1" : "mb-4",
   };
 
-  const alignmentClass =
-    mobileContentAlign === "top"
-      ? "items-start"
-      : mobileContentAlign === "bottom"
-      ? "items-end"
-      : "items-center";
+  // Alignment classes based on mobileContentAlign
+  const alignmentClass = mobileContentAlign === "top" ? "items-start" : 
+                        mobileContentAlign === "bottom" ? "items-end" : 
+                        "items-center";
 
   if (serviceId && isLoading) {
     return (
@@ -164,51 +148,58 @@ export default function ServiceHero({
     );
   }
 
+  // ---------- Background (imagem | textura | cor) ----------
   const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : null;
+
+  // ---------- Overlay: gradiente Tailwind OU cor/gradiente CSS ----------
   const overlayIsVisible = parseFloat(overlayOpacity || "0") > 0;
+
+  // Heurística: se a string do gradientOverlay tem classes tailwind de gradiente, usamos Tailwind;
+  const looksLikeTailwindGradient =
+    !!gradientOverlay && /(from-|via-|to-)/.test(gradientOverlay);
+
+  // Min-height: mobile vs desktop
   const minHeightValue = mobileHeight || customHeight || "600px";
 
   return (
-    <section
+    <section 
       className="relative w-full pt-24 md:pt-28 pb-12 md:pb-16 flex justify-center"
       style={{
         minHeight: minHeightValue,
-        backgroundColor: encodedBackgroundImage
-          ? "transparent"
-          : backgroundColor,
-        backgroundImage: encodedBackgroundImage
+        backgroundColor: encodedBackgroundImage ? "transparent" : (backgroundColor || "transparent"),
+        backgroundImage: encodedBackgroundImage 
           ? `url("${encodedBackgroundImage}")`
-          : backgroundTexture || undefined,
-        backgroundSize: encodedBackgroundImage
-          ? "cover"
-          : backgroundTexture
-          ? "200px 200px"
-          : undefined,
+          : (backgroundTexture || undefined),
+        backgroundSize: encodedBackgroundImage ? "cover" : (backgroundTexture ? "200px 200px" : undefined),
         backgroundPosition: encodedBackgroundImage ? "center" : undefined,
-        backgroundRepeat: encodedBackgroundImage
-          ? "no-repeat"
-          : backgroundTexture
-          ? "repeat"
-          : undefined,
+        backgroundRepeat: encodedBackgroundImage ? "no-repeat" : (backgroundTexture ? "repeat" : undefined),
       }}
     >
-      <div className={`absolute inset-0 flex justify-center ${alignmentClass}`}>
-        {/* Overlay sólido, sem gradientes */}
-        {overlayIsVisible && (
-          <div
-            className="absolute inset-0 z-1"
-            style={{
-              background: overlayColor || "rgba(0,0,0,0.55)",
-              opacity: parseFloat(overlayOpacity),
-            }}
-          />
-        )}
-
+      {/* Container para overlay e conteúdo */}
+      <div 
+        className={`absolute inset-0 flex justify-center ${alignmentClass}`}
+      >
+        {/* Overlay */}
+        {overlayIsVisible &&
+          (looksLikeTailwindGradient ? (
+            <div
+              className={`absolute inset-0 z-1 bg-gradient-to-br ${gradientOverlay}`}
+              style={{ opacity: parseFloat(overlayOpacity) }}
+            />
+          ) : (
+            <div
+              className="absolute inset-0 z-1"
+              style={{
+                background: overlayColor || gradientOverlay || "rgba(0,0,0,0.6)",
+                opacity: parseFloat(overlayOpacity),
+              }}
+            />
+          ))}
         {/* Conteúdo */}
         <div className="container mx-auto px-2 sm:px-4 relative z-10 w-full">
           <div className="max-w-5xl mx-auto text-center">
             {badge && (
-              <Badge
+              <Badge 
                 className={`bg-brand-yellow text-black ${spacing.badgeMb} px-1.5 py-0.5`}
                 style={{ fontSize: mobileBadgeSize }}
               >
@@ -224,15 +215,11 @@ export default function ServiceHero({
                 color: textColor,
               }}
             >
-              <span className={textColor ? "" : "text-brand-yellow"}>
-                {title}
-              </span>
+              <span className={textColor ? "" : "text-brand-yellow"}>{title}</span>
               {subtitle && (
                 <>
                   <br />
-                  <span className={textColor ? "" : "text-white"}>
-                    {subtitle}
-                  </span>
+                  <span className={textColor ? "" : "text-white"}>{subtitle}</span>
                 </>
               )}
             </h1>
@@ -249,49 +236,33 @@ export default function ServiceHero({
             </p>
 
             <div className="flex flex-row gap-1 sm:gap-2 justify-center items-center flex-wrap px-1 sm:px-2">
-              {/* Botão principal: amarelo sólido, sem gradiente */}
               <Button
                 asChild
-                className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 transition-transform flex-1 sm:flex-none"
+                className="bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-bold hover:scale-105 transition-transform flex-1 sm:flex-none"
                 style={{
                   fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
-                  padding:
-                    "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
+                  padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
                 }}
               >
-                <Link
-                  href={primaryCta.href}
-                  data-testid="button-primary-cta"
-                  className="whitespace-nowrap overflow-hidden text-ellipsis"
-                >
+                <Link href={primaryCta.href} data-testid="button-primary-cta" className="whitespace-nowrap overflow-hidden text-ellipsis">
                   <span className="hidden sm:inline">{primaryCta.text}</span>
-                  <span className="sm:hidden">
-                    {mobileButtonLabels.primary}
-                  </span>
+                  <span className="sm:hidden">{mobileButtonLabels.primary}</span>
                   <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 inline" />
                 </Link>
               </Button>
 
-              {/* Botão secundário: outline amarelo */}
               <Button
                 asChild
                 variant="outline"
-                className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black flex-1 sm:flex-none"
+                className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black flex-1 sm:flex-none"
                 style={{
                   fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
-                  padding:
-                    "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
+                  padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
                 }}
               >
-                <Link
-                  href={secondaryCta.href}
-                  data-testid="button-secondary-cta"
-                  className="whitespace-nowrap"
-                >
+                <Link href={secondaryCta.href} data-testid="button-secondary-cta" className="whitespace-nowrap">
                   <span className="hidden sm:inline">{secondaryCta.text}</span>
-                  <span className="sm:hidden">
-                    {mobileButtonLabels.secondary}
-                  </span>
+                  <span className="sm:hidden">{mobileButtonLabels.secondary}</span>
                 </Link>
               </Button>
 
@@ -299,29 +270,27 @@ export default function ServiceHero({
                 <Button
                   asChild
                   variant="outline"
-                  className="border-brand-yellow/60 text-brand-yellow hover:bg-brand-yellow hover:text-black flex-1 sm:flex-none"
+                  className="border-brand-yellow/50 text-brand-yellow hover:bg-brand-yellow hover:text-black flex-1 sm:flex-none"
                   style={{
                     fontSize: "clamp(0.625rem, 1.25vw, 1rem)",
-                    padding:
-                      "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
+                    padding: "clamp(0.25rem, 1vw, 0.75rem) clamp(0.5rem, 2vw, 1.5rem)",
                   }}
                 >
-                  <Link
-                    href="/portfolio"
-                    data-testid="button-portfolio"
-                    className="whitespace-nowrap"
-                  >
+                  <Link href="/portfolio" data-testid="button-portfolio" className="whitespace-nowrap">
                     <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 inline" />
-                    <span className="hidden sm:inline">Ver portfólio</span>
-                    <span className="sm:hidden">
-                      {mobileButtonLabels.portfolio}
-                    </span>
+                    <span className="hidden sm:inline">Ver Portfólio</span>
+                    <span className="sm:hidden">{mobileButtonLabels.portfolio}</span>
                   </Link>
                 </Button>
               )}
             </div>
           </div>
         </div>
+
+        {/* Fade inferior (apenas se overlay ativo) */}
+        {overlayIsVisible && (
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/50 to-transparent" />
+        )}
       </div>
     </section>
   );

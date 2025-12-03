@@ -24,7 +24,6 @@ import LojaCanvasDetalhes from "@/pages/canvas-detalhes";
 import LojaTexturaDetalhes from "@/pages/textura-detalhes";
 import Carrinho from "@/pages/carrinho";
 import Portfolio from "@/pages/portfolio";
-import Servicos from "@/pages/servicos";
 import ServicoDesignGrafico from "@/pages/servico-design-grafico";
 import ServicoImpressaoDigital from "@/pages/servico-impressao-digital";
 import ServicoPapelParede from "@/pages/servico-papel-parede";
@@ -101,7 +100,6 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/sobre" component={Sobre} />
-        <Route path="/servicos" component={Servicos} />
         <Route path="/servico-design-grafico" component={ServicoDesignGrafico} />
         <Route path="/servico-impressao-digital" component={ServicoImpressaoDigital} />
         <Route path="/servico-papel-parede" component={ServicoPapelParede} />

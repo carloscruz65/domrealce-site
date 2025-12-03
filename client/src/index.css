@@ -5,65 +5,74 @@
 @tailwind utilities;
 
 :root {
+  /* === PALETA SIMPLIFICADA === */
+  /* Cores principais */
+  --brand-primary: #f4c430;        /* Amarelo DOMREALCE (mais suave) */
+  --brand-secondary: #d62828;      /* Vermelho REALCE (menos agressivo) */
+  --brand-dark: #000000;           /* Preto */
+  --brand-white: #ffffff;          /* Branco */
+
+  /* Mantém variáveis antigas mas mapeadas para a paleta simples */
+  --brand-yellow: var(--brand-primary);
+  --brand-red: var(--brand-secondary);
+  --brand-turquoise: var(--brand-primary);  /* unificado para amarelo */
+  --brand-green: var(--brand-secondary);    /* unificado para vermelho */
+  --brand-dark-red: var(--brand-secondary); /* unificado para vermelho */
+
+  /* Aliases de compatibilidade */
+  --brand-coral: var(--brand-secondary);
+  --brand-blue: var(--brand-primary);
+
+  /* Tokens de design (sem degradês) */
   --background: var(--brand-dark);
   --foreground: var(--brand-white);
-  --card: var(--brand-dark);
-  --card-foreground: var(--brand-white);
-  --popover: var(--brand-dark);
-  --popover-foreground: var(--brand-white);
-  --primary: var(--brand-yellow);
+
+  --card: var(--brand-white);
+  --card-foreground: var(--brand-dark);
+
+  --popover: var(--brand-white);
+  --popover-foreground: var(--brand-dark);
+
+  --primary: var(--brand-primary);
   --primary-foreground: var(--brand-dark);
-  --secondary: var(--brand-red);
+
+  --secondary: var(--brand-secondary);
   --secondary-foreground: var(--brand-white);
-  --muted: hsl(0, 0%, 95%);
+
+  --muted: hsl(0, 0%, 96%);
   --muted-foreground: hsl(0, 0%, 40%);
-  --accent: var(--brand-turquoise);
-  --accent-foreground: var(--brand-white);
-  --destructive: var(--brand-red);
+
+  --accent: var(--brand-primary);
+  --accent-foreground: var(--brand-dark);
+
+  --destructive: var(--brand-secondary);
   --destructive-foreground: var(--brand-white);
+
   --border: hsl(0, 0%, 90%);
   --input: hsl(0, 0%, 98%);
-  --ring: var(--brand-yellow);
-  --chart-1: var(--brand-yellow);
-  --chart-2: var(--brand-red);
-  --chart-3: var(--brand-turquoise);
-  --chart-4: var(--brand-green);
-  --chart-5: var(--brand-dark-red);
+  --ring: var(--brand-primary);
+
+  --chart-1: var(--brand-primary);
+  --chart-2: var(--brand-secondary);
+  --chart-3: var(--brand-primary);
+  --chart-4: var(--brand-secondary);
+  --chart-5: var(--brand-dark);
+
   --sidebar: hsl(0, 0%, 0%);
   --sidebar-foreground: hsl(0, 0%, 100%);
-  --sidebar-primary: hsl(51, 100%, 50%);
+  --sidebar-primary: var(--brand-primary);
   --sidebar-primary-foreground: hsl(0, 0%, 0%);
   --sidebar-accent: hsl(0, 0%, 0%);
   --sidebar-accent-foreground: hsl(0, 0%, 100%);
-  --sidebar-border: hsl(174, 72%, 56%);
-  --sidebar-ring: hsl(51, 100%, 50%);
+  --sidebar-border: var(--brand-primary);
+  --sidebar-ring: var(--brand-primary);
+
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-heading: 'Poppins', system-ui, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
+
   --radius: 0.75rem;
-
-  /* DOMREALCE Brand Colors - Extraídas do logótipo */
-  --brand-yellow: hsl(50, 100%, 60%);
-  /* Amarelo do "DOM" */
-  --brand-red: hsl(0, 85%, 50%);
-  /* Vermelho do "REALCE" */
-  --brand-turquoise: hsl(180, 70%, 50%);
-  /* Azul turquesa do círculo */
-  --brand-green: hsl(120, 60%, 40%);
-  /* Verde do círculo */
-  --brand-dark-red: hsl(0, 70%, 30%);
-  /* Vermelho escuro do círculo */
-  --brand-dark: hsl(0, 0%, 0%);
-  /* Preto para texto */
-  --brand-white: hsl(0, 0%, 100%);
-  /* Branco para fundos */
-
-  /* Alias para manter compatibilidade com código existente */
-  --brand-coral: var(--brand-red);
-  /* Coral = Vermelho */
-  --brand-blue: var(--brand-turquoise);
-  /* Azul = Turquesa */
 }
 
 /* Ajuste de cores para Toast (força texto preto) */
@@ -78,26 +87,35 @@
   color: #000000 !important;
 }
 
+/* Tema dark - ainda minimalista */
 .dark {
-  --background: var(--brand-dark);
+  --background: hsl(0, 0%, 5%);
   --foreground: var(--brand-white);
-  --card: hsl(0, 0%, 8%);
+
+  --card: hsl(0, 0%, 10%);
   --card-foreground: var(--brand-white);
-  --popover: hsl(0, 0%, 8%);
+
+  --popover: hsl(0, 0%, 10%);
   --popover-foreground: var(--brand-white);
-  --primary: var(--brand-yellow);
+
+  --primary: var(--brand-primary);
   --primary-foreground: var(--brand-dark);
-  --secondary: var(--brand-red);
+
+  --secondary: var(--brand-secondary);
   --secondary-foreground: var(--brand-white);
+
   --muted: hsl(0, 0%, 15%);
   --muted-foreground: hsl(0, 0%, 65%);
-  --accent: var(--brand-turquoise);
+
+  --accent: var(--brand-primary);
   --accent-foreground: var(--brand-dark);
-  --destructive: var(--brand-red);
+
+  --destructive: var(--brand-secondary);
   --destructive-foreground: var(--brand-white);
+
   --border: hsl(0, 0%, 20%);
   --input: hsl(0, 0%, 15%);
-  --ring: var(--brand-yellow);
+  --ring: var(--brand-primary);
 }
 
 @layer base {
@@ -108,10 +126,10 @@
   body {
     @apply font-sans antialiased;
     font-family: var(--font-sans);
-    background: transparent;
-    color: white;
+    background: var(--background);
+    color: var(--foreground);
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
@@ -127,27 +145,25 @@
 }
 
 @layer utilities {
+  /* Borda "especial" sem degradê */
   .gradient-border {
-    background: linear-gradient(45deg, var(--brand-yellow), var(--brand-red), var(--brand-turquoise), var(--brand-green));
-    padding: 2px;
     border-radius: 12px;
+    padding: 2px;
+    border: 2px solid var(--primary);
   }
 
   .gradient-border-inner {
-    background: var(--brand-dark);
+    background: var(--background);
     border-radius: 10px;
     height: 100%;
   }
 
+  /* Hero simples, sem degradê */
   .hero-gradient {
-    background: linear-gradient(135deg,
-        hsla(50, 100%, 60%, 0.1) 0%,
-        hsla(0, 85%, 50%, 0.1) 25%,
-        hsla(180, 70%, 50%, 0.1) 50%,
-        hsla(120, 60%, 40%, 0.1) 100%);
+    background-color: var(--background);
   }
 
-  /* Cores do logótipo DOMREALCE */
+  /* Cores do logótipo DOMREALCE (mas mapeadas à paleta simples) */
   .text-brand-yellow {
     color: var(--brand-yellow);
   }
@@ -157,15 +173,15 @@
   }
 
   .text-brand-turquoise {
-    color: var(--brand-turquoise);
+    color: var(--brand-yellow);
   }
 
   .text-brand-green {
-    color: var(--brand-green);
+    color: var(--brand-red);
   }
 
   .text-brand-dark-red {
-    color: var(--brand-dark-red);
+    color: var(--brand-red);
   }
 
   .text-brand-dark {
@@ -194,15 +210,15 @@
   }
 
   .bg-brand-turquoise {
-    background-color: var(--brand-turquoise);
+    background-color: var(--brand-yellow);
   }
 
   .bg-brand-green {
-    background-color: var(--brand-green);
+    background-color: var(--brand-red);
   }
 
   .bg-brand-dark-red {
-    background-color: var(--brand-dark-red);
+    background-color: var(--brand-red);
   }
 
   .bg-brand-dark {
@@ -231,15 +247,15 @@
   }
 
   .border-brand-turquoise {
-    border-color: var(--brand-turquoise);
+    border-color: var(--brand-yellow);
   }
 
   .border-brand-green {
-    border-color: var(--brand-green);
+    border-color: var(--brand-red);
   }
 
   .border-brand-dark-red {
-    border-color: var(--brand-dark-red);
+    border-color: var(--brand-red);
   }
 
   .border-brand-dark {
@@ -259,13 +275,13 @@
     border-color: var(--brand-blue);
   }
 
-  /* Gradientes usando as cores do logótipo */
+  /* Antes: gradiente. Agora: cor sólida da marca */
   .bg-gradient-logo {
-    background: linear-gradient(135deg, var(--brand-yellow), var(--brand-red), var(--brand-turquoise));
+    background-color: var(--brand-primary);
   }
 
   .bg-gradient-logo-hover:hover {
-    background: linear-gradient(135deg, var(--brand-red), var(--brand-turquoise), var(--brand-green));
+    background-color: var(--brand-secondary);
     transition: background 0.3s ease;
   }
 }
@@ -530,24 +546,9 @@ img[data-clickable],
   transform: translateX(0);
 }
 
-/* Gradient animation */
+/* Antes havia um gradiente animado aqui; agora está simplificado */
 .gradient-animate {
-  background-size: 400% 400%;
-  animation: gradient-shift 4s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+  background-color: var(--primary);
 }
 
 /* DOMREALCE: Performance & SEO Enhancements */
@@ -584,16 +585,17 @@ img {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  /* Antes: degradê. Agora: overlay sólido e simples */
+  background: rgba(0, 0, 0, 0.35);
   z-index: -1;
 }
 
 .hero-overlay-light::after {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.1));
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .hero-overlay-dark::after {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* Enhanced WhatsApp FAB animations */
@@ -689,8 +691,88 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   html {
     scroll-behavior: auto;
   }
+}
+/* === FIX: Cartões sem contraste no tema escuro === */
+
+.card-simple,
+.service-card,
+.service-item {
+  background: #111 !important;     /* fundo escuro (sem degradê) */
+  color: #fff !important;          /* texto branco */
+  box-shadow: none !important;
+}
+
+/* ícones dos serviços */
+.card-icon,
+.service-icon {
+  background: #f4c430 !important;  /* amarelo */
+  color: #000 !important;          /* ícone visível */
+}
+
+/* títulos dos cartões */
+.card-title,
+.service-title {
+  color: #fff !important;
+}
+/* === ELIMINAR DEGRADÊS DOS ÍCONES === */
+.card-icon,
+.service-icon,
+.feature-icon {
+  background: var(--brand-primary) !important;  /* amarelo sólido */
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* === REMOVER QUALQUER DEGRADÊ NO FUNDO DOS CARTÕES === */
+.card-simple,
+.service-card,
+.service-item,
+.feature-card {
+  background: #111 !important;       /* fundo uniforme escuro */
+  background-image: none !important; /* elimina radial-gradient */
+  filter: none !important;
+}
+
+/* === REMOVER O EFEITO DE HOVER (LEVANTAR, ESCALA, GLOW) === */
+.card-simple:hover,
+.service-card:hover,
+.service-item:hover,
+.feature-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: #111 !important;
+}
+
+/* === REMOVER A ANIMAÇÃO/FOCO QUE FAZ APARECER O BRILHO VERDE/AMARELO === */
+.card-simple::before,
+.service-card::before,
+.service-item::before,
+.feature-card::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* === REMOVER QUALQUER ANIMAÇÃO DE HOVER GLOBAL (lift, tilt, bounce) === */
+.hover-lift,
+.hover-lift:hover,
+.hover-tilt,
+.hover-tilt:hover,
+.animate-glow,
+.animate-float,
+.animate-float-slow {
+  transform: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+/* === REMOVER BLUR DE ILUMINAÇÃO POR TRÁS DO TEXTO NOS CARTÕES === */
+.card-simple *,
+.service-card *,
+.service-item *,
+.feature-card * {
+  backdrop-filter: none !important;
 }
