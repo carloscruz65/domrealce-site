@@ -4,20 +4,19 @@ import ServiceHero from "@/components/service-hero";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  Image, 
-  CheckCircle, 
-  Star, 
-  ArrowRight, 
+import {
+  Image,
+  CheckCircle,
+  Star,
+  ArrowRight,
   Frame,
   Brush,
   Camera,
   Palette,
   Award,
-  Shield
+  Shield,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -26,222 +25,258 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function ServicoTelasArtisticas() {
   const [formData, setFormData] = useState({
-    largura: '',
-    altura: '',
-    quantidade: '1',
-    opcaoImagem: 'adobe-stock', // 'adobe-stock' ou 'propria'
-    descricaoImagem: '',
-    codigoAdobeStock: '',
-    linkImagemAdobe: '',
-    informacoesImagemAdobe: '',
-    mensagem: '',
-    nome: '',
-    email: '',
-    telefone: ''
+    largura: "",
+    altura: "",
+    quantidade: "1",
+    opcaoImagem: "adobe-stock", // 'adobe-stock' ou 'propria'
+    descricaoImagem: "",
+    codigoAdobeStock: "",
+    linkImagemAdobe: "",
+    informacoesImagemAdobe: "",
+    mensagem: "",
+    nome: "",
+    email: "",
+    telefone: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validação para Adobe Stock
-    if (formData.opcaoImagem === 'adobe-stock') {
-      const hasCode = formData.codigoAdobeStock.trim() !== '';
-      const hasLink = formData.linkImagemAdobe.trim() !== '';
-      const hasInfo = formData.informacoesImagemAdobe.trim() !== '';
-      
+    if (formData.opcaoImagem === "adobe-stock") {
+      const hasCode = formData.codigoAdobeStock.trim() !== "";
+      const hasLink = formData.linkImagemAdobe.trim() !== "";
+      const hasInfo = formData.informacoesImagemAdobe.trim() !== "";
+
       if (!hasCode && !hasLink && !hasInfo) {
-        alert('Para imagens do Adobe Stock, é obrigatório fornecer pelo menos um dos seguintes: código da imagem, link da imagem ou informações da imagem.');
+        alert(
+          "Para imagens do Adobe Stock, é obrigatório fornecer pelo menos um dos seguintes: código da imagem, link da imagem ou informações da imagem."
+        );
         return;
       }
     }
-    
-    let imagemInfo = '';
-    if (formData.opcaoImagem === 'adobe-stock') {
+
+    let imagemInfo = "";
+    if (formData.opcaoImagem === "adobe-stock") {
       imagemInfo = `Adobe Stock:
-${formData.codigoAdobeStock ? `📝 Código: ${formData.codigoAdobeStock}` : ''}
-${formData.linkImagemAdobe ? `🔗 Link: ${formData.linkImagemAdobe}` : ''}
-${formData.informacoesImagemAdobe ? `ℹ️ Informações: ${formData.informacoesImagemAdobe}` : ''}
-${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : ''}`;
+${formData.codigoAdobeStock ? `📝 Código: ${formData.codigoAdobeStock}` : ""}
+${formData.linkImagemAdobe ? `🔗 Link: ${formData.linkImagemAdobe}` : ""}
+${
+  formData.informacoesImagemAdobe
+    ? `ℹ️ Informações: ${formData.informacoesImagemAdobe}`
+    : ""
+}
+${
+  formData.descricaoImagem
+    ? `📝 Descrição: ${formData.descricaoImagem}`
+    : ""
+}`;
     } else {
       imagemInfo = `Imagem própria - ${formData.descricaoImagem}`;
     }
 
     const whatsappMessage = `Olá! Gostaria de um orçamento para tela artística:
-    
+
 📐 Medidas: ${formData.largura}cm x ${formData.altura}cm
 📦 Quantidade: ${formData.quantidade} tela(s)
 🖼️ Imagem: ${imagemInfo}
 📞 Contacto: ${formData.nome} - ${formData.telefone}
 📧 Email: ${formData.email}
 💬 Mensagem: ${formData.mensagem}`;
-    
+
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    window.open(`https://wa.me/351930682725?text=${encodedMessage}`, '_blank');
+    window.open(
+      `https://wa.me/351930682725?text=${encodedMessage}`,
+      "_blank"
+    );
   };
+
   const features = [
     {
       icon: <Frame className="w-6 h-6" />,
-      title: "Canvas Premium",
-      description: "Telas de algodão de alta gramagem para máxima durabilidade e qualidade"
+      title: "Canvas premium",
+      description:
+        "Telas de algodão de alta gramagem para máxima durabilidade e qualidade.",
     },
     {
       icon: <Brush className="w-6 h-6" />,
-      title: "Impressão Artística",
-      description: "Tecnologia de impressão que reproduz fielmente cores e texturas"
+      title: "Impressão artística",
+      description:
+        "Tecnologia de impressão que reproduz fielmente cores e texturas.",
     },
     {
       icon: <Camera className="w-6 h-6" />,
-      title: "Fotografias Personalizadas",
-      description: "Transforme as suas fotografias em obras de arte profissionais"
+      title: "Fotografias personalizadas",
+      description:
+        "Transforme as suas fotografias em obras de arte profissionais.",
     },
     {
       icon: <Palette className="w-6 h-6" />,
-      title: "Arte Digital",
-      description: "Criação de arte digital exclusiva para a sua tela"
+      title: "Arte digital",
+      description: "Criação de arte digital exclusiva para a sua tela.",
     },
     {
       icon: <Award className="w-6 h-6" />,
-      title: "Molduras Incluídas",
-      description: "Variedade de molduras elegantes incluídas no serviço"
+      title: "Molduras incluídas",
+      description: "Variedade de molduras elegantes incluídas no serviço.",
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Resistente ao Tempo",
-      description: "Tintas UV resistentes que mantêm as cores vibrantes por anos"
-    }
+      title: "Resistente ao tempo",
+      description:
+        "Tintas UV resistentes que mantêm as cores vibrantes por anos.",
+    },
   ];
 
   const sizes = [
-    "20x30 cm", "30x40 cm", "40x50 cm", "50x70 cm", 
-    "60x80 cm", "70x100 cm", "80x120 cm", "100x150 cm"
+    "20x30 cm",
+    "30x40 cm",
+    "40x50 cm",
+    "50x70 cm",
+    "60x80 cm",
+    "70x100 cm",
+    "80x120 cm",
+    "100x150 cm",
   ];
 
   const applications = [
     {
-      title: "Decoração Residencial",
-      description: "Transforme a sua casa num espaço único com arte personalizada",
-      examples: ["Salas de estar", "Quartos", "Escritórios", "Corredores"]
+      title: "Decoração residencial",
+      description:
+        "Transforme a sua casa num espaço único com arte personalizada.",
+      examples: ["Salas de estar", "Quartos", "Escritórios", "Corredores"],
     },
     {
-      title: "Espaços Comerciais", 
-      description: "Crie ambientes profissionais inspiradores e memoráveis",
-      examples: ["Hotéis", "Restaurantes", "Consultórios", "Escritórios"]
+      title: "Espaços comerciais",
+      description:
+        "Crie ambientes profissionais inspiradores e memoráveis.",
+      examples: ["Hotéis", "Restaurantes", "Consultórios", "Escritórios"],
     },
     {
-      title: "Presentes Especiais",
-      description: "Ofereça algo verdadeiramente único e pessoal",
-      examples: ["Casamentos", "Aniversários", "Formações", "Eventos"]
-    }
+      title: "Presentes especiais",
+      description: "Ofereça algo verdadeiramente único e pessoal.",
+      examples: ["Casamentos", "Aniversários", "Formações", "Eventos"],
+    },
   ];
 
   const process = [
     {
       step: "01",
-      title: "Seleção da Imagem",
-      description: "Escolha das nossas texturas da loja ou visite o Adobe Stock para selecionar uma imagem. Para Adobe Stock, recolha o número da imagem ou tire uma miniatura"
+      title: "Seleção da imagem",
+      description:
+        "Escolhe uma imagem da nossa loja, do Adobe Stock ou envia a tua própria fotografia.",
     },
     {
-      step: "02", 
-      title: "Preparação Digital",
-      description: "Otimizamos a imagem para garantir a melhor qualidade de impressão"
+      step: "02",
+      title: "Preparação digital",
+      description:
+        "Otimizamos a imagem para garantir a melhor qualidade de impressão.",
     },
     {
       step: "03",
-      title: "Impressão em Canvas", 
-      description: "Impressão de alta qualidade em tela de algodão premium"
+      title: "Impressão em canvas",
+      description: "Impressão de alta qualidade em tela de algodão premium.",
     },
     {
       step: "04",
-      title: "Montagem e Moldura",
-      description: "Esticamos a tela e aplicamos a moldura escolhida"
+      title: "Montagem e moldura",
+      description: "Esticamos a tela e aplicamos a moldura escolhida.",
     },
     {
       step: "05",
-      title: "Controlo de Qualidade",
-      description: "Inspeção final antes da entrega para garantir perfeição"
-    }
+      title: "Controlo de qualidade",
+      description:
+        "Inspeção final antes da entrega para garantir um resultado perfeito.",
+    },
   ];
 
   const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80",
       alt: "Tela artística em sala moderna",
-      title: "Arte Contemporânea"
+      title: "Arte contemporânea",
     },
     {
       src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
       alt: "Canvas com fotografia em preto e branco",
-      title: "Fotografia Artística"
+      title: "Fotografia artística",
     },
     {
       src: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80",
       alt: "Tela com paisagem natural",
-      title: "Paisagens Naturais"
+      title: "Paisagens naturais",
     },
     {
       src: "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=800&q=80",
       alt: "Canvas abstrato colorido",
-      title: "Arte Abstrata"
+      title: "Arte abstrata",
     },
     {
       src: "https://images.unsplash.com/photo-1578926314433-e2789279f4aa?w=800&q=80",
       alt: "Tela decorativa em quarto",
-      title: "Decoração Personalizada"
+      title: "Decoração personalizada",
     },
     {
       src: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&q=80",
       alt: "Tela artística premium",
-      title: "Qualidade Premium"
-    }
+      title: "Qualidade premium",
+    },
   ];
 
-  const { data: galleryData } = useQuery<{images: typeof defaultImages}>({
-    queryKey: ['/api/service-galleries', 'telas-artisticas'],
+  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
+    queryKey: ["/api/service-galleries", "telas-artisticas"],
   });
   const galleryImages = galleryData?.images || defaultImages;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-black text-white">
       <Navigation />
-      
+
       <ServiceHero
         serviceId="telas-artisticas"
         badge="Telas Artísticas Premium"
         badgeIcon={<Image className="w-4 h-4 mr-2" />}
-        title="Transforme Fotografias"
-        subtitle="em Obras de Arte"
+        title="Transforme fotografias"
+        subtitle="em obras de arte"
         description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
         overlayOpacity="0"
         primaryCta={{
-          text: "Criar Minha Tela",
-          href: "/contactos#formulario"
+          text: "Criar minha tela",
+          href: "/contactos#formulario",
         }}
         secondaryCta={{
           text: "Contactar",
-          href: "/contactos#formulario"
+          href: "/contactos#formulario",
         }}
       />
 
-      {/* Features Grid */}
-      <section className="pt-8 pb-8 bg-gray-900/50">
+      {/* Qualidade artística */}
+      <section className="pt-8 pb-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-purple-400">Qualidade</span> <span className="text-white">Artística</span>
+              <span className="text-brand-yellow">Qualidade</span>{" "}
+              <span className="text-white">artística</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Tecnologia de impressão artística que garante resultados dignos de galeria
+              Tecnologia de impressão artística que garante resultados dignos
+              de galeria.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="bg-[#0a0a0a] border-[#333] hover:border-purple-400 transition-all duration-300">
+              <Card
+                key={index}
+                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+              >
                 <CardContent className="p-6">
-                  <div className="text-purple-400 mb-4">
+                  <div className="text-brand-yellow mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold mb-3 text-white">
+                    {feature.title}
+                  </h3>
                   <p className="text-gray-400">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -250,63 +285,99 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      <ServiceGallery images={galleryImages} />
+      {/* Galeria */}
+      <ServiceGallery
+        images={galleryImages}
+        title="Exemplos de telas artísticas"
+        description="Algumas inspirações de telas produzidas para decoração residencial e comercial."
+        columns={3}
+      />
 
-      {/* Sizes Section */}
-      <section className="pt-8 pb-8 bg-black">
+      {/* Tamanhos disponíveis */}
+      <section className="pt-8 pb-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Tamanhos</span> <span className="text-brand-coral">Disponíveis</span>
+              <span className="text-white">Tamanhos</span>{" "}
+              <span className="text-brand-yellow">disponíveis</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Desde formatos compactos até grandes obras de parede
+              Desde formatos compactos até grandes obras de parede.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {sizes.map((size, index) => (
-              <div key={index} className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 text-center hover:border-brand-coral transition-all duration-300">
-                <div className="text-2xl font-bold text-brand-coral mb-2">{size}</div>
+              <div
+                key={index}
+                className="bg-gray-900/60 border border-gray-800 rounded-lg p-6 text-center hover:border-brand-yellow transition-all duration-300"
+              >
+                <div className="text-2xl font-bold text-brand-yellow mb-2">
+                  {size}
+                </div>
                 <div className="text-sm text-gray-400">Formato padrão</div>
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-8">
-            <p className="text-gray-400 mb-4">Precisa de um tamanho personalizado?</p>
-            <Button asChild variant="outline" className="border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-black">
-              <Link href="/contactos#formulario">Solicitar Medida Especial</Link>
+            <p className="text-gray-400 mb-4">
+              Precisa de um tamanho personalizado?
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black"
+            >
+              <Link href="/contactos#formulario">
+                Solicitar medida especial
+              </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Applications Section */}
-      <section className="pt-8 pb-8 bg-gray-900/30">
+      {/* Aplicações ideais */}
+      <section className="pt-8 pb-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Aplicações</span> <span className="text-brand-yellow">Ideais</span>
+              <span className="text-white">Aplicações</span>{" "}
+              <span className="text-brand-yellow">ideais</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Perfeitas para qualquer ambiente que necessite de um toque artístico especial
+              Perfeitas para qualquer ambiente que necessite de um toque
+              artístico especial.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {applications.map((application, index) => (
-              <Card key={index} className="bg-[#0a0a0a] border-[#333] hover:border-brand-yellow transition-all duration-300">
+              <Card
+                key={index}
+                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+              >
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">{application.title}</h3>
-                  <p className="text-gray-400 mb-4">{application.description}</p>
+                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
+                    {application.title}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {application.description}
+                  </p>
                   <div>
-                    <span className="text-sm text-gray-500 mb-2 block">Exemplos:</span>
+                    <span className="text-sm text-gray-500 mb-2 block">
+                      Exemplos:
+                    </span>
                     <div className="space-y-1">
                       {application.examples.map((example, exampleIndex) => (
-                        <div key={exampleIndex} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full"></div>
-                          <span className="text-sm text-gray-300">{example}</span>
+                        <div
+                          key={exampleIndex}
+                          className="flex items-center gap-2"
+                        >
+                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
+                          <span className="text-sm text-gray-300">
+                            {example}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -318,31 +389,35 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      {/* Process Section */}
-      <section className="py-16 bg-black">
+      {/* Processo de criação */}
+      <section className="py-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Processo de</span> <span className="text-purple-400">Criação</span>
+              <span className="text-white">Processo de</span>{" "}
+              <span className="text-brand-yellow">criação</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Cada tela é cuidadosamente produzida para garantir qualidade artística excepcional
+              Cada tela é cuidadosamente produzida para garantir qualidade
+              artística excecional.
             </p>
           </div>
-          
+
           <div className="max-w-4xl mx-auto">
             {process.map((step, index) => (
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-brand-coral rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
                     {step.step}
                   </div>
                 </div>
                 <div className="flex-1 pb-8">
-                  <h3 className="text-xl font-semibold mb-2 text-white">{step.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2 text-white">
+                    {step.title}
+                  </h3>
                   <p className="text-gray-400">{step.description}</p>
                   {index < process.length - 1 && (
-                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4"></div>
+                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
                   )}
                 </div>
               </div>
@@ -351,68 +426,84 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      {/* Quality Section */}
-      <section className="py-16 bg-gray-900/50">
+      {/* Garantia de qualidade */}
+      <section className="py-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                  <span className="text-purple-400">Garantia de</span> <span className="text-white">Qualidade</span>
+                  <span className="text-brand-yellow">Garantia de</span>{" "}
+                  <span className="text-white">qualidade</span>
                 </h2>
                 <p className="text-gray-400 mb-8 text-lg">
-                  Utilizamos apenas materiais premium e tecnologia de impressão avançada 
-                  para garantir que cada tela seja uma verdadeira obra de arte.
+                  Utilizamos apenas materiais premium e tecnologia de impressão
+                  avançada para garantir que cada tela seja uma verdadeira obra
+                  de arte.
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0" />
-                    <span className="text-white">Canvas 100% algodão, 400g/m²</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Canvas 100% algodão, 400g/m²
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0" />
-                    <span className="text-white">Tintas pigmentadas resistentes UV</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Tintas pigmentadas resistentes UV
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0" />
-                    <span className="text-white">Molduras de madeira certificada</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Molduras de madeira certificada
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0" />
-                    <span className="text-white">Acabamento profissional</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0" />
-                    <span className="text-white">Pronto para pendurar</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Acabamento profissional e pronto a pendurar
+                    </span>
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-black/50 rounded-2xl p-8 border border-gray-800">
+
+              <div className="bg-black rounded-2xl p-8 border border-gray-800">
                 <div className="text-center mb-6">
-                  <Star className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                  <h3 className="text-2xl font-semibold mb-2 text-white">Qualidade Artística</h3>
+                  <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold mb-2 text-white">
+                    Qualidade artística
+                  </h3>
                   <p className="text-gray-400">
-                    Cada tela é uma peça única criada com máximo cuidado
+                    Cada tela é uma peça única criada com máximo cuidado.
                   </p>
                 </div>
-                
-                <div className="space-y-4">
+
+                <div className="space-y-4 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Durabilidade</span>
-                    <span className="text-purple-400 font-semibold">50+ anos</span>
+                    <span className="text-brand-yellow font-semibold">
+                      50+ anos
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Resolução mínima</span>
-                    <span className="text-purple-400 font-semibold">300 DPI</span>
+                    <span className="text-brand-yellow font-semibold">
+                      300 DPI
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Prazo de produção</span>
-                    <span className="text-purple-400 font-semibold">3-7 dias</span>
+                    <span className="text-brand-yellow font-semibold">
+                      3-7 dias
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Garantia</span>
-                    <span className="text-purple-400 font-semibold">Vida útil</span>
+                    <span className="text-brand-yellow font-semibold">
+                      Vida útil da tela
+                    </span>
                   </div>
                 </div>
               </div>
@@ -421,29 +512,365 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : '
         </div>
       </section>
 
-      
+      {/* Orçamento personalizado */}
+      <section className="py-16 bg-black border-t border-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-brand-yellow">Orçamento</span>{" "}
+                <span className="text-white">personalizado</span>
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Use uma imagem do Adobe Stock ou envie a sua fotografia e
+                receba um orçamento à medida.
+              </p>
+            </div>
 
-      {/* CTA Section */}
-      <section className="pt-8 pb-8 bg-gradient-to-r from-purple-600/10 via-brand-coral/10 to-brand-yellow/10">
+            <Card className="bg-black border border-gray-800">
+              <CardContent className="p-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="largura" className="text-white">
+                        Largura (cm)
+                      </Label>
+                      <Input
+                        id="largura"
+                        type="number"
+                        step="1"
+                        placeholder="Ex: 70"
+                        value={formData.largura}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            largura: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="altura" className="text-white">
+                        Altura (cm)
+                      </Label>
+                      <Input
+                        id="altura"
+                        type="number"
+                        step="1"
+                        placeholder="Ex: 100"
+                        value={formData.altura}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            altura: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quantidade" className="text-white">
+                      Quantidade de telas
+                    </Label>
+                    <Input
+                      id="quantidade"
+                      type="number"
+                      min="1"
+                      value={formData.quantidade}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          quantidade: e.target.value,
+                        })
+                      }
+                      className="bg-gray-900 border-gray-700 text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white">Opção de imagem</Label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center text-white">
+                        <input
+                          type="radio"
+                          name="opcaoImagem"
+                          value="adobe-stock"
+                          checked={formData.opcaoImagem === "adobe-stock"}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              opcaoImagem: e.target.value,
+                            })
+                          }
+                          className="mr-2"
+                        />
+                        Adobe Stock
+                      </label>
+                      <label className="flex items-center text-white">
+                        <input
+                          type="radio"
+                          name="opcaoImagem"
+                          value="propria"
+                          checked={formData.opcaoImagem === "propria"}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              opcaoImagem: e.target.value,
+                            })
+                          }
+                          className="mr-2"
+                        />
+                        Imagem própria
+                      </label>
+                    </div>
+                  </div>
+
+                  {formData.opcaoImagem === "adobe-stock" ? (
+                    <div className="space-y-4">
+                      <div>
+                        <Label
+                          htmlFor="codigoAdobeStock"
+                          className="text-white"
+                        >
+                          Código Adobe Stock (se disponível)
+                        </Label>
+                        <Input
+                          id="codigoAdobeStock"
+                          placeholder="Ex: 123456789"
+                          value={formData.codigoAdobeStock}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              codigoAdobeStock: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="linkImagemAdobe"
+                          className="text-white"
+                        >
+                          Link da imagem Adobe Stock (se disponível)
+                        </Label>
+                        <Input
+                          id="linkImagemAdobe"
+                          type="url"
+                          placeholder="https://stock.adobe.com/..."
+                          value={formData.linkImagemAdobe}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              linkImagemAdobe: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="informacoesImagemAdobe"
+                          className="text-white"
+                        >
+                          Informações da imagem (título, autor, etc.)
+                        </Label>
+                        <Textarea
+                          id="informacoesImagemAdobe"
+                          placeholder="Ex: título da imagem, nome do autor, palavras-chave..."
+                          value={formData.informacoesImagemAdobe}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              informacoesImagemAdobe: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="descricaoImagem"
+                          className="text-white"
+                        >
+                          Descrição adicional (opcional)
+                        </Label>
+                        <Textarea
+                          id="descricaoImagem"
+                          placeholder="Ex: preferências de cores, estilo, detalhes específicos..."
+                          value={formData.descricaoImagem}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              descricaoImagem: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                        />
+                      </div>
+
+                      <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
+                        <p className="text-brand-yellow text-sm">
+                          💡 <strong>Dica:</strong> forneça pelo menos um dos
+                          seguintes: código da imagem, link direto ou
+                          informações detalhadas. Assim conseguimos localizar a
+                          imagem correta.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <Label
+                        htmlFor="descricaoImagemPropria"
+                        className="text-white"
+                      >
+                        Descrição da sua imagem
+                      </Label>
+                      <Textarea
+                        id="descricaoImagemPropria"
+                        placeholder="Ex: fotografia de família, retrato, paisagem..."
+                        value={formData.descricaoImagem}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            descricaoImagem: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="nome" className="text-white">
+                        Nome
+                      </Label>
+                      <Input
+                        id="nome"
+                        value={formData.nome}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            nome: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-white">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            email: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="telefone" className="text-white">
+                        Telefone
+                      </Label>
+                      <Input
+                        id="telefone"
+                        value={formData.telefone}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            telefone: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="mensagem" className="text-white">
+                      Mensagem adicional
+                    </Label>
+                    <Textarea
+                      id="mensagem"
+                      placeholder="Detalhes adicionais sobre o projeto..."
+                      value={formData.mensagem}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          mensagem: e.target.value,
+                        })
+                      }
+                      className="bg-gray-900 border-gray-700 text-white"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Solicitar orçamento por WhatsApp
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA final */}
+      <section className="py-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-            <span className="text-white">Pronto para Criar a Sua</span> <span className="text-purple-400">Obra de Arte?</span>
+            <span className="text-white">Pronto para criar a sua</span>{" "}
+            <span className="text-brand-yellow">obra de arte?</span>
           </h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Transforme as suas fotografias favoritas ou criações artísticas em telas 
-            profissionais que durarão para sempre.
+            Transforme as suas fotografias favoritas ou criações artísticas em
+            telas profissionais que durarão muitos anos.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-purple-600 to-brand-coral text-white font-bold px-8 py-6 text-lg">
+            <Button
+              asChild
+              className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
+            >
               <Link href="/contactos#formulario">
-                Criar Minha Tela
+                Criar minha tela
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            <Button asChild variant="outline" className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg">
-              <a href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas." target="_blank" rel="noopener noreferrer">
-                WhatsApp Direto
+            <Button
+              asChild
+              variant="outline"
+              className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
+            >
+              <a
+                href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp direto
               </a>
             </Button>
           </div>
