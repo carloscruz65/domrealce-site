@@ -298,22 +298,27 @@ export default function ServicoImpressaoDigital() {
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto space-y-8">
-              {process.map((step, index) => (
-                <div key={index} className="flex gap-5">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center text-black font-bold">
+            <div className="max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-6">
+                {process.map((step, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
                       {step.step}
                     </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-white">
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-1 text-white">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-400">{step.description}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>

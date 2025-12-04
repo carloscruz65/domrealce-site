@@ -9,7 +9,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { Button } from "@/components/ui/button";
-import { Shield, Upload, FileText, X } from "lucide-react";
+import { FileText, X } from "lucide-react";
 import cabineTelefonica from "@assets/cabine_telefónica_1757173064310.webp";
 
 export default function Contactos() {
@@ -17,21 +17,21 @@ export default function Contactos() {
 
   // Fetch Google Maps API key
   const { data: mapsConfig } = useQuery<{ apiKey: string }>({
-    queryKey: ['/api/config/google-maps-key'],
+    queryKey: ["/api/config/google-maps-key"],
   });
 
   const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    assunto: '',
-    mensagem: '',
-    anexos: [] as any[]
+    nome: "",
+    email: "",
+    telefone: "",
+    assunto: "",
+    mensagem: "",
+    anexos: [] as any[],
   });
 
   const submitMutation = useMutation({
     mutationFn: async (data: InsertContact) => {
-      return await apiRequest('/api/contact', 'POST', data);
+      return await apiRequest("/api/contact", "POST", data);
     },
     onSuccess: (data: any) => {
       toast({
@@ -40,21 +40,22 @@ export default function Contactos() {
         variant: "default",
       });
       setFormData({
-        nome: '',
-        email: '',
-        telefone: '',
-        assunto: '',
-        mensagem: '',
-        anexos: []
+        nome: "",
+        email: "",
+        telefone: "",
+        assunto: "",
+        mensagem: "",
+        anexos: [],
       });
     },
     onError: (error: any) => {
       toast({
         title: "Erro",
-        description: error.message || "Erro ao enviar mensagem. Tente novamente.",
+        description:
+          error.message || "Erro ao enviar mensagem. Tente novamente.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +64,7 @@ export default function Contactos() {
     try {
       const dataToSubmit = {
         ...formData,
-        ficheiros: formData.anexos?.map(file => file.uploadURL) || []
+        ficheiros: formData.anexos?.map((file) => file.uploadURL) || [],
       };
 
       const validatedData = insertContactSchema.parse(dataToSubmit);
@@ -85,8 +86,8 @@ export default function Contactos() {
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat bg-black"
         style={{
           backgroundImage: `url(${cabineTelefonica})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'right center',
+          backgroundSize: "cover",
+          backgroundPosition: "right center",
         }}
       >
         <div className="relative z-10 text-center px-4">
@@ -94,7 +95,8 @@ export default function Contactos() {
             Contacto
           </h1>
           <p className="text-lg md:text-xl text-white/80 drop-shadow-md">
-            Entre em contacto connosco. Estamos aqui para ajudar com o seu projeto!
+            Entre em contacto connosco. Estamos aqui para ajudar com o seu
+            projeto!
           </p>
         </div>
       </section>
@@ -105,8 +107,8 @@ export default function Contactos() {
           <GoogleMap
             apiKey={mapsConfig.apiKey}
             center={{
-              lat: 41.22940,
-              lng: -8.3237
+              lat: 41.2294,
+              lng: -8.3237,
             }}
             zoom={17}
             className="w-full h-[700px]"
@@ -128,7 +130,10 @@ export default function Contactos() {
             <div className="inline-flex gap-4">
               <button
                 onClick={() => {
-                  window.open('https://www.google.com/maps/search/?api=1&query=Rua+de+Rebolido+42%2C+4580-402+Gondalães%2C+Paredes', '_blank');
+                  window.open(
+                    "https://www.google.com/maps/search/?api=1&query=Rua+de+Rebolido+42%2C+4580-402+Gondalães%2C+Paredes",
+                    "_blank"
+                  );
                 }}
                 className="px-6 py-3 bg-brand-yellow text-black rounded-lg font-semibold hover:bg-brand-yellow/90 transition-all duration-300 flex items-center gap-2"
               >
@@ -136,7 +141,10 @@ export default function Contactos() {
               </button>
               <button
                 onClick={() => {
-                  window.open('https://waze.com/ul?q=Rua+de+Rebolido+42+Gondalães+Paredes', '_blank');
+                  window.open(
+                    "https://waze.com/ul?q=Rua+de+Rebolido+42+Gondalães+Paredes",
+                    "_blank"
+                  );
                 }}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 flex items-center gap-2"
               >
@@ -151,11 +159,12 @@ export default function Contactos() {
       <section className="py-12 bg-black/90">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-
             {/* Address and Contact Info - Left Side */}
             <div className="lg:col-span-1">
               <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 border border-brand-yellow/30 h-full">
-                <h3 className="text-xl font-bold text-brand-yellow mb-6">Morada</h3>
+                <h3 className="text-xl font-bold text-brand-yellow mb-6">
+                  Morada
+                </h3>
 
                 <div className="space-y-4">
                   <div>
@@ -163,8 +172,10 @@ export default function Contactos() {
                       D. M Realce
                     </h4>
                     <div className="text-white/80">
-                      Rua de Rebolido, 42<br />
-                      4580-402 Gondalães, Paredes<br />
+                      Rua de Rebolido, 42
+                      <br />
+                      4580-402 Gondalães, Paredes
+                      <br />
                       Portugal
                     </div>
                   </div>
@@ -175,7 +186,9 @@ export default function Contactos() {
                         <span className="text-brand-yellow">📞</span>
                         <div>
                           <p className="text-white/60 text-sm">Telefone</p>
-                          <p className="text-white font-medium">+351 930 682 725</p>
+                          <p className="text-white font-medium">
+                            +351 930 682 725
+                          </p>
                         </div>
                       </div>
 
@@ -183,7 +196,9 @@ export default function Contactos() {
                         <span className="text-brand-turquoise">✉️</span>
                         <div>
                           <p className="text-white/60 text-sm">Email</p>
-                          <p className="text-white font-medium">carloscruz@domrealce.com</p>
+                          <p className="text-white font-medium">
+                            carloscruz@domrealce.com
+                          </p>
                         </div>
                       </div>
 
@@ -191,7 +206,11 @@ export default function Contactos() {
                         <span className="text-brand-coral">🕰️</span>
                         <div>
                           <p className="text-white/60 text-sm">Horário</p>
-                          <p className="text-white font-medium">Segunda a Sexta<br />9h00 - 18h00</p>
+                          <p className="text-white font-medium">
+                            Segunda a Sexta
+                            <br />
+                            9h00 - 18h00
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -200,8 +219,14 @@ export default function Contactos() {
                   <div className="pt-4">
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText('Rua de Rebolido 42, 4580-402 Gondalães, Paredes');
-                        toast({ title: 'Morada copiada!', description: 'A morada foi copiada para a área de transferência.' });
+                        navigator.clipboard.writeText(
+                          "Rua de Rebolido 42, 4580-402 Gondalães, Paredes"
+                        );
+                        toast({
+                          title: "Morada copiada!",
+                          description:
+                            "A morada foi copiada para a área de transferência.",
+                        });
                       }}
                       className="w-full px-4 py-2 bg-brand-turquoise/20 text-brand-turquoise rounded-lg hover:bg-brand-turquoise/30 transition-all duration-300 text-sm font-medium"
                     >
@@ -215,16 +240,22 @@ export default function Contactos() {
             {/* Contact Form - Right Side */}
             <div className="lg:col-span-2">
               <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-brand-yellow/30">
-                <h3 className="text-2xl font-bold text-brand-yellow mb-6">Formulário de Contacto</h3>
+                <h3 className="text-2xl font-bold text-brand-yellow mb-6">
+                  Formulário de Contacto
+                </h3>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-white/80 mb-2 font-medium">Nome *</label>
+                      <label className="block text-white/80 mb-2 font-medium">
+                        Nome *
+                      </label>
                       <input
                         type="text"
                         value={formData.nome}
-                        onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, nome: e.target.value })
+                        }
                         className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow transition-all duration-300"
                         placeholder="O seu nome"
                         required
@@ -232,11 +263,15 @@ export default function Contactos() {
                     </div>
 
                     <div>
-                      <label className="block text-white/80 mb-2 font-medium">Email *</label>
+                      <label className="block text-white/80 mb-2 font-medium">
+                        Email *
+                      </label>
                       <input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
                         className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow transition-all duration-300"
                         placeholder="o.seu.email@exemplo.com"
                         required
@@ -245,22 +280,30 @@ export default function Contactos() {
                   </div>
 
                   <div>
-                    <label className="block text-white/80 mb-2 font-medium">Telefone</label>
+                    <label className="block text-white/80 mb-2 font-medium">
+                      Telefone
+                    </label>
                     <input
                       type="tel"
                       value={formData.telefone}
-                      onChange={(e) => setFormData({...formData, telefone: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, telefone: e.target.value })
+                      }
                       className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow transition-all duration-300"
                       placeholder="+351 900 000 000 (opcional)"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-white/80 mb-2 font-medium">Assunto *</label>
+                    <label className="block text-white/80 mb-2 font-medium">
+                      Assunto *
+                    </label>
                     <input
                       type="text"
                       value={formData.assunto}
-                      onChange={(e) => setFormData({...formData, assunto: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, assunto: e.target.value })
+                      }
                       className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow transition-all duration-300"
                       placeholder="Qual é o assunto da sua mensagem?"
                       required
@@ -268,10 +311,14 @@ export default function Contactos() {
                   </div>
 
                   <div>
-                    <label className="block text-white/80 mb-2 font-medium">Mensagem *</label>
+                    <label className="block text-white/80 mb-2 font-medium">
+                      Mensagem *
+                    </label>
                     <textarea
                       value={formData.mensagem}
-                      onChange={(e) => setFormData({...formData, mensagem: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, mensagem: e.target.value })
+                      }
                       rows={4}
                       className="w-full p-3 bg-gray-800/50 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow transition-all duration-300 resize-none"
                       placeholder="Descreva o seu projeto ou dúvida em detalhe..."
@@ -280,24 +327,37 @@ export default function Contactos() {
                   </div>
 
                   <div>
-                    <label className="block text-white/80 mb-2 font-medium">Anexos (opcional)</label>
+                    <label className="block text-white/80 mb-2 font-medium">
+                      Anexos (opcional)
+                    </label>
                     <ObjectUploader
-                      onUpload={(files) => setFormData({...formData, anexos: files})}
+                      onUpload={(files) =>
+                        setFormData({ ...formData, anexos: files })
+                      }
                       maxFiles={3}
-                      acceptedTypes={['image/*', '.pdf', '.doc', '.docx']}
+                      acceptedTypes={["image/*", ".pdf", ".doc", ".docx"]}
                       className="w-full"
                     />
 
                     {formData.anexos && formData.anexos.length > 0 && (
                       <div className="mt-3">
-                        <p className="text-white/60 mb-2 text-sm">Ficheiros anexados:</p>
+                        <p className="text-white/60 mb-2 text-sm">
+                          Ficheiros anexados:
+                        </p>
                         <div className="space-y-2">
                           {formData.anexos.map((file, index) => (
-                            <div key={index} className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10">
+                            <div
+                              key={index}
+                              className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10"
+                            >
                               <div className="flex items-center gap-2">
                                 <FileText className="h-4 w-4 text-brand-turquoise" />
-                                <span className="text-white/80 text-sm">{file.originalName}</span>
-                                <span className="text-white/40 text-xs">({(file.size / 1024).toFixed(1)} KB)</span>
+                                <span className="text-white/80 text-sm">
+                                  {file.originalName}
+                                </span>
+                                <span className="text-white/40 text-xs">
+                                  ({(file.size / 1024).toFixed(1)} KB)
+                                </span>
                               </div>
                               <Button
                                 type="button"
@@ -306,7 +366,10 @@ export default function Contactos() {
                                 onClick={() => {
                                   setFormData({
                                     ...formData,
-                                    anexos: formData.anexos?.filter((_, i) => i !== index)
+                                    anexos:
+                                      formData.anexos?.filter(
+                                        (_, i) => i !== index
+                                      ) || [],
                                   });
                                 }}
                                 className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
@@ -318,13 +381,14 @@ export default function Contactos() {
                         </div>
                       </div>
                     )}
-                  </div>
+                  type="submit"</div>
 
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <button
                       type="submit"
                       disabled={submitMutation.isPending}
-                      className="flex-1 bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="flex-1 text-black font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      style={{ background: "#facc15", backgroundImage: "none" }}
                     >
                       {submitMutation.isPending ? (
                         <>
@@ -332,11 +396,13 @@ export default function Contactos() {
                           A enviar...
                         </>
                       ) : (
-                        'Enviar Mensagem'
+                        "Enviar Mensagem"
                       )}
                     </button>
 
-                    <Link href={`https://wa.me/351930682725?text=${encodeURIComponent('Olá! Gostaria de saber mais sobre os vossos serviços.')}`}>
+                    <Link href={`https://wa.me/351930682725?text=${encodeURIComponent(
+                      "Olá! Gostaria de saber mais sobre os vossos serviços."
+                    )}`}>
                       <button
                         type="button"
                         className="flex-1 bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2"
@@ -352,13 +418,17 @@ export default function Contactos() {
         </div>
       </section>
 
-      {/* Motivational Quote Section */}
-      <section className="py-12 bg-gradient-to-b from-black/90 to-black">
+      {/* Motivational Quote Section – sem degradé */}
+      <section className="py-12 bg-black">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <p className="text-2xl md:text-3xl font-italic text-white/90">
-              "Estamos prontos para fazer seu projeto brilhar! 
-              <span className="text-brand-yellow font-semibold"> Juntos, vamos mais longe.</span>"
+              "Estamos prontos para fazer seu projeto brilhar!
+              <span className="text-brand-yellow font-semibold">
+                {" "}
+                Juntos, vamos mais longe.
+              </span>
+              "
             </p>
           </div>
         </div>

@@ -379,7 +379,7 @@ export default function Contactos() {
                     <button
                       type="submit"
                       disabled={submitMutation.isPending}
-                      className="w-full bg-gradient-to-r from-brand-yellow to-brand-coral text-black font-semibold py-3 px-6 rounded-lg hover:from-brand-yellow/90 hover:to-brand-coral/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-brand-yellow text-black font-semibold py-3 px-6 rounded-lg hover:bg-brand-yellow/90 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {submitMutation.isPending ? (
                         <>

@@ -17,11 +17,14 @@ import {
   Palette,
   Award,
   Shield,
+  FileText,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 export default function ServicoTelasArtisticas() {
   const [formData, setFormData] = useState({
@@ -31,26 +34,23 @@ export default function ServicoTelasArtisticas() {
     opcaoImagem: "adobe-stock", // 'adobe-stock' ou 'propria'
     descricaoImagem: "",
     codigoAdobeStock: "",
-    linkImagemAdobe: "",
-    informacoesImagemAdobe: "",
     mensagem: "",
     nome: "",
     email: "",
     telefone: "",
+    anexos: [] as any[],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação para Adobe Stock
+    // Validação para Adobe Stock: código obrigatório
     if (formData.opcaoImagem === "adobe-stock") {
       const hasCode = formData.codigoAdobeStock.trim() !== "";
-      const hasLink = formData.linkImagemAdobe.trim() !== "";
-      const hasInfo = formData.informacoesImagemAdobe.trim() !== "";
 
-      if (!hasCode && !hasLink && !hasInfo) {
+      if (!hasCode) {
         alert(
-          "Para imagens do Adobe Stock, é obrigatório fornecer pelo menos um dos seguintes: código da imagem, link da imagem ou informações da imagem."
+          "Para imagens do Adobe Stock, é obrigatório indicar o código ou número da imagem."
         );
         return;
       }
@@ -58,37 +58,56 @@ export default function ServicoTelasArtisticas() {
 
     let imagemInfo = "";
     if (formData.opcaoImagem === "adobe-stock") {
-      imagemInfo = `Adobe Stock:
-${formData.codigoAdobeStock ? `📝 Código: ${formData.codigoAdobeStock}` : ""}
-${formData.linkImagemAdobe ? `🔗 Link: ${formData.linkImagemAdobe}` : ""}
-${
-  formData.informacoesImagemAdobe
-    ? `ℹ️ Informações: ${formData.informacoesImagemAdobe}`
-    : ""
-}
-${
-  formData.descricaoImagem
-    ? `📝 Descrição: ${formData.descricaoImagem}`
-    : ""
-}`;
+      imagemInfo = `Adobe Stock
+- Código / nº da imagem: ${formData.codigoAdobeStock}
+${formData.descricaoImagem ? `- Observações: ${formData.descricaoImagem}` : ""}`;
     } else {
-      imagemInfo = `Imagem própria - ${formData.descricaoImagem}`;
+      imagemInfo = `Imagem própria
+${formData.descricaoImagem ? `- Descrição: ${formData.descricaoImagem}` : ""}
+
+(Nota: posso enviar a fotografia em resposta a este email.)`;
     }
 
-    const whatsappMessage = `Olá! Gostaria de um orçamento para tela artística:
+    let emailBody = `Olá,
 
-📐 Medidas: ${formData.largura}cm x ${formData.altura}cm
+Gostaria de um orçamento para tela artística:
+
+📐 Medidas: ${formData.largura} cm x ${formData.altura} cm
 📦 Quantidade: ${formData.quantidade} tela(s)
-🖼️ Imagem: ${imagemInfo}
+
+🖼️ Imagem:
+${imagemInfo}
+
 📞 Contacto: ${formData.nome} - ${formData.telefone}
 📧 Email: ${formData.email}
-💬 Mensagem: ${formData.mensagem}`;
 
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    window.open(
-      `https://wa.me/351930682725?text=${encodedMessage}`,
-      "_blank"
-    );
+💬 Mensagem adicional:
+${formData.mensagem || "(sem mensagem adicional)"}
+`;
+
+    // adicionar links dos ficheiros enviados (via ObjectUploader)
+    if (formData.anexos && formData.anexos.length > 0) {
+      emailBody += `
+
+📎 Ficheiros enviados:
+${formData.anexos
+  .map(
+    (file: any, index: number) =>
+      `${index + 1}. ${file.originalName}${
+        file.uploadURL ? " - " + file.uploadURL : ""
+      }`
+  )
+  .join("\n")}
+`;
+    }
+
+    const emailSubject = `Pedido de orçamento - Tela artística`;
+
+    const mailtoLink = `mailto:carloscruz@domrealce.com?subject=${encodeURIComponent(
+      emailSubject
+    )}&body=${encodeURIComponent(emailBody)}`;
+
+    window.location.href = mailtoLink;
   };
 
   const features = [
@@ -403,22 +422,25 @@ ${
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            {process.map((step, index) => (
-              <div key={index} className="flex gap-6 mb-8 last:mb-0">
+          <div className="max-w-5xl mx-auto grid gap-6 md:grid-cols-2">
+            {process.map((step) => (
+              <div
+                key={step.step}
+                className="bg-gray-900/80 border border-gray-800 rounded-2xl px-6 py-5 flex items-start gap-4"
+              >
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-lg md:text-xl">
                     {step.step}
                   </div>
                 </div>
-                <div className="flex-1 pb-8">
-                  <h3 className="text-xl font-semibold mb-2 text-white">
+
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
                     {step.title}
                   </h3>
-                  <p className="text-gray-400">{step.description}</p>
-                  {index < process.length - 1 && (
-                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
-                  )}
+                  <p className="text-gray-400 text-sm md:text-base">
+                    {step.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -638,7 +660,7 @@ ${
                           htmlFor="codigoAdobeStock"
                           className="text-white"
                         >
-                          Código Adobe Stock (se disponível)
+                          Código / nº da imagem Adobe Stock
                         </Label>
                         <Input
                           id="codigoAdobeStock"
@@ -651,62 +673,20 @@ ${
                             })
                           }
                           className="bg-gray-900 border-gray-700 text-white"
+                          required
                         />
                       </div>
 
                       <div>
                         <Label
-                          htmlFor="linkImagemAdobe"
+                          htmlFor="descricaoImagemAdobe"
                           className="text-white"
                         >
-                          Link da imagem Adobe Stock (se disponível)
-                        </Label>
-                        <Input
-                          id="linkImagemAdobe"
-                          type="url"
-                          placeholder="https://stock.adobe.com/..."
-                          value={formData.linkImagemAdobe}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              linkImagemAdobe: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="informacoesImagemAdobe"
-                          className="text-white"
-                        >
-                          Informações da imagem (título, autor, etc.)
+                          Observações (opcional)
                         </Label>
                         <Textarea
-                          id="informacoesImagemAdobe"
-                          placeholder="Ex: título da imagem, nome do autor, palavras-chave..."
-                          value={formData.informacoesImagemAdobe}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              informacoesImagemAdobe: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="descricaoImagem"
-                          className="text-white"
-                        >
-                          Descrição adicional (opcional)
-                        </Label>
-                        <Textarea
-                          id="descricaoImagem"
-                          placeholder="Ex: preferências de cores, estilo, detalhes específicos..."
+                          id="descricaoImagemAdobe"
+                          placeholder="Notas adicionais sobre a imagem ou composição..."
                           value={formData.descricaoImagem}
                           onChange={(e) =>
                             setFormData({
@@ -720,10 +700,16 @@ ${
 
                       <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
                         <p className="text-brand-yellow text-sm">
-                          💡 <strong>Dica:</strong> forneça pelo menos um dos
-                          seguintes: código da imagem, link direto ou
-                          informações detalhadas. Assim conseguimos localizar a
-                          imagem correta.
+                          💡 <strong>Dica:</strong> pode procurar a imagem em{" "}
+                          <a
+                            href="https://stock.adobe.com/pt"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                          >
+                            Adobe Stock
+                          </a>{" "}
+                          e copiar o código/número para aqui.
                         </p>
                       </div>
                     </div>
@@ -737,7 +723,7 @@ ${
                       </Label>
                       <Textarea
                         id="descricaoImagemPropria"
-                        placeholder="Ex: fotografia de família, retrato, paisagem..."
+                        placeholder="Ex: fotografia de família, retrato, paisagem... (pode enviar a fotografia quando responder ao nosso email)"
                         value={formData.descricaoImagem}
                         onChange={(e) =>
                           setFormData({
@@ -824,12 +810,83 @@ ${
                     />
                   </div>
 
+                  {/* Anexos (opcional) */}
+                  <div>
+                    <Label className="text-white">Anexos (opcional)</Label>
+
+                    <ObjectUploader
+                      onUpload={(files) =>
+                        setFormData({
+                          ...formData,
+                          anexos: files,
+                        })
+                      }
+                      maxFiles={3}
+                      acceptedTypes={["image/*", ".pdf", ".ai", ".svg", ".tif", ".tiff"]}
+                      className="w-full mt-2"
+                    />
+
+                    {/* 🔹 ESTE BLOCO TEM DE FICAR SEMPRE VISÍVEL, POR ISSO ESTÁ FORA DO IF */}
+                    <div className="mt-3 text-xs text-white/60 space-y-1">
+                      <p>• Máximo 3 ficheiros, até 10MB cada</p>
+                      <p>• Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF</p>
+                      <p>• Importante: Fontes devem ser convertidas em linhas antes do envio</p>
+                      <p>
+                        • Os ficheiros serão mencionados no email. Para envio dos ficheiros reais,
+                        utilize email ou WhatsApp.
+                      </p>
+                    </div>
+
+                    {/* Lista de ficheiros anexados – só aparece se houver anexos */}
+                    {formData.anexos && formData.anexos.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-white/60 mb-2 text-sm">Ficheiros anexados:</p>
+                        <div className="space-y-2">
+                          {formData.anexos.map((file: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10"
+                            >
+                              <div className="flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-brand-turquoise" />
+                                <span className="text-white/80 text-sm">
+                                  {file.originalName}
+                                </span>
+                                {typeof file.size === "number" && (
+                                  <span className="text-white/40 text-xs">
+                                    ({(file.size / 1024).toFixed(1)} KB)
+                                  </span>
+                                )}
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  setFormData({
+                                    ...formData,
+                                    anexos: formData.anexos.filter(
+                                      (_: any, i: number) => i !== index
+                                    ),
+                                  })
+                                }
+                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <Button
                     type="submit"
                     className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
                   >
                     <ArrowRight className="w-4 h-4 mr-2" />
-                    Solicitar orçamento por WhatsApp
+                    Solicitar orçamento por email
                   </Button>
                 </form>
               </CardContent>

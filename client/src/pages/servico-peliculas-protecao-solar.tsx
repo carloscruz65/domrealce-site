@@ -5,74 +5,78 @@ import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import {
   Sun,
-  Shield,
   Thermometer,
   Eye,
-  Home,
-  Building2,
+  Shield,
   CheckCircle,
   Star,
   ArrowRight,
 } from "lucide-react";
-import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
 
+// Imagens padrão da galeria (habitações, lojas, escritórios, armazéns)
 const defaultImages = [
   {
-    src: "https://images.unsplash.com/photo-1526498460520-4c246339dccb?w=800&q=80",
-    alt: "Sala com janelas amplas com luz natural",
-    title: "Conforto em habitações",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1512914890250-353c97c9e7e2?w=800&q=80",
-    alt: "Montra de loja com grandes vidros",
-    title: "Lojas e montras",
+    src: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80",
+    alt: "Sala com janelas amplas e luz natural controlada",
+    title: "Conforto térmico em habitações",
   },
   {
     src: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=800&q=80",
-    alt: "Interior de escritório com janelas amplas",
-    title: "Escritórios",
+    alt: "Montra de loja com proteção solar",
+    title: "Lojas e montras protegidas",
   },
   {
-    src: "https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=800&q=80",
-    alt: "Edifício com fachada envidraçada",
-    title: "Espaços comerciais",
+    src: "https://images.unsplash.com/photo-1529421308262-f81441e4594a?w=800&q=80",
+    alt: "Escritório moderno com grandes superfícies envidraçadas",
+    title: "Escritórios com menos encandeamento",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800&q=80",
+    alt: "Zona de estar com janelas de grande dimensão",
+    title: "Proteção UV em casa",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=800&q=80",
+    alt: "Apartamento com vista e vidro protegido",
+    title: "Mais conforto sem obras",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1529421308262-f81441e4594a?w=800&q=80",
+    alt: "Edifício com fachadas envidraçadas",
+    title: "Aplicações em edifícios e espaços comerciais",
   },
 ];
 
-export default function ServicoPeliculaSolar() {
-  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
-    queryKey: ["/api/service-galleries", "pelicula-solar"],
-  });
-
-  const galleryImages = galleryData?.images || defaultImages;
-
+export default function ServicoPeliculasProtecaoSolar() {
+  // Só para vidros de habitações / lojas / armazéns – nada de viaturas
   const benefits = [
     {
       icon: Sun,
-      title: "Menos calor",
+      title: "Proteção UV",
       description:
-        "Reduz a entrada de calor e ajuda a manter a temperatura mais estável no interior.",
+        "Bloqueia até 99% dos raios ultravioleta nocivos, ajudando a proteger móveis, pavimentos e tecidos do desbotamento.",
     },
     {
       icon: Thermometer,
-      title: "Conforto e poupança",
+      title: "Controlo térmico",
       description:
-        "Ambientes mais confortáveis e menor necessidade de ar condicionado.",
+        "Reduz o calor que entra pela janela, ajudando a manter o interior mais fresco e confortável.",
     },
     {
       icon: Eye,
-      title: "Mais privacidade",
+      title: "Privacidade",
       description:
-        "Ideal para habitações, lojas e escritórios onde não se pretende tanta exposição.",
+        "Permite ver para fora, reduzindo a visibilidade do exterior para o interior, consoante a película escolhida.",
     },
     {
       icon: Shield,
-      title: "Proteção extra",
+      title: "Segurança",
       description:
-        "Ajuda a reter estilhaços em caso de quebra e reduz o desgaste do mobiliário.",
+        "Ajuda a manter o vidro coeso em caso de quebra, reduzindo o risco de estilhaços soltos.",
     },
   ];
 
@@ -80,98 +84,117 @@ export default function ServicoPeliculaSolar() {
     {
       title: "Habitações",
       description:
-        "Mais conforto em salas, quartos e marquises com grandes áreas envidraçadas.",
-      examples: ["Janelas de sala", "Quartos", "Marquises", "Portas de vidro"],
+        "Melhor conforto térmico e proteção UV em janelas de casas e apartamentos.",
+      examples: ["Salas de estar", "Quartos", "Marquises", "Portas envidraçadas"],
     },
     {
       title: "Lojas e montras",
       description:
-        "Protege produtos do desbotamento e torna o espaço mais agradável para clientes.",
-      examples: ["Montras", "Portas de entrada", "Showrooms", "Espaços de exposição"],
+        "Protege produtos do sol e melhora o conforto de clientes e colaboradores.",
+      examples: ["Montras comerciais", "Portas de entrada", "Salas de exposição"],
     },
     {
       title: "Escritórios",
       description:
-        "Menos encandeamento em ecrãs e ambientes de trabalho mais confortáveis.",
-      examples: ["Salas de reunião", "Open-space", "Receções", "Consultórios"],
+        "Reduz o encandeamento em ecrãs e melhora o ambiente de trabalho.",
+      examples: ["Open-spaces", "Salas de reunião", "Receções"],
     },
     {
-      title: "Armazéns e indústria",
+      title: "Armazéns e pavilhões",
       description:
-        "Ajuda a reduzir o calor em zonas com muita exposição solar.",
-      examples: ["Fachadas envidraçadas", "Átrios", "Zonas de carga", "Escritórios internos"],
-    },
-  ];
-
-  const services = [
-    {
-      icon: Home,
-      title: "Película solar residencial",
-      description:
-        "Aplicação em janelas de casas e apartamentos para reduzir calor e proteger interiores.",
-      features: ["Várias tonalidades", "Aplicação sem bolhas", "Garantia até 5 anos"],
-    },
-    {
-      icon: Building2,
-      title: "Película arquitetónica",
-      description:
-        "Soluções para lojas, escritórios e espaços comerciais com grande exposição solar.",
-      features: ["Redução de reflexos", "Melhor conforto", "Melhor aspeto da fachada"],
-    },
-    {
-      icon: Shield,
-      title: "Película de segurança",
-      description:
-        "Películas que reforçam o vidro e ajudam a reter estilhaços em caso de quebra.",
-      features: ["Extra resistente", "Transparente ou escurecida", "Opções certificadas"],
+        "Ajuda a controlar o calor em zonas envidraçadas de grandes espaços.",
+      examples: [
+        "Zonas administrativas",
+        "Portas envidraçadas",
+        "Claraboias laterais (quando aplicável)",
+      ],
     },
   ];
 
   const process = [
     {
       step: "01",
-      title: "Avaliação",
+      title: "Avaliação no local",
       description:
-        "Analisamos o tipo de vidro, a exposição solar e as necessidades do espaço.",
+        "Analisamos o tipo de vidro, a exposição solar e as necessidades específicas do espaço.",
     },
     {
       step: "02",
       title: "Escolha da película",
       description:
-        "Apresentamos as opções mais adequadas em termos de tonalidade e desempenho.",
+        "Aconselhamos a película mais adequada (tonalidade, nível de proteção, privacidade, etc.).",
     },
     {
       step: "03",
       title: "Preparação dos vidros",
       description:
-        "Limpeza e preparação cuidada para uma aplicação limpa e duradoura.",
+        "Limpeza cuidada e preparação da superfície para uma aplicação perfeita.",
     },
     {
       step: "04",
-      title: "Aplicação",
+      title: "Aplicação profissional",
       description:
-        "Aplicação profissional por técnicos experientes, com equipamento próprio.",
+        "Instalação por técnicos especializados, com garantia de um acabamento sem bolhas.",
     },
     {
       step: "05",
-      title: "Verificação",
+      title: "Verificação e garantia",
       description:
-        "Inspeção final e explicação dos cuidados a ter nos primeiros dias.",
+        "Inspeção final, explicação de cuidados após aplicação e garantia do serviço.",
     },
   ];
+
+  const specsLeft = [
+    { label: "Proteção UV", value: "até 99%" },
+    { label: "Redução de calor", value: "até ~60% (dependendo da película)" },
+    {
+      label: "Garantia",
+      value: "até 5 anos, consoante o modelo",
+    },
+    {
+      label: "Tipo de aplicação",
+      value: "interior (mais comum) ou exterior em casos específicos",
+    },
+  ];
+
+  const specsRight = [
+    {
+      label: "Tonalidades disponíveis",
+      value: "escura, média, clara e quase incolor",
+    },
+    {
+      label: "Privacidade",
+      value: "de baixa a elevada – ajustada ao projeto",
+    },
+    {
+      label: "Compatibilidade",
+      value: "vidros simples e duplos (a confirmar em avaliação)",
+    },
+    {
+      label: "Manutenção",
+      value: "limpeza simples com produtos não abrasivos",
+    },
+  ];
+
+  // Galeria: tenta ir buscar imagens ao backend, senão usa as default
+  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
+    queryKey: ["/api/service-galleries", "peliculas-protecao-solar"],
+  });
+
+  const galleryImages = galleryData?.images || defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* HERO no estilo das outras páginas */}
+      {/* Hero genérico com imagem vinda do backend / CMS */}
       <ServiceHero
-        serviceId="pelicula-solar"
+        serviceId="peliculas-protecao-solar"
         badge="Películas de proteção solar"
         badgeIcon={<Sun className="w-4 h-4 mr-2" />}
         title="Películas de proteção solar"
-        subtitle="para vidros de habitações e espaços comerciais"
-        description="Aplicamos películas de proteção solar em vidros de casas, lojas, escritórios e armazéns para reduzir o calor, aumentar o conforto e proteger interiores."
+        subtitle="para casas, lojas e espaços comerciais"
+        description="Aplicação profissional de películas solares em vidros de habitações, lojas, escritórios e armazéns. Mais conforto térmico, proteção UV e privacidade, sem obras."
         overlayOpacity="0"
         primaryCta={{
           text: "Pedir orçamento",
@@ -189,10 +212,11 @@ export default function ServicoPeliculaSolar() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
               <span className="text-brand-yellow">Benefícios</span>{" "}
-              <span className="text-white">da película solar</span>
+              <span className="text-white">principais</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Uma solução simples para melhorar o conforto e proteger o interior dos seus espaços com vidros.
+              As películas de proteção solar melhoram o conforto, ajudam a reduzir
+              custos de energia e protegem o interior dos seus espaços.
             </p>
           </div>
 
@@ -205,11 +229,13 @@ export default function ServicoPeliculaSolar() {
                   className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
                 >
                   <CardContent className="p-6 text-center">
-                    <div className="bg-brand-yellow/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+                    <div className="w-16 h-16 rounded-full bg-brand-yellow/10 flex items-center justify-center mx-auto mb-4">
                       <Icon className="w-8 h-8 text-brand-yellow" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-3 text-white">{benefit.title}</h3>
-                    <p className="text-gray-400 leading-relaxed">{benefit.description}</p>
+                    <h3 className="text-xl font-semibold mb-3 text-white">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-gray-400">{benefit.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -218,10 +244,10 @@ export default function ServicoPeliculaSolar() {
         </div>
       </section>
 
-      {/* Galeria */}
+      {/* Galeria de trabalhos */}
       <ServiceGallery
         title="Exemplos de aplicações"
-        description="Alguns exemplos de habitações e espaços comerciais com película de proteção solar."
+        description="Alguns projetos de aplicação de películas de proteção solar em habitações, lojas, escritórios e outros espaços comerciais."
         images={galleryImages}
         columns={3}
       />
@@ -235,31 +261,32 @@ export default function ServicoPeliculaSolar() {
               <span className="text-brand-yellow">ideais</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Adaptamos a solução ao tipo de espaço e à exposição solar de cada projeto.
+              Películas solares para todo o tipo de espaços envidraçados — sempre
+              fora do contexto automóvel.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {applications.map((application, index) => (
+            {applications.map((app, index) => (
               <Card
                 key={index}
                 className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow transition-all duration-300"
               >
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3 text-brand-yellow">
-                    {application.title}
+                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
+                    {app.title}
                   </h3>
-                  <p className="text-gray-400 mb-4">{application.description}</p>
-                  <div>
-                    <span className="text-sm text-gray-500 mb-2 block">Exemplos:</span>
-                    <div className="space-y-1">
-                      {application.examples.map((example, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
-                          <span className="text-sm text-gray-300">{example}</span>
-                        </div>
-                      ))}
-                    </div>
+                  <p className="text-gray-400 mb-4">{app.description}</p>
+                  <span className="text-sm text-gray-500 mb-2 block">
+                    Exemplos:
+                  </span>
+                  <div className="space-y-1">
+                    {app.examples.map((ex, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
+                        <span className="text-sm text-gray-300">{ex}</span>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -268,51 +295,8 @@ export default function ServicoPeliculaSolar() {
         </div>
       </section>
 
-      {/* Serviços */}
-      <section className="pt-8 pb-16 bg-gray-900/40">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Serviços</span>{" "}
-              <span className="text-brand-yellow">disponíveis</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Diferentes tipos de película para responder a necessidades específicas.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <Card
-                  key={index}
-                  className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <Icon className="w-6 h-6 text-brand-yellow" />
-                      <h3 className="text-xl font-semibold text-white">{service.title}</h3>
-                    </div>
-                    <p className="text-gray-400 mb-6 leading-relaxed">{service.description}</p>
-                    <ul className="space-y-2">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-gray-300 text-sm">
-                          <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Processo */}
-      <section className="py-16 bg-black border-t border-gray-900">
+      <section className="py-16 bg-gray-900/40 border-t border-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
@@ -320,95 +304,92 @@ export default function ServicoPeliculaSolar() {
               <span className="text-brand-yellow">profissional</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Um processo simples e organizado, desde o contacto até à instalação final.
+              Um processo simples, pensado para causar o mínimo de incómodo no seu
+              dia a dia.
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            {process.map((step, index) => (
-              <div key={index} className="flex gap-6 mb-8 last:mb-0">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6">
+              {process.map((step, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                >
+                  <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
                     {step.step}
                   </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-1 text-white">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 pb-8">
-                  <h3 className="text-xl font-semibold mb-2 text-white">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-400">{step.description}</p>
-                  {index < process.length - 1 && (
-                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Especificações / Qualidade */}
-      <section className="py-16 bg-gray-900/40">
+      <section className="py-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-start">
-              <Card className="bg-black border border-gray-800">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold mb-6 text-brand-yellow">
-                    Especificações técnicas
-                  </h3>
-                  <div className="space-y-4 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Proteção UV</span>
-                      <span className="text-white font-semibold">Até 99%</span>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+                  <span className="text-brand-yellow">Especificações</span>{" "}
+                  <span className="text-white">técnicas</span>
+                </h2>
+                <p className="text-gray-400 mb-8 text-lg">
+                  Trabalhamos com películas de fabricantes reconhecidos, com
+                  diferentes tonalidades e níveis de proteção, adaptados a cada
+                  projeto.
+                </p>
+                <div className="space-y-4">
+                  {specsLeft.map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                      <span className="text-white">
+                        <strong className="text-gray-300">
+                          {item.label}:
+                        </strong>{" "}
+                        {item.value}
+                      </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Redução de calor</span>
-                      <span className="text-white font-semibold">Até 60%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Garantia</span>
-                      <span className="text-white font-semibold">Até 5 anos</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Aplicação</span>
-                      <span className="text-white font-semibold">Pelo interior do vidro</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  ))}
+                </div>
+              </div>
 
-              <Card className="bg-black border border-gray-800">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                    <h3 className="text-2xl font-semibold mb-2 text-white">
-                      Tonalidades disponíveis
-                    </h3>
-                    <p className="text-gray-400">
-                      Escolha o equilíbrio certo entre privacidade, luz natural e estética.
-                    </p>
-                  </div>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">5% (escura)</span>
-                      <span className="text-white font-semibold">Máxima privacidade</span>
+              <div className="bg-black rounded-2xl p-8 border border-gray-800">
+                <div className="text-center mb-6">
+                  <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold mb-2 text-white">
+                    Qualidade e confiança
+                  </h3>
+                  <p className="text-gray-400">
+                    Aplicação profissional com garantia e acompanhamento
+                    pós-venda.
+                  </p>
+                </div>
+
+                <div className="space-y-4 text-sm">
+                  {specsRight.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center gap-4"
+                    >
+                      <span className="text-gray-400">{item.label}</span>
+                      <span className="text-brand-yellow font-semibold text-right">
+                        {item.value}
+                      </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">20% (média)</span>
-                      <span className="text-white font-semibold">Equilíbrio conforto/visibilidade</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">35% (clara)</span>
-                      <span className="text-white font-semibold">Mais luz com redução de calor</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">70% (quase incolor)</span>
-                      <span className="text-white font-semibold">Proteção UV quase invisível</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -418,12 +399,13 @@ export default function ServicoPeliculaSolar() {
       <section className="py-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-            <span className="text-white">Pronto para melhorar o conforto dos seus</span>{" "}
+            <span className="text-white">Pronto para melhorar os seus</span>{" "}
             <span className="text-brand-yellow">vidros?</span>
           </h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Fale connosco e ajudamos a escolher a película mais adequada para a sua casa, loja,
-            escritório ou armazém.
+            Envie-nos as dimensões aproximadas e o tipo de espaço. A nossa equipa
+            ajuda a escolher a película certa e apresenta um orçamento ajustado ao
+            seu projeto.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -442,7 +424,7 @@ export default function ServicoPeliculaSolar() {
               className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
             >
               <a
-                href="https://wa.me/351930682725?text=Olá!%20Estou%20interessado%20em%20películas%20de%20proteção%20solar%20para%20vidros."
+                href="https://wa.me/351930682725?text=Olá!%20Gostava%20de%20informações%20sobre%20películas%20de%20proteção%20solar%20para%20vidros."
                 target="_blank"
                 rel="noopener noreferrer"
               >

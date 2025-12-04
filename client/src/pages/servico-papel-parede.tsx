@@ -21,11 +21,14 @@ import {
   Upload,
   Calculator,
   ShoppingCart,
+  FileText,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 export default function ServicoPapelParede() {
   const [formData, setFormData] = useState({
@@ -41,6 +44,7 @@ export default function ServicoPapelParede() {
     nome: "",
     email: "",
     telefone: "",
+    anexos: [] as any[],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,23 +80,51 @@ ${
     : ""
 }`;
     } else {
-      imagemInfo = `Imagem própria - ${formData.descricaoImagem}`;
+      imagemInfo = `Imagem própria
+${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : ""}
+(Nota: posso enviar a imagem em resposta a este email ou via WhatsApp.)`;
     }
 
-    const whatsappMessage = `Olá! Gostaria de um orçamento para papel de parede:
+    const emailSubject = "Pedido de orçamento - Papel de parede";
 
-📐 Medidas: ${formData.largura}m x ${formData.altura}m
+    let emailBody = `Olá,
+
+Gostaria de um orçamento para papel de parede:
+
+📐 Medidas: ${formData.largura} m x ${formData.altura} m
 📦 Quantidade: ${formData.quantidade} parede(s)
-🖼️ Imagem: ${imagemInfo}
+
+🖼️ Imagem:
+${imagemInfo}
+
 📞 Contacto: ${formData.nome} - ${formData.telefone}
 📧 Email: ${formData.email}
-💬 Mensagem: ${formData.mensagem}`;
 
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    window.open(
-      `https://wa.me/351930682725?text=${encodedMessage}`,
-      "_blank"
-    );
+💬 Mensagem adicional:
+${formData.mensagem || "(sem mensagem adicional)"}
+`;
+
+    // anexos (links / referências geradas pelo ObjectUploader)
+    if (formData.anexos && formData.anexos.length > 0) {
+      emailBody += `
+
+📎 Ficheiros enviados:
+${formData.anexos
+  .map(
+    (file: any, index: number) =>
+      `${index + 1}. ${file.originalName}${
+        file.uploadURL ? " - " + file.uploadURL : ""
+      }`
+  )
+  .join("\n")}
+`;
+    }
+
+    const mailtoLink = `mailto:carloscruz@domrealce.com?subject=${encodeURIComponent(
+      emailSubject
+    )}&body=${encodeURIComponent(emailBody)}`;
+
+    window.location.href = mailtoLink;
   };
 
   const features = [
@@ -302,25 +334,27 @@ ${
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            {process.map((step, index) => (
-              <div key={index} className="flex gap-6 mb-8 last:mb-0">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6">
+              {process.map((step, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                >
+                  <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
                     {step.step}
                   </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-1 text-white">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 pb-8">
-                  <h3 className="text-xl font-semibold mb-2 text-white">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-400">{step.description}</p>
-                  {index < process.length - 1 && (
-                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -705,12 +739,95 @@ ${
                     />
                   </div>
 
+                  {/* Anexos (opcional) */}
+                  <div>
+                    <Label className="text-white">Anexos (opcional)</Label>
+
+                    <ObjectUploader
+                      onUpload={(files) =>
+                        setFormData({
+                          ...formData,
+                          anexos: files,
+                        })
+                      }
+                      maxFiles={3}
+                      acceptedTypes={[
+                        "image/*",
+                        ".pdf",
+                        ".ai",
+                        ".svg",
+                        ".tif",
+                        ".tiff",
+                      ]}
+                      className="w-full mt-2"
+                    />
+
+                    <div className="mt-3 text-xs text-white/60 space-y-1">
+                      <p>• Máximo 3 ficheiros, até 10MB cada</p>
+                      <p>
+                        • Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF
+                      </p>
+                      <p>
+                        • Importante: Fontes devem ser convertidas em linhas
+                        antes do envio
+                      </p>
+                      <p>
+                        • Os ficheiros serão mencionados no email. Para envio
+                        dos ficheiros reais, utilize email ou WhatsApp.
+                      </p>
+                    </div>
+
+                    {formData.anexos && formData.anexos.length > 0 && (
+                      <div className="mt-3">
+                        <p className="text-white/60 mb-2 text-sm">
+                          Ficheiros anexados:
+                        </p>
+                        <div className="space-y-2">
+                          {formData.anexos.map((file: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10"
+                            >
+                              <div className="flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-brand-turquoise" />
+                                <span className="text-white/80 text-sm">
+                                  {file.originalName}
+                                </span>
+                                {typeof file.size === "number" && (
+                                  <span className="text-white/40 text-xs">
+                                    ({(file.size / 1024).toFixed(1)} KB)
+                                  </span>
+                                )}
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  setFormData({
+                                    ...formData,
+                                    anexos: formData.anexos.filter(
+                                      (_: any, i: number) => i !== index
+                                    ),
+                                  })
+                                }
+                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <Button
                     type="submit"
                     className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
                   >
                     <Calculator className="w-4 h-4 mr-2" />
-                    Solicitar orçamento por WhatsApp
+                    Solicitar orçamento por email
                   </Button>
                 </form>
               </CardContent>

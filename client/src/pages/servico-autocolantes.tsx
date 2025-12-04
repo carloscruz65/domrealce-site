@@ -332,25 +332,27 @@ export default function ServicoAutocolantes() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
-            {process.map((step, index) => (
-              <div key={index} className="flex gap-6 mb-8 last:mb-0">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6">
+              {process.map((step, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                >
+                  <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
                     {step.step}
                   </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-1 text-white">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 pb-8">
-                  <h3 className="text-xl font-semibold mb-2 text-white">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-400">{step.description}</p>
-                  {index < process.length - 1 && (
-                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

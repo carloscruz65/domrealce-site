@@ -213,13 +213,13 @@ export default function Navigation() {
               Contactos
             </Link>
 
-            {/* Cart Button */}
+            {/* Cart Button – sem degradé */}
             <Link
               href="/carrinho"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-2 bg-gradient-to-r from-brand-coral to-brand-turquoise hover:from-brand-turquoise hover:to-brand-coral ${
+              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-2 ${
                 location === "/carrinho"
-                  ? "text-black"
-                  : "text-black hover:text-black"
+                  ? "bg-brand-yellow text-brand-dark"
+                  : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -425,13 +425,13 @@ export default function Navigation() {
                 Contactos
               </Link>
 
-              {/* Cart Button Mobile */}
+              {/* Cart Button Mobile – sem degradé */}
               <Link
                 href="/carrinho"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left flex items-center gap-2 bg-gradient-to-r from-brand-coral to-brand-turquoise hover:from-brand-turquoise hover:to-brand-coral ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left flex items-center gap-2 ${
                   location === "/carrinho"
-                    ? "text-black"
-                    : "text-black hover:text-black"
+                    ? "bg-brand-yellow text-brand-dark"
+                    : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
