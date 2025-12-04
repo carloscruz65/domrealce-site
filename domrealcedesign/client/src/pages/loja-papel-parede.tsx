@@ -117,11 +117,20 @@ export default function LojaPapelParede() {
                 <div className="group text-center cursor-pointer">
                   {/* Imagem com overlay "Ver Mais" no hover */}
                   <div className="relative overflow-hidden rounded-lg mb-1 md:mb-2">
-                    <img
-                      src={texture.path}
-                      alt={texture.name}
-                      className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <div className="relative overflow-hidden rounded-lg mb-1 md:mb-2">
+                      <img
+                        src={texture.path}
+                        alt={texture.name}
+                        className="w-[70%] mx-auto aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {/* Overlay com texto "Ver Mais" que aparece no hover */}
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg">
+                        <div className="text-center">
+                          <Eye className="w-4 h-4 md:w-5 md:h-5 text-[#FFD700] mx-auto mb-1" />
+                          <span className="text-[#FFD700] font-bold text-xs">Ver Mais</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Overlay com texto "Ver Mais" que aparece no hover */}
                     <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg">
                       <div className="text-center">
