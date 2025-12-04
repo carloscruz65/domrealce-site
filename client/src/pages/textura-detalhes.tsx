@@ -285,15 +285,20 @@ export default function LojaTexturaDetalhes() {
 
                 {/* Quick Actions */}
                 <div className="space-y-3">
-                  <Button 
-                    onClick={handleAddToCart}
-                    disabled={!selectedTexture}
-                    className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
-                    data-testid="button-add-to-cart"
-                  >
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Adicionar ao Carrinho
-                  </Button>
+                  {selectedTexture ? (
+                    <Button 
+                      onClick={handleAddToCart}
+                      className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3 rounded-md"
+                      data-testid="button-add-to-cart"
+                    >
+                      <ShoppingCart className="w-5 h-5 mr-2" />
+                      Adicionar ao Carrinho
+                    </Button>
+                  ) : (
+                    <div className="w-full bg-[#1a1a1a] border border-[#333] text-gray-400 font-medium py-3 px-4 rounded-md text-center">
+                      👆 Escolha uma textura acima para adicionar ao carrinho
+                    </div>
+                  )}
                   
                   <p className="text-xs text-gray-400 text-center">
                     Ou clique numa textura e depois "Ver Maior" para ver detalhes
@@ -420,7 +425,7 @@ export default function LojaTexturaDetalhes() {
                       <div className="space-y-3">
                         <Button 
                           onClick={handleAddToCart}
-                          className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90"
+                          className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3 rounded-md"
                         >
                           <ShoppingCart className="w-5 h-5 mr-2" />
                           Adicionar ao Carrinho

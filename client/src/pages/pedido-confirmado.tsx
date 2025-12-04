@@ -71,7 +71,7 @@ export default function PedidoConfirmado() {
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/loja/papel-parede">
-                    <Button className="bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold hover:opacity-90">
+                    <Button className="bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold">
                       Continuar a Comprar
                     </Button>
                   </Link>

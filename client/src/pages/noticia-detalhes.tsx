@@ -308,7 +308,7 @@ export default function NoticiaDetalhes() {
 
           {/* CTA */}
           <Button 
-            className="w-full bg-gradient-to-r from-brand-yellow to-brand-coral text-black hover:opacity-90 font-semibold shadow-lg h-12"
+            className="w-full bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold shadow-lg h-12"
             size="lg"
             onClick={() => window.open('https://domrealce.com', '_blank')}
             data-testid="button-visit-website"

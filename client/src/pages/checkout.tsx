@@ -830,7 +830,7 @@ export default function Checkout() {
                 <Button
                   onClick={handleFinalizarPedido}
                   disabled={isProcessing || cartItems.length === 0}
-                  className="w-full bg-gradient-to-r from-[#FFD700] to-[#20B2AA] text-black font-bold py-3 hover:opacity-90 disabled:opacity-50"
+                  className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3 disabled:opacity-50"
                 >
                   {isProcessing
                     ? "A processar..."
