@@ -13,6 +13,12 @@ export default function Footer() {
             src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
             alt="DOMREALCE Logo" 
             className="h-16 w-auto mx-auto"
+            loading="eager"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.insertAdjacentHTML('afterend', '<span class="text-2xl font-bold text-brand-yellow">DOMREALCE</span>');
+            }}
           />
         </div>
 

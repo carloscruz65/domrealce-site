@@ -61,6 +61,12 @@ export default function Navigation() {
               src="/public-objects/essenciais/1758147535288_domrealce-logo.png"
               alt="DOMREALCE Logo"
               className="h-12 w-auto"
+              loading="eager"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.insertAdjacentHTML('afterend', '<span class="text-xl font-bold text-brand-yellow">DOMREALCE</span>');
+              }}
             />
           </Link>
 
