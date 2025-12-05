@@ -39,30 +39,37 @@ export default function Navigation() {
   const isServicesActive =
     location === "/servicos" || location.startsWith("/servico-");
 
+  const baseLinkClasses =
+    "relative transition-all duration-300 font-medium px-3 py-2 rounded-full text-sm text-white/80 hover:text-white hover:bg-white/5";
+
+  const activeLinkClasses =
+    "text-brand-yellow bg-white/5";
+
   return (
     <header
-      className={`fixed w-full top-0 z-50 transition-all duration-300 border-b border-brand-yellow ${
-        isScrolled ? "bg-black" : "bg-black/90 backdrop-blur-md"
+      className={`fixed w-full top-0 z-50 transition-all duration-300 border-b border-white/10 ${
+        isScrolled
+          ? "bg-black/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
+          : "bg-black/70 backdrop-blur-xl"
       }`}
     >
-      <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <nav className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          {/* LOGO */}
           <Link href="/" className="flex items-center space-x-3">
             <img
               src="/public-objects/essenciais/1758147535288_domrealce-logo.png"
               alt="DOMREALCE Logo"
-              className="h-14 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-3 items-center">
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-black/40 border border-white/5 backdrop-blur">
             <Link
               href="/"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-yellow"
+              className={`${baseLinkClasses} ${
+                location === "/" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -71,10 +78,8 @@ export default function Navigation() {
 
             <Link
               href="/sobre"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/sobre"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-turquoise"
+              className={`${baseLinkClasses} ${
+                location === "/sobre" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -85,22 +90,24 @@ export default function Navigation() {
             <div className="relative group">
               <button
                 type="button"
-                className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-1 ${
-                  isServicesActive
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-coral"
+                className={`${baseLinkClasses} flex items-center gap-1 ${
+                  isServicesActive ? activeLinkClasses : ""
                 }`}
               >
                 Serviços
                 <span className="text-xs">▾</span>
+                {/* sublinhado suave quando ativo */}
+                {isServicesActive && (
+                  <span className="absolute left-3 right-3 -bottom-1 h-[2px] rounded-full bg-brand-yellow/80" />
+                )}
               </button>
 
-              <div className="absolute left-0 top-full w-72 bg-black border border-[#333] rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50">
+              <div className="absolute left-0 top-full mt-2 w-72 bg-black border border-[#333] rounded-xl shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50">
                 <ul className="py-2">
                   <li>
                     <Link
                       href="/servico-design-grafico"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Design Gráfico
                     </Link>
@@ -108,7 +115,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-impressao-digital"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Impressão Digital
                     </Link>
@@ -116,7 +123,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-papel-parede"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Papel de Parede
                     </Link>
@@ -124,7 +131,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-telas-artisticas"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Telas Artísticas
                     </Link>
@@ -132,7 +139,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-autocolantes"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Autocolantes e Etiquetas
                     </Link>
@@ -140,7 +147,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-decoracao-viaturas"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Decoração de Viaturas
                     </Link>
@@ -148,7 +155,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-espacos-comerciais"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Espaços Comerciais
                     </Link>
@@ -156,7 +163,7 @@ export default function Navigation() {
                   <li>
                     <Link
                       href="/servico-peliculas-protecao-solar"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                     >
                       Películas de Proteção Solar
                     </Link>
@@ -167,10 +174,8 @@ export default function Navigation() {
 
             <Link
               href="/portfolio"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/portfolio"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-yellow"
+              className={`${baseLinkClasses} ${
+                location === "/portfolio" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -179,10 +184,8 @@ export default function Navigation() {
 
             <Link
               href="/loja"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/loja"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-turquoise"
+              className={`${baseLinkClasses} ${
+                location === "/loja" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -191,10 +194,8 @@ export default function Navigation() {
 
             <Link
               href="/noticias"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/noticias"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-green"
+              className={`${baseLinkClasses} ${
+                location === "/noticias" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -203,23 +204,21 @@ export default function Navigation() {
 
             <Link
               href="/contactos"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md ${
-                location === "/contactos"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "text-white hover:text-brand-coral"
+              className={`${baseLinkClasses} ${
+                location === "/contactos" ? activeLinkClasses : ""
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
               Contactos
             </Link>
 
-            {/* Cart Button – sem degradé */}
+            {/* Cart Button – destaque, sem degradé */}
             <Link
               href="/carrinho"
-              className={`transition-all duration-300 font-medium px-3 py-2 rounded-md flex items-center gap-2 ${
+              className={`ml-1 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                 location === "/carrinho"
-                  ? "bg-brand-yellow text-brand-dark"
-                  : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
+                  ? "bg-brand-yellow text-brand-dark shadow-lg shadow-brand-yellow/30"
+                  : "bg-brand-yellow text-black hover:bg-brand-yellow/90 hover:shadow-lg hover:shadow-brand-yellow/30"
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -232,7 +231,7 @@ export default function Navigation() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-white hover:bg-brand-coral/20"
+            className="md:hidden text-white hover:bg-white/10"
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
               if (!isMenuOpen) setIsServicesMobileOpen(false);
@@ -244,14 +243,14 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4">
+          <div className="md:hidden mt-4 pb-4 border-t border-white/10 pt-3">
             <div className="flex flex-col space-y-2">
               <Link
                 href="/"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-yellow"
+                    ? "bg-white/5 text-brand-yellow"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -260,10 +259,10 @@ export default function Navigation() {
 
               <Link
                 href="/sobre"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/sobre"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-turquoise"
+                    ? "bg-white/5 text-brand-turquoise"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -271,13 +270,13 @@ export default function Navigation() {
               </Link>
 
               {/* Serviços com SUBMENU (mobile) */}
-              <div className="rounded-md bg-black/40 border border-gray-800">
+              <div className="rounded-lg bg-black/60 border border-gray-800">
                 <button
                   type="button"
-                  className={`w-full text-left transition-all duration-300 font-medium py-3 px-4 rounded-md flex items-center justify-between ${
+                  className={`w-full text-left transition-all duration-300 font-medium py-3 px-4 rounded-lg flex items-center justify-between ${
                     location.startsWith("/servico-")
-                      ? "bg-brand-yellow text-brand-dark"
-                      : "text-white"
+                      ? "bg-white/5 text-brand-yellow"
+                      : "text-white/80"
                   }`}
                   onClick={() =>
                     setIsServicesMobileOpen((prev) => !prev)
@@ -294,7 +293,7 @@ export default function Navigation() {
                     <div className="flex flex-col py-1">
                       <Link
                         href="/servico-design-grafico"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -304,7 +303,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-impressao-digital"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -314,7 +313,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-papel-parede"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -324,7 +323,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-telas-artisticas"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -334,7 +333,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-autocolantes"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -344,7 +343,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-decoracao-viaturas"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -354,7 +353,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-espacos-comerciais"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -364,7 +363,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/servico-peliculas-protecao-solar"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#222] hover:text-brand-yellow"
+                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsServicesMobileOpen(false);
@@ -379,10 +378,10 @@ export default function Navigation() {
 
               <Link
                 href="/portfolio"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/portfolio"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-yellow"
+                    ? "bg-white/5 text-brand-yellow"
+                    : "text-white/80 hover:bg:white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -391,10 +390,10 @@ export default function Navigation() {
 
               <Link
                 href="/loja"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/loja"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-turquoise"
+                    ? "bg:white/5 text-brand-turquoise"
+                    : "text-white/80 hover:bg-white/5 hover:text:white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -403,10 +402,10 @@ export default function Navigation() {
 
               <Link
                 href="/noticias"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/noticias"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-green"
+                    ? "bg-white/5 text-brand-green"
+                    : "text-white/80 hover:bg-white/5 hover:text:white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -415,10 +414,10 @@ export default function Navigation() {
 
               <Link
                 href="/contactos"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left ${
+                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/contactos"
-                    ? "bg-brand-yellow text-brand-dark"
-                    : "text-white hover:text-brand-coral"
+                    ? "bg-white/5 text-brand-coral"
+                    : "text-white/80 hover:bg-white/5 hover:text:white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -428,9 +427,9 @@ export default function Navigation() {
               {/* Cart Button Mobile – sem degradé */}
               <Link
                 href="/carrinho"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-md text-left flex items-center gap-2 ${
+                className={`transition-all duration-300 font-semibold py-3 px-4 rounded-lg text-left flex items-center gap-2 ${
                   location === "/carrinho"
-                    ? "bg-brand-yellow text-brand-dark"
+                    ? "bg-brand-yellow text-black shadow-lg shadow-brand-yellow/30"
                     : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
                 }`}
                 onClick={() => setIsMenuOpen(false)}

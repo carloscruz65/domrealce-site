@@ -1,152 +1,845 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import ServiceHero from "@/components/service-hero";
+import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-// Logo agora vem do object storage
+import { useQuery } from "@tanstack/react-query";
+import {
+  Image,
+  CheckCircle,
+  Star,
+  ArrowRight,
+  Frame,
+  Brush,
+  Camera,
+  Palette,
+  Award,
+  Shield,
+} from "lucide-react";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-export default function Footer() {
+export default function ServicoTelasArtisticas() {
+  const [formData, setFormData] = useState({
+    largura: "",
+    altura: "",
+    quantidade: "1",
+    opcaoImagem: "adobe-stock", // 'adobe-stock' ou 'propria'
+    descricaoImagem: "",
+    codigoAdobeStock: "",
+    mensagem: "",
+    nome: "",
+    email: "",
+    telefone: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validação para Adobe Stock: código obrigatório
+    if (formData.opcaoImagem === "adobe-stock") {
+      const hasCode = formData.codigoAdobeStock.trim() !== "";
+
+      if (!hasCode) {
+        alert(
+          "Para imagens do Adobe Stock, é obrigatório indicar o código ou número da imagem."
+        );
+        return;
+      }
+    }
+
+    let imagemInfo = "";
+    if (formData.opcaoImagem === "adobe-stock") {
+      imagemInfo = `Adobe Stock
+- Código / nº da imagem: ${formData.codigoAdobeStock}
+${formData.descricaoImagem ? `- Observações: ${formData.descricaoImagem}` : ""}`;
+    } else {
+      imagemInfo = `Imagem própria
+${formData.descricaoImagem ? `- Descrição: ${formData.descricaoImagem}` : ""}
+
+(Nota: posso enviar a fotografia em resposta a este email.)`;
+    }
+
+    const emailSubject = `Pedido de orçamento - Tela artística`;
+    const emailBody = `Olá,
+
+Gostaria de um orçamento para tela artística:
+
+📐 Medidas: ${formData.largura} cm x ${formData.altura} cm
+📦 Quantidade: ${formData.quantidade} tela(s)
+
+🖼️ Imagem:
+${imagemInfo}
+
+📞 Contacto: ${formData.nome} - ${formData.telefone}
+📧 Email: ${formData.email}
+
+💬 Mensagem adicional:
+${formData.mensagem || "(sem mensagem adicional)"}
+`;
+
+    const mailtoLink = `mailto:carloscruz@domrealce.com?subject=${encodeURIComponent(
+      emailSubject
+    )}&body=${encodeURIComponent(emailBody)}`;
+
+    window.location.href = mailtoLink;
+  };
+
+  const features = [
+    {
+      icon: <Frame className="w-6 h-6" />,
+      title: "Canvas premium",
+      description:
+        "Telas de algodão de alta gramagem para máxima durabilidade e qualidade.",
+    },
+    {
+      icon: <Brush className="w-6 h-6" />,
+      title: "Impressão artística",
+      description:
+        "Tecnologia de impressão que reproduz fielmente cores e texturas.",
+    },
+    {
+      icon: <Camera className="w-6 h-6" />,
+      title: "Fotografias personalizadas",
+      description:
+        "Transforme as suas fotografias em obras de arte profissionais.",
+    },
+    {
+      icon: <Palette className="w-6 h-6" />,
+      title: "Arte digital",
+      description: "Criação de arte digital exclusiva para a sua tela.",
+    },
+    {
+      icon: <Award className="w-6 h-6" />,
+      title: "Molduras incluídas",
+      description: "Variedade de molduras elegantes incluídas no serviço.",
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Resistente ao tempo",
+      description:
+        "Tintas UV resistentes que mantêm as cores vibrantes por anos.",
+    },
+  ];
+
+  const sizes = [
+    "20x30 cm",
+    "30x40 cm",
+    "40x50 cm",
+    "50x70 cm",
+    "60x80 cm",
+    "70x100 cm",
+    "80x120 cm",
+    "100x150 cm",
+  ];
+
+  const applications = [
+    {
+      title: "Decoração residencial",
+      description:
+        "Transforme a sua casa num espaço único com arte personalizada.",
+      examples: ["Salas de estar", "Quartos", "Escritórios", "Corredores"],
+    },
+    {
+      title: "Espaços comerciais",
+      description:
+        "Crie ambientes profissionais inspiradores e memoráveis.",
+      examples: ["Hotéis", "Restaurantes", "Consultórios", "Escritórios"],
+    },
+    {
+      title: "Presentes especiais",
+      description: "Ofereça algo verdadeiramente único e pessoal.",
+      examples: ["Casamentos", "Aniversários", "Formações", "Eventos"],
+    },
+  ];
+
+  const process = [
+    {
+      step: "01",
+      title: "Seleção da imagem",
+      description:
+        "Escolhe uma imagem da nossa loja, do Adobe Stock ou envia a tua própria fotografia.",
+    },
+    {
+      step: "02",
+      title: "Preparação digital",
+      description:
+        "Otimizamos a imagem para garantir a melhor qualidade de impressão.",
+    },
+    {
+      step: "03",
+      title: "Impressão em canvas",
+      description: "Impressão de alta qualidade em tela de algodão premium.",
+    },
+    {
+      step: "04",
+      title: "Montagem e moldura",
+      description: "Esticamos a tela e aplicamos a moldura escolhida.",
+    },
+    {
+      step: "05",
+      title: "Controlo de qualidade",
+      description:
+        "Inspeção final antes da entrega para garantir um resultado perfeito.",
+    },
+  ];
+
+  const defaultImages = [
+    {
+      src: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80",
+      alt: "Tela artística em sala moderna",
+      title: "Arte contemporânea",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+      alt: "Canvas com fotografia em preto e branco",
+      title: "Fotografia artística",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80",
+      alt: "Tela com paisagem natural",
+      title: "Paisagens naturais",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=800&q=80",
+      alt: "Canvas abstrato colorido",
+      title: "Arte abstrata",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1578926314433-e2789279f4aa?w=800&q=80",
+      alt: "Tela decorativa em quarto",
+      title: "Decoração personalizada",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&q=80",
+      alt: "Tela artística premium",
+      title: "Qualidade premium",
+    },
+  ];
+
+  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
+    queryKey: ["/api/service-galleries", "telas-artisticas"],
+  });
+  const galleryImages = galleryData?.images || defaultImages;
+
   return (
-    <footer id="contactos" className="bg-black border-t border-brand-turquoise py-16">
-      <div className="container mx-auto px-4">
-        {/* Logo centralizado */}
-        <div className="text-center mb-12">
-          <img 
-            src="/public-objects/essenciais/1758147535288_domrealce-logo.png" 
-            alt="DOMREALCE Logo" 
-            className="h-16 w-auto mx-auto"
-          />
+    <div className="min-h-screen bg-black text-white">
+      <Navigation />
+
+      <ServiceHero
+        serviceId="telas-artisticas"
+        badge="Telas Artísticas Premium"
+        badgeIcon={<Image className="w-4 h-4 mr-2" />}
+        title="Transforme fotografias"
+        subtitle="em obras de arte"
+        description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
+        overlayOpacity="0"
+        primaryCta={{
+          text: "Criar minha tela",
+          href: "/contactos#formulario",
+        }}
+        secondaryCta={{
+          text: "Contactar",
+          href: "/contactos#formulario",
+        }}
+      />
+
+      {/* Qualidade artística */}
+      <section className="pt-8 pb-16 bg-gray-900/40">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              <span className="text-brand-yellow">Qualidade</span>{" "}
+              <span className="text-white">artística</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Tecnologia de impressão artística que garante resultados dignos
+              de galeria.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card
+                key={index}
+                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+              >
+                <CardContent className="p-6">
+                  <div className="text-brand-yellow mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3 text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Informações principais em linha */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {/* Telefone e Email */}
-          <div className="text-left">
-            <div className="flex items-center mb-4">
-              <Phone className="text-brand-yellow mr-3" size={20} />
-              <p className="text-white/80">+351 930 682 725</p>
-            </div>
-            <div className="flex items-center">
-              <Mail className="text-brand-turquoise mr-3 flex-shrink-0" size={20} />
-              <p className="text-white/80">carloscruz@domrealce.com</p>
-            </div>
+      {/* Galeria */}
+      <ServiceGallery
+        images={galleryImages}
+        title="Exemplos de telas artísticas"
+        description="Algumas inspirações de telas produzidas para decoração residencial e comercial."
+        columns={3}
+      />
+
+      {/* Tamanhos disponíveis */}
+      <section className="pt-8 pb-16 bg-black border-t border-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              <span className="text-white">Tamanhos</span>{" "}
+              <span className="text-brand-yellow">disponíveis</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Desde formatos compactos até grandes obras de parede.
+            </p>
           </div>
 
-          {/* Morada */}
-          <div className="text-left">
-            <div className="flex items-start">
-              <MapPin className="text-brand-coral mr-3 mt-1" size={20} />
-              <p className="text-white/80">
-                Rua de Rebolido, 42<br />
-                4580-402 Gondalães, Paredes
-              </p>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {sizes.map((size, index) => (
+              <div
+                key={index}
+                className="bg-gray-900/60 border border-gray-800 rounded-lg p-6 text-center hover:border-brand-yellow transition-all duration-300"
+              >
+                <div className="text-2xl font-bold text-brand-yellow mb-2">
+                  {size}
+                </div>
+                <div className="text-sm text-gray-400">Formato padrão</div>
+              </div>
+            ))}
           </div>
 
-          {/* Horário */}
-          <div className="text-left">
-            <div className="flex items-start">
-              <Clock className="text-brand-yellow mr-3 mt-1" size={20} />
-              <div className="text-white/80 text-sm">
-                <p>Segunda-Sexta: 9h00-18h00</p>
-                <p>Sábado: 9h00-13h00</p>
-                <p>Domingo: Encerrado</p>
+          <div className="text-center mt-8">
+            <p className="text-gray-400 mb-4">
+              Precisa de um tamanho personalizado?
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black"
+            >
+              <Link href="/contactos#formulario">
+                Solicitar medida especial
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Aplicações ideais */}
+      <section className="pt-8 pb-16 bg-gray-900/40">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              <span className="text-white">Aplicações</span>{" "}
+              <span className="text-brand-yellow">ideais</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Perfeitas para qualquer ambiente que necessite de um toque
+              artístico especial.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {applications.map((application, index) => (
+              <Card
+                key={index}
+                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+              >
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
+                    {application.title}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {application.description}
+                  </p>
+                  <div>
+                    <span className="text-sm text-gray-500 mb-2 block">
+                      Exemplos:
+                    </span>
+                    <div className="space-y-1">
+                      {application.examples.map((example, exampleIndex) => (
+                        <div
+                          key={exampleIndex}
+                          className="flex items-center gap-2"
+                        >
+                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
+                          <span className="text-sm text-gray-300">
+                            {example}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Processo de criação */}
+      <section className="py-16 bg-black border-t border-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+              <span className="text-white">Processo de</span>{" "}
+              <span className="text-brand-yellow">criação</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Cada tela é cuidadosamente produzida para garantir qualidade
+              artística excecional.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            {process.map((step, index) => (
+              <div key={index} className="flex gap-6 mb-8 last:mb-0">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+                    {step.step}
+                  </div>
+                </div>
+                <div className="flex-1 pb-8">
+                  <h3 className="text-xl font-semibold mb-2 text-white">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400">{step.description}</p>
+                  {index < process.length - 1 && (
+                    <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Garantia de qualidade */}
+      <section className="py-16 bg-gray-900/40">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+                  <span className="text-brand-yellow">Garantia de</span>{" "}
+                  <span className="text-white">qualidade</span>
+                </h2>
+                <p className="text-gray-400 mb-8 text-lg">
+                  Utilizamos apenas materiais premium e tecnologia de impressão
+                  avançada para garantir que cada tela seja uma verdadeira obra
+                  de arte.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Canvas 100% algodão, 400g/m²
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Tintas pigmentadas resistentes UV
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Molduras de madeira certificada
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">
+                      Acabamento profissional e pronto a pendurar
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black rounded-2xl p-8 border border-gray-800">
+                <div className="text-center mb-6">
+                  <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold mb-2 text-white">
+                    Qualidade artística
+                  </h3>
+                  <p className="text-gray-400">
+                    Cada tela é uma peça única criada com máximo cuidado.
+                  </p>
+                </div>
+
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Durabilidade</span>
+                    <span className="text-brand-yellow font-semibold">
+                      50+ anos
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Resolução mínima</span>
+                    <span className="text-brand-yellow font-semibold">
+                      300 DPI
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Prazo de produção</span>
+                    <span className="text-brand-yellow font-semibold">
+                      3-7 dias
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Garantia</span>
+                    <span className="text-brand-yellow font-semibold">
+                      Vida útil da tela
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Redes Sociais */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center space-x-4">
-            <a 
-              href="https://www.facebook.com/DomrealcePublicidade/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 bg-brand-blue rounded-full text-white hover:bg-blue-600 transition-colors flex items-center justify-center"
-            >
-              <span className="sr-only">Facebook</span>
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <Button
-              size="icon"
-              className="w-10 h-10 bg-brand-coral rounded-full text-white hover:bg-red-500 transition-colors"
-            >
-              <span className="sr-only">Instagram</span>
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </Button>
-            <a
-              href="https://www.linkedin.com/company/51830077/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button
-                size="icon"
-                className="w-10 h-10 bg-brand-turquoise rounded-full text-black hover:bg-cyan-400 transition-colors"
-              >
-                <span className="sr-only">LinkedIn</span>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </Button>
-            </a>
-            <a 
-              href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button
-                size="icon"
-                className="w-10 h-10 bg-brand-yellow rounded-full text-black hover:bg-yellow-400 transition-colors"
-              >
-                <span className="sr-only">WhatsApp</span>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                </svg>
-              </Button>
-            </a>
-          </div>
-        </div>
-
-        {/* WhatsApp CTA */}
-        <div className="bg-gradient-to-r from-brand-turquoise to-brand-blue rounded-2xl p-6 mb-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <h4 className="text-white font-heading font-semibold mb-2">Fale connosco via WhatsApp</h4>
-              <p className="text-white/80">Resposta rápida e atendimento personalizado</p>
+      {/* Orçamento personalizado */}
+      <section className="py-16 bg-black border-t border-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-brand-yellow">Orçamento</span>{" "}
+                <span className="text-white">personalizado</span>
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Use uma imagem do Adobe Stock ou envie a sua fotografia e
+                receba um orçamento à medida.
+              </p>
             </div>
-            <a 
-              href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              <Button className="bg-black text-brand-yellow px-6 py-3 rounded-lg font-semibold hover:bg-brand-coral hover:text-white transition-colors">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                </svg>
-                Contactar via WhatsApp
-              </Button>
-            </a>
-          </div>
-        </div>
 
-        {/* Footer Bottom */}
-        <div className="border-t border-brand-blue pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/60 mb-4 md:mb-0">
-            &copy; 2024 DOMREALCE. Todos os direitos reservados.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center md:justify-end text-sm">
-            <Link href="/politica-privacidade" className="text-white/60 hover:text-brand-yellow transition-colors">Política de Privacidade</Link>
-            <Link href="/termos-condicoes" className="text-white/60 hover:text-brand-turquoise transition-colors">Termos e Condições</Link>
-            <Link href="/politica-cookies" className="text-white/60 hover:text-brand-coral transition-colors">Política de Cookies</Link>
-            <Link href="/aviso-legal" className="text-white/60 hover:text-brand-yellow transition-colors">Aviso Legal</Link>
+            <Card className="bg-black border border-gray-800">
+              <CardContent className="p-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="largura" className="text-white">
+                        Largura (cm)
+                      </Label>
+                      <Input
+                        id="largura"
+                        type="number"
+                        step="1"
+                        placeholder="Ex: 70"
+                        value={formData.largura}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            largura: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="altura" className="text-white">
+                        Altura (cm)
+                      </Label>
+                      <Input
+                        id="altura"
+                        type="number"
+                        step="1"
+                        placeholder="Ex: 100"
+                        value={formData.altura}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            altura: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quantidade" className="text-white">
+                      Quantidade de telas
+                    </Label>
+                    <Input
+                      id="quantidade"
+                      type="number"
+                      min="1"
+                      value={formData.quantidade}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          quantidade: e.target.value,
+                        })
+                      }
+                      className="bg-gray-900 border-gray-700 text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white">Opção de imagem</Label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center text-white">
+                        <input
+                          type="radio"
+                          name="opcaoImagem"
+                          value="adobe-stock"
+                          checked={formData.opcaoImagem === "adobe-stock"}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              opcaoImagem: e.target.value,
+                            })
+                          }
+                          className="mr-2"
+                        />
+                        Adobe Stock
+                      </label>
+                      <label className="flex items-center text-white">
+                        <input
+                          type="radio"
+                          name="opcaoImagem"
+                          value="propria"
+                          checked={formData.opcaoImagem === "propria"}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              opcaoImagem: e.target.value,
+                            })
+                          }
+                          className="mr-2"
+                        />
+                        Imagem própria
+                      </label>
+                    </div>
+                  </div>
+
+                  {formData.opcaoImagem === "adobe-stock" ? (
+                    <div className="space-y-4">
+                      <div>
+                        <Label
+                          htmlFor="codigoAdobeStock"
+                          className="text-white"
+                        >
+                          Código / nº da imagem Adobe Stock
+                        </Label>
+                        <Input
+                          id="codigoAdobeStock"
+                          placeholder="Ex: 123456789"
+                          value={formData.codigoAdobeStock}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              codigoAdobeStock: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="descricaoImagemAdobe"
+                          className="text-white"
+                        >
+                          Observações (opcional)
+                        </Label>
+                        <Textarea
+                          id="descricaoImagemAdobe"
+                          placeholder="Notas adicionais sobre a imagem ou composição..."
+                          value={formData.descricaoImagem}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              descricaoImagem: e.target.value,
+                            })
+                          }
+                          className="bg-gray-900 border-gray-700 text-white"
+                        />
+                      </div>
+
+                      <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
+                        <p className="text-brand-yellow text-sm">
+                          💡 <strong>Dica:</strong> pode procurar a imagem em{" "}
+                          <a
+                            href="https://stock.adobe.com/pt"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                          >
+                            Adobe Stock
+                          </a>{" "}
+                          e copiar o código/número para aqui.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <Label
+                        htmlFor="descricaoImagemPropria"
+                        className="text-white"
+                      >
+                        Descrição da sua imagem
+                      </Label>
+                      <Textarea
+                        id="descricaoImagemPropria"
+                        placeholder="Ex: fotografia de família, retrato, paisagem... (pode enviar a fotografia quando responder ao nosso email)"
+                        value={formData.descricaoImagem}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            descricaoImagem: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="nome" className="text-white">
+                        Nome
+                      </Label>
+                      <Input
+                        id="nome"
+                        value={formData.nome}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            nome: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-white">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            email: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="telefone" className="text-white">
+                        Telefone
+                      </Label>
+                      <Input
+                        id="telefone"
+                        value={formData.telefone}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            telefone: e.target.value,
+                          })
+                        }
+                        className="bg-gray-900 border-gray-700 text-white"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="mensagem" className="text-white">
+                      Mensagem adicional
+                    </Label>
+                    <Textarea
+                      id="mensagem"
+                      placeholder="Detalhes adicionais sobre o projeto..."
+                      value={formData.mensagem}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          mensagem: e.target.value,
+                        })
+                      }
+                      className="bg-gray-900 border-gray-700 text-white"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Solicitar orçamento por email
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
-    </footer>
+      </section>
+
+      {/* CTA final */}
+      <section className="py-16 bg-black border-t border-gray-900">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+            <span className="text-white">Pronto para criar a sua</span>{" "}
+            <span className="text-brand-yellow">obra de arte?</span>
+          </h2>
+          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            Transforme as suas fotografias favoritas ou criações artísticas em
+            telas profissionais que durarão muitos anos.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              asChild
+              className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
+            >
+              <Link href="/contactos#formulario">
+                Criar minha tela
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
+            >
+              <a
+                href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp direto
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
   );
 }
