@@ -2,12 +2,22 @@ import { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
+import logoDomrealce from "@/assets/domrealce-logo.png";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isServicesMobileOpen, setIsServicesMobileOpen] = useState(false);
   const [location] = useLocation();
+
+  // 🔢 Número de produtos no carrinho
+  // 👉 Quando tiveres o store/contexto do carrinho, substituis isto por algo real.
+  //
+  // Exemplos futuros:
+  //   const { items } = useCart();
+  //   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  //
+  const cartCount = 0;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,8 +52,7 @@ export default function Navigation() {
   const baseLinkClasses =
     "relative transition-all duration-300 font-medium px-3 py-2 rounded-full text-sm text-white/80 hover:text-white hover:bg-white/5";
 
-  const activeLinkClasses =
-    "text-brand-yellow bg-white/5";
+  const activeLinkClasses = "text-brand-yellow bg-white/5";
 
   return (
     <header
@@ -58,15 +67,9 @@ export default function Navigation() {
           {/* LOGO */}
           <Link href="/" className="flex items-center space-x-3">
             <img
-              src="/public-objects/essenciais/1758147535288_domrealce-logo.png"
+              src={logoDomrealce}
               alt="DOMREALCE Logo"
-              className="h-12 w-auto"
-              loading="eager"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.insertAdjacentHTML('afterend', '<span class="text-xl font-bold text-brand-yellow">DOMREALCE</span>');
-              }}
+              className="h-14 w-auto"
             />
           </Link>
 
@@ -102,7 +105,6 @@ export default function Navigation() {
               >
                 Serviços
                 <span className="text-xs">▾</span>
-                {/* sublinhado suave quando ativo */}
                 {isServicesActive && (
                   <span className="absolute left-3 right-3 -bottom-1 h-[2px] rounded-full bg-brand-yellow/80" />
                 )}
@@ -218,7 +220,7 @@ export default function Navigation() {
               Contactos
             </Link>
 
-            {/* Cart Button – destaque, sem degradé */}
+            {/* Cart Button – com badge */}
             <Link
               href="/carrinho"
               className={`ml-1 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
@@ -228,8 +230,15 @@ export default function Navigation() {
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
-              <ShoppingCart className="h-4 w-4" />
-              Carrinho
+              <div className="relative">
+                <ShoppingCart className="h-4 w-4" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 min-w-[18px] px-1 h-[18px] rounded-full bg-black text-brand-yellow text-[10px] font-bold flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+              <span>Carrinho</span>
             </Link>
           </div>
 
@@ -281,7 +290,7 @@ export default function Navigation() {
                   type="button"
                   className={`w-full text-left transition-all duration-300 font-medium py-3 px-4 rounded-lg flex items-center justify-between ${
                     location.startsWith("/servico-")
-                      ? "bg-white/5 text-brand-yellow"
+                      ? "bg:white/5 text-brand-yellow"
                       : "text-white/80"
                   }`}
                   onClick={() =>
@@ -387,7 +396,7 @@ export default function Navigation() {
                 className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/portfolio"
                     ? "bg-white/5 text-brand-yellow"
-                    : "text-white/80 hover:bg:white/5 hover:text-white"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -398,8 +407,8 @@ export default function Navigation() {
                 href="/loja"
                 className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/loja"
-                    ? "bg:white/5 text-brand-turquoise"
-                    : "text-white/80 hover:bg-white/5 hover:text:white"
+                    ? "bg-white/5 text-brand-turquoise"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -411,7 +420,7 @@ export default function Navigation() {
                 className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/noticias"
                     ? "bg-white/5 text-brand-green"
-                    : "text-white/80 hover:bg-white/5 hover:text:white"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -423,14 +432,14 @@ export default function Navigation() {
                 className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
                   location === "/contactos"
                     ? "bg-white/5 text-brand-coral"
-                    : "text-white/80 hover:bg-white/5 hover:text:white"
+                    : "text-white/80 hover:bg-white/5 hover:text-white"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contactos
               </Link>
 
-              {/* Cart Button Mobile – sem degradé */}
+              {/* Cart Button Mobile – com badge */}
               <Link
                 href="/carrinho"
                 className={`transition-all duration-300 font-semibold py-3 px-4 rounded-lg text-left flex items-center gap-2 ${
@@ -440,8 +449,15 @@ export default function Navigation() {
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                <ShoppingCart className="h-4 w-4" />
-                Carrinho
+                <div className="relative">
+                  <ShoppingCart className="h-4 w-4" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 min-w-[18px] px-1 h-[18px] rounded-full bg-black text-brand-yellow text-[10px] font-bold flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+                <span>Carrinho</span>
               </Link>
             </div>
           </div>
