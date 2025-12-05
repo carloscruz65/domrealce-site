@@ -77,9 +77,13 @@ export default function NewsSection() {
                 <h4 className={`text-xl font-heading font-semibold mb-3 text-white ${titleHoverColors[index % titleHoverColors.length]} transition-colors cursor-pointer hover:animate-pulse-brand`}>
                   {article.titulo}
                 </h4>
+
                 <p className="text-white/80 mb-4">
-                  {article.descricao}
+                  {article.descricao.length > 200
+                    ? `${article.descricao.slice(0, 200)}…`
+                    : article.descricao}
                 </p>
+
                 <Button 
                   asChild
                   variant="link" 

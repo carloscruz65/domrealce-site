@@ -317,7 +317,7 @@ export default function Sobre() {
           <div className="relative">
             <div className="rounded-lg overflow-hidden border border-[#333] bg-[#0a0a0a]">
               <img
-                src="/public-objects/essenciais/atelier-interior.webp"
+                src="/public-objects/sobre/interior-domrealce.webp"
                 alt="Interior do atelier DOMREALCE em Paredes"
                 className="w-full h-full max-h-[420px] object-cover"
                 loading="lazy"
