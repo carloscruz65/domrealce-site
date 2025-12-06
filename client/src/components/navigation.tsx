@@ -78,7 +78,7 @@ export default function Navigation() {
     window.addEventListener("storage", handleStorage);
 
     // Atualização periódica para apanhar alterações feitas na mesma página
-    const intervalId = window.setInterval(updateCartCount, 1000);
+    const intervalId = window.setInterval(updateCartCount, 5000); // A cada 5 segundos (otimizado)
 
     return () => {
       window.removeEventListener("storage", handleStorage);

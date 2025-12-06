@@ -32,7 +32,8 @@ export default function ClientLogos() {
   // Carregar logótipos da API (object storage)
   const { data: logosData, isLoading } = useQuery<LogosResponse>({
     queryKey: ['/api/client-logos'],
-    refetchInterval: 10000, // Atualizar a cada 10 segundos para novos logótipos
+    staleTime: 1000 * 60 * 30, // Cache por 30 minutos (logos raramente mudam)
+    refetchOnWindowFocus: false,
   });
 
   // Usar logótipos reais ou fallback
