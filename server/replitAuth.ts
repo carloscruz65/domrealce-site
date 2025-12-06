@@ -118,11 +118,99 @@ export async function setupAuth(app: Express) {
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
+  // Show login page with button
   app.get("/api/login", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"],
-    })(req, res, next);
+    // Check if user wants to actually authenticate (via query param or already authenticated)
+    if (req.query.auth === 'start') {
+      return passport.authenticate(`replitauth:${req.hostname}`, {
+        prompt: "login consent",
+        scope: ["openid", "email", "profile", "offline_access"],
+      })(req, res, next);
+    }
+    
+    // Show a simple login page with button
+    const isLoggedIn = req.isAuthenticated();
+    const user = req.user as any;
+    
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="pt">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login Admin - DOMREALCE</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+          }
+          .container {
+            background: rgba(255,255,255,0.1);
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+          }
+          h1 { margin-bottom: 1rem; color: #FFD700; }
+          p { margin-bottom: 2rem; opacity: 0.8; line-height: 1.6; }
+          .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #FFD700;
+            color: #1a1a2e;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+          }
+          .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+          }
+          .btn-secondary {
+            background: #4CAF50;
+            margin-left: 1rem;
+          }
+          .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(76,175,80,0.2);
+            border-radius: 0.5rem;
+          }
+          .links { margin-top: 2rem; }
+          .links a { color: #FFD700; margin: 0 0.5rem; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>🔐 Admin DOMREALCE</h1>
+          ${isLoggedIn ? `
+            <div class="status">
+              <p>✅ Sessão ativa: <strong>${user?.claims?.email || 'Utilizador'}</strong></p>
+            </div>
+            <div class="links">
+              <a href="/admin" class="btn">Ir para Admin</a>
+              <a href="/api/admin/download-all-images" class="btn btn-secondary">Download Imagens</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.9rem;">
+              <a href="/api/logout" style="color: #ff6b6b;">Terminar Sessão</a>
+            </p>
+          ` : `
+            <p>Faça login com a sua conta Replit para aceder ao painel de administração.</p>
+            <a href="/api/login?auth=start" class="btn">Entrar com Replit</a>
+          `}
+        </div>
+      </body>
+      </html>
+    `);
   });
 
   app.get("/api/callback", (req, res, next) => {
