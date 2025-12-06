@@ -8,8 +8,24 @@ interface SliderResponse {
   slides: Slide[];
 }
 
+// Gera URL da versão mobile (adiciona -mobile antes da extensão)
+function getMobileImageUrl(imageUrl: string): string {
+  const lastDot = imageUrl.lastIndexOf('.');
+  if (lastDot === -1) return imageUrl;
+  return `${imageUrl.substring(0, lastDot)}-mobile${imageUrl.substring(lastDot)}`;
+}
+
 export default function DynamicSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar se é mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const { data, isLoading, error } = useQuery<SliderResponse>({
     queryKey: ["/api/slider"],
@@ -90,17 +106,18 @@ export default function DynamicSlider() {
           key={slide.id}
           className={`slide ${index === currentSlide ? "active" : ""}`}
         >
-          {/* ✅ Imagem real (melhor para LCP do que background-image) */}
+          {/* ✅ Imagem real com srcset para mobile/desktop */}
           <img
             src={slide.image}
+            srcSet={`${getMobileImageUrl(slide.image)} 800w, ${slide.image} 1920w`}
+            sizes="100vw"
             alt={slide.title || "Slide DOMREALCE"}
             className="slide-bg-image"
             loading={index === 0 ? "eager" : "lazy"}
             decoding="async"
-            /* ajuda o browser a priorizar o primeiro slide */
             {...(index === 0 ? { fetchpriority: "high" as any } : {})}
-            width={1920}
-            height={900}
+            width={isMobile ? 800 : 1920}
+            height={isMobile ? 450 : 900}
           />
 
           <div className="text-overlay">
