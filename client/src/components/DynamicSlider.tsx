@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link } from "wouter"; // ✅ Wouter SPA navigation
+import { useState, useEffect, useMemo } from "react";
+import { Link } from "wouter";
 import type { Slide } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import "./Slider.css";
@@ -17,18 +17,23 @@ export default function DynamicSlider() {
       const res = await fetch("/api/slider");
       if (!res.ok) throw new Error("Erro ao carregar slides");
       return res.json();
-    }
+    },
   });
 
-  let activeSlides = data?.slides?.filter((slide: Slide) => slide.active) || [];
+  // 👉 Filtrar apenas slides ativos e garantir que o 2.º vem em primeiro
+  const activeSlides = useMemo(() => {
+    const base = data?.slides?.filter((s) => s.active) ?? [];
+    if (base.length > 1) {
+      const clone = [...base];
+      const second = clone[1];
+      clone.splice(1, 1);
+      clone.unshift(second);
+      return clone;
+    }
+    return base;
+  }, [data?.slides]);
 
-  // 👉 Forçar que o 2º slide (index 1) fique sempre em 1º
-  if (activeSlides.length > 1) {
-    const second = activeSlides.splice(1, 1)[0];
-    activeSlides.unshift(second);
-  }
-
-  // Auto-advance slides every 3.5s
+  // Auto-advance
   useEffect(() => {
     if (activeSlides.length > 1) {
       const interval = setInterval(() => {
@@ -38,18 +43,19 @@ export default function DynamicSlider() {
     }
   }, [activeSlides.length]);
 
-  // Loading state
+  // Estado de loading – mantém um “hero” com altura estável
   if (isLoading) {
     return (
       <div className="slider">
         <div className="slide active loading">
+          <div className="slide-bg-placeholder" />
           <div className="text-overlay">
             <div className="animate-pulse">
-              <div className="h-12 bg-gray-700 rounded mb-4"></div>
-              <div className="h-6 bg-gray-700 rounded mb-6"></div>
+              <div className="h-10 bg-gray-700/70 rounded mb-3"></div>
+              <div className="h-6 bg-gray-700/60 rounded mb-5"></div>
               <div className="flex justify-center gap-4">
-                <div className="h-12 w-32 bg-gray-700 rounded"></div>
-                <div className="h-12 w-32 bg-gray-700 rounded"></div>
+                <div className="h-10 w-32 bg-gray-700/60 rounded"></div>
+                <div className="h-10 w-32 bg-gray-700/60 rounded"></div>
               </div>
             </div>
           </div>
@@ -58,34 +64,17 @@ export default function DynamicSlider() {
     );
   }
 
-  // Error state
-  if (error) {
+  // Erro
+  if (error || activeSlides.length === 0) {
     return (
       <div className="slider">
         <div className="slide active fallback">
+          <div className="slide-bg-placeholder" />
           <div className="text-overlay">
-            <h1>Realce sua marca com criatividade e alta definição</h1>
+            <h1>Realce a sua marca com criatividade e alta definição</h1>
             <p>
-              Transformamos as suas ideias em comunicação visual de excelência.
-              Design gráfico, impressão digital, papel de parede e soluções
-              personalizadas para empresas e particulares.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Sem slides
-  if (activeSlides.length === 0) {
-    return (
-      <div className="slider">
-        <div className="slide active fallback">
-          <div className="text-overlay">
-            <h1>Realce sua marca com criatividade e alta definição</h1>
-            <p>
-              Transformamos as suas ideias em comunicação visual de excelência.
-              Design gráfico, impressão digital, papel de parede e soluções
+              Transformamos as suas ideias em comunicação visual de excelência:
+              design gráfico, impressão digital, papel de parede e soluções
               personalizadas para empresas e particulares.
             </p>
           </div>
@@ -96,19 +85,29 @@ export default function DynamicSlider() {
 
   return (
     <div className="slider">
-      {activeSlides.map((slide: Slide, index: number) => (
+      {activeSlides.map((slide, index) => (
         <div
           key={slide.id}
           className={`slide ${index === currentSlide ? "active" : ""}`}
-          style={{
-            backgroundImage: `url('${slide.image}')`
-          }}
         >
+          {/* ✅ Imagem real (melhor para LCP do que background-image) */}
+          <img
+            src={slide.image}
+            alt={slide.title || "Slide DOMREALCE"}
+            className="slide-bg-image"
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding="async"
+            /* ajuda o browser a priorizar o primeiro slide */
+            {...(index === 0 ? { fetchpriority: "high" as any } : {})}
+            width={1920}
+            height={900}
+          />
+
           <div className="text-overlay">
             <h1>{slide.title}</h1>
             <p>{slide.text}</p>
 
-            {/* ✅ Botões lado a lado - corrigido para mobile/tablet */}
+            {/* Botões só nos outros slides, como já tinhas */}
             {index !== 0 && (
               <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 w-full max-w-[260px] sm:max-w-sm md:max-w-md mx-auto">
                 <Link href="/servicos" className="flex-1">
@@ -127,10 +126,10 @@ export default function DynamicSlider() {
         </div>
       ))}
 
-      {/* Navigation dots */}
+      {/* Dots */}
       {activeSlides.length > 1 && (
         <div className="slider-dots">
-          {activeSlides.map((_: Slide, index: number) => (
+          {activeSlides.map((_, index) => (
             <button
               key={index}
               className={`dot ${index === currentSlide ? "active" : ""}`}
