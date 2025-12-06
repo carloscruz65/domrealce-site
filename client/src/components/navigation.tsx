@@ -10,14 +10,8 @@ export default function Navigation() {
   const [isServicesMobileOpen, setIsServicesMobileOpen] = useState(false);
   const [location] = useLocation();
 
-  // 🔢 Número de produtos no carrinho
-  // 👉 Quando tiveres o store/contexto do carrinho, substituis isto por algo real.
-  //
-  // Exemplos futuros:
-  //   const { items } = useCart();
-  //   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  //
-  const cartCount = 0;
+  // 🔢 Número de produtos no carrinho (lido do localStorage "cart")
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +39,52 @@ export default function Navigation() {
         document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isMenuOpen]);
+
+  // Ler e acompanhar o carrinho no localStorage
+  useEffect(() => {
+    const updateCartCount = () => {
+      try {
+        const savedCart = localStorage.getItem("cart");
+        if (!savedCart) {
+          setCartCount(0);
+          return;
+        }
+
+        const items = JSON.parse(savedCart) as Array<{
+          quantidade?: number;
+          quantity?: number;
+        }>;
+
+        const total = items.reduce(
+          (sum, item) => sum + (item.quantidade ?? item.quantity ?? 1),
+          0
+        );
+
+        setCartCount(total);
+      } catch (error) {
+        console.error("Erro ao ler carrinho do localStorage:", error);
+      }
+    };
+
+    // Atualiza ao carregar
+    updateCartCount();
+
+    // Atualiza se o carrinho mudar noutra aba/janela
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === "cart") {
+        updateCartCount();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // Atualização periódica para apanhar alterações feitas na mesma página
+    const intervalId = window.setInterval(updateCartCount, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.clearInterval(intervalId);
+    };
+  }, []);
 
   const isServicesActive =
     location === "/servicos" || location.startsWith("/servico-");
