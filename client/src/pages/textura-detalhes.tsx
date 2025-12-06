@@ -231,6 +231,7 @@ export default function LojaTexturaDetalhes() {
                       <img
                         src={texture.path}
                         alt={texture.name}
+                        loading="lazy"
                         className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       {/* Hover overlay "Ver Maior" */}
@@ -264,6 +265,7 @@ export default function LojaTexturaDetalhes() {
                     <img
                       src={selectedTexture}
                       alt="Textura selecionada"
+                      loading="lazy"
                       className="w-full aspect-square object-cover rounded mb-3"
                     />
                     <p className="text-xs text-gray-300 text-center">

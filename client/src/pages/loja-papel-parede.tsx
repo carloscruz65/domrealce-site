@@ -125,6 +125,7 @@ export default function LojaPapelParede() {
                     <img
                       src={texture.path}
                       alt={texture.name}
+                      loading="lazy"
                       className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {/* Overlay com texto "Ver Mais" que aparece no hover */}

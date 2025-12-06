@@ -52,6 +52,7 @@ export default function PortfolioSection() {
               <img 
                 src={product.imagem} 
                 alt={product.titulo} 
+                loading="lazy"
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent group-hover:from-black/60 transition-all duration-300"></div>
