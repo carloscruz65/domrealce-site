@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <!-- Viewport acessível (sem maximum-scale=1) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- SEO Meta Tags -->
     <title>DOMREALCE - Comunicação Visual e Impressão Digital | Portugal</title>
     <meta name="description" content="DOMREALCE - Especialista em comunicação visual, impressão digital, papel de parede, decoração de viaturas e sinalética comercial. 40 anos de experiência em Lisboa." />
@@ -12,7 +12,7 @@
     <meta name="author" content="DOMREALCE" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.domrealce.com/" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.domrealce.com/" />
@@ -21,20 +21,20 @@
     <meta property="og:image" content="https://www.domrealce.com/og-image.jpg" />
     <meta property="og:locale" content="pt_PT" />
     <meta property="og:site_name" content="DOMREALCE" />
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.domrealce.com/" />
     <meta name="twitter:title" content="DOMREALCE - Comunicação Visual e Impressão Digital" />
     <meta name="twitter:description" content="Especialista em comunicação visual, impressão digital e papel de parede com 40 anos de experiência em Lisboa, Portugal." />
     <meta name="twitter:image" content="https://www.domrealce.com/og-image.jpg" />
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    
+
     <!-- Structured Data Schema -->
     <script type="application/ld+json">
     {
@@ -112,14 +112,17 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
       >
     </noscript>
-    
+
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
     <link rel="dns-prefetch" href="//storage.googleapis.com">
     <link rel="dns-prefetch" href="//images.unsplash.com">
     <link rel="dns-prefetch" href="//api.ifthenpay.com">
     <meta name="format-detection" content="telephone=no">
-    
+
+    <!-- Preload do CSS principal (ajuda FCP/LCP) -->
+    <link rel="preload" href="/assets/index-BCiQ1Hrc.css" as="style">
+
     <!-- Preload LCP image - versões desktop e mobile -->
     <link
       rel="preload"
@@ -133,12 +136,12 @@
       href="/public-objects/inicio/slider/camiao-corrida-reboconorte-mobile.webp"
       media="(max-width: 767px)"
     >
-    
+
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
+
     <!-- Facebook Pixel Code (carregado após conteúdo principal) -->
     <script defer>
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
@@ -148,7 +151,7 @@
     <noscript>
       <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1778183959323005&ev=PageView&noscript=1" />
     </noscript>
-    
+
     <!-- Replit dev banner -->
     <script defer type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>

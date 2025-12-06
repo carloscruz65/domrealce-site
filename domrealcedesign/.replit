@@ -44,3 +44,6 @@ waitForPort = 5000
 
 [objectStorage]
 defaultBucketID = "replit-objstore-8764e3e2-1960-4f62-bfca-f1883317acbb"
+[deployment]
+command = "npm run build"
+directory = "dist/public"
