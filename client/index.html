@@ -2,7 +2,8 @@
 <html lang="pt-PT">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <!-- Viewport acessível (sem maximum-scale=1) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Meta Tags -->
     <title>DOMREALCE - Comunicação Visual e Impressão Digital | Portugal</title>
@@ -95,11 +96,22 @@
       }
     }
     </script>
+
     <!-- Preload critical fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"></noscript>
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    >
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      >
+    </noscript>
     
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
@@ -109,10 +121,20 @@
     <meta name="format-detection" content="telephone=no">
     
     <!-- Preload LCP image - versões desktop e mobile -->
-    <link rel="preload" as="image" href="/public-objects/inicio/slider/camiao-corrida-reboconorte.webp" fetchpriority="high" media="(min-width: 768px)">
-    <link rel="preload" as="image" href="/public-objects/inicio/slider/camiao-corrida-reboconorte-mobile.webp" fetchpriority="high" media="(max-width: 767px)">
+    <link
+      rel="preload"
+      as="image"
+      href="/public-objects/inicio/slider/camiao-corrida-reboconorte.webp"
+      media="(min-width: 768px)"
+    >
+    <link
+      rel="preload"
+      as="image"
+      href="/public-objects/inicio/slider/camiao-corrida-reboconorte-mobile.webp"
+      media="(max-width: 767px)"
+    >
     
-    </head>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
@@ -124,7 +146,7 @@
       fbq('track', 'PageView');
     </script>
     <noscript>
-      <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1778183959323005&ev=PageView&noscript=1"/>
+      <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1778183959323005&ev=PageView&noscript=1" />
     </noscript>
     
     <!-- Replit dev banner -->
