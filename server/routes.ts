@@ -20,6 +20,7 @@ import { createIfthenPayService, type PaymentMethod } from "./ifthenpay";
 import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import path from 'path';
+import archiver from 'archiver';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -616,6 +617,56 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       console.error("Error processing slider images:", error);
       res.status(500).json({ error: "Failed to process slider images" });
+    }
+  });
+
+  // API route to download all Object Storage images as ZIP
+  app.get("/api/admin/download-all-images", protegerAdmin, async (req, res) => {
+    try {
+      const files = await objectStorageService.listPublicFiles();
+      
+      // Filter only image files
+      const imageFiles = files.filter(file => 
+        /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
+      );
+      
+      if (imageFiles.length === 0) {
+        return res.status(404).json({ error: "Nenhuma imagem encontrada" });
+      }
+      
+      // Set response headers for ZIP download
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', 'attachment; filename=domrealce-imagens.zip');
+      
+      // Create ZIP archive
+      const archive = archiver('zip', { zlib: { level: 5 } });
+      
+      archive.on('error', (err: Error) => {
+        console.error('Archive error:', err);
+        res.status(500).json({ error: 'Erro ao criar arquivo ZIP' });
+      });
+      
+      // Pipe archive to response
+      archive.pipe(res);
+      
+      // Add each image to the archive
+      for (const filePath of imageFiles) {
+        try {
+          const fileBuffer = await objectStorageService.downloadFile(filePath);
+          if (fileBuffer) {
+            archive.append(fileBuffer, { name: filePath });
+          }
+        } catch (err) {
+          console.error(`Error adding file ${filePath} to archive:`, err);
+        }
+      }
+      
+      // Finalize archive
+      await archive.finalize();
+      
+    } catch (error) {
+      console.error("Error creating image archive:", error);
+      res.status(500).json({ error: "Failed to create image archive" });
     }
   });
 

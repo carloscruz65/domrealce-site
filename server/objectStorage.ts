@@ -248,6 +248,28 @@ export class ObjectStorageService {
     });
   }
 
+  // Download a file as Buffer (for ZIP creation)
+  async downloadFile(filePath: string): Promise<Buffer | null> {
+    try {
+      for (const searchPath of this.getPublicObjectSearchPaths()) {
+        const fullPath = `${searchPath}/${filePath}`;
+        const { bucketName, objectName } = parseObjectPath(fullPath);
+        const bucket = objectStorageClient.bucket(bucketName);
+        const file = bucket.file(objectName);
+        
+        const [exists] = await file.exists();
+        if (exists) {
+          const [contents] = await file.download();
+          return contents;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error(`Error downloading file ${filePath}:`, error);
+      return null;
+    }
+  }
+
   // Delete a file from public storage
   async deletePublicFile(filePath: string): Promise<boolean> {
     try {
