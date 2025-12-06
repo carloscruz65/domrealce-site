@@ -18,7 +18,9 @@ export default function Footer() {
             src={logoDomrealce}
             alt="DOMREALCE Logo"
             className="h-16 w-auto"
-            loading="eager"
+            loading="lazy"
+            width={200}
+            height={64}
           />
           <p className="max-w-xl text-sm md:text-base text-white/70">
             Comunicação visual, impressão e decoração de espaços para marcas

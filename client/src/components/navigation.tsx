@@ -110,6 +110,8 @@ export default function Navigation() {
               src={logoDomrealce}
               alt="DOMREALCE Logo"
               className="h-14 w-auto"
+              width={180}
+              height={56}
             />
           </Link>
 
