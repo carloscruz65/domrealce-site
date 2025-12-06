@@ -1,0 +1,68 @@
+Estatísticas
+Pedidos de bloqueio de renderização Poupança estimada de 1210 ms
+Use durações totais de cache eficientes Poupança estimada de 477 KiB
+Ajuste forçado
+Análise detalhada de LCP
+Árvore de dependências de rede
+Latência do pedido de documento Poupança estimada de 4 KiB
+Melhore a entrega de imagens Poupança estimada de 40 KiB
+Otimize o tamanho do DOM
+Terceiros
+Estas estatísticas também estão disponíveis no painel de desempenho das Chrome DevTools: registe um rastreio para ver informações mais detalhadas.
+Diagnósticos
+Reduza o JavaScript não utilizado Poupança estimada de 873 KiB
+Reduza o CSS Poupança estimada de 170 KiB
+Evite tarefas longas na thread principal 4 tarefas longas encontradas
+Evite animações não compostas 3 elementos animados encontrados
+Mais informações sobre o desempenho da sua aplicação. Estes números não afetam diretamente a pontuação de desempenho.
+Auditorias aprovadas (14)
+Mostrar
+77
+Acessibilidade
+Estas verificações realçam oportunidades de melhorar a acessibilidade da sua app Web. A deteção automática só pode detetar um subconjunto de problemas e não garante a acessibilidade da sua app Web, por isso, também recomendamos testes manuais.
+Nomes e etiquetas
+Os botões não têm um nome acessível
+Estas são oportunidades para melhorar a semântica dos controlos na sua aplicação. Desta forma, poderá melhorar a experiência dos utilizadores de tecnologia de assistência, como os de leitores de ecrã.
+Práticas recomendadas
+O [user-scalable="no"] é utilizado no elemento <meta name="viewport"> ou o atributo [maximum-scale] é inferior a 5.
+As áreas de toque não têm tamanho nem espaçamento suficientes.
+O documento não tem um ponto de referência principal.
+Todos os elementos de título têm conteúdo.
+Os links idênticos têm a mesma finalidade.
+Estes itens realçam as práticas recomendadas de acessibilidade comuns.
+Contraste
+As cores de primeiro e de segundo plano não têm uma relação de contraste suficiente
+Estas são oportunidades para melhorar a legibilidade do seu conteúdo.
+Navegação
+Os elementos do título não se encontram numa ordem sequencialmente decrescente
+Estas são oportunidades para melhorar a navegação do teclado na sua aplicação.
+Itens adicionais a verificar manualmente (10)
+Mostrar
+Estes itens destinam-se a áreas não abrangidas por uma ferramenta de teste automatizada. Saiba mais no nosso guia sobre como efetuar uma revisão de acessibilidade.
+Auditorias aprovadas (17)
+Mostrar
+Não aplicável (35)
+Mostrar
+92
+Práticas recomendadas
+Geral
+Os erros do navegador foram registados na consola
+Foram registados erros no painel Issues das Chrome Devtools
+Mapas de origem em falta para JavaScript original grande
+Confiança e segurança
+Certifique-se de que a CSP é eficaz contra ataques XSS
+Use uma política HSTS forte
+Garanta o isolamento de origem adequado com o COOP
+Mitigue o XSS baseado em DOM com a Trusted Types
+Auditorias aprovadas (10)
+Mostrar
+Não aplicável (3)
+Mostrar
+100
+SEO
+Estas verificações asseguram que a página está a seguir os conselhos básicos de otimização do motor de pesquisa. Existem vários fatores adicionais que o Lighthouse não contabiliza aqui e que podem afetar a classificação de pesquisa, incluindo o desempenho nas Métricas essenciais da Web. Saiba mais acerca do Google Search Essentials.
+Itens adicionais a verificar manualmente (1)
+Ocultar
+Os dados estruturados são válidos
+Execute estes verificadores adicionais no seu site para consultar mais práticas recomendadas de SEO.
+Auditorias aprovadas (10)

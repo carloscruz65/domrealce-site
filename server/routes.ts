@@ -1308,11 +1308,12 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // 📍 Public Slider API - serves slides even with ADMIN_MODE=false
+  // Cache for 5 minutes to improve LCP performance
   app.get("/api/slider", async (req, res) => {
     try {
-      console.log("📍 /api/slider endpoint called");
       const slides = await storage.getSlides();
-      console.log(`✅ Fetched ${slides.length} slides from storage`);
+      // Add cache headers for better performance
+      res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
       res.json({ slides });
     } catch (error) {
       console.error("❌ Error fetching public slides:", error);
@@ -1433,7 +1434,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // Convert data string to Date if provided
       const processedData = {
         ...newsData,
-        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : new Date()
+        data: newsData.data ? (typeof newsData.data === 'object' ? newsData.data : new Date(newsData.data as string)) : new Date()
       };
       
       const noticia = await storage.createNews(processedData as any);
@@ -1452,7 +1453,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // Convert data string to Date if provided
       const processedData = {
         ...newsData,
-        data: newsData.data ? (newsData.data instanceof Date ? newsData.data : new Date(newsData.data)) : undefined
+        data: newsData.data ? (typeof newsData.data === 'object' ? newsData.data : new Date(newsData.data as string)) : undefined
       };
       
       const noticia = await storage.updateNews(id, processedData as any);
@@ -1646,7 +1647,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         page,
         section,
         element,
-        type: "text", // Default type, can be enhanced later
+        type: "text" as const,
         value: String(value)
       };
 
