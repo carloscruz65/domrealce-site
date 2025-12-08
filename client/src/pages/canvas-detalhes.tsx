@@ -353,13 +353,18 @@ export default function LojaCanvasDetalhes() {
                       <SelectTrigger className="bg-[#0a0a0a] border-[#333]">
                         <SelectValue placeholder="Escolha o tamanho" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#0a0a0a] border-[#333]">
+                      <SelectContent className="bg-[#0a0a0a] border-[#333] text-white">
                         {sizeOptions.map((option) => (
-                          <SelectItem key={option.size} value={option.size}>
+                          <SelectItem
+                            key={option.size}
+                            value={option.size}
+                            className="text-white data-[highlighted]:bg-[#20B2AA] data-[highlighted]:text-black"
+                          >
                             {option.size}cm - €{option.price.toFixed(2)}
                           </SelectItem>
                         ))}
                       </SelectContent>
+
                     </Select>
                   </div>
 

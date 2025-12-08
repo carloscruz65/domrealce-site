@@ -110,16 +110,17 @@ export default function Loja() {
                       <img 
                         src="/public-objects/essenciais/1758147540061_box_amostras_prodeccor_plus_1755963100331.webp" 
                         alt="Papel de Parede Samples" 
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    
-                    <h3 className="text-lg font-bold group-hover:text-[#FFD700] transition-colors text-center">
+
+                    <h3 className="text-lg font-bold text-gray-100 text-center group-hover:text-[#FFD700] transition-colors">
                       Papel de Parede
                     </h3>
                   </CardContent>
                 </Card>
               </Link>
+
 
               {/* Quadros em Canvas */}
               <Link href="/loja/quadros-canvas">
@@ -129,16 +130,17 @@ export default function Loja() {
                       <img 
                         src="/public-objects/essenciais/1758147537971_image_1756920896021.png" 
                         alt="Quadros em Canvas" 
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    
-                    <h3 className="text-lg font-bold group-hover:text-[#20B2AA] transition-colors text-center">
+
+                    <h3 className="text-lg font-bold text-gray-100 group-hover:text-[#20B2AA] transition-colors text-center">
                       Quadros em Canvas
                     </h3>
                   </CardContent>
                 </Card>
               </Link>
+
 
               {/* Placeholders para outras categorias */}
               {[1, 2].map((i) => (

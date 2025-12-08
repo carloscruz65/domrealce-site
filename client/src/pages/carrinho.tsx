@@ -223,17 +223,23 @@ export default function Carrinho() {
 
                         {/* Canvas Size Display */}
                         {item.type === 'quadros-canvas' && (
-                          <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#333]">
+                          <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#333] space-y-1">
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-400">Tamanho:</span>
-                              <span className="text-sm font-semibold">{item.tamanho}cm</span>
+                              <span className="text-sm font-semibold text-gray-300">
+                                {item.tamanho}cm
+                              </span>
                             </div>
+
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-400">Dimensões:</span>
-                              <span className="text-sm">{item.larguraCm}×{item.alturaCm}cm</span>
+                              <span className="text-sm text-gray-300">
+                                {item.larguraCm}×{item.alturaCm}cm
+                              </span>
                             </div>
                           </div>
                         )}
+
 
                         {/* Wallpaper Options */}
                         {item.type === 'papel-parede' && (
@@ -339,9 +345,10 @@ export default function Carrinho() {
                             >
                               <Minus className="h-4 w-4" />
                             </Button>
-                            <span className="w-12 text-center font-semibold">
+                            <span className="w-12 text-center font-semibold text-[#FFD700]">
                               {item.quantidade || 1}
                             </span>
+
                             <Button
                               variant="outline"
                               size="sm"
@@ -411,23 +418,34 @@ export default function Carrinho() {
                     Resumo do Pedido
                   </h3>
                   
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-3 mb-6 text-gray-300">
                     <div className="flex justify-between">
-                      <span>Subtotal:</span>
-                      <span>€{totals.subtotal.toFixed(2)}</span>
+                      <span className="text-gray-300">Subtotal:</span>
+                      <span className="text-gray-300">€{totals.subtotal.toFixed(2)}</span>
                     </div>
+
                     <div className="flex justify-between">
-                      <span>Envio:</span>
-                      <span className={totals.shipping === 0 ? "text-green-400" : ""}>
-                        {totals.shipping === 0 ? "Grátis" : `€${totals.shipping.toFixed(2)}`}
+                      <span className="text-gray-300">Envio:</span>
+                      <span
+                        className={
+                          totals.shipping === 0
+                            ? "text-green-400"
+                            : "text-gray-300"
+                        }
+                      >
+                        {totals.shipping === 0
+                          ? "Grátis"
+                          : `€${totals.shipping.toFixed(2)}`}
                       </span>
                     </div>
+
                     <div className="flex justify-between">
-                      <span>IVA (23%):</span>
-                      <span>€{totals.iva.toFixed(2)}</span>
+                      <span className="text-gray-300">IVA (23%):</span>
+                      <span className="text-gray-300">€{totals.iva.toFixed(2)}</span>
                     </div>
+
                     <div className="flex justify-between font-bold text-lg border-t border-[#333] pt-3">
-                      <span>Total:</span>
+                      <span className="text-gray-300">Total:</span>
                       <span className="text-[#FFD700]">€{totals.total.toFixed(2)}</span>
                     </div>
                   </div>
@@ -439,6 +457,7 @@ export default function Carrinho() {
                       </p>
                     </div>
                   )}
+
                   
                   <Link href="/checkout">
                     <Button 
