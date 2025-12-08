@@ -38,13 +38,14 @@ export default function LojaQuadrosCanvas() {
   });
 
   const displayNameOverrides: Record<string, string> = {
-    Mármore_geométrico: "Mármore Geométrico",
-    Textura_mármore: "Textura Mármore",
+    Marmore_geometrico: "Mármore Geométrico",
+    Textura_marmore: "Textura Mármore",
     Geometrico_Minimalista: "Geométrico Minimalista",
     Animais_Cores: "Animais Cores",
     Plantas_abstratas: "Plantas Abstratas",
-    Arte_Contemporânea: "Arte Contemporânea",
-    Geométricos: "Geométricos"
+    Arte_ContemporâNea: "Arte Contemporânea",
+    Geométricos: "Geométricos",
+    Leoes: "Leões",
   };
 
   const canvasCoversRaw =
