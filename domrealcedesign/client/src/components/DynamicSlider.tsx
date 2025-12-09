@@ -164,7 +164,7 @@ export default function DynamicSlider() {
                     <p>{slide.text}</p>
 
                     {/* Botões */}
-                    {index !== 0 && (
+                    {slide.title !== "BEM VINDO DOMREALCE" && (
                       <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 w-full max-w-[260px] sm:max-w-sm md:max-w-md mx-auto">
                         <Link href="/servicos" className="flex-1">
                           <button className="w-full px-3 py-2 rounded-md font-medium text-xs sm:text-sm transition text-center bg-brand-yellow text-black hover:bg-yellow-500">
@@ -178,6 +178,8 @@ export default function DynamicSlider() {
                         </Link>
                       </div>
                     )}
+
+
                   </div>
                 </div>
 

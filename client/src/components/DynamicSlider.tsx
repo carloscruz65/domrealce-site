@@ -124,8 +124,8 @@ export default function DynamicSlider() {
             <h1>{slide.title}</h1>
             <p>{slide.text}</p>
 
-            {/* Botões só nos outros slides, como já tinhas */}
-            {index !== 0 && (
+            {/* Botões só nos outros slides, exceto "Bem-vindos à DomRealce" */}
+            {index !== 0 && !slide.image?.toLowerCase().includes('bem-vindo') && (
               <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 w-full max-w-[260px] sm:max-w-sm md:max-w-md mx-auto">
                 <Link href="/servicos" className="flex-1">
                   <button className="w-full px-3 py-2 rounded-md font-medium text-xs sm:text-sm transition text-center bg-brand-yellow text-black hover:bg-yellow-500">
