@@ -14,14 +14,23 @@ app.use((req, res, next) => {
   res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com; " +
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-      "font-src 'self' https://fonts.gstatic.com; " +
-      "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com; " +
-      "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com; " +
-      "frame-src 'none';"
+    [
+      "default-src 'self'",
+      // scripts (site + GA + Maps + PayPal)
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
+      // CSS
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      // fonts
+      "font-src 'self' https://fonts.gstatic.com",
+      // imagens (inclui PayPal se for preciso mostrar logos)
+      "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
+      // pedidos XHR/fetch (PayPal SDK também fala com os servidores dele)
+      "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
+      // iframes/popups (ESSENCIAL para o botão PayPal funcionar)
+      "frame-src https://www.paypal.com https://www.sandbox.paypal.com",
+    ].join("; ")
   );
+
   next();
 });
 

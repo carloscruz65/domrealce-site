@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -41,6 +41,7 @@ export default function Carrinho() {
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const paypalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // Load cart from localStorage
@@ -345,10 +346,9 @@ export default function Carrinho() {
                             >
                               <Minus className="h-4 w-4" />
                             </Button>
-                            <span className="w-12 text-center font-semibold text-[#FFD700]">
+                            <span className="w-12 text-center font-semibold">
                               {item.quantidade || 1}
                             </span>
-
                             <Button
                               variant="outline"
                               size="sm"
@@ -457,6 +457,13 @@ export default function Carrinho() {
                       </p>
                     </div>
                   )}
+                  
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-400 mb-2">
+                      Ou paga de forma segura com PayPal:
+                    </p>
+                    <div ref={paypalRef}></div>
+                  </div>
 
                   
                   <Link href="/checkout">
