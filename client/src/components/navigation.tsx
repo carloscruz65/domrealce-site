@@ -152,7 +152,18 @@ export default function Navigation() {
                 )}
               </button>
 
-              <div className="absolute left-0 top-full mt-2 w-72 bg-black border border-[#333] rounded-xl shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50">
+              <div
+                className="
+                  absolute left-0 top-full
+                  w-72
+                  bg-black border border-[#333] rounded-xl shadow-2xl
+                  opacity-0 pointer-events-none
+                  group-hover:opacity-100 group-hover:pointer-events-auto
+                  hover:opacity-100 hover:pointer-events-auto
+                  transition-opacity duration-200
+                  z-50
+                "
+              >
                 <ul className="py-2">
                   <li>
                     <Link

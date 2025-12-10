@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,6 +8,7 @@ import { Trash2, Plus, Minus, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import { PaypalButton } from "@/components/PaypalButton";
 
 // Unified CartItem interface that supports both product types
 interface CartItem {
@@ -41,8 +42,6 @@ export default function Carrinho() {
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const paypalRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     // Load cart from localStorage
     const savedCart = localStorage.getItem('cart');
@@ -462,7 +461,24 @@ export default function Carrinho() {
                     <p className="text-xs text-gray-400 mb-2">
                       Ou paga de forma segura com PayPal:
                     </p>
-                    <div ref={paypalRef}></div>
+
+                    <PaypalButton
+                      amount={totals.total} // total final em EUR
+                      onSuccess={(details) => {
+                        console.log("Pagamento PayPal OK:", details);
+                        alert("Pagamento PayPal concluído com sucesso! ✅");
+
+                        // limpar carrinho
+                        localStorage.removeItem("cart");
+
+                        // idealmente: redirect para página de obrigado
+                        // window.location.href = "/obrigado";
+                      }}
+                      onError={(err) => {
+                        console.error("Erro PayPal:", err);
+                        alert("Ocorreu um erro ao processar o pagamento PayPal.");
+                      }}
+                    />
                   </div>
 
                   
