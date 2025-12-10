@@ -458,14 +458,10 @@ export default function Carrinho() {
                   )}
                   
                   <div className="mt-4">
-                    <p className="text-xs text-gray-400 mb-2">
-                      Ou paga de forma segura com PayPal:
-                    </p>
-
-                    <PaypalButton
-                      amount={totals.total}
-                      onSuccess={(details) => {
-                        console.log("Pagamento PayPal OK:", details);
+                    <button
+                      className="text-xs text-brand-yellow underline"
+                      onClick={() => {
+                        console.log("Simulação de pagamento OK (sem PayPal)");
 
                         // limpar carrinho
                         localStorage.removeItem("cart");
@@ -473,13 +469,9 @@ export default function Carrinho() {
                         // redirecionar para página de sucesso
                         window.location.href = "/obrigado";
                       }}
-                      onError={(err) => {
-                        console.error("Erro PayPal:", err);
-
-                        // redirecionar para a página de erro/cancelamento
-                        window.location.href = "/pagamento-erro";
-                      }}
-                    />
+                    >
+                      Testar fluxo de pagamento (sem pagar)
+                    </button>
                   </div>
 
                   
