@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -187,23 +187,15 @@ export default function ServicoPeliculasProtecaoSolar() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* Hero genérico com imagem vinda do backend / CMS */}
-      <ServiceHero
-        serviceId="peliculas-protecao-solar"
+      <ServiceHeroTwoColumn
         badge="Películas de proteção solar"
-        badgeIcon={<Sun className="w-4 h-4 mr-2" />}
-        title="Películas de proteção solar"
-        subtitle="para casas, lojas e espaços comerciais"
+        badgeIcon={<Sun className="w-4 h-4" />}
+        title="Películas de proteção solar e segurança"
+        subtitle="Para casas, lojas e espaços comerciais"
         description="Aplicação profissional de películas solares em vidros de habitações, lojas, escritórios e armazéns. Mais conforto térmico, proteção UV e privacidade, sem obras."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Pedir orçamento",
-          href: "/contactos#formulario",
-        }}
-        secondaryCta={{
-          text: "Contactar",
-          href: "/contactos#formulario",
-        }}
+        imageSrc="/public-objects/servicos/peliculas-solar-protecao.webp"
+        imageAlt="Películas de Proteção Solar DOMREALCE"
+        primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
       />
 
       {/* Benefícios */}
