@@ -16,6 +16,9 @@ import React, { useEffect, lazy, Suspense } from "react";
 // Páginas críticas (carregamento imediato)
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
+import Obrigado from "@/pages/Obrigado";
+import PagamentoErro from "@/pages/PagamentoErro";
+
 
 // Páginas com lazy loading (carregamento diferido)
 const Contactos = lazy(() => import("@/pages/contactos"));
@@ -147,7 +150,9 @@ function Router() {
           <Route path="/aviso-legal" component={AvisoLegal} />
           <Route path="/demo-interativo" component={DemoInterativo} />
           <Route path="/visual-editor-demo" component={VisualEditorDemo} />
-          
+          <Route path="/obrigado" component={Obrigado} />
+          <Route path="/pagamento-erro" component={PagamentoErro} />
+
           {showEditor && location.startsWith('/editor') && <VisualEditorToolbar />}
           
           <Route component={NotFound} />

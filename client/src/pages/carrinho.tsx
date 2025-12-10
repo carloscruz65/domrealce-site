@@ -463,20 +463,21 @@ export default function Carrinho() {
                     </p>
 
                     <PaypalButton
-                      amount={totals.total} // total final em EUR
+                      amount={totals.total}
                       onSuccess={(details) => {
                         console.log("Pagamento PayPal OK:", details);
-                        alert("Pagamento PayPal concluído com sucesso! ✅");
 
                         // limpar carrinho
                         localStorage.removeItem("cart");
 
-                        // idealmente: redirect para página de obrigado
-                        // window.location.href = "/obrigado";
+                        // redirecionar para página de sucesso
+                        window.location.href = "/obrigado";
                       }}
                       onError={(err) => {
                         console.error("Erro PayPal:", err);
-                        alert("Ocorreu um erro ao processar o pagamento PayPal.");
+
+                        // redirecionar para a página de erro/cancelamento
+                        window.location.href = "/pagamento-erro";
                       }}
                     />
                   </div>

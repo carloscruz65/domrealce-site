@@ -44,6 +44,22 @@ export default function Home() {
         />
       </section>
 
+      {/* SECÇÃO DE TRANSIÇÃO — mensagem de enquadramento */}
+      <section className="bg-[#050505] border-t border-white/5">
+        <div className="container mx-auto px-4 py-10 md:py-14 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-brand-turquoise">
+            Porque a comunicação visual certa transforma um negócio.
+          </h2>
+
+          <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Criamos soluções de impressão, decoração e design que ajudam empresas 
+            a destacarem-se no seu mercado. Com produção própria em Paredes e 
+            experiência acumulada ao longo de várias décadas, tratamos cada projeto 
+            com rigor técnico e atenção ao detalhe.
+          </p>
+        </div>
+      </section>
+
       {/* HIGHLIGHTS DOMREALCE – 3 pontos rápidos logo abaixo do hero */}
       <section className="bg-[#050505] border-t border-white/5">
         <div className="container mx-auto px-4 py-10 md:py-12">
