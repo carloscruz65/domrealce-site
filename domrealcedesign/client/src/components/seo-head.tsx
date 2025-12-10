@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface SEOHeadProps {
   title?: string;
@@ -6,86 +6,135 @@ interface SEOHeadProps {
   keywords?: string;
   canonicalUrl?: string;
   ogImage?: string;
+  heroImage?: string; // imagem principal da página (ex: hero da home)
 }
 
-export function SEOHead({ 
-  title, 
-  description, 
+export function SEOHead({
+  title,
+  description,
   keywords,
   canonicalUrl,
-  ogImage = "https://www.domrealce.com/og-image.jpg"
+  ogImage = "https://www.domrealce.com/og-image.jpg",
+  heroImage,
 }: SEOHeadProps) {
   useEffect(() => {
-    // Update page title
+    const { head } = document;
+
+    // TITLE
     if (title) {
       document.title = `${title} | DOMREALCE`;
     }
 
-    // Update meta description
+    // META DESCRIPTION
     if (description) {
-      let metaDesc = document.querySelector('meta[name="description"]');
+      let metaDesc = head.querySelector('meta[name="description"]');
       if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.setAttribute('name', 'description');
-        document.head.appendChild(metaDesc);
+        metaDesc = document.createElement("meta");
+        metaDesc.setAttribute("name", "description");
+        head.appendChild(metaDesc);
       }
-      metaDesc.setAttribute('content', description);
+      metaDesc.setAttribute("content", description);
     }
 
-    // Update meta keywords
+    // META KEYWORDS
     if (keywords) {
-      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      let metaKeywords = head.querySelector('meta[name="keywords"]');
       if (!metaKeywords) {
-        metaKeywords = document.createElement('meta');
-        metaKeywords.setAttribute('name', 'keywords');
-        document.head.appendChild(metaKeywords);
+        metaKeywords = document.createElement("meta");
+        metaKeywords.setAttribute("name", "keywords");
+        head.appendChild(metaKeywords);
       }
-      metaKeywords.setAttribute('content', keywords);
+      metaKeywords.setAttribute("content", keywords);
     }
 
-    // Update canonical URL
+    // CANONICAL URL
     if (canonicalUrl) {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      let canonicalLink = head.querySelector('link[rel="canonical"]');
       if (!canonicalLink) {
-        canonicalLink = document.createElement('link');
-        canonicalLink.setAttribute('rel', 'canonical');
-        document.head.appendChild(canonicalLink);
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        head.appendChild(canonicalLink);
       }
-      canonicalLink.setAttribute('href', canonicalUrl);
+      canonicalLink.setAttribute("href", canonicalUrl);
     }
 
-    // Update Open Graph tags
+    // OPEN GRAPH BASE
     if (title) {
-      let ogTitle = document.querySelector('meta[property="og:title"]');
+      let ogTitle = head.querySelector('meta[property="og:title"]');
       if (!ogTitle) {
-        ogTitle = document.createElement('meta');
-        ogTitle.setAttribute('property', 'og:title');
-        document.head.appendChild(ogTitle);
+        ogTitle = document.createElement("meta");
+        ogTitle.setAttribute("property", "og:title");
+        head.appendChild(ogTitle);
       }
-      ogTitle.setAttribute('content', title);
+      ogTitle.setAttribute("content", title);
     }
 
     if (description) {
-      let ogDesc = document.querySelector('meta[property="og:description"]');
+      let ogDesc = head.querySelector('meta[property="og:description"]');
       if (!ogDesc) {
-        ogDesc = document.createElement('meta');
-        ogDesc.setAttribute('property', 'og:description');
-        document.head.appendChild(ogDesc);
+        ogDesc = document.createElement("meta");
+        ogDesc.setAttribute("property", "og:description");
+        head.appendChild(ogDesc);
       }
-      ogDesc.setAttribute('content', description);
+      ogDesc.setAttribute("content", description);
     }
 
     if (canonicalUrl) {
-      let ogUrl = document.querySelector('meta[property="og:url"]');
+      let ogUrl = head.querySelector('meta[property="og:url"]');
       if (!ogUrl) {
-        ogUrl = document.createElement('meta');
-        ogUrl.setAttribute('property', 'og:url');
-        document.head.appendChild(ogUrl);
+        ogUrl = document.createElement("meta");
+        ogUrl.setAttribute("property", "og:url");
+        head.appendChild(ogUrl);
       }
-      ogUrl.setAttribute('content', canonicalUrl);
+      ogUrl.setAttribute("content", canonicalUrl);
     }
 
-  }, [title, description, keywords, canonicalUrl, ogImage]);
+    // OPEN GRAPH IMAGE
+    if (ogImage) {
+      let ogImg = head.querySelector('meta[property="og:image"]');
+      if (!ogImg) {
+        ogImg = document.createElement("meta");
+        ogImg.setAttribute("property", "og:image");
+        head.appendChild(ogImg);
+      }
+      ogImg.setAttribute("content", ogImage);
 
-  return null; // This component doesn't render anything
+      // Twitter image
+      let twImg = head.querySelector('meta[name="twitter:image"]');
+      if (!twImg) {
+        twImg = document.createElement("meta");
+        twImg.setAttribute("name", "twitter:image");
+        head.appendChild(twImg);
+      }
+      twImg.setAttribute("content", ogImage);
+    }
+
+    // Twitter card básico
+    let twCard = head.querySelector('meta[name="twitter:card"]');
+    if (!twCard) {
+      twCard = document.createElement("meta");
+      twCard.setAttribute("name", "twitter:card");
+      head.appendChild(twCard);
+    }
+    twCard.setAttribute("content", "summary_large_image");
+
+    // PRELOAD DA IMAGEM PRINCIPAL (HERO)
+    if (heroImage) {
+      let preloadLink = head.querySelector(
+        'link[data-hero-preload="true"]'
+      ) as HTMLLinkElement | null;
+
+      if (!preloadLink) {
+        preloadLink = document.createElement("link");
+        preloadLink.setAttribute("rel", "preload");
+        preloadLink.setAttribute("as", "image");
+        preloadLink.setAttribute("data-hero-preload", "true");
+        head.appendChild(preloadLink);
+      }
+
+      preloadLink.setAttribute("href", heroImage);
+    }
+  }, [title, description, keywords, canonicalUrl, ogImage, heroImage]);
+
+  return null;
 }

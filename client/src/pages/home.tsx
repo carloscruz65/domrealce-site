@@ -1,15 +1,25 @@
+import { lazy, Suspense } from "react";
+
 import Navigation from "@/components/navigation";
 import StaticHero from "@/components/StaticHero";
-import ServicesSection from "@/components/services-section";
-import PortfolioSection from "@/components/portfolio-section";
-import NewsSection from "@/components/news-section";
+import ServicesSection from "@/components/services-section"; // opcional se quiseres tirar o lazy
+import PortfolioSection from "@/components/portfolio-section"; // idem
+import NewsSection from "@/components/news-section"; // idem
+import ClientLogos from "@/components/ClientLogos"; // idem
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { usePageConfig } from "@/hooks/use-page-config";
-import ClientLogos from "@/components/ClientLogos";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+
+// carregados de forma preguiçosa (abaixo da dobra)
+const LazyServicesSection = lazy(() => import("@/components/services-section"));
+const LazyPortfolioSection = lazy(
+  () => import("@/components/portfolio-section")
+);
+const LazyNewsSection = lazy(() => import("@/components/news-section"));
+const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 export default function Home() {
   const { getConfig, isLoading } = usePageConfig("home");
@@ -21,19 +31,20 @@ export default function Home() {
         description="DOMREALCE – Atelier de comunicação visual em Paredes, especializado em impressão digital, papel de parede, decoração de viaturas e espaços comerciais. Mais de 40 anos de experiência ao serviço da região do Grande Porto."
         keywords="comunicação visual, impressão digital, papel de parede, decoração viaturas, sinalética, publicidade, Paredes, Grande Porto, DOMREALCE"
         canonicalUrl="https://www.domrealce.com/"
+        heroImage="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
       />
 
       <Navigation />
 
       {/* HERO – imagem estática para carregamento rápido */}
       <section className="mt-16">
-        <StaticHero 
+        <StaticHero
           imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
           alt="Bem-vindos à DOMREALCE - Comunicação Visual"
         />
       </section>
 
-      {/* HIGHLIGHTS DOMREALCE – 3 pontos rápidos logo abaixo do slider */}
+      {/* HIGHLIGHTS DOMREALCE – 3 pontos rápidos logo abaixo do hero */}
       <section className="bg-[#050505] border-t border-white/5">
         <div className="container mx-auto px-4 py-10 md:py-12">
           <div className="grid gap-6 md:grid-cols-3">
@@ -79,27 +90,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVIÇOS */}
-      <section className="bg-[#050505]">
-        <ServicesSection />
-      </section>
+      {/* SECÇÕES ABAIXO DA DOBRA EM LAZY + SUSPENSE */}
+      <Suspense fallback={null}>
+        {/* SERVIÇOS */}
+        <section className="bg-[#050505]">
+          <LazyServicesSection />
+        </section>
 
-      {/* PORTFÓLIO */}
-      <section className="bg-[#050505]">
-        <PortfolioSection />
-      </section>
+        {/* PORTFÓLIO */}
+        <section className="bg-[#050505]">
+          <LazyPortfolioSection />
+        </section>
 
-      {/* NOTÍCIAS */}
-      <section className="bg-[#050505]">
-        <NewsSection />
-      </section>
+        {/* NOTÍCIAS */}
+        <section className="bg-[#050505]">
+          <LazyNewsSection />
+        </section>
 
-      {/* CLIENTES */}
-      <section className="bg-[#050505]">
-        <ClientLogos />
-      </section>
+        {/* CLIENTES */}
+        <section className="bg-[#050505]">
+          <LazyClientLogos />
+        </section>
+      </Suspense>
 
-      {/* CTA FINAL – alinhado com o estilo das outras páginas */}
+      {/* CTA FINAL */}
       <section className="bg-gradient-to-r from-brand-yellow/10 via-brand-turquoise/10 to-brand-coral/10 border-t border-white/5">
         <div className="container mx-auto px-4 py-12 md:py-16">
           <div className="max-w-3xl mx-auto text-center">
