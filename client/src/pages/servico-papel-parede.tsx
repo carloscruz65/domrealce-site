@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -250,22 +250,15 @@ ${formData.anexos
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <ServiceHero
-        serviceId="papel-parede"
+      <ServiceHeroTwoColumn
         badge="Papel de Parede Premium"
-        badgeIcon={<Wallpaper className="w-4 h-4 mr-2" />}
-        title="Papel de parede"
-        subtitle="à medida do seu espaço"
+        badgeIcon={<Wallpaper className="w-4 h-4" />}
+        title="Papel de parede à medida do seu espaço"
+        subtitle="Decoração personalizada"
         description="Descubra uma coleção completa de papéis de parede, com visualização em tamanho real, várias categorias e aplicação profissional."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Explorar catálogo de texturas",
-          href: "/loja/papel-parede",
-        }}
-        secondaryCta={{
-          text: "Contactar",
-          href: "/contactos#formulario",
-        }}
+        imageSrc="/public-objects/servicos/papel-parede.webp"
+        imageAlt="Papel de Parede DOMREALCE"
+        primaryCta={{ text: "Explorar catálogo", href: "/loja/papel-parede" }}
       />
 
       {/* Catálogo Interativo */}

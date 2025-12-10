@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -167,22 +167,16 @@ export default function ServicoEspacosComerciais() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <ServiceHero
-        serviceId="espacos-comerciais"
+      <ServiceHeroTwoColumn
         badge="Espaços comerciais"
-        badgeIcon={<Building2 className="w-4 h-4 mr-2" />}
+        badgeIcon={<Building2 className="w-4 h-4" />}
         title="Decoração de espaços comerciais"
-        subtitle="ambientes que vendem por si"
+        subtitle="Ambientes que vendem por si"
         description="Desenhamos e implementamos soluções completas de comunicação e decoração para lojas, restaurantes, escritórios e outros espaços comerciais."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Falar sobre o meu espaço",
-          href: "/contactos#formulario",
-        }}
-        secondaryCta={{
-          text: "Ver portfólio",
-          href: "/portfolio",
-        }}
+        imageSrc="/public-objects/servicos/espacos-comerciais.webp"
+        imageAlt="Espaços Comerciais DOMREALCE"
+        primaryCta={{ text: "Falar sobre o meu espaço", href: "/contactos#formulario" }}
+        secondaryCta={{ text: "Ver portfólio", href: "/portfolio" }}
       />
 
       {/* Segmentos */}

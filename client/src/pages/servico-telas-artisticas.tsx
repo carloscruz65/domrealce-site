@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -251,22 +251,15 @@ ${formData.anexos
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <ServiceHero
-        serviceId="telas-artisticas"
+      <ServiceHeroTwoColumn
         badge="Telas Artísticas Premium"
-        badgeIcon={<Image className="w-4 h-4 mr-2" />}
-        title="Transforme fotografias"
-        subtitle="em obras de arte"
+        badgeIcon={<Image className="w-4 h-4" />}
+        title="Transforme fotografias em obras de arte"
+        subtitle="Impressão artística"
         description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Criar minha tela",
-          href: "/contactos#formulario",
-        }}
-        secondaryCta={{
-          text: "Contactar",
-          href: "/contactos#formulario",
-        }}
+        imageSrc="/public-objects/servicos/telas-artisticas.webp"
+        imageAlt="Telas Artísticas DOMREALCE"
+        primaryCta={{ text: "Criar minha tela", href: "/contactos#formulario" }}
       />
 
       {/* Qualidade artística */}

@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -149,14 +149,14 @@ export default function ServicoImpressaoDigital() {
       <Navigation />
 
       {/* Hero - usa imagem/config do backend + ServiceHero já sem gradientes */}
-      <ServiceHero
-        serviceId="impressao-digital"
+      <ServiceHeroTwoColumn
         badge="Impressão Digital Profissional"
-        badgeIcon={<Printer className="w-4 h-4 mr-2" />}
-        title="Impressão Digital"
-        subtitle="de grande formato"
+        badgeIcon={<Printer className="w-4 h-4" />}
+        title="Impressão Digital de grande formato"
+        subtitle="Qualidade profissional"
         description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
-        portfolioButton={true}
+        imageSrc="/public-objects/servicos/impressao-digital.webp"
+        imageAlt="Impressão Digital DOMREALCE"
       />
 
       <main>

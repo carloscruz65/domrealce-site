@@ -1,7 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -165,23 +165,15 @@ export default function ServicoDecoracaoViaturas() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* Hero igual ao estilo das outras páginas */}
-      <ServiceHero
-        serviceId="decoracao-viaturas"
+      <ServiceHeroTwoColumn
         badge="Decoração de viaturas"
-        badgeIcon={<Car className="w-4 h-4 mr-2" />}
-        title="Decoração de viaturas"
-        subtitle="wrapping e publicidade móvel"
+        badgeIcon={<Car className="w-4 h-4" />}
+        title="Decoração de viaturas - wrapping e publicidade móvel"
+        subtitle="Transforme a sua viatura"
         description="Especialistas em car wrapping e decoração de viaturas. Desde mudanças de cor completas até publicidade móvel para o seu negócio, com qualidade profissional garantida."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Transformar a minha viatura",
-          href: "/contactos#formulario"
-        }}
-        secondaryCta={{
-          text: "Contactar",
-          href: "/contactos#formulario"
-        }}
+        imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
+        imageAlt="Decoração de Viaturas DOMREALCE"
+        primaryCta={{ text: "Transformar a minha viatura", href: "/contactos#formulario" }}
       />
 
       {/* Tipos de veículos */}

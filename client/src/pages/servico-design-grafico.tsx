@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -129,14 +129,14 @@ export default function ServicoDesignGrafico() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <ServiceHero
-        serviceId="design-grafico"
+      <ServiceHeroTwoColumn
         badge="Design Gráfico Profissional"
-        badgeIcon={<Palette className="w-4 h-4 mr-1" />}
-        title="Identidade Visual"
-        subtitle="que marca a diferença"
+        badgeIcon={<Palette className="w-4 h-4" />}
+        title="Identidade Visual que marca a diferença"
+        subtitle="Design que comunica"
         description="Criamos designs únicos e memoráveis que comunicam a essência da sua marca. Com 40 anos de experiência, transformamos ideias em identidades visuais poderosas."
-        portfolioButton={true}
+        imageSrc="/public-objects/servicos/design-grafico.webp"
+        imageAlt="Design Gráfico DOMREALCE"
       />
 
       <main>

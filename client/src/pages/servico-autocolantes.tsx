@@ -1,6 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import ServiceHero from "@/components/service-hero";
+import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -170,22 +170,15 @@ export default function ServicoAutocolantes() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <ServiceHero
-        serviceId="autocolantes"
+      <ServiceHeroTwoColumn
         badge="Autocolantes profissionais"
-        badgeIcon={<Sticker className="w-4 h-4 mr-2" />}
-        title="Autocolantes e etiquetas"
-        subtitle="com corte de contorno"
+        badgeIcon={<Sticker className="w-4 h-4" />}
+        title="Autocolantes e etiquetas com corte de contorno"
+        subtitle="Precisão digital"
         description="Tecnologia de corte digital de precisão para criar autocolantes únicos. Desde etiquetas simples até designs complexos com formas personalizadas."
-        overlayOpacity="0"
-        primaryCta={{
-          text: "Criar autocolantes",
-          href: "/contactos#formulario"
-        }}
-        secondaryCta={{
-          text: "Ver materiais",
-          href: "/contactos#formulario"
-        }}
+        imageSrc="/public-objects/servicos/autocolantes.webp"
+        imageAlt="Autocolantes DOMREALCE"
+        primaryCta={{ text: "Criar autocolantes", href: "/contactos#formulario" }}
       />
 
       {/* Tecnologias / Features */}
