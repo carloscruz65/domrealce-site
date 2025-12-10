@@ -1,5 +1,5 @@
 import Navigation from "@/components/navigation";
-import DynamicSlider from "@/components/DynamicSlider";
+import StaticHero from "@/components/StaticHero";
 import ServicesSection from "@/components/services-section";
 import PortfolioSection from "@/components/portfolio-section";
 import NewsSection from "@/components/news-section";
@@ -25,9 +25,12 @@ export default function Home() {
 
       <Navigation />
 
-      {/* HERO / SLIDER – enquadrado num fundo com gradiente suave */}
-      <section className="mt-16 bg-gradient-to-b from-black via-[#050505] to-[#050505]">
-        <DynamicSlider />
+      {/* HERO – imagem estática para carregamento rápido */}
+      <section className="mt-16">
+        <StaticHero 
+          imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
+          alt="Bem-vindos à DOMREALCE - Comunicação Visual"
+        />
       </section>
 
       {/* HIGHLIGHTS DOMREALCE – 3 pontos rápidos logo abaixo do slider */}
