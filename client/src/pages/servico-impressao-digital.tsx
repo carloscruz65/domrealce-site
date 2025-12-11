@@ -17,6 +17,7 @@ import {
   Palette,
   Clock,
   Award,
+  ChevronDown,
 } from "lucide-react";
 
 export default function ServicoImpressaoDigital() {
@@ -28,28 +29,10 @@ export default function ServicoImpressaoDigital() {
         "Impressões com tintas látex de alta qualidade, sem odor e resistentes ao desbotamento.",
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Materiais Resistentes",
-      description:
-        "Vinil, lona e outros materiais com elevada resistência a intempéries e UV.",
-    },
-    {
-      icon: <Palette className="w-6 h-6" />,
-      title: "Cores Vibrantes",
-      description:
-        "Tecnologia de impressão que garante cores vivas, consistentes e duradouras.",
-    },
-    {
       icon: <Zap className="w-6 h-6" />,
       title: "Produção Rápida",
       description:
         "Prazos de entrega reduzidos sem comprometer a qualidade de impressão.",
-    },
-    {
-      icon: <Award className="w-6 h-6" />,
-      title: "Acabamentos Premium",
-      description:
-        "Laminação, corte de contorno e outros acabamentos profissionais.",
     },
     {
       icon: <Clock className="w-6 h-6" />,
@@ -160,7 +143,7 @@ export default function ServicoImpressaoDigital() {
       />
 
       <main>
-        {/* TECNOLOGIA AVANÇADA (mantida, mas com cores alinhadas à identidade) */}
+        {/* TECNOLOGIA AVANÇADA */}
         <section className="pt-8 pb-16 bg-gray-900/40">
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
@@ -174,7 +157,91 @@ export default function ServicoImpressaoDigital() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Cartão grande: Materiais e Acabamentos */}
+            <div className="max-w-5xl mx-auto mb-10">
+              <Card className="bg-black border border-gray-800">
+                <CardContent className="p-6 md:p-8">
+                  <h3 className="text-2xl font-semibold mb-3 text-white">
+                    Materiais e Acabamentos
+                  </h3>
+                  <p className="text-gray-400 text-base mb-4">
+                    Trabalhamos com uma seleção de materiais profissionais e
+                    acabamentos técnicos pensados para durar. Cada projeto é
+                    preparado de acordo com o local de aplicação, exposição ao
+                    exterior e objetivo de comunicação, garantindo sempre boa
+                    reprodução de cor, estabilidade e durabilidade.
+                  </p>
+
+                  <details className="group mt-2">
+                    <summary className="cursor-pointer flex items-center justify-between text-sm text-brand-yellow select-none">
+                      <span>Ver materiais e suportes utilizados</span>
+                      <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                    </summary>
+
+                    <div className="mt-4 space-y-3">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                        <p className="text-sm text-gray-300">
+                          <span className="text-white font-medium">
+                            Vinis de várias gamas
+                          </span>{" "}
+                          (monoméricos, poliméricos e cast) para montras,
+                          viaturas e sinalética interior e exterior.
+                        </p>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                        <p className="text-sm text-gray-300">
+                          <span className="text-white font-medium">
+                            Lonas publicitárias
+                          </span>{" "}
+                          (frontlit, backlit e perfuradas) para fachadas,
+                          eventos, vedações e grandes formatos.
+                        </p>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                        <p className="text-sm text-gray-300">
+                          <span className="text-white font-medium">
+                            Vinil decorativo e jateado
+                          </span>{" "}
+                          para interiores, privacidade em vidro e ambientes mais
+                          acolhedores.
+                        </p>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                        <p className="text-sm text-gray-300">
+                          <span className="text-white font-medium">
+                            Suportes rígidos
+                          </span>{" "}
+                          como PVC e acrílico, ideais para placas, sinalética e
+                          comunicação permanente.
+                        </p>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                        <p className="text-sm text-gray-300">
+                          <span className="text-white font-medium">
+                            Proteção e acabamentos
+                          </span>{" "}
+                          com laminação mate ou brilho, proteção UV e corte de
+                          contorno para maior durabilidade e melhor acabamento
+                          visual.
+                        </p>
+                      </div>
+                    </div>
+                  </details>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Linha de 3 cartões: Tintas, Produção, Prazos */}
+            <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <Card
                   key={index}
@@ -187,7 +254,9 @@ export default function ServicoImpressaoDigital() {
                     <h3 className="text-xl font-semibold mb-3 text-white">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400">{feature.description}</p>
+                    <p className="text-gray-400 text-sm">
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               ))}
@@ -236,7 +305,7 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
-        {/* MATERIAIS DISPONÍVEIS – mantida, sem cores turquesa/coral */}
+        {/* MATERIAIS DISPONÍVEIS – mantida */}
         <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
@@ -244,7 +313,7 @@ export default function ServicoImpressaoDigital() {
                 <span className="text-white">Materiais</span>{" "}
                 <span className="text-brand-yellow">Disponíveis</span>
               </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                 Selecionamos materiais que garantem durabilidade, boa
                 reprodução de cor e resistência às condições de utilização.
               </p>
@@ -323,7 +392,7 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
-        {/* ESPECIFICAÇÕES / CONFIANÇA – cores ajustadas */}
+        {/* ESPECIFICAÇÕES / CONFIANÇA */}
         <section className="py-16 bg-gray-900/40">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -388,9 +457,7 @@ export default function ServicoImpressaoDigital() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400">
-                      Tipo de projetos
-                    </span>
+                    <span className="text-gray-400">Tipo de projetos</span>
                     <span className="text-brand-yellow font-semibold">
                       Pontuais ou recorrentes
                     </span>
@@ -407,7 +474,7 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
-        {/* CTA FINAL – sem gradiente */}
+        {/* CTA FINAL */}
         <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">

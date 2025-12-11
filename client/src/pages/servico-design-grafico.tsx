@@ -23,19 +23,19 @@ export default function ServicoDesignGrafico() {
       icon: <Palette className="w-6 h-6" />,
       title: "Aplicação e Desenvolvimento Visual da Marca",
       description:
-        "Preparamos e adaptamos elementos gráficos para que a sua identidade funcione em viaturas, montras, interiores e materiais impressos.",
+        "Preparamos e adaptamos elementos gráficos para que a identidade da sua marca funcione em viaturas, montras, interiores e materiais impressos. Garantimos coerência, qualidade e preparação técnica para cada aplicação.",
     },
     {
       icon: <Layers className="w-6 h-6" />,
       title: "Design Vectorial",
       description:
-        "Produzimos gráficos vetoriais de elevada qualidade, preparados para impressão digital, vinil de recorte ou qualquer aplicação profissional. Trabalhamos com Adobe Illustrator, assegurando ficheiros limpos, escaláveis e fidelidade visual.",
+        "Produzimos gráficos vetoriais de elevada qualidade, preparados para impressão digital, vinil de recorte e outras aplicações profissionais. Trabalhamos com Adobe Illustrator para assegurar ficheiros limpos, escaláveis e com excelente fidelidade visual.",
     },
     {
       icon: <Eye className="w-6 h-6" />,
       title: "Maquetes",
       description:
-        "Criamos visualizações realistas que ajudam a antecipar o resultado final. Este é um dos nossos pontos fortes: complementamos o design com maquetes precisas, permitindo ao cliente ver como o projeto irá ficar aplicado antes da produção e instalação.",
+        "Criamos visualizações realistas que ajudam a antecipar o resultado final. Este é um dos nossos pontos fortes: desenvolvemos maquetes precisas que complementam o design e permitem ao cliente ver como o projeto ficará aplicado antes da produção e instalação.",
     },
     {
       icon: <FileImage className="w-6 h-6" />,
@@ -134,7 +134,7 @@ export default function ServicoDesignGrafico() {
         badgeIcon={<Palette className="w-4 h-4" />}
         title="Identidade Visual que marca a diferença"
         subtitle="Design que comunica"
-        description="Criamos designs únicos e memoráveis que comunicam a essência da sua marca. Com 40 anos de experiência, transformamos ideias em identidades visuais poderosas."
+        description="Criamos designs únicos e memoráveis que comunicam a essência da sua marca. Com uma experiência longa e sólida na área, transformamos ideias em identidades visuais poderosas."
         imageSrc="/public-objects/servicos/design-grafico.webp"
         imageAlt="Design Gráfico DOMREALCE"
       />
@@ -245,8 +245,7 @@ export default function ServicoDesignGrafico() {
                         {step.title}
                       </h3>
                       <p className="text-gray-400 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
+                        {step.description}</p>
                     </div>
                   </div>
                 ))}
@@ -286,8 +285,9 @@ export default function ServicoDesignGrafico() {
                     Experiência e Confiança
                   </h3>
                   <p className="text-gray-400">
-                    Com 40 anos de experiência, garantimos um acompanhamento
-                    próximo e resultados à altura da sua marca.
+                    Com uma experiência longa e profundamente ligada à área,
+                    garantimos um acompanhamento próximo e resultados à altura
+                    da sua marca.
                   </p>
                 </div>
 
