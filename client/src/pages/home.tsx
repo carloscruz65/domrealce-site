@@ -28,7 +28,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       <SEOHead
         title="Comunicação Visual e Impressão Digital no Norte de Portugal"
-        description="DOMREALCE – Atelier de comunicação visual em Paredes, especializado em impressão digital, papel de parede, decoração de viaturas e espaços comerciais. Mais de 40 anos de experiência ao serviço da região do Grande Porto."
+        description="DOMREALCE – Atelier de comunicação visual em Paredes, especializado em impressão digital, papel de parede, decoração de viaturas e espaços comerciais. Décadas de experiência ao serviço da região do Grande Porto."
         keywords="comunicação visual, impressão digital, papel de parede, decoração viaturas, sinalética, publicidade, Paredes, Grande Porto, DOMREALCE"
         canonicalUrl="https://www.domrealce.com/"
         heroImage="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
@@ -69,7 +69,7 @@ export default function Home() {
                 Experiência
               </p>
               <h3 className="text-lg font-semibold mb-2">
-                +40 anos em comunicação visual
+                Experiência construída ao longo de décadas
               </h3>
               <p className="text-sm text-gray-300">
                 Know-how acumulado em publicidade, impressão, decoração de
@@ -82,7 +82,7 @@ export default function Home() {
                 Atelier
               </p>
               <h3 className="text-lg font-semibold mb-2">
-                Espaço de 80 m² em Paredes
+                Estúdio totalmente equipado em Paredes
               </h3>
               <p className="text-sm text-gray-300">
                 Do desenho à produção: maquetes, impressão, corte, laminação e

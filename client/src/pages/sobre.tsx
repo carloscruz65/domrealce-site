@@ -24,7 +24,7 @@ export default function Sobre() {
   const heroDescription = getConfig(
     "hero",
     "description",
-    "Atelier de comunicação visual e decoração no norte de Portugal, com mais de 40 anos de experiência, onde cada projeto é pensado ao detalhe — do primeiro esboço à instalação final."
+    "Atelier de comunicação visual e decoração no norte de Portugal, com uma trajetória profundamente ligada à área, onde cada projeto é pensado ao detalhe do primeiro esboço à instalação final."
   );
 
   const whoWeAreTitle = getConfig("who", "title", "Quem somos");
@@ -36,7 +36,7 @@ export default function Sobre() {
   const whoWeAreText2 = getConfig(
     "who",
     "text_2",
-    "Com mais de 40 anos de experiência acumulada, aliamos o know-how tradicional à tecnologia atual: impressão digital de grande formato, corte e acabamento profissional, sempre com foco na durabilidade e na estética."
+    "Com uma experiência longa e profundamente enraizada na área, aliamos o know-how tradicional à tecnologia atual: impressão digital de grande formato, corte e acabamento profissional, sempre com foco na durabilidade e na estética."
   );
 
   const howWeWorkTitle = getConfig("work", "title", "Como trabalhamos");
@@ -50,7 +50,7 @@ export default function Sobre() {
   const spaceText = getConfig(
     "space",
     "text",
-    "Trabalhamos num espaço acolhedor de cerca de 80 m², preparado para receber clientes, desenvolver maquetes, produzir e finalizar o trabalho no mesmo fluxo. Tudo está organizado para que o processo seja eficiente, limpo e controlado."
+    "Trabalhamos num espaço acolhedor, preparado para receber clientes, desenvolver maquetes, produzir e finalizar o trabalho no mesmo fluxo. Tudo está organizado para que o processo seja eficiente, limpo e controlado."
   );
 
   const quoteText = getConfig(

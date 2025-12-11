@@ -21,21 +21,21 @@ export default function ServicoDesignGrafico() {
   const features = [
     {
       icon: <Palette className="w-6 h-6" />,
-      title: "Identidade Visual Completa",
+      title: "Aplicação e Desenvolvimento Visual da Marca",
       description:
-        "Criamos logótipos únicos e desenvolvemos toda a identidade visual da sua marca.",
+        "Preparamos e adaptamos elementos gráficos para que a sua identidade funcione em viaturas, montras, interiores e materiais impressos.",
     },
     {
       icon: <Layers className="w-6 h-6" />,
       title: "Design Vectorial",
       description:
-        "Desenhos escaláveis em qualquer tamanho sem perda de qualidade.",
+        "Produzimos gráficos vetoriais de elevada qualidade, preparados para impressão digital, vinil de recorte ou qualquer aplicação profissional. Trabalhamos com Adobe Illustrator, assegurando ficheiros limpos, escaláveis e fidelidade visual.",
     },
     {
       icon: <Eye className="w-6 h-6" />,
       title: "Maquetes",
       description:
-        "Visualização realista dos seus projetos antes da produção final.",
+        "Criamos visualizações realistas que ajudam a antecipar o resultado final. Este é um dos nossos pontos fortes: complementamos o design com maquetes precisas, permitindo ao cliente ver como o projeto irá ficar aplicado antes da produção e instalação.",
     },
     {
       icon: <FileImage className="w-6 h-6" />,
