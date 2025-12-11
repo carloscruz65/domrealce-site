@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 type PaypalButtonProps = {
   amount: number; // total em euros
@@ -16,7 +16,10 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
   const paypalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!window.paypal || !paypalRef.current) return;
+    if (!window.paypal || !paypalRef.current) {
+      console.warn("⚠️ PayPal SDK ainda não carregou.");
+      return;
+    }
 
     // limpar botões antigos (evita duplicados)
     paypalRef.current.innerHTML = "";
@@ -64,9 +67,7 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
     return () => {
       try {
         button.close();
-      } catch {
-        // ignora erros no cleanup
-      }
+      } catch {}
     };
   }, [amount, onSuccess, onError]);
 

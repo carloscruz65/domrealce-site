@@ -3,13 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -22,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { PaypalButton } from "@/components/PaypalButton";
 
 interface CartItem {
   id: string;
@@ -39,6 +33,8 @@ interface CartItem {
   area?: number;
   precoTotal: number;
   quantidade?: number;
+  // outros campos que já usas (type, canvasImage, canvasName, quantity, tamanho, etc.)
+  [key: string]: any;
 }
 
 export default function Checkout() {
@@ -60,11 +56,11 @@ export default function Checkout() {
 
   // Dados de pagamento
   const [paymentData, setPaymentData] = useState({
-    metodoPagamento: "mbway", // MB WAY como padrão (mais popular)
+    metodoPagamento: "mbway", // MB WAY como padrão
   });
 
   // Estado para rastrear erros de validação
-  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({});
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     // Carregar carrinho do localStorage
@@ -99,7 +95,8 @@ export default function Checkout() {
   }, []);
 
   const totalCarrinho = cartItems.reduce(
-    (total, item) => total + item.precoTotal * (item.quantidade || 1),
+    (total, item) =>
+      total + item.precoTotal * (item.quantidade || item.quantity || 1),
     0,
   );
 
@@ -124,7 +121,8 @@ export default function Checkout() {
       case "telefone":
         if (!value) return "Telefone é obrigatório";
         const phoneRegex = /^[0-9]{9}$/;
-        if (!phoneRegex.test(value.replace(/\s/g, ""))) return "Telefone deve ter 9 dígitos";
+        if (!phoneRegex.test(value.replace(/\s/g, "")))
+          return "Telefone deve ter 9 dígitos";
         return "";
       case "morada":
         if (!value) return "Morada é obrigatória";
@@ -133,7 +131,8 @@ export default function Checkout() {
       case "codigoPostal":
         if (!value) return "Código postal é obrigatório";
         const postalRegex = /^\d{4}-\d{3}$/;
-        if (!postalRegex.test(value)) return "Código postal deve ter formato 0000-000";
+        if (!postalRegex.test(value))
+          return "Código postal deve ter formato 0000-000";
         return "";
       case "cidade":
         if (!value) return "Cidade é obrigatória";
@@ -141,7 +140,8 @@ export default function Checkout() {
         return "";
       case "nif":
         if (value && value.length !== 9) return "NIF deve ter 9 dígitos";
-        if (value && !/^\d{9}$/.test(value)) return "NIF deve conter apenas números";
+        if (value && !/^\d{9}$/.test(value))
+          return "NIF deve conter apenas números";
         return "";
       default:
         return "";
@@ -150,10 +150,13 @@ export default function Checkout() {
 
   // Função para validar todos os campos
   const validateAllFields = () => {
-    const errors: {[key: string]: string} = {};
-    
-    Object.keys(customerData).forEach(fieldName => {
-      const error = validateField(fieldName, customerData[fieldName as keyof typeof customerData]);
+    const errors: { [key: string]: string } = {};
+
+    Object.keys(customerData).forEach((fieldName) => {
+      const error = validateField(
+        fieldName,
+        customerData[fieldName as keyof typeof customerData],
+      );
       if (error) {
         errors[fieldName] = error;
       }
@@ -170,24 +173,43 @@ export default function Checkout() {
   // Função para atualizar campo e validar
   const updateCustomerData = (field: string, value: string) => {
     setCustomerData({ ...customerData, [field]: value });
-    
+
     // Limpar erro do campo quando o usuário começar a digitar
     if (fieldErrors[field]) {
       const newErrors = { ...fieldErrors };
       delete newErrors[field];
       setFieldErrors(newErrors);
     }
-    
+
     // Validar o campo em tempo real após 1 segundo
     setTimeout(() => {
       const error = validateField(field, value);
       if (error) {
-        setFieldErrors(prev => ({ ...prev, [field]: error }));
+        setFieldErrors((prev) => ({ ...prev, [field]: error }));
       }
     }, 1000);
   };
 
+  const getPaymentMethod = () => {
+    switch (paymentData.metodoPagamento) {
+      case "multibanco":
+        return "multibanco";
+      case "mbway":
+      default:
+        return "mbway"; // PayPal não passa por aqui
+    }
+  };
+
   const handleFinalizarPedido = async () => {
+    // Se o cliente escolheu PayPal, ele deve usar o botão PayPal, não este
+    if (paymentData.metodoPagamento === "paypal") {
+      toast({
+        title: "Método PayPal selecionado",
+        description: "Use o botão PayPal acima para concluir o pagamento.",
+      });
+      return; // IMPORTANTE: mantém o return para bloquear o botão
+    }
+
     // Validar todos os campos
     if (!validateAllFields()) {
       toast({
@@ -205,7 +227,9 @@ export default function Checkout() {
       // Melhor geração de número para evitar conflitos
       const timestamp = Date.now();
       const randomSuffix = Math.random().toString(36).substr(2, 4).toUpperCase();
-      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp.toString().slice(-6)}-${randomSuffix}`;
+      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp
+        .toString()
+        .slice(-6)}-${randomSuffix}`;
 
       // Criar encomenda na base de dados primeiro
       const orderData = {
@@ -224,7 +248,7 @@ export default function Checkout() {
         total: totalFinal.toString(),
         metodoPagamento: getPaymentMethod(),
         estado: "pendente",
-        estadoPagamento: "pendente"
+        estadoPagamento: "pendente",
       };
 
       console.log("🛒 Criando encomenda:", orderData);
@@ -242,9 +266,8 @@ export default function Checkout() {
       console.log("📦 Encomenda criada:", orderResult);
 
       if (!orderResult.success) {
-        // Mostrar erro específico se disponível
         let errorMessage = "Erro ao criar encomenda";
-        
+
         if (orderResult.error) {
           if (orderResult.error.includes("email")) {
             errorMessage = "Email inválido. Verifique o formato do email.";
@@ -252,7 +275,10 @@ export default function Checkout() {
             errorMessage = "Número de telefone inválido.";
           } else if (orderResult.error.includes("codigo")) {
             errorMessage = "Código postal inválido. Use o formato 0000-000.";
-          } else if (orderResult.error.includes("nif") || orderResult.error.includes("NIF")) {
+          } else if (
+            orderResult.error.includes("nif") ||
+            orderResult.error.includes("NIF")
+          ) {
             errorMessage = "NIF inválido. Deve ter 9 dígitos.";
           } else if (orderResult.error.includes("nome")) {
             errorMessage = "Nome deve ter pelo menos 2 caracteres.";
@@ -264,14 +290,14 @@ export default function Checkout() {
             errorMessage = orderResult.error;
           }
         }
-        
+
         throw new Error(errorMessage);
       }
 
-      // Preparar dados para o pagamento
+      // Preparar dados para o pagamento (IfthenPay)
       const paymentRequest = {
         method: getPaymentMethod(),
-        orderId: orderResult.order.id, // Usar o ID da encomenda
+        orderId: orderResult.order.id,
         amount: totalFinal,
         customerData: {
           email: customerData.email,
@@ -284,7 +310,6 @@ export default function Checkout() {
         },
       };
 
-      // Criar pagamento
       const response = await fetch("/api/payments/create", {
         method: "POST",
         headers: {
@@ -309,27 +334,32 @@ export default function Checkout() {
           },
           body: JSON.stringify({
             referenciaIfthenpay: result.data.requestId || result.data.reference,
-            dadosPagamento: result.data
+            dadosPagamento: result.data,
           }),
         });
       }
 
-      // Processar resposta baseada no método de pagamento
       const method = getPaymentMethod();
 
       if (method === "mbway") {
-        // Mostrar instruções MB WAY
         toast({
           title: "📱 MB WAY enviado!",
           description: "Confirme o pagamento no seu telemóvel.",
           duration: 6000,
         });
 
-        // Monitorizar status do pagamento
-        monitorMBWayPayment(result.data.requestId, numeroEncomenda, orderResult.order.id);
+        monitorMBWayPayment(
+          result.data.requestId,
+          numeroEncomenda,
+          orderResult.order.id,
+        );
       } else {
-        // Multibanco - mostrar referências
-        showPaymentInstructions(method, result.data, numeroEncomenda, orderResult.order.id);
+        showPaymentInstructions(
+          method,
+          result.data,
+          numeroEncomenda,
+          orderResult.order.id,
+        );
       }
     } catch (error) {
       console.error("Payment error:", error);
@@ -346,18 +376,11 @@ export default function Checkout() {
     }
   };
 
-  const getPaymentMethod = () => {
-    switch (paymentData.metodoPagamento) {
-      case "transferencia":
-        return "multibanco";
-      case "mbway":
-        return "mbway";
-      default:
-        return "mbway"; // Padrão para MB WAY
-    }
-  };
-
-  const monitorMBWayPayment = async (requestId: string, numeroEncomenda: string, orderId: string) => {
+  const monitorMBWayPayment = async (
+    requestId: string,
+    numeroEncomenda: string,
+    orderId: string,
+  ) => {
     const maxAttempts = 48; // 4 minutos (48 x 5 segundos)
     let attempts = 0;
 
@@ -374,7 +397,6 @@ export default function Checkout() {
         const result = await response.json();
 
         if (result.status === "000") {
-          // Pagamento confirmado - atualizar estado da encomenda
           await fetch(`/api/admin/orders/${orderId}/status`, {
             method: "PUT",
             headers: {
@@ -382,7 +404,7 @@ export default function Checkout() {
             },
             body: JSON.stringify({
               estado: "paga",
-              estadoPagamento: "pago"
+              estadoPagamento: "pago",
             }),
           });
 
@@ -393,28 +415,25 @@ export default function Checkout() {
           });
           setLocation(`/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`);
         } else if (result.status === "101") {
-          // Pagamento expirado
           await fetch(`/api/admin/orders/${orderId}/status`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              estadoPagamento: "falhado"
+              estadoPagamento: "falhado",
             }),
           });
-          
+
           toast({
             title: "Pagamento expirado",
             description: "O pagamento MB WAY expirou. Tente novamente.",
             variant: "destructive",
           });
         } else if (attempts < maxAttempts) {
-          // Continuar a verificar
           setTimeout(checkStatus, 5000);
           attempts++;
         } else {
-          // Timeout
           toast({
             title: "Timeout do pagamento",
             description:
@@ -444,7 +463,6 @@ export default function Checkout() {
       });
     }
 
-    // Guardar dados do pedido temporariamente
     localStorage.setItem(
       "pendingOrder",
       JSON.stringify({
@@ -457,8 +475,9 @@ export default function Checkout() {
       }),
     );
 
-    // Redirecionar para página de instruções
-    setLocation(`/instrucoes-pagamento?method=${method}&numeroEncomenda=${numeroEncomenda}`);
+    setLocation(
+      `/instrucoes-pagamento?method=${method}&numeroEncomenda=${numeroEncomenda}`,
+    );
   };
 
   return (
@@ -503,16 +522,20 @@ export default function Checkout() {
                     <Input
                       id="nome"
                       value={customerData.nome}
-                      onChange={(e) => updateCustomerData("nome", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("nome", e.target.value)
+                      }
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.nome 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.nome
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                       required
                     />
                     {fieldErrors.nome && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.nome}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.nome}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -523,16 +546,20 @@ export default function Checkout() {
                       id="email"
                       type="email"
                       value={customerData.email}
-                      onChange={(e) => updateCustomerData("email", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("email", e.target.value)
+                      }
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.email 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.email
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                       required
                     />
                     {fieldErrors.email && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.email}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -546,17 +573,21 @@ export default function Checkout() {
                       id="telefone"
                       type="tel"
                       value={customerData.telefone}
-                      onChange={(e) => updateCustomerData("telefone", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("telefone", e.target.value)
+                      }
                       placeholder="9xxxxxxxx"
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.telefone 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.telefone
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                       required
                     />
                     {fieldErrors.telefone && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.telefone}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.telefone}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -566,16 +597,20 @@ export default function Checkout() {
                     <Input
                       id="nif"
                       value={customerData.nif}
-                      onChange={(e) => updateCustomerData("nif", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("nif", e.target.value)
+                      }
                       placeholder="123456789"
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.nif 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.nif
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                     />
                     {fieldErrors.nif && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.nif}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.nif}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -587,38 +622,49 @@ export default function Checkout() {
                   <Input
                     id="morada"
                     value={customerData.morada}
-                    onChange={(e) => updateCustomerData("morada", e.target.value)}
+                    onChange={(e) =>
+                      updateCustomerData("morada", e.target.value)
+                    }
                     className={`bg-[#0a0a0a] text-white ${
-                      fieldErrors.morada 
-                        ? 'border-red-500 focus:border-red-500' 
-                        : 'border-[#333]'
+                      fieldErrors.morada
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-[#333]"
                     }`}
                     required
                   />
                   {fieldErrors.morada && (
-                    <p className="text-red-500 text-sm mt-1">{fieldErrors.morada}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors.morada}
+                    </p>
                   )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="codigoPostal" className="text-gray-300">
+                    <Label
+                      htmlFor="codigoPostal"
+                      className="text-gray-300"
+                    >
                       Código Postal *
                     </Label>
                     <Input
                       id="codigoPostal"
                       value={customerData.codigoPostal}
-                      onChange={(e) => updateCustomerData("codigoPostal", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("codigoPostal", e.target.value)
+                      }
                       placeholder="0000-000"
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.codigoPostal 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.codigoPostal
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                       required
                     />
                     {fieldErrors.codigoPostal && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.codigoPostal}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.codigoPostal}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -628,16 +674,20 @@ export default function Checkout() {
                     <Input
                       id="cidade"
                       value={customerData.cidade}
-                      onChange={(e) => updateCustomerData("cidade", e.target.value)}
+                      onChange={(e) =>
+                        updateCustomerData("cidade", e.target.value)
+                      }
                       className={`bg-[#0a0a0a] text-white ${
-                        fieldErrors.cidade 
-                          ? 'border-red-500 focus:border-red-500' 
-                          : 'border-[#333]'
+                        fieldErrors.cidade
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-[#333]"
                       }`}
                       required
                     />
                     {fieldErrors.cidade && (
-                      <p className="text-red-500 text-sm mt-1">{fieldErrors.cidade}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {fieldErrors.cidade}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -652,51 +702,82 @@ export default function Checkout() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Select
-                  value={paymentData.metodoPagamento}
-                  onValueChange={(value) => {
-                    setPaymentData({ ...paymentData, metodoPagamento: value });
-                    // Limpar erro do método de pagamento
-                    if (fieldErrors.metodoPagamento) {
-                      const newErrors = { ...fieldErrors };
-                      delete newErrors.metodoPagamento;
-                      setFieldErrors(newErrors);
-                    }
-                  }}
-                >
-                  <SelectTrigger className={`bg-[#0a0a0a] text-white ${
-                    fieldErrors.metodoPagamento 
-                      ? 'border-red-500 focus:border-red-500' 
-                      : 'border-[#333]'
-                  }`}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#111111] border-[#333]">
-                    <SelectItem
-                      value="mbway"
-                      className="text-white hover:bg-[#333]"
-                    >
-                      💚 MB WAY (Recomendado)
-                    </SelectItem>
-                    <SelectItem
-                      value="transferencia"
-                      className="text-white hover:bg-[#333]"
-                    >
-                      🏧 Multibanco
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                {fieldErrors.metodoPagamento && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.metodoPagamento}</p>
-                )}
+                <p className="text-sm text-gray-300">
+                  Escolha como pretende pagar a sua encomenda.
+                </p>
 
-                {paymentData.metodoPagamento === "transferencia" && (
-                  <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
-                    <p className="text-gray-300 text-sm">
-                      Após confirmar o pedido, receberá os dados bancários por
-                      email para efectuar a transferência.
-                    </p>
-                  </div>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-2 text-sm text-gray-200">
+                    <input
+                      type="radio"
+                      name="metodoPagamento"
+                      value="mbway"
+                      checked={paymentData.metodoPagamento === "mbway"}
+                      onChange={() => {
+                        setPaymentData({
+                          ...paymentData,
+                          metodoPagamento: "mbway",
+                        });
+                        if (fieldErrors.metodoPagamento) {
+                          const newErrors = { ...fieldErrors };
+                          delete newErrors.metodoPagamento;
+                          setFieldErrors(newErrors);
+                        }
+                      }}
+                      className="accent-[#FFD700]"
+                    />
+                    <span>💚 MB WAY (Recomendado)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 text-sm text-gray-200">
+                    <input
+                      type="radio"
+                      name="metodoPagamento"
+                      value="multibanco"
+                      checked={paymentData.metodoPagamento === "multibanco"}
+                      onChange={() => {
+                        setPaymentData({
+                          ...paymentData,
+                          metodoPagamento: "multibanco",
+                        });
+                        if (fieldErrors.metodoPagamento) {
+                          const newErrors = { ...fieldErrors };
+                          delete newErrors.metodoPagamento;
+                          setFieldErrors(newErrors);
+                        }
+                      }}
+                      className="accent-[#FFD700]"
+                    />
+                    <span>🏧 Multibanco / Pagamento de Serviços</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 text-sm text-gray-200">
+                    <input
+                      type="radio"
+                      name="metodoPagamento"
+                      value="paypal"
+                      checked={paymentData.metodoPagamento === "paypal"}
+                      onChange={() => {
+                        setPaymentData({
+                          ...paymentData,
+                          metodoPagamento: "paypal",
+                        });
+                        if (fieldErrors.metodoPagamento) {
+                          const newErrors = { ...fieldErrors };
+                          delete newErrors.metodoPagamento;
+                          setFieldErrors(newErrors);
+                        }
+                      }}
+                      className="accent-[#FFD700]"
+                    />
+                    <span>PayPal / Cartão de crédito</span>
+                  </label>
+                </div>
+
+                {fieldErrors.metodoPagamento && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors.metodoPagamento}
+                  </p>
                 )}
 
                 {paymentData.metodoPagamento === "mbway" && (
@@ -717,6 +798,36 @@ export default function Checkout() {
                   </div>
                 )}
 
+                {paymentData.metodoPagamento === "multibanco" && (
+                  <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
+                    <p className="text-gray-300 text-sm">
+                      Após confirmar o pedido, serão gerados os dados para
+                      pagamento por referência Multibanco / Pagamento de
+                      Serviços.
+                    </p>
+                  </div>
+                )}
+
+                {paymentData.metodoPagamento === "paypal" && (
+                  <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
+                    <p className="text-gray-300 text-sm mb-3">
+                      Pagamento seguro com PayPal ou cartão de crédito.
+                      O pedido é finalizado automaticamente após o pagamento.
+                    </p>
+                    <PaypalButton
+                      amount={totalFinal}
+                      onSuccess={(details) => {
+                        console.log("Pagamento PayPal OK:", details);
+                        localStorage.removeItem("cart");
+                        window.location.href = "/obrigado";
+                      }}
+                      onError={(err) => {
+                        console.error("Erro PayPal:", err);
+                        window.location.href = "/pagamento-erro";
+                      }}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -755,9 +866,9 @@ export default function Checkout() {
                           <>
                             <p className="text-xs text-gray-400">
                               {item.larguraCm}×{item.alturaCm}cm ={" "}
-                              {((item.largura || 0) * (item.altura || 0)).toFixed(
-                                2,
-                              )}
+                              {(
+                                (item.largura || 0) * (item.altura || 0)
+                              ).toFixed(2)}
                               m²
                             </p>
                             <p className="text-xs text-gray-400">
@@ -771,9 +882,10 @@ export default function Checkout() {
                         )}
                         <p className="text-sm font-semibold text-[#FFD700]">
                           €
-                          {(item.precoTotal * (item.quantidade || item.quantity || 1)).toFixed(
-                            2,
-                          )}
+                          {(
+                            item.precoTotal *
+                            (item.quantidade || item.quantity || 1)
+                          ).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -829,7 +941,11 @@ export default function Checkout() {
                 {/* Botão finalizar */}
                 <Button
                   onClick={handleFinalizarPedido}
-                  disabled={isProcessing || cartItems.length === 0}
+                  disabled={
+                    isProcessing ||
+                    cartItems.length === 0 ||
+                    paymentData.metodoPagamento === "paypal"
+                  }
                   className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3 disabled:opacity-50"
                 >
                   {isProcessing
