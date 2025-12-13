@@ -42,18 +42,22 @@ export function MachinesSection() {
                 que faz todos os dias.
               </p>
 
-              <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                <a href="/contactos-maquinas#formulario" className="...">
-                  Pedir orçamento para máquina →
+              <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3">
+                <a
+                  href="/contactos-maquinas#formulario"
+                  className="inline-flex items-center justify-center rounded-xl bg-brand-yellow text-black font-bold px-6 py-3 hover:bg-brand-yellow/90 transition"
+                >
+                  Pedir orçamento para máquina <span className="ml-2">→</span>
                 </a>
 
                 <a
-                  href="#galeria"
-                  className="inline-flex items-center justify-center rounded-xl border border-gray-700 text-white px-6 py-3 hover:border-brand-yellow/70 hover:text-brand-yellow transition"
+                  href="/portfolio"
+                  className="inline-flex items-center justify-center rounded-xl border border-gray-700 text-white font-semibold px-6 py-3 hover:border-brand-yellow/70 hover:text-brand-yellow transition"
                 >
                   Ver exemplos
                 </a>
               </div>
+
             </div>
 
             {/* Imagem */}
