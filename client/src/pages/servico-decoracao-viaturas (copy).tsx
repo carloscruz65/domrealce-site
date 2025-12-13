@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { MachinesSection } from "@/components/services/MachinesSection";
 import { 
   Car, 
   CheckCircle, 
@@ -176,6 +175,7 @@ export default function ServicoDecoracaoViaturas() {
         imageAlt="Decoração de Viaturas DOMREALCE"
         primaryCta={{ text: "Transformar a minha viatura", href: "/contactos#formulario" }}
       />
+
       {/* Tipos de veículos */}
       <section className="pt-8 pb-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
@@ -217,9 +217,6 @@ export default function ServicoDecoracaoViaturas() {
           </div>
         </div>
       </section>
-
-      {/* 🔵 NOVA SECÇÃO: MÁQUINAS INDUSTRIAIS */}
-      <MachinesSection />
 
       {/* Galeria (igual às outras, só cartões) */}
       <ServiceGallery

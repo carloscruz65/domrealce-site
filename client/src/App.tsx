@@ -18,6 +18,8 @@ import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import Obrigado from "@/pages/Obrigado";
 import PagamentoErro from "@/pages/PagamentoErro";
+import ContactosMaquinas from "@/pages/contactos-maquinas";
+
 
 
 // Páginas com lazy loading (carregamento diferido)
@@ -152,6 +154,7 @@ function Router() {
           <Route path="/visual-editor-demo" component={VisualEditorDemo} />
           <Route path="/obrigado" component={Obrigado} />
           <Route path="/pagamento-erro" component={PagamentoErro} />
+          <Route path="/contactos-maquinas" component={ContactosMaquinas} />
 
           {showEditor && location.startsWith('/editor') && <VisualEditorToolbar />}
           

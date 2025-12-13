@@ -131,7 +131,6 @@ export default function ServicoImpressaoDigital() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* Hero - usa imagem/config do backend + ServiceHero já sem gradientes */}
       <ServiceHeroTwoColumn
         badge="Impressão Digital Profissional"
         badgeIcon={<Printer className="w-4 h-4" />}
@@ -140,6 +139,7 @@ export default function ServicoImpressaoDigital() {
         description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
         imageSrc="/public-objects/servicos/impressao-digital.webp"
         imageAlt="Impressão Digital DOMREALCE"
+        imageClassName="translate-y-10 md:translate-y-16"
       />
 
       <main>
@@ -264,6 +264,117 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
+        {/* PORQUÊ ESCOLHER A NOSSA IMPRESSÃO DIGITAL */}
+        <section className="py-16 bg-black border-t border-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-white">Porquê escolher a nossa</span>{" "}
+                <span className="text-brand-yellow">Impressão Digital?</span>
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Três pilares orientam cada projeto: durabilidade, qualidade de
+                impressão e respeito absoluto pelos prazos combinados.
+              </p>
+            </div>
+
+            {/* Selos de qualidade */}
+            <div className="max-w-4xl mx-auto mb-12">
+              <div className="flex flex-wrap justify-center gap-4">
+                {/* Durabilidade Garantida */}
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
+                  <Shield className="w-4 h-4 text-brand-yellow" />
+                  <span className="text-sm text-gray-100">
+                    Durabilidade garantida
+                  </span>
+                </div>
+
+                {/* Qualidade de Impressão Profissional */}
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
+                  <Award className="w-4 h-4 text-brand-yellow" />
+                  <span className="text-sm text-gray-100">
+                    Qualidade de impressão profissional
+                  </span>
+                </div>
+
+                {/* Pontualidade nos prazos */}
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
+                  <Clock className="w-4 h-4 text-brand-yellow" />
+                  <span className="text-sm text-gray-100">
+                    Pontualidade nos prazos
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Argumentos / razões */}
+            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Cores fiéis e consistentes
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Trabalhamos com perfis de cor calibrados (ICC) e controlo de
+                  prova, para que o resultado final corresponda ao que foi
+                  aprovado em design.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Pensado para interior e exterior
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Selecionamos materiais de acordo com a exposição ao sol, chuva
+                  e desgaste, garantindo durabilidade adequada a cada contexto.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Preparação técnica dos ficheiros
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Verificamos resolução, margens, cortes e cores antes de
+                  produzir, reduzindo retrabalho e surpresas indesejadas.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Aconselhamento personalizado
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Ajudamos a escolher o material e acabamento ideais para o
+                  objetivo do projeto, seja montra, viatura, interior ou
+                  sinalética.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Acabamentos profissionais
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Laminação mate ou brilho, proteção UV e corte de contorno
+                  preciso, para um resultado final mais resistente e valorizado.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Acompanhamento até à instalação
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Sempre que necessário, acompanhamos o projeto até à
+                  instalação, garantindo que tudo fica aplicado com o rigor que
+                  planeámos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* GALERIA – cartões simples, sem clique/zoom */}
         <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
@@ -313,7 +424,7 @@ export default function ServicoImpressaoDigital() {
                 <span className="text-white">Materiais</span>{" "}
                 <span className="text-brand-yellow">Disponíveis</span>
               </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                 Selecionamos materiais que garantem durabilidade, boa
                 reprodução de cor e resistência às condições de utilização.
               </p>
@@ -329,7 +440,9 @@ export default function ServicoImpressaoDigital() {
                     <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
                       {material.name}
                     </h3>
-                    <p className="text-gray-400 mb-4">{material.description}</p>
+                    <p className="text-gray-400 mb-4">
+                      {material.description}
+                    </p>
                     <div>
                       <span className="text-sm text-gray-500 mb-2 block">
                         Aplicações:
@@ -353,7 +466,7 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
-        {/* PROCESSO – versão minimalista, igual ao de Design Gráfico */}
+        {/* PROCESSO – versão minimalista, agora com 3 colunas em desktop */}
         <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
@@ -368,7 +481,7 @@ export default function ServicoImpressaoDigital() {
             </div>
 
             <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid gap-6 md:grid-cols-3">
                 {process.map((step, index) => (
                   <div
                     key={index}
