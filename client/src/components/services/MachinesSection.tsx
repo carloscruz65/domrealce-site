@@ -95,8 +95,7 @@ export function MachinesSection() {
 
             <div className={content}>
               <p className="mb-3">
-                A decoração é pensada para o tipo de trabalho da máquina e
-                para o ambiente onde opera: obra, armazém, exterior, interior.
+                Em máquinas industriais, a intervenção é sobretudo técnica: reproduzimos vinis existentes ou reconstruímos a identificação original na ausência de referências, garantindo proporções corretas, leitura funcional e compatibilidade com a máquina.
               </p>
               <ul className="grid md:grid-cols-2 gap-3 text-sm">
                 <li>
@@ -112,7 +111,7 @@ export function MachinesSection() {
                     Elevação e acesso
                   </span>
                   <br />
-                  Gruas, plataformas elevatórias, estações elevatórias e
+                  Gruas, estações elevatórias e
                   equipamentos de acesso.
                 </li>
                 <li>
@@ -168,21 +167,19 @@ export function MachinesSection() {
                     Medidas sobre as imagens
                   </span>{" "}
                   – utilizamos registo de medidas diretamente nas fotos para
-                  planear à escala (ImageMeter Pro / método equivalente).
+                  planear à escala.
                 </li>
                 <li>
                   <span className="font-semibold text-brand-yellow">
                     Planeamento em estúdio
                   </span>{" "}
-                  – desenho técnico, organização dos autocolantes por zonas e
-                  leitura à distância.
+                  – desenho técnico e organização dos autocolantes por zonas, respeitando dimensões e posicionamento original.
                 </li>
                 <li>
                   <span className="font-semibold text-brand-yellow">
                     Produção e aplicação controlada
                   </span>{" "}
-                  – impressão e aplicação em ambiente preparado no nosso
-                  espaço de trabalho.
+                  – impressão no nosso espaço e aplicação realizada no local do cliente.
                 </li>
               </ol>
             </div>

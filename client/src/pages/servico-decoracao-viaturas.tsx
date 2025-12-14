@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { MachinesSection } from "@/components/services/MachinesSection";
 import { 
   Car, 
   CheckCircle, 
@@ -20,7 +19,6 @@ import {
   Shield
 } from "lucide-react";
 
-// Imagens padrão (agora com URLs externas, como nas outras páginas)
 const defaultImages = [
   {
     src: "https://images.unsplash.com/photo-1483721310020-03333e577078?w=800&q=80",
@@ -59,85 +57,35 @@ export default function ServicoDecoracaoViaturas() {
       features: ["Branding empresarial", "Informações de contacto", "Promoções", "Logótipos"]
     },
     {
-      icon: <Car className="w-8 h-8" />,
-      title: "Viaturas de competição",
-      description: "Decoração para desportos motorizados.",
-      features: ["Patrocinadores", "Numeração", "Designs aerodinâmicos", "Materiais especiais"]
-    },
-    {
       icon: <Bus className="w-8 h-8" />,
-      title: "Camiões e pesados",
-      description: "Decoração para veículos de grande porte.",
-      features: ["Publicidade de grande impacto", "Identificação de frota", "Regulamentações", "Visibilidade"]
+      title: "Frotas e autocarros",
+      description: "Decoração uniforme para toda a frota.",
+      features: ["Identidade visual", "Aplicação em série", "Manutenção", "Renovação"]
     },
     {
       icon: <Bike className="w-8 h-8" />,
       title: "Motociclos",
-      description: "Personalização para motocicletas.",
-      features: ["Designs únicos", "Proteção do depósito", "Detalhes especiais", "Efeitos personalizados"]
+      description: "Personalização de motos e scooters.",
+      features: ["Designs únicos", "Proteção", "Detalhes especiais", "Wrapping parcial"]
     },
     {
       icon: <Settings className="w-8 h-8" />,
-      title: "Máquinas de obras",
-      description: "Identificação e personalização de equipamentos.",
-      features: ["Numeração", "Logótipos da empresa", "Informações de segurança", "Cores corporativas"]
-    }
-  ];
-
-  const materials = [
-    {
-      name: "Vinil cast premium",
-      description: "Material de conformação superior para curvas complexas.",
-      durability: "7–10 anos",
-      applications: ["Wrapping completo", "Mudança de cor", "Proteção"]
+      title: "Máquinas e equipamentos",
+      description: "Identificação de maquinaria industrial.",
+      features: ["Logótipos", "Sinalização de segurança", "Numeração", "Cores corporativas"]
     },
     {
-      name: "Vinil promocional", 
-      description: "Económico para aplicações de média duração.",
-      durability: "3–5 anos",
-      applications: ["Publicidade", "Rotulação", "Detalhes"]
-    },
-    {
-      name: "PPF (paint protection film)",
-      description: "Película transparente de proteção da pintura.",
-      durability: "10+ anos",
-      applications: ["Proteção frontal", "Portas", "Espelhos"]
-    },
-    {
-      name: "Vinil de texturas",
-      description: "Texturas realistas para decoração de viaturas.",
-      durability: "5–7 anos",
-      applications: ["Detalhes interiores", "Spoilers", "Capôs"]
-    }
-  ];
-
-  const services = [
-    {
-      title: "Wrapping completo",
-      description: "Mudança completa da cor ou aplicação de design em toda a viatura.",
-      benefits: ["Protege a pintura original", "Reversível", "Muitas opções de cor", "Valor de revenda mantido"]
-    },
-    {
-      title: "Wrapping parcial",
-      description: "Decoração de áreas específicas da viatura.",
-      benefits: ["Custo reduzido", "Impacto visual", "Fácil manutenção", "Flexibilidade de design"]
-    },
-    {
-      title: "Rotulação publicitária",
-      description: "Aplicação de logótipos e informações comerciais.",
-      benefits: ["Publicidade móvel", "Imagem profissional", "Alcance geográfico", "Custo-benefício"]
-    },
-    {
-      title: "Película de proteção",
-      description: "Aplicação de película protetora transparente.",
-      benefits: ["Protege de riscos", "Quase invisível", "Auto-regeneração", "Longa duração"]
+      icon: <Shield className="w-8 h-8" />,
+      title: "Proteção PPF",
+      description: "Películas de proteção para a pintura.",
+      features: ["Anti-risco", "Anti-pedra", "Proteção UV", "Acabamento invisível"]
     }
   ];
 
   const process = [
     {
       step: "01",
-      title: "Consulta e medição",
+      title: "Consulta inicial",
       description: "Avaliação da viatura e definição do projeto personalizado."
     },
     {
@@ -176,7 +124,7 @@ export default function ServicoDecoracaoViaturas() {
         imageAlt="Decoração de Viaturas DOMREALCE"
         primaryCta={{ text: "Transformar a minha viatura", href: "/contactos#formulario" }}
       />
-      {/* Tipos de veículos */}
+
       <section className="pt-8 pb-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -204,10 +152,10 @@ export default function ServicoDecoracaoViaturas() {
                   </h3>
                   <p className="text-gray-400 mb-4">{vehicle.description}</p>
                   <div className="space-y-2">
-                    {vehicle.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full flex-shrink-0" />
-                        <span className="text-sm text-gray-300">{feature}</span>
+                    {vehicle.features.map((feature, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
+                        <span className="text-gray-300 text-sm">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -218,182 +166,72 @@ export default function ServicoDecoracaoViaturas() {
         </div>
       </section>
 
-      {/* 🔵 NOVA SECÇÃO: MÁQUINAS INDUSTRIAIS */}
-      <MachinesSection />
-
-      {/* Galeria (igual às outras, só cartões) */}
       <ServiceGallery
-        title="Galeria de trabalhos"
-        description="Alguns exemplos de projetos de decoração de viaturas realizados pela nossa equipa."
         images={galleryImages}
+        title="Exemplos de decoração de viaturas"
+        description="Alguns projetos de decoração de viaturas realizados para diferentes tipos de clientes."
         columns={3}
       />
 
-      {/* Serviços */}
-      <section className="pt-8 pb-16 bg-black border-t border-gray-900">
+      <section className="py-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Serviços</span>{" "}
-              <span className="text-brand-yellow">disponíveis</span>
+              <span className="text-brand-yellow">Processo</span>{" "}
+              <span className="text-white">de trabalho</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Soluções completas para transformar e proteger a sua viatura.
+              Um processo estruturado para garantir resultados perfeitos em cada projeto.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {services.map((service, index) => (
-              <Card
-                key={index}
-                className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-              >
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-400 mb-4">{service.description}</p>
-                  <div>
-                    <span className="text-sm text-gray-500 mb-2 block">Benefícios:</span>
-                    <div className="space-y-2">
-                      {service.benefits.map((benefit, benefitIndex) => (
-                        <div key={benefitIndex} className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
-                          <span className="text-sm text-gray-300">{benefit}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Materiais */}
-      <section className="pt-8 pb-16 bg-gray-900/40">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Materiais</span>{" "}
-              <span className="text-brand-yellow">premium</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Utilizamos apenas materiais de marcas reconhecidas mundialmente.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {materials.map((material, index) => (
-              <Card
-                key={index}
-                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-              >
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
-                    {material.name}
-                  </h3>
-                  <p className="text-gray-400 mb-4">{material.description}</p>
-                  <div className="mb-4">
-                    <span className="text-sm text-gray-500">Durabilidade:</span>
-                    <span className="text-brand-yellow font-semibold ml-2">
-                      {material.durability}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-500 mb-2 block">Aplicações:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {material.applications.map((app, appIndex) => (
-                        <Badge
-                          key={appIndex}
-                          variant="outline"
-                          className="border-brand-yellow text-brand-yellow"
-                        >
-                          {app}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Processo */}
-      <section className="py-16 bg-black border-t border-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-white">Processo</span>{" "}
-              <span className="text-brand-yellow">profissional</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Metodologia que garante resultados excecionais e duradouros.
-            </p>
-          </div>
-
-          <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-6">
-              {process.map((step, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
-                >
-                  <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
-                    {step.step}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold mb-1 text-white">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
+          <div className="grid md:grid-cols-5 gap-6">
+            {process.map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-yellow/10 border-2 border-brand-yellow flex items-center justify-center mx-auto mb-4">
+                  <span className="text-brand-yellow font-bold text-xl">{item.step}</span>
                 </div>
-              ))}
-            </div>
+                <h3 className="text-lg font-semibold mb-2 text-white">{item.title}</h3>
+                <p className="text-gray-400 text-sm">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Garantia / Qualidade */}
       <section className="py-16 bg-gray-900/40">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                  <span className="text-brand-yellow">Garantia de</span>{" "}
-                  <span className="text-white">qualidade</span>
+                  <span className="text-brand-yellow">Especificações</span>{" "}
+                  <span className="text-white">técnicas</span>
                 </h2>
                 <p className="text-gray-400 mb-8 text-lg">
-                  Todos os nossos trabalhos incluem garantia contra defeitos de aplicação 
-                  e utilizamos apenas materiais certificados pelos fabricantes.
+                  Utilizamos materiais de primeira qualidade e técnicas profissionais 
+                  para garantir resultados duradouros.
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">Garantia de aplicação: 2 anos</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">Vinil cast de alta qualidade</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">Materiais certificados Hexis, Oracal e Mactac</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">Durabilidade 5-7 anos exterior</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">Técnicos especializados</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">Resistente a UV e intempéries</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">Seguro de responsabilidade civil</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">Remoção sem danificar pintura</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">Suporte pós-venda</span>
+                    <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                    <span className="text-white">Aplicação por técnicos certificados</span>
                   </div>
                 </div>
               </div>
@@ -402,37 +240,28 @@ export default function ServicoDecoracaoViaturas() {
                 <div className="text-center mb-6">
                   <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
                   <h3 className="text-2xl font-semibold mb-2 text-white">
-                    Excelência comprovada
+                    Qualidade garantida
                   </h3>
                   <p className="text-gray-400">
-                    40 anos de experiência em decoração de viaturas.
+                    Garantia de satisfação em todos os trabalhos.
                   </p>
                 </div>
-
-                <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Viaturas decoradas</span>
-                    <span className="text-brand-yellow font-semibold">
-                      1000+
-                    </span>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-800">
+                    <span className="text-gray-400">Marcas utilizadas</span>
+                    <span className="text-white font-medium">3M, Avery, Oracal</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Prazo médio</span>
-                    <span className="text-brand-yellow font-semibold">
-                      2–5 dias
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Satisfação</span>
-                    <span className="text-brand-yellow font-semibold">
-                      99%
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-800">
                     <span className="text-gray-400">Garantia</span>
-                    <span className="text-brand-yellow font-semibold">
-                      2 anos
-                    </span>
+                    <span className="text-white font-medium">2-5 anos</span>
+                  </div>
+                  <div className="flex items-center justify-between py-3 border-b border-gray-800">
+                    <span className="text-gray-400">Tempo de aplicação</span>
+                    <span className="text-white font-medium">1-5 dias</span>
+                  </div>
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-gray-400">Acabamentos</span>
+                    <span className="text-white font-medium">Mate, brilho, carbono</span>
                   </div>
                 </div>
               </div>
@@ -441,7 +270,6 @@ export default function ServicoDecoracaoViaturas() {
         </div>
       </section>
 
-      {/* CTA final, sem degradê */}
       <section className="py-16 bg-black border-t border-gray-900">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
@@ -449,8 +277,8 @@ export default function ServicoDecoracaoViaturas() {
             <span className="text-brand-yellow">viatura?</span>
           </h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Entre em contacto connosco e descubra como podemos dar uma nova vida 
-            à sua viatura com qualidade e profissionalismo.
+            Entre em contacto e descubra como podemos dar uma nova vida 
+            à sua viatura com decoração profissional.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
