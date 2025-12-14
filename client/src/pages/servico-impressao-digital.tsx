@@ -131,19 +131,16 @@ export default function ServicoImpressaoDigital() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* ⬇️ DESCE A SECÇÃO DO HERO */}
-      <section className="pt-12 md:pt-16">
-        <ServiceHeroTwoColumn
-          badge="Impressão Digital Profissional"
-          badgeIcon={<Printer className="w-4 h-4" />}
-          title="Impressão Digital de grande formato"
-          subtitle="Qualidade profissional"
-          description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
-          imageSrc="/public-objects/servicos/impressao-digital.webp"
-          imageAlt="Impressão Digital DOMREALCE"
-          imageClassName="translate-y-10 md:translate-y-16"
-        />
-      </section>
+      <ServiceHeroTwoColumn
+        badge="Impressão Digital Profissional"
+        badgeIcon={<Printer className="w-4 h-4" />}
+        title="Impressão Digital de grande formato"
+        subtitle="Qualidade profissional"
+        description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
+        imageSrc="/public-objects/servicos/impressao-digital.webp"
+        imageAlt="Impressão Digital DOMREALCE"
+        imageClassName="translate-y-10 md:translate-y-16"
+      />
 
       <main>
         {/* TECNOLOGIA AVANÇADA */}
