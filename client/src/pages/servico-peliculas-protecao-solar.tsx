@@ -146,21 +146,21 @@ export default function ServicoPeliculasProtecaoSolar() {
 
   const specsLeft = [
     { label: "Proteção UV", value: "até 99%" },
-    { label: "Redução de calor", value: "até ~60% (dependendo da película)" },
+    { label: "Redução de calor", value: "até 89% (dependendo da película)" },
     {
       label: "Garantia",
       value: "até 5 anos, consoante o modelo",
     },
     {
       label: "Tipo de aplicação",
-      value: "interior (mais comum) ou exterior em casos específicos",
+      value: "Interior ou exterior (compatibilidade confirmada em avaliação técnica)",
     },
   ];
 
   const specsRight = [
     {
       label: "Tonalidades disponíveis",
-      value: "escura, média, clara e quase incolor",
+      value: "Espelhada (recomendada), Escura, com vários graus de transparência",
     },
     {
       label: "Privacidade",
@@ -168,7 +168,7 @@ export default function ServicoPeliculasProtecaoSolar() {
     },
     {
       label: "Compatibilidade",
-      value: "vidros simples e duplos (a confirmar em avaliação)",
+      value: "vidros temperados, simples e duplos (a confirmar em avaliação)",
     },
     {
       label: "Manutenção",

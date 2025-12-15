@@ -23,7 +23,7 @@ const defaultImages = [
   {
     src: "https://images.unsplash.com/photo-1529424301806-4be0bb154e3b?w=800&q=80",
     alt: "Loja moderna decorada",
-    title: "Lojas e Retalho",
+    title: "Lojas e espaços comerciais",
   },
   {
     src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80",
@@ -46,9 +46,9 @@ export default function ServicoEspacosComerciais() {
   const segments = [
     {
       icon: <Store className="w-8 h-8" />,
-      title: "Lojas e retalho",
-      description: "Montras, interiores e comunicação visual para pontos de venda.",
-      items: ["Montras", "Faixas e placas", "Expositores", "Decoração interior"],
+      title: "Lojas e espaços comerciais",
+      description: "Montras, interiores e comunicação visual para espaços comerciais.",
+      items: ["Montras (promoções, campanhas e eventos sazonais)", "Faixas e placas", "Expositores", "Decoração interior"],
     },
     {
       icon: <Utensils className="w-8 h-8" />,
@@ -60,13 +60,13 @@ export default function ServicoEspacosComerciais() {
       icon: <Briefcase className="w-8 h-8" />,
       title: "Escritórios e serviços",
       description: "Espaços corporativos com imagem profissional e coerente.",
-      items: ["Logótipos em parede", "Vinil decorativo", "Sinalética interna", "Salas de reunião"],
+      items: ["Sinalética", "Logótipos em parede", "Vinil decorativo", "Sinalética interna", "Salas de reunião"],
     },
     {
       icon: <Hotel className="w-8 h-8" />,
       title: "Hotéis e alojamento",
       description: "Experiências marcantes desde a receção aos quartos.",
-      items: ["Receções", "Corredores", "Quartos", "Áreas comuns"],
+      items: ["Sinalética", "Receções", "Corredores", "Quartos", "Áreas comuns"],
     },
     {
       icon: <Users className="w-8 h-8" />,
