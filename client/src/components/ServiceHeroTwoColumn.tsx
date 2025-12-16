@@ -14,6 +14,7 @@ interface ServiceHeroTwoColumnProps {
   primaryCta?: { text: string; href: string };
   secondaryCta?: { text: string; href: string };
   imagePosition?: "left" | "right";
+  children?: React.ReactNode; //
 }
 
 export default function ServiceHeroTwoColumn({
@@ -27,6 +28,7 @@ export default function ServiceHeroTwoColumn({
   primaryCta = { text: "Pedir Orçamento", href: "/contactos#formulario" },
   secondaryCta = { text: "Ver Portfolio", href: "/portfolio" },
   imagePosition = "right",
+  children, //
 }: ServiceHeroTwoColumnProps) {
   const textContent = (
     <div className="flex flex-col justify-center h-full py-8 md:py-12 lg:py-16">
@@ -54,6 +56,12 @@ export default function ServiceHeroTwoColumn({
         <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6 max-w-xl">
           {description}
         </p>
+      )}
+
+      {children && (
+        <div className="mt-6">
+          {children}
+        </div>
       )}
       
       <div className="flex flex-col sm:flex-row gap-3">

@@ -12,12 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { MachinesSection } from "@/components/services/MachinesSection";
 import { TrucksSection } from "@/components/services/TrucksSection";
 import ServicesAvailableSection from "@/components/services/ServicesAvailableSection";
-// (opcional) se quiseres depois criamos esta também:
-// import VehiclesCommercialSection from "@/components/services/VehiclesCommercialSection";
 
 import {
   Car,
-  CheckCircle,
   Star,
   ArrowRight,
   Truck,
@@ -208,7 +205,6 @@ export default function ServicoDecoracaoViaturas() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
-      
 
       {/* TOP: só Tipos de veículos (para a página não “parecer gigante”) */}
       <section className="pt-0 pb-16 bg-gray-900/40 scroll-mt-28">
@@ -236,9 +232,9 @@ export default function ServicoDecoracaoViaturas() {
             {vehicleTypes.map((vehicle) => (
               <Card
                 key={vehicle.key}
-                className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+                className="h-full bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-6 h-full flex flex-col">
                   <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
 
                   <h3 className="text-xl font-semibold mb-3 text-white">{vehicle.title}</h3>
@@ -255,7 +251,7 @@ export default function ServicoDecoracaoViaturas() {
 
                   <Button
                     onClick={() => openVehicle(vehicle.key)}
-                    className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
+                    className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
                   >
                     {activeVehicle === vehicle.key ? "Fechar" : "Ver mais"}
                     <ArrowRight className="w-4 h-4 ml-2" />
@@ -297,36 +293,91 @@ export default function ServicoDecoracaoViaturas() {
             />
           )}
 
+          {/* ✅ HERO CUSTOM para Particulares: distribui conteúdo pela altura da imagem */}
           {activeVehicle === "particulares" && (
-            <ServiceHeroTwoColumn
-              badge="Particulares"
-              badgeIcon={<Car className="w-4 h-4" />}
-              title="Personalização e detalhes"
-              subtitle="Intervenções pontuais, pensadas caso a caso"
-              description="Trabalhos personalizados em viaturas particulares, avaliados individualmente para garantir segurança, qualidade e bom resultado final."
-              imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
-              imageAlt="Personalização de viaturas DOMREALCE"
-              primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
-            >
-              <ul className="mt-6 space-y-2 text-sm text-gray-300">
-                <li className="flex gap-2">
-                  <span className="text-brand-yellow">•</span>
-                  Faixas decorativas e detalhes visuais
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-brand-yellow">•</span>
-                  Autocolantes personalizados
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-brand-yellow">•</span>
-                  Identificação discreta ou estética
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-brand-yellow">•</span>
-                  Aplicações em peças simples e acessíveis
-                </li>
-              </ul>
-            </ServiceHeroTwoColumn>
+            <section className="bg-[#050505] pt-20 md:pt-24 pb-8 md:pb-12 border-b border-white/5">
+              <div className="container mx-auto px-4">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-stretch min-h-[400px] md:min-h-[500px]">
+                  {/* TEXTO */}
+                  <div className="md:h-full md:flex md:flex-col md:justify-between">
+                    {/* TOP */}
+                    <div>
+                      <div className="mb-4">
+                        <Badge
+                          variant="outline"
+                          className="border-brand-yellow text-brand-yellow inline-flex items-center gap-2"
+                        >
+                          <Car className="w-4 h-4" />
+                          Particulares
+                        </Badge>
+                      </div>
+
+                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight text-white">
+                        Personalização e detalhes
+                      </h1>
+
+                      <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed max-w-xl">
+                        Trabalhos personalizados em viaturas particulares, avaliados individualmente para garantir
+                        segurança, qualidade e bom resultado final.
+                      </p>
+
+                      {/* LISTA: sobe e fica mais “colada” ao texto */}
+                      <ul className="mt-7 space-y-3 text-sm md:text-base text-gray-300">
+                        <li className="flex gap-3">
+                          <span className="text-brand-yellow">•</span>
+                          Faixas decorativas e detalhes visuais
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="text-brand-yellow">•</span>
+                          Autocolantes personalizados
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="text-brand-yellow">•</span>
+                          Identificação discreta ou estética
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="text-brand-yellow">•</span>
+                          Aplicações em peças simples e acessíveis
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* BOTTOM: botões descem e alinham com a base da imagem */}
+                    <div className="mt-8 md:mt-0 pt-6 md:pt-10 flex flex-wrap gap-3">
+                      <Button
+                        asChild
+                        className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 px-6"
+                      >
+                        <Link href="/contactos#formulario">
+                          Falar connosco
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
+
+                      <Button
+                        asChild
+                        variant="outline"
+                        className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-6"
+                      >
+                        <Link href="/portfolio">Ver Portfólio</Link>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* IMAGEM */}
+                  <div className="h-full">
+                    <div className="relative w-full h-full min-h-[320px] md:min-h-[500px] rounded-2xl overflow-hidden border border-white/5">
+                      <img
+                        src="/public-objects/servicos/decoracao-viaturas.webp"
+                        alt="Personalização de viaturas DOMREALCE"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           )}
 
           {activeVehicle === "motos" && (
@@ -334,7 +385,7 @@ export default function ServicoDecoracaoViaturas() {
               badge="Motociclos"
               badgeIcon={<Bike className="w-4 h-4" />}
               title="Motociclos com identidade"
-              subtiftle="Peças, detalhes e impacto"
+              subtitle="Peças, detalhes e impacto"
               description="Personalização em vinil para depósitos, carenagens e detalhes."
               imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
               imageAlt="Decoração de motociclos DOMREALCE"
@@ -347,16 +398,12 @@ export default function ServicoDecoracaoViaturas() {
 
           <ServicesAvailableSection services={services} />
 
-          {/* Secções gerais (agora só aparecem depois de escolher) */}
-            <ServiceGallery
-              title="Galeria de trabalhos"
-              description="Alguns exemplos de projetos realizados pela nossa equipa."
-              images={galleryImages}
-              columns={3}
+          <ServiceGallery
+            title="Galeria de trabalhos"
+            description="Alguns exemplos de projetos realizados pela nossa equipa."
+            images={galleryImages}
+            columns={3}
           />
-
-          
-
 
           <section className="pt-8 pb-16 bg-gray-900/40">
             <div className="container mx-auto px-4">
@@ -470,9 +517,6 @@ export default function ServicoDecoracaoViaturas() {
               </div>
             </div>
           </section>
-
-    
-
 
           <section className="py-16 bg-black border-t border-gray-900">
             <div className="container mx-auto px-4 text-center">
