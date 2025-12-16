@@ -1,125 +1,187 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Truck } from "lucide-react";
-import { Link } from "wouter";
-import {
-  detailPanel,
-  detailItem,
-  detailSummary,
-  detailContent,
-} from "@/components/services/serviceDetailStyles";
+        import React from "react";
+        import { Truck, ChevronDown } from "lucide-react";
+        import { Button } from "@/components/ui/button";
+        import { Link } from "wouter";
 
-export function TrucksSection() {
-  return (
-    <section className="py-16 bg-black border-t border-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
-          {/* Texto */}
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-700 text-sm text-gray-200 mb-5">
-              <Truck className="w-4 h-4 text-brand-yellow" />
-              <span className="text-brand-yellow font-semibold">Camiões e atrelados</span>
-            </div>
+        /* ====== estilos reutilizáveis (iguais às Máquinas) ====== */
 
-            <h2 className="text-4xl md:text-5xl font-heading font-bold leading-tight">
-              <span className="text-white">Camiões &</span>{" "}
-              <span className="text-brand-yellow">atrelados</span>
-            </h2>
+        const item = "border-b border-gray-800 last:border-b-0";
 
-            <p className="mt-3 text-xl font-semibold text-brand-yellow">
-              Grande formato com leitura à distância
-            </p>
+        const summary =
+          "flex items-center justify-between w-full py-4 px-4 md:px-6 " +
+          "text-sm md:text-base font-semibold text-brand-yellow cursor-pointer " +
+          "bg-gray-900/30 hover:bg-gray-900/55 transition-colors " +
+          "focus:outline-none list-none";
 
-            <p className="mt-5 text-gray-300 leading-relaxed max-w-xl">
-              Rotulagem e decoração para transporte e logística: projetos criados de raiz ou
-              reprodução/renovação de decorações existentes. Pensado para superfícies grandes,
-              durabilidade e impacto visual diário na estrada.
-            </p>
+        const content =
+          "px-4 md:px-6 pb-6 pt-4 text-sm text-gray-300 leading-relaxed " +
+          "bg-black/40 border-t border-gray-800";
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Button asChild className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90">
-                <Link href="/contactos#formulario">Pedir orçamento</Link>
-              </Button>
+        const chevron =
+          "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+          "group-open:rotate-180 rounded-full border border-gray-700 " +
+          "bg-black/20 p-0.5 group-hover:border-brand-yellow/60 group-hover:bg-black/40";
 
-              <Button asChild variant="outline" className="border-gray-700 text-white hover:bg-gray-900">
-                <Link href="/portfolio">Ver exemplos</Link>
-              </Button>
-            </div>
+        /* ======================================================= */
 
-            <p className="mt-10 text-sm text-gray-400">
-              Explore os detalhes abaixo para perceber como planeamos e executamos decoração de grande formato.
-            </p>
+        export function TrucksSection() {
+          return (
+            <section className="py-16 bg-black border-t border-gray-900">
+              <div className="container mx-auto px-4">
 
-            <div className="mt-4">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="tipos">
-                  <AccordionTrigger className="text-left">
-                    Tipos de trabalhos
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed">
-                    Laterais, traseiras, portas, lonas, painéis e conjuntos completos (conforme o veículo e as superfícies).
-                    Ajustamos sempre a leitura a distância e o contexto real (estrada, estaleiro, logística).
-                  </AccordionContent>
-                </AccordionItem>
+                {/* ===== HERO ===== */}
+                <div className="mb-10 md:mb-12">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-brand-yellow/40 bg-black/40 px-3 py-1 text-sm text-brand-yellow">
+                    <Truck className="w-4 h-4" />
+                    Camiões e atrelados
+                  </div>
 
-                <AccordionItem value="referencia">
-                  <AccordionTrigger className="text-left">
-                    Criação de raiz vs. criação por referência
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed">
-                    Podemos criar um layout novo ou reproduzir uma decoração existente com base em fotos e medidas,
-                    mantendo coerência de marca e proporções corretas no veículo real.
-                  </AccordionContent>
-                </AccordionItem>
+                  <div className="mt-6 grid lg:grid-cols-2 gap-10 items-center">
+                    {/* Texto */}
+                    <div>
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-[1.05]">
+                        <span className="text-white">Camiões &</span>{" "}
+                        <span className="text-brand-yellow">atrelados</span>
+                      </h2>
 
-                <AccordionItem value="planeamento">
-                  <AccordionTrigger className="text-left">
-                    Planeamento e aplicação
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed">
-                    Produção no nosso espaço com controlo de qualidade e aplicação conforme o cenário.
-                    Em grande formato, muitas vezes faz sentido aplicar no local do cliente (quando o veículo não pode parar).
-                  </AccordionContent>
-                </AccordionItem>
+                      <p className="mt-5 text-brand-yellow text-xl md:text-2xl font-semibold">
+                        Grande formato com leitura à distância
+                      </p>
 
-                <AccordionItem value="antesdepois">
-                  <AccordionTrigger className="text-left">
-                    Antes, planeamento e resultado final
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed">
-                    Quando possível, organizamos o trabalho em etapas (levantamento, design, aprovação, produção, aplicação),
-                    para reduzir paragens e garantir um resultado limpo e durável.
-                  </AccordionContent>
-                </AccordionItem>
+                      <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed max-w-xl">
+                        Rotulagem e decoração para transporte e logística: projetos criados de raiz
+                        ou reprodução/renovação de decorações existentes. Pensado para superfícies
+                        grandes, durabilidade e impacto visual diário na estrada.
+                      </p>
 
-                <AccordionItem value="notas">
-                  <AccordionTrigger className="text-left">
-                    Notas importantes antes de iniciar
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed">
-                    Se existir vinil antigo, idealmente não remover antes do levantamento.
-                    Isso ajuda-nos a medir e planear corretamente, evitando surpresas na aplicação.
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </div>
+                      <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                        <Button asChild className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90">
+                          <Link href="/contactos#formulario">Pedir orçamento</Link>
+                        </Button>
 
-          {/* Bloco “imagem” / placeholder */}
-          <div className="bg-gray-900/40 border border-gray-800 rounded-2xl min-h-[320px] lg:min-h-[420px] flex items-center justify-center">
-            <div className="text-center px-6">
-              <div className="text-brand-yellow font-semibold mb-2">Imagem / exemplo</div>
-              <p className="text-gray-400 text-sm">
-                Aqui podemos colocar uma foto real (ou um mockup) de camião/atrelado com decoração DOMREALCE.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="border-gray-700 text-white hover:border-brand-yellow/70 hover:text-brand-yellow"
+                        >
+                          <Link href="/portfolio">Ver exemplos</Link>
+                        </Button>
+                      </div>
+                    </div>
 
-// (opcional) para evitar chatices de import no futuro
-export default TrucksSection;
+                    {/* Imagem */}
+                    <div className="relative aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden border border-gray-800 bg-gray-900/60">
+                      <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-400">
+                        Imagem / exemplo (camião ou atrelado com decoração DOMREALCE)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ===== DROPDOWNS ===== */}
+                <p className="mt-12 md:mt-16 text-sm md:text-base text-gray-400 max-w-4xl">
+                  Explore os detalhes abaixo para perceber como planeamos e executamos decoração de grande formato.
+                </p>
+
+                <div className="mt-4 bg-gray-900/60 border border-gray-800 rounded-2xl overflow-hidden">
+
+                  {/* Tipos de trabalhos */}
+                  <details className={`${item} group`}>
+                    <summary className={summary}>
+                      <span>Tipos de trabalhos</span>
+                      <ChevronDown className={chevron} />
+                    </summary>
+
+                    <div className={content}>
+                      <ul className="grid md:grid-cols-2 gap-3">
+                        <li>
+                          <span className="font-semibold text-brand-yellow">Camiões rígidos</span><br />
+                          Laterais, traseira, portas e detalhes.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-brand-yellow">Semirreboques, atrelados e estruturas especiais</span><br />
+                          Cisternas, galeras, contentores, camiões palco e projetos de alteração total de cor.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-brand-yellow">Lonas e painéis</span><br />
+                          Elementos removíveis e peças por substituição.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-brand-yellow">Renovação</span><br />
+                          Substituição de vinil antigo e atualização de imagem.
+                        </li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  {/* Processo técnico */}
+                  <details className={`${item} group`}>
+                    <summary className={summary}>
+                      <span>Processo técnico de trabalho</span>
+                      <ChevronDown className={chevron} />
+                    </summary>
+
+                    <div className={content}>
+                      <ol className="space-y-2 list-decimal list-inside">
+                        <li>Definição do objetivo e da mensagem</li>
+                        <li>Levantamento fotográfico e técnico</li>
+                        <li>Planeamento visual e maquetes</li>
+                        <li>Produção e preparação</li>
+                        <li>Aplicação controlada</li>
+                      </ol>
+                    </div>
+                  </details>
+
+                  {/* Criação */}
+                  <details className={`${item} group`}>
+                    <summary className={summary}>
+                      <span>Criação de raiz vs. criação por referência</span>
+                      <ChevronDown className={chevron} />
+                    </summary>
+
+                    <div className={content}>
+                      <ul className="space-y-2">
+                        <li>Criação de raiz quando é necessário definir imagem e hierarquia.</li>
+                        <li>Reprodução ou renovação com base em referências reais.</li>
+                        <li>Ajustes sempre pensados para garantir boa leitura à distância.</li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  {/* Antes / Depois */}
+                  <details className={`${item} group`}>
+                    <summary className={summary}>
+                      <span>Antes, planeamento e resultado final</span>
+                      <ChevronDown className={chevron} />
+                    </summary>
+
+                    <div className={content}>
+                      <p>
+                        Sempre que possível, o trabalho é apresentado em fases para
+                        clarificar todo o processo ao cliente.
+                      </p>
+                    </div>
+                  </details>
+
+                  {/* Notas */}
+                  <details className={`${item} group`}>
+                    <summary className={summary}>
+                      <span>Notas importantes antes de iniciar</span>
+                      <ChevronDown className={chevron} />
+                    </summary>
+
+                    <div className={content}>
+                      <p>
+                        O cliente deve confirmar previamente as condições de acesso,
+                        espaço disponível, segurança e tempo de paragem da viatura.
+                      </p>
+                    </div>
+                  </details>
+
+                </div>
+              </div>
+            </section>
+          );
+        }
+
+        export default TrucksSection;

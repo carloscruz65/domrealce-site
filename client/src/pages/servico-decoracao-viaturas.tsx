@@ -87,7 +87,7 @@ export default function ServicoDecoracaoViaturas() {
       key: "particulares",
       icon: <Car className="w-8 h-8" />,
       title: "Viaturas particulares",
-      description: "Personalização e detalhes sob consulta.",
+      description: "Personalização e detalhes.",
       features: [
         "Detalhes e faixas",
         "Autocolantes personalizados",
@@ -301,13 +301,32 @@ export default function ServicoDecoracaoViaturas() {
             <ServiceHeroTwoColumn
               badge="Particulares"
               badgeIcon={<Car className="w-4 h-4" />}
-              title="Personalização e detalhes (sob consulta)"
-              subtitle="Só o que dá para fazer bem"
-              description="Trabalhos pontuais e personalizados. Avaliamos caso a caso para garantir segurança e qualidade."
+              title="Personalização e detalhes"
+              subtitle="Intervenções pontuais, pensadas caso a caso"
+              description="Trabalhos personalizados em viaturas particulares, avaliados individualmente para garantir segurança, qualidade e bom resultado final."
               imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
               imageAlt="Personalização de viaturas DOMREALCE"
               primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
-            />
+            >
+              <ul className="mt-6 space-y-2 text-sm text-gray-300">
+                <li className="flex gap-2">
+                  <span className="text-brand-yellow">•</span>
+                  Faixas decorativas e detalhes visuais
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-brand-yellow">•</span>
+                  Autocolantes personalizados
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-brand-yellow">•</span>
+                  Identificação discreta ou estética
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-brand-yellow">•</span>
+                  Aplicações em peças simples e acessíveis
+                </li>
+              </ul>
+            </ServiceHeroTwoColumn>
           )}
 
           {activeVehicle === "motos" && (
@@ -326,12 +345,14 @@ export default function ServicoDecoracaoViaturas() {
           {activeVehicle === "maquinas" && <MachinesSection />}
           {activeVehicle === "camioes" && <TrucksSection />}
 
+          <ServicesAvailableSection services={services} />
+
           {/* Secções gerais (agora só aparecem depois de escolher) */}
-          <ServiceGallery
-            title="Galeria de trabalhos"
-            description="Alguns exemplos de projetos realizados pela nossa equipa."
-            images={galleryImages}
-            columns={3}
+            <ServiceGallery
+              title="Galeria de trabalhos"
+              description="Alguns exemplos de projetos realizados pela nossa equipa."
+              images={galleryImages}
+              columns={3}
           />
 
           
@@ -450,7 +471,7 @@ export default function ServicoDecoracaoViaturas() {
             </div>
           </section>
 
-          <ServicesAvailableSection services={services} />
+    
 
 
           <section className="py-16 bg-black border-t border-gray-900">

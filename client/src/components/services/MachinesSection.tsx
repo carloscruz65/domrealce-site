@@ -5,10 +5,15 @@ const item =
   "border-b border-gray-800 last:border-b-0";
 
 const summary =
-  "flex items-center justify-between w-full py-3 px-4 md:px-6 text-sm md:text-base font-semibold text-brand-yellow cursor-pointer";
+  "flex items-center justify-between w-full py-4 px-4 md:px-6 " +
+  "text-sm md:text-base font-semibold text-brand-yellow cursor-pointer " +
+  "bg-gray-900/30 hover:bg-gray-900/55 transition-colors " +
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow/40 " +
+  "group-open:bg-gray-900/60 list-none";
 
 const content =
-  "pb-4 px-4 md:px-6 text-sm text-gray-300 leading-relaxed";
+  "px-4 md:px-6 pb-6 pt-4 text-sm text-gray-300 leading-relaxed " +
+  "bg-black/40 border-t border-gray-800";
 
 export function MachinesSection() {
   return (
@@ -89,7 +94,12 @@ export function MachinesSection() {
                 Tipos de máquinas que trabalhamos
               </span>
               <ChevronDown
-                className="w-5 h-5 text-brand-yellow transition-transform duration-300 group-open:rotate-180"
+                className={
+                  "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+                  "group-open:rotate-180 " +
+                  "rounded-full border border-gray-700 bg-black/20 p-0.5 " +
+                  "group-hover:border-brand-yellow/60 group-hover:bg-black/40"
+                }
               />
             </summary>
 
@@ -112,7 +122,7 @@ export function MachinesSection() {
                     Elevação e acesso
                   </span>
                   <br />
-                  Gruas, plataformas elevatórias, estações elevatórias e
+                  Gruas, plataformas elevatórias e
                   equipamentos de acesso.
                 </li>
                 <li>
@@ -140,7 +150,12 @@ export function MachinesSection() {
                 Processo técnico de trabalho
               </span>
               <ChevronDown
-                className="w-5 h-5 text-brand-yellow transition-transform duration-300 group-open:rotate-180"
+                className={
+                  "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+                  "group-open:rotate-180 " +
+                  "rounded-full border border-gray-700 bg-black/20 p-0.5 " +
+                  "group-hover:border-brand-yellow/60 group-hover:bg-black/40"
+                }
               />
             </summary>
 
@@ -181,8 +196,7 @@ export function MachinesSection() {
                   <span className="font-semibold text-brand-yellow">
                     Produção e aplicação controlada
                   </span>{" "}
-                  – impressão e aplicação em ambiente preparado no nosso
-                  espaço de trabalho.
+                  – impressão nas nossas instalações e aplicação nas instalações do cliente
                 </li>
               </ol>
             </div>
@@ -195,7 +209,12 @@ export function MachinesSection() {
                 Planeamento por modelo de máquina
               </span>
               <ChevronDown
-                className="w-5 h-5 text-brand-yellow transition-transform duration-300 group-open:rotate-180"
+                className={
+                  "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+                  "group-open:rotate-180 " +
+                  "rounded-full border border-gray-700 bg-black/20 p-0.5 " +
+                  "group-hover:border-brand-yellow/60 group-hover:bg-black/40"
+                }
               />
             </summary>
 
@@ -228,7 +247,12 @@ export function MachinesSection() {
                 Antes, planeamento e resultado final
               </span>
               <ChevronDown
-                className="w-5 h-5 text-brand-yellow transition-transform duration-300 group-open:rotate-180"
+                className={
+                  "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+                  "group-open:rotate-180 " +
+                  "rounded-full border border-gray-700 bg-black/20 p-0.5 " +
+                  "group-hover:border-brand-yellow/60 group-hover:bg-black/40"
+                }
               />
             </summary>
 
@@ -291,7 +315,12 @@ export function MachinesSection() {
                 Marcas e equipamentos frequentes
               </span>
               <ChevronDown
-                className="w-5 h-5 text-brand-yellow transition-transform duration-300 group-open:rotate-180"
+                className={
+                  "w-5 h-5 text-brand-yellow transition-all duration-300 " +
+                  "group-open:rotate-180 " +
+                  "rounded-full border border-gray-700 bg-black/20 p-0.5 " +
+                  "group-hover:border-brand-yellow/60 group-hover:bg-black/40"
+                }
               />
             </summary>
 
