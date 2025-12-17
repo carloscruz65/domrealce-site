@@ -2,7 +2,42 @@
 
 This is a full-stack web application for DOMREALCE, a Portuguese visual communication and digital printing company. The application serves as a company portfolio and business website showcasing services like digital printing, vinyl cutting, vehicle wrapping, and custom signage. Built with a modern tech stack including React, Express, TypeScript, and PostgreSQL, it follows a monorepo structure with separate client and server directories.
 
-## Recent Changes (November 2025)
+## Recent Changes (December 2025)
+
+### Performance Optimization - Hero Sections (December 2025)
+- **Homepage Static Hero**: Replaced dynamic slider with single static image (`StaticHero.tsx`)
+  - Uses `/public-objects/homepage/bem-vindo-domrealce.webp` for fast loading
+  - Removed JavaScript animations and multiple image preloading
+  - Significantly improved PageSpeed scores
+  
+- **Two-Column Service Heroes** (`ServiceHeroTwoColumn.tsx`): New lightweight hero layout for all 8 service pages
+  - Layout: Text content on left (60%), image on right (40%)
+  - Static images from Object Storage - no dynamic loading or API calls
+  - All buttons use solid yellow (#FFD700) - NO gradients anywhere
+  - Service pages updated:
+    1. Design Gráfico (`/servico-design-grafico`) - image: `design-grafico.webp`
+    2. Impressão Digital (`/servico-impressao-digital`) - image: `impressao-digital.webp`
+    3. Papel de Parede (`/servico-papel-parede`) - image: `papel-parede.webp`
+    4. Telas Artísticas (`/servico-telas-artisticas`) - image: `telas-artisticas.webp`
+    5. Autocolantes (`/servico-autocolantes`) - image: `autocolantes.webp`
+    6. Decoração de Viaturas (`/servico-decoracao-viaturas`) - image: `decoracao-viaturas.webp`
+    7. Espaços Comerciais (`/servico-espacos-comerciais`) - image: `espacos-comerciais.webp`
+    8. Películas de Proteção Solar (`/servico-peliculas-protecao-solar`) - image: `peliculas-solar-protecao.webp`
+
+### Image Storage Structure
+- All hero images stored in Object Storage at `/public-objects/servicos/`
+- Recommended dimensions: 600x500px or 700x600px in WebP format
+- Homepage hero at `/public-objects/homepage/`
+
+### Design Guidelines (IMPORTANT - DO NOT CHANGE)
+- **Buttons**: All buttons site-wide use solid yellow `#FFD700` or `bg-brand-yellow` - NO gradients
+- **Shop URLs**: 
+  - Papel de Parede: `/loja/papel-de-parede/`
+  - Quadros em Canvas: `/loja/quadros-em-canvas/`
+- **Shop filtering**: Uses case-insensitive path filtering (`toLowerCase()`)
+- **Theme**: Dark theme with black backgrounds, yellow accent color
+
+## Previous Changes (November 2025)
 - **Hero Editor System for Service Pages** (Production-Ready): Complete dynamic hero editing system
   - Database schema: service_heroes table with all customizable fields (badge, title, subtitle, description, images, backgroundColor, textColor, overlayOpacity, height, CTA buttons)
   - API endpoints: GET /api/service-heroes/:serviceId (public), PUT /api/admin/service-heroes/:serviceId (protected by protegerAdmin)
