@@ -57,7 +57,7 @@ export default function Checkout() {
 
   // ✅ PayPal Client ID (preferência: .env)
     const PAYPAL_CLIENT_ID =
-    "Af5-fL1wMBaHSr4IaI2yVCQt1_BvpJkZv-m_xndpgTki0BkvwQghTGD1tji9UEGzxkv-5qIEW2UsgY3p";
+    "AUhs9LK2rWuahuEayCJAHu3z2WsVJHRAH4fQeEP1T8nr1zMaAswjSzPaNUIPUK3TBU-tJ5d2RgKpF8wI";
 
   const [paypalReady, setPaypalReady] = useState(false);
 
