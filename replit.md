@@ -29,6 +29,18 @@ This is a full-stack web application for DOMREALCE, a Portuguese visual communic
 - Recommended dimensions: 600x500px or 700x600px in WebP format
 - Homepage hero at `/public-objects/homepage/`
 
+### PayPal Integration (December 2025)
+- **PayPal SDK**: Carregado dinamicamente apenas quando o cliente seleciona PayPal como método de pagamento
+- **Client ID**: Hardcoded no checkout.tsx (sandbox/production)
+- **Fluxo completo**:
+  1. Cliente preenche dados e seleciona PayPal
+  2. Valida todos os campos obrigatórios ANTES de permitir pagamento
+  3. Após pagamento aprovado, cria encomenda na base de dados com estado "paga"
+  4. Guarda dados PayPal: orderId, payerId, email, captureId
+  5. Redireciona para `/pedido-confirmado?numeroEncomenda=...`
+- **Ficheiro principal**: `client/src/pages/checkout.tsx` (função `handlePayPalSuccess`)
+- **Componente botão**: `client/src/components/PaypalButton.tsx`
+
 ### Design Guidelines (IMPORTANT - DO NOT CHANGE)
 - **Buttons**: All buttons site-wide use solid yellow `#FFD700` or `bg-brand-yellow` - NO gradients
 - **Shop URLs**: 

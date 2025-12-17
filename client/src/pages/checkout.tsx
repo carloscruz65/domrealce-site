@@ -244,9 +244,96 @@ export default function Checkout() {
     switch (paymentData.metodoPagamento) {
       case "multibanco":
         return "multibanco";
+      case "paypal":
+        return "paypal";
       case "mbway":
       default:
-        return "mbway"; // PayPal não passa por aqui
+        return "mbway";
+    }
+  };
+
+  // Função para processar pagamento PayPal com sucesso
+  const handlePayPalSuccess = async (paypalDetails: any) => {
+    // Validar todos os campos primeiro
+    if (!validateAllFields()) {
+      toast({
+        title: "Dados incompletos",
+        description: "Por favor, preencha todos os dados antes de pagar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substr(2, 4).toUpperCase();
+      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp
+        .toString()
+        .slice(-6)}-${randomSuffix}`;
+
+      // Criar encomenda na base de dados
+      const orderData = {
+        numeroEncomenda,
+        clienteNome: customerData.nome,
+        clienteEmail: customerData.email,
+        clienteTelefone: customerData.telefone,
+        clienteMorada: customerData.morada,
+        clienteCodigoPostal: customerData.codigoPostal,
+        clienteCidade: customerData.cidade,
+        clienteNIF: customerData.nif || undefined,
+        itens: cartItems,
+        subtotal: totalCarrinho.toString(),
+        envio: custoEnvio.toString(),
+        iva: valorIva.toString(),
+        total: totalFinal.toString(),
+        metodoPagamento: "paypal",
+        estado: "paga",
+        estadoPagamento: "pago",
+        referenciaIfthenpay: paypalDetails?.id || paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id || "PAYPAL-" + timestamp,
+        dadosPagamento: {
+          paypalOrderId: paypalDetails?.id,
+          paypalPayerId: paypalDetails?.payer?.payer_id,
+          paypalPayerEmail: paypalDetails?.payer?.email_address,
+          paypalPayerName: paypalDetails?.payer?.name?.given_name + " " + paypalDetails?.payer?.name?.surname,
+          captureId: paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id,
+          status: paypalDetails?.status,
+        },
+      };
+
+      const orderResponse = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      const orderResult = await orderResponse.json();
+
+      if (!orderResult.success) {
+        throw new Error(orderResult.error || "Erro ao guardar encomenda");
+      }
+
+      // Limpar carrinho
+      localStorage.removeItem("cart");
+
+      toast({
+        title: "Pagamento confirmado!",
+        description: `Encomenda ${numeroEncomenda} criada com sucesso.`,
+      });
+
+      // Redirecionar para página de confirmação
+      setLocation(`/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`);
+
+    } catch (error: any) {
+      console.error("Erro ao processar encomenda PayPal:", error);
+      toast({
+        title: "Erro ao processar encomenda",
+        description: error.message || "O pagamento foi feito mas houve um erro ao guardar. Contacte-nos.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -827,12 +914,15 @@ export default function Checkout() {
                         amount={totalFinal}
                         onSuccess={(details: any) => {
                           console.log("Pagamento PayPal OK:", details);
-                          localStorage.removeItem("cart");
-                          window.location.href = "/obrigado";
+                          handlePayPalSuccess(details);
                         }}
                         onError={(err: any) => {
                           console.error("Erro PayPal:", err);
-                          window.location.href = "/pagamento-erro";
+                          toast({
+                            title: "Erro no PayPal",
+                            description: "O pagamento foi cancelado ou falhou. Tente novamente.",
+                            variant: "destructive",
+                          });
                         }}
                       />
                     )}
