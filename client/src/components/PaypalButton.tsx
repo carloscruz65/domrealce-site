@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 type PaypalButtonProps = {
-  amount: number; // total em euros
+  amount: number;
   onSuccess?: (details: any) => void;
   onError?: (err: any) => void;
 };
@@ -12,8 +12,21 @@ declare global {
   }
 }
 
-export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) {
+export function PaypalButton({
+  amount,
+  onSuccess,
+  onError,
+}: PaypalButtonProps) {
   const paypalRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ guardar callbacks sem causar rerender do effect
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+  }, [onSuccess, onError]);
 
   useEffect(() => {
     if (!window.paypal || !paypalRef.current) {
@@ -21,7 +34,6 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
       return;
     }
 
-    // limpar botões antigos (evita duplicados)
     paypalRef.current.innerHTML = "";
 
     const button = window.paypal.Buttons({
@@ -37,8 +49,8 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
           purchase_units: [
             {
               amount: {
-                value: amount.toFixed(2),
                 currency_code: "EUR",
+                value: amount.toFixed(2),
               },
             },
           ],
@@ -49,16 +61,16 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
         try {
           const details = await actions.order.capture();
           console.log("Pagamento PayPal OK:", details);
-          onSuccess?.(details);
+          onSuccessRef.current?.(details);
         } catch (err) {
           console.error("Erro ao capturar pagamento PayPal:", err);
-          onError?.(err);
+          onErrorRef.current?.(err);
         }
       },
 
       onError: (err: any) => {
         console.error("Erro PayPal:", err);
-        onError?.(err);
+        onErrorRef.current?.(err);
       },
     });
 
@@ -69,7 +81,7 @@ export function PaypalButton({ amount, onSuccess, onError }: PaypalButtonProps) 
         button.close();
       } catch {}
     };
-  }, [amount, onSuccess, onError]);
+  }, [amount]); // ✅ só depende do amount
 
   return <div ref={paypalRef} />;
 }
