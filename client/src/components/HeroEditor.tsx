@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ImageUploader from "@/components/ImageUploader";
-import { Save, ArrowLeft, Image as ImageIcon, Type, Palette, Maximize2, Smartphone } from "lucide-react";
+import { Save, ArrowLeft, Image as ImageIcon, Type, Palette, Maximize2, Smartphone, Eye, Monitor, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 
@@ -46,27 +46,47 @@ interface HeroEditorProps {
   onBack?: () => void;
 }
 
+interface ValidationErrors {
+  title?: string;
+  backgroundImage?: string;
+}
+
 export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEditorProps) {
   const [heroData, setHeroData] = useState<HeroData>({
     serviceId,
     title: "",
     backgroundImage: "",
   });
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
+  const [showPreview, setShowPreview] = useState(true);
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const { toast } = useToast();
 
-  // Load existing hero
   const { data, isLoading } = useQuery<HeroData>({
     queryKey: ['/api/service-heroes', serviceId],
   });
 
-  // Initialize hero data when loaded
   useEffect(() => {
     if (data) {
       setHeroData(data);
     }
   }, [data]);
 
-  // Save mutation
+  const validateFields = (): boolean => {
+    const newErrors: ValidationErrors = {};
+    
+    if (!heroData.title.trim()) {
+      newErrors.title = "Título é obrigatório";
+    }
+    
+    if (!heroData.backgroundImage.trim()) {
+      newErrors.backgroundImage = "Imagem de fundo é obrigatória";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const saveMutation = useMutation({
     mutationFn: async (updatedHero: HeroData) => {
       return await apiRequest(
@@ -94,13 +114,16 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
 
   const handleUpdateField = (field: keyof HeroData, value: string) => {
     setHeroData({ ...heroData, [field]: value });
+    if (errors[field as keyof ValidationErrors]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
   };
 
   const handleSave = () => {
-    if (!heroData.title.trim() || !heroData.backgroundImage.trim()) {
+    if (!validateFields()) {
       toast({
         title: "Campos obrigatórios",
-        description: "Título e imagem de fundo são obrigatórios.",
+        description: "Por favor, preencha todos os campos obrigatórios.",
         variant: "destructive",
       });
       return;
@@ -120,9 +143,168 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
     );
   }
 
+  const LivePreview = () => {
+    const isMobile = previewMode === "mobile";
+    const containerWidth = isMobile ? "375px" : "100%";
+    const containerHeight = isMobile 
+      ? (heroData.mobileHeight || "400px") 
+      : (heroData.height || "400px");
+    
+    const titleSize = isMobile 
+      ? (heroData.mobileTitleSize || "1.5rem") 
+      : "2.5rem";
+    const descSize = isMobile 
+      ? (heroData.mobileDescSize || "0.875rem") 
+      : "1.125rem";
+    const badgeSize = isMobile 
+      ? (heroData.mobileBadgeSize || "0.75rem") 
+      : "0.875rem";
+    
+    const contentAlign = isMobile 
+      ? heroData.mobileContentAlign || "center" 
+      : "center";
+    
+    const alignItemsClass = contentAlign === "top" 
+      ? "items-start" 
+      : contentAlign === "bottom" 
+        ? "items-end" 
+        : "items-center";
+    
+    const justifyClass = contentAlign === "top" 
+      ? "justify-start pt-8" 
+      : contentAlign === "bottom" 
+        ? "justify-end pb-8" 
+        : "justify-center";
+
+    return (
+      <div 
+        className="relative overflow-hidden rounded-lg border-2 border-dashed border-muted-foreground/30"
+        style={{ 
+          width: containerWidth, 
+          height: containerHeight,
+          maxWidth: "100%",
+          margin: isMobile ? "0 auto" : undefined,
+        }}
+      >
+        {heroData.backgroundImage ? (
+          <img 
+            src={heroData.backgroundImage} 
+            alt="Preview" 
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        ) : (
+          <div 
+            className="absolute inset-0" 
+            style={{ backgroundColor: heroData.backgroundColor || "#000000" }}
+          />
+        )}
+        
+        <div 
+          className="absolute inset-0 bg-black"
+          style={{ opacity: parseFloat(heroData.overlayOpacity || "0.5") }}
+        />
+        
+        <div className={`relative z-10 h-full flex flex-col ${justifyClass} ${alignItemsClass} px-4 md:px-8`}>
+          <div className="text-center max-w-2xl mx-auto">
+            {heroData.badge && (
+              <span 
+                className="inline-block px-3 py-1 rounded-full bg-yellow-500 text-black font-medium mb-3"
+                style={{ fontSize: badgeSize }}
+              >
+                {heroData.badge}
+              </span>
+            )}
+            
+            <h1 
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: titleSize, 
+                color: heroData.textColor || "#ffffff",
+                lineHeight: 1.2,
+              }}
+            >
+              {heroData.title || "Título do Hero"}
+            </h1>
+            
+            {heroData.subtitle && (
+              <p 
+                className="mb-2 opacity-90"
+                style={{ 
+                  fontSize: descSize, 
+                  color: heroData.textColor || "#ffffff" 
+                }}
+              >
+                {heroData.subtitle}
+              </p>
+            )}
+            
+            {heroData.description && (
+              <p 
+                className="mb-4 opacity-80"
+                style={{ 
+                  fontSize: descSize, 
+                  color: heroData.textColor || "#ffffff" 
+                }}
+              >
+                {heroData.description}
+              </p>
+            )}
+            
+            <div className="flex gap-2 justify-center flex-wrap">
+              {heroData.primaryCtaText && (
+                <button 
+                  className="px-4 py-2 bg-yellow-500 text-black font-medium rounded hover:bg-yellow-400 transition-colors"
+                  style={{ fontSize: isMobile ? "0.875rem" : "1rem" }}
+                >
+                  {isMobile && heroData.mobileButtonLabels?.primary 
+                    ? heroData.mobileButtonLabels.primary 
+                    : heroData.primaryCtaText}
+                </button>
+              )}
+              {heroData.secondaryCtaText && (
+                <button 
+                  className="px-4 py-2 border border-white text-white font-medium rounded hover:bg-white/10 transition-colors"
+                  style={{ fontSize: isMobile ? "0.875rem" : "1rem" }}
+                >
+                  {isMobile && heroData.mobileButtonLabels?.secondary 
+                    ? heroData.mobileButtonLabels.secondary 
+                    : heroData.secondaryCtaText}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {isMobile ? "📱 Mobile Preview" : "🖥️ Desktop Preview"}
+        </div>
+      </div>
+    );
+  };
+
+  const RequiredLabel = ({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) => (
+    <Label htmlFor={htmlFor} className="flex items-center gap-1">
+      {children}
+      <span className="text-destructive">*</span>
+    </Label>
+  );
+
+  const FieldError = ({ message }: { message?: string }) => {
+    if (!message) return null;
+    return (
+      <p className="text-sm text-destructive flex items-center gap-1 mt-1">
+        <AlertCircle className="h-3 w-3" />
+        {message}
+      </p>
+    );
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
           {onBack && (
             <Button
@@ -143,15 +325,62 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
             </p>
           </div>
         </div>
-        <Button
-          onClick={handleSave}
-          disabled={saveMutation.isPending}
-          data-testid="button-save"
-        >
-          <Save className="h-4 w-4 mr-2" />
-          {saveMutation.isPending ? "A guardar..." : "Guardar Alterações"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowPreview(!showPreview)}
+            data-testid="button-toggle-preview"
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            {showPreview ? "Ocultar Preview" : "Mostrar Preview"}
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
+            data-testid="button-save"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {saveMutation.isPending ? "A guardar..." : "Guardar Alterações"}
+          </Button>
+        </div>
       </div>
+
+      {showPreview && (
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Preview em Tempo Real
+              </CardTitle>
+              <div className="flex gap-1">
+                <Button
+                  variant={previewMode === "desktop" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPreviewMode("desktop")}
+                  data-testid="button-preview-desktop"
+                >
+                  <Monitor className="h-4 w-4 mr-1" />
+                  Desktop
+                </Button>
+                <Button
+                  variant={previewMode === "mobile" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPreviewMode("mobile")}
+                  data-testid="button-preview-mobile"
+                >
+                  <Smartphone className="h-4 w-4 mr-1" />
+                  Mobile
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <LivePreview />
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs defaultValue="content" className="w-full">
         <TabsList className="grid w-full grid-cols-5">
@@ -195,17 +424,16 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="title">
-                  Título <span className="text-destructive">*</span>
-                </Label>
+                <RequiredLabel htmlFor="title">Título</RequiredLabel>
                 <Input
                   id="title"
                   value={heroData.title}
                   onChange={(e) => handleUpdateField("title", e.target.value)}
                   placeholder="Título principal do hero"
                   data-testid="input-title"
-                  required
+                  className={errors.title ? "border-destructive" : ""}
                 />
+                <FieldError message={errors.title} />
               </div>
 
               <div className="space-y-2">
@@ -286,12 +514,15 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
               <CardTitle>Imagem de Fundo</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <ImageUploader
-                label="Imagem de Fundo *"
-                value={heroData.backgroundImage}
-                onChange={(url) => handleUpdateField("backgroundImage", url)}
-                folder="servicos"
-              />
+              <div className={errors.backgroundImage ? "border border-destructive rounded-lg p-4" : ""}>
+                <ImageUploader
+                  label="Imagem de Fundo *"
+                  value={heroData.backgroundImage}
+                  onChange={(url) => handleUpdateField("backgroundImage", url)}
+                  folder="servicos"
+                />
+                <FieldError message={errors.backgroundImage} />
+              </div>
               {heroData.backgroundImage && (
                 <div className="border rounded-lg overflow-hidden bg-muted">
                   <img 
@@ -368,22 +599,6 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
                     placeholder="0.5"
                     data-testid="input-overlay-opacity"
                   />
-                </div>
-              </div>
-
-              <div className="p-4 border rounded-lg bg-muted">
-                <p className="text-sm text-muted-foreground mb-2">Preview de cores:</p>
-                <div 
-                  className="rounded p-6 flex items-center justify-center"
-                  style={{
-                    backgroundColor: heroData.backgroundColor || "#000000",
-                    color: heroData.textColor || "#ffffff",
-                  }}
-                >
-                  <div className="text-center">
-                    <div className="text-2xl font-bold mb-2">Título de Exemplo</div>
-                    <div className="text-lg opacity-90">Subtítulo de exemplo</div>
-                  </div>
                 </div>
               </div>
             </CardContent>
@@ -548,7 +763,7 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
                     data-testid="input-mobile-height"
                   />
                   <p className="text-xs text-muted-foreground">
-                    ⚠️ IMPORTANTE: Use isto para garantir que a imagem tenha altura suficiente em mobile (ex: "600px", "70vh")
+                    Use isto para garantir que a imagem tenha altura suficiente em mobile (ex: "600px", "70vh")
                   </p>
                 </div>
 
@@ -566,15 +781,9 @@ export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEdito
                     <option value="bottom">Baixo (items-end)</option>
                   </select>
                   <p className="text-xs text-muted-foreground">
-                    ⚠️ IMPORTANTE: Use "bottom" se o texto estiver cortado no topo da imagem
+                    Use "bottom" se o texto estiver cortado no topo da imagem
                   </p>
                 </div>
-              </div>
-
-              <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg">
-                <p className="text-sm text-amber-900 dark:text-amber-100">
-                  <strong>Dica:</strong> Deixe os campos vazios para usar os valores padrão responsivos. Preencha apenas se precisar de controle total para um serviço específico.
-                </p>
               </div>
             </CardContent>
           </Card>
