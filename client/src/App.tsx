@@ -53,6 +53,7 @@ const PoliticaCookies = lazy(() => import("@/pages/politica-cookies"));
 const AvisoLegal = lazy(() => import("@/pages/aviso-legal"));
 const ComoAplicarPapelParede = lazy(() => import("@/pages/como-aplicar"));
 const Admin = lazy(() => import("@/pages/admin"));
+const ExportarSite = lazy(() => import("@/pages/exportar-site"));
 const DemoInterativo = lazy(() => import("@/pages/demo-interativo"));
 const VisualEditorDemo = lazy(() => import("@/pages/visual-editor-demo"));
 
@@ -143,6 +144,7 @@ function Router() {
           <Route path="/carrinho" component={Carrinho} />
           <Route path="/editor" component={Admin} />
           <Route path="/admin" component={Admin} />
+          <Route path="/exportar-site" component={ExportarSite} />
           <Route path="/noticias" component={Noticias} />
           <Route path="/noticia/:id" component={NoticiaDetalhes} />
           <Route path="/contactos" component={Contactos} />

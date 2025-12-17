@@ -31,7 +31,6 @@ export default function StaticHero({
         className="w-full h-auto block object-cover"
         loading="eager"
         decoding="async"
-        fetchPriority="high"
         width={1920}
         height={900} // ajusta conforme a tua imagem real
       />
