@@ -41,6 +41,30 @@ This is a full-stack web application for DOMREALCE, a Portuguese visual communic
 - **Ficheiro principal**: `client/src/pages/checkout.tsx` (função `handlePayPalSuccess`)
 - **Componente botão**: `client/src/components/PaypalButton.tsx`
 
+### Admin Panel Improvements (December 2025)
+- **EncomendasManager** (Gestão de Encomendas):
+  - Search by order number, customer name, email, or phone
+  - Filter by order status (pendente, paga, processamento, enviado, entregue, cancelado)
+  - Filter by payment status (pendente, pago, falhou)
+  - Date range filtering (start/end dates)
+  - Statistics dashboard (total orders, pending, paid, total value)
+  - CSV export with all order details
+  - Enhanced order detail view with PayPal data display
+
+- **SliderManager** (Gestão do Slider):
+  - Drag-and-drop slide reordering
+  - Up/down arrow buttons for order adjustment
+  - Active/inactive toggle per slide
+  - Image preview in slide list
+  - Visual feedback during drag operations
+
+- **PortfolioManager** (Gestão de Portfolio):
+  - Search by filename or caption
+  - Filter by category
+  - Image preview modal with zoom
+  - Statistics (total images, categories)
+  - Improved grid layout with hover actions
+
 ### Design Guidelines (IMPORTANT - DO NOT CHANGE)
 - **Buttons**: All buttons site-wide use solid yellow `#FFD700` or `bg-brand-yellow` - NO gradients
 - **Shop URLs**: 
