@@ -472,7 +472,7 @@ ${formData.anexos
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
                     <span className="text-white">
-                      Molduras de madeira certificada
+                      Molduras de madeira
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
