@@ -1,19 +1,21 @@
-import nodemailer from 'nodemailer';
-import type { Contact } from '@shared/schema';
+import nodemailer from "nodemailer";
+import type { Contact } from "@shared/schema";
 
-// Email configuration
 const transporter = nodemailer.createTransport({
-  // For development, we'll log emails to console
-  // In production, configure with real SMTP settings
-  streamTransport: true,
-  newline: 'unix',
-  buffer: true
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: (process.env.SMTP_SECURE || "true") === "true", // 465 = true
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
 });
 
 export async function sendContactEmail(contact: Contact): Promise<boolean> {
   try {
     const mailOptions = {
-      from: '"DOMREALCE Website" <noreply@domrealce.com>',
+      from: `"DOMREALCE Website" <${process.env.SMTP_USER}>`,
+      replyTo: contact.email,
       to: 'carloscruz@domrealce.com',
       subject: `Nova mensagem de contacto - ${contact.nome}`,
       html: `

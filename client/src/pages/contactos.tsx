@@ -9,7 +9,15 @@ import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { FileText, X, PhoneCall, MessageCircle, MapPin, Clock3, Mail } from "lucide-react";
+import {
+  FileText,
+  X,
+  PhoneCall,
+  MessageCircle,
+  MapPin,
+  Clock3,
+  Mail,
+} from "lucide-react";
 
 export default function Contactos() {
   const { toast } = useToast();
@@ -31,7 +39,7 @@ export default function Contactos() {
   const submitMutation = useMutation({
     mutationFn: async (data: InsertContact) => {
       // ATENÇÃO: manter a assinatura correta do apiRequest que estiveres a usar no projeto
-      return await apiRequest("/api/contact", "POST", data);
+      return await apiRequest("POST", "/api/contact", data);
     },
     onSuccess: (data: any) => {
       toast({
@@ -63,10 +71,11 @@ export default function Contactos() {
 
     try {
       const ficheiros =
-        formData.anexos?.map((file) =>
-          `${file.name} (${(file.size / 1024).toFixed(1)} KB) - ${
-            file.file?.type || "unknown"
-          }`
+        formData.anexos?.map(
+          (file) =>
+            `${file.name} (${(file.size / 1024).toFixed(1)} KB) - ${
+              file.file?.type || "unknown"
+            }`,
         ) || [];
 
       const payload: InsertContact = {
@@ -89,7 +98,7 @@ export default function Contactos() {
           issues.some(
             (issue) =>
               issue.path[0] === "nome" &&
-              issue.message.toLowerCase().includes("2 caracteres")
+              issue.message.toLowerCase().includes("2 caracteres"),
           )
         ) {
           errorMessage = "Nome deve ter pelo menos 2 caracteres.";
@@ -97,7 +106,7 @@ export default function Contactos() {
           issues.some(
             (issue) =>
               issue.path[0] === "mensagem" &&
-              issue.message.toLowerCase().includes("10 caracteres")
+              issue.message.toLowerCase().includes("10 caracteres"),
           )
         ) {
           errorMessage = "Mensagem deve ter pelo menos 10 caracteres.";
@@ -262,7 +271,7 @@ export default function Contactos() {
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        "Rua de Rebolido 42, 4580-402 Gondalães, Paredes"
+                        "Rua de Rebolido 42, 4580-402 Gondalães, Paredes",
                       );
                       toast({
                         title: "Morada copiada!",
@@ -458,7 +467,7 @@ export default function Contactos() {
                                     ...formData,
                                     anexos:
                                       formData.anexos?.filter(
-                                        (_, i) => i !== index
+                                        (_, i) => i !== index,
                                       ) || [],
                                   });
                                 }}
@@ -514,7 +523,7 @@ export default function Contactos() {
                 onClick={() => {
                   window.open(
                     "https://www.google.com/maps/search/?api=1&query=Rua+de+Rebolido+42%2C+4580-402+Gondalães%2C+Paredes",
-                    "_blank"
+                    "_blank",
                   );
                 }}
               >
@@ -526,7 +535,7 @@ export default function Contactos() {
                 onClick={() => {
                   window.open(
                     "https://waze.com/ul?q=Rua+de+Rebolido+42+Gondalães+Paredes",
-                    "_blank"
+                    "_blank",
                   );
                 }}
               >
