@@ -5,7 +5,7 @@ import ServiceGallery from "@/components/service-gallery";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   Image,
   CheckCircle,
@@ -25,8 +25,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ObjectUploader } from "@/components/ObjectUploader";
+import { useToast } from "@/hooks/use-toast";
+import { insertContactSchema } from "@shared/schema";
+import { z } from "zod";
+
+type TelasAnexoItem = {
+  file: File;
+  originalName: string;
+  size: number;
+  type?: string;
+};
 
 export default function ServicoTelasArtisticas() {
+  const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     largura: "",
     altura: "",
@@ -38,76 +50,156 @@ export default function ServicoTelasArtisticas() {
     nome: "",
     email: "",
     telefone: "",
-    anexos: [] as any[],
+    anexos: [] as TelasAnexoItem[],
+  });
+
+  const submitMutation = useMutation({
+    mutationFn: async () => {
+      // Validação extra: Adobe Stock precisa de código
+      if (formData.opcaoImagem === "adobe-stock") {
+        const hasCode = formData.codigoAdobeStock.trim() !== "";
+        if (!hasCode) {
+          throw new Error(
+            "Para imagens do Adobe Stock, é obrigatório indicar o código ou número da imagem."
+          );
+        }
+      }
+
+      // Montar mensagem final (igual ao Contactos: tudo vai dentro de "mensagem")
+      const imagemInfo =
+        formData.opcaoImagem === "adobe-stock"
+          ? [
+              "Imagem: Adobe Stock",
+              `- Código / nº da imagem: ${formData.codigoAdobeStock || "-"}`,
+              formData.descricaoImagem
+                ? `- Observações: ${formData.descricaoImagem}`
+                : "",
+            ]
+              .filter(Boolean)
+              .join("\n")
+          : [
+              "Imagem: Própria",
+              formData.descricaoImagem
+                ? `- Descrição: ${formData.descricaoImagem}`
+                : "- Descrição: -",
+            ].join("\n");
+
+      const detalhesTelas = [
+        "=== Pedido de Orçamento: Tela Artística ===",
+        `Medidas: ${formData.largura} cm x ${formData.altura} cm`,
+        `Quantidade: ${formData.quantidade} tela(s)`,
+        "",
+        imagemInfo,
+        "",
+        "Mensagem adicional:",
+        formData.mensagem?.trim() || "(sem mensagem adicional)",
+      ].join("\n");
+
+      // Validar com o schema do contacto (como em Contactos)
+      const payload = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        telefone: formData.telefone?.trim() || undefined,
+        empresa: undefined,
+        mensagem: detalhesTelas.trim(),
+        ficheiros: [],
+      };
+
+      const validatedData = insertContactSchema.parse(payload);
+
+      // FormData com texto + ficheiros reais
+      const fd = new FormData();
+      fd.append("nome", validatedData.nome);
+      fd.append("email", validatedData.email);
+      fd.append("telefone", validatedData.telefone ?? "");
+      fd.append("empresa", validatedData.empresa ?? "");
+      fd.append("mensagem", validatedData.mensagem);
+
+      // backend espera "files"
+      (formData.anexos || []).forEach((a) => {
+        if (a?.file) fd.append("files", a.file);
+      });
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: fd,
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || data?.success === false) {
+        throw new Error(data?.message || "Erro ao enviar pedido.");
+      }
+
+      return data;
+    },
+
+    onSuccess: () => {
+      toast({
+        title: "Pedido enviado",
+        description: "Recebemos o seu pedido. Respondemos com a maior brevidade.",
+      });
+
+      setFormData({
+        largura: "",
+        altura: "",
+        quantidade: "1",
+        opcaoImagem: "adobe-stock",
+        descricaoImagem: "",
+        codigoAdobeStock: "",
+        mensagem: "",
+        nome: "",
+        email: "",
+        telefone: "",
+        anexos: [],
+      });
+    },
+
+    onError: (error: any) => {
+      // Zod errors mais “humanos”
+      if (error instanceof z.ZodError) {
+        const issues = error.issues;
+
+        let errorMessage = "Por favor, verifique os dados inseridos.";
+        if (
+          issues.some(
+            (issue) =>
+              issue.path[0] === "nome" &&
+              issue.message.toLowerCase().includes("2 caracteres")
+          )
+        ) {
+          errorMessage = "Nome deve ter pelo menos 2 caracteres.";
+        } else if (
+          issues.some(
+            (issue) =>
+              issue.path[0] === "mensagem" &&
+              issue.message.toLowerCase().includes("10 caracteres")
+          )
+        ) {
+          errorMessage = "Mensagem deve ter pelo menos 10 caracteres.";
+        } else if (issues.some((issue) => issue.path[0] === "email")) {
+          errorMessage = "Por favor insira um email válido.";
+        }
+
+        toast({
+          title: "Erro de validação",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Erro",
+        description: error?.message || "Erro ao enviar. Tente novamente.",
+        variant: "destructive",
+      });
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validação para Adobe Stock: código obrigatório
-    if (formData.opcaoImagem === "adobe-stock") {
-      const hasCode = formData.codigoAdobeStock.trim() !== "";
-
-      if (!hasCode) {
-        alert(
-          "Para imagens do Adobe Stock, é obrigatório indicar o código ou número da imagem."
-        );
-        return;
-      }
-    }
-
-    let imagemInfo = "";
-    if (formData.opcaoImagem === "adobe-stock") {
-      imagemInfo = `Adobe Stock
-- Código / nº da imagem: ${formData.codigoAdobeStock}
-${formData.descricaoImagem ? `- Observações: ${formData.descricaoImagem}` : ""}`;
-    } else {
-      imagemInfo = `Imagem própria
-${formData.descricaoImagem ? `- Descrição: ${formData.descricaoImagem}` : ""}
-
-(Nota: posso enviar a fotografia em resposta a este email.)`;
-    }
-
-    let emailBody = `Olá,
-
-Gostaria de um orçamento para tela artística:
-
-📐 Medidas: ${formData.largura} cm x ${formData.altura} cm
-📦 Quantidade: ${formData.quantidade} tela(s)
-
-🖼️ Imagem:
-${imagemInfo}
-
-📞 Contacto: ${formData.nome} - ${formData.telefone}
-📧 Email: ${formData.email}
-
-💬 Mensagem adicional:
-${formData.mensagem || "(sem mensagem adicional)"}
-`;
-
-    // adicionar links dos ficheiros enviados (via ObjectUploader)
-    if (formData.anexos && formData.anexos.length > 0) {
-      emailBody += `
-
-📎 Ficheiros enviados:
-${formData.anexos
-  .map(
-    (file: any, index: number) =>
-      `${index + 1}. ${file.originalName}${
-        file.uploadURL ? " - " + file.uploadURL : ""
-      }`
-  )
-  .join("\n")}
-`;
-    }
-
-    const emailSubject = `Pedido de orçamento - Tela artística`;
-
-    const mailtoLink = `mailto:carloscruz@domrealce.com?subject=${encodeURIComponent(
-      emailSubject
-    )}&body=${encodeURIComponent(emailBody)}`;
-
-    window.location.href = mailtoLink;
+    submitMutation.mutate();
   };
 
   const features = [
@@ -167,8 +259,7 @@ ${formData.anexos
     },
     {
       title: "Espaços comerciais",
-      description:
-        "Crie ambientes profissionais inspiradores e memoráveis.",
+      description: "Crie ambientes profissionais inspiradores e memoráveis.",
       examples: ["Hotéis", "Restaurantes", "Consultórios", "Escritórios"],
     },
     {
@@ -219,7 +310,7 @@ ${formData.anexos
       src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
       alt: "Canvas com fotografia em preto e branco",
       title: "Fotografia artística",
-    },
+      },
     {
       src: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80",
       alt: "Tela com paisagem natural",
@@ -283,9 +374,7 @@ ${formData.anexos
                 className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
               >
                 <CardContent className="p-6">
-                  <div className="text-brand-yellow mb-4">
-                    {feature.icon}
-                  </div>
+                  <div className="text-brand-yellow mb-4">{feature.icon}</div>
                   <h3 className="text-xl font-semibold mb-3 text-white">
                     {feature.title}
                   </h3>
@@ -333,17 +422,13 @@ ${formData.anexos
           </div>
 
           <div className="text-center mt-8">
-            <p className="text-gray-400 mb-4">
-              Precisa de um tamanho personalizado?
-            </p>
+            <p className="text-gray-400 mb-4">Precisa de um tamanho personalizado?</p>
             <Button
               asChild
               variant="outline"
               className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black"
             >
-              <Link href="/contactos#formulario">
-                Solicitar medida especial
-              </Link>
+              <Link href="/contactos#formulario">Solicitar medida especial</Link>
             </Button>
           </div>
         </div>
@@ -358,8 +443,7 @@ ${formData.anexos
               <span className="text-brand-yellow">ideais</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Perfeitas para qualquer ambiente que necessite de um toque
-              artístico especial.
+              Perfeitas para qualquer ambiente que necessite de um toque artístico especial.
             </p>
           </div>
 
@@ -373,23 +457,14 @@ ${formData.anexos
                   <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
                     {application.title}
                   </h3>
-                  <p className="text-gray-400 mb-4">
-                    {application.description}
-                  </p>
+                  <p className="text-gray-400 mb-4">{application.description}</p>
                   <div>
-                    <span className="text-sm text-gray-500 mb-2 block">
-                      Exemplos:
-                    </span>
+                    <span className="text-sm text-gray-500 mb-2 block">Exemplos:</span>
                     <div className="space-y-1">
                       {application.examples.map((example, exampleIndex) => (
-                        <div
-                          key={exampleIndex}
-                          className="flex items-center gap-2"
-                        >
+                        <div key={exampleIndex} className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
-                          <span className="text-sm text-gray-300">
-                            {example}
-                          </span>
+                          <span className="text-sm text-gray-300">{example}</span>
                         </div>
                       ))}
                     </div>
@@ -410,8 +485,7 @@ ${formData.anexos
               <span className="text-brand-yellow">criação</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Cada tela é cuidadosamente produzida para garantir qualidade
-              artística excecional.
+              Cada tela é cuidadosamente produzida para garantir qualidade artística excecional.
             </p>
           </div>
 
@@ -431,9 +505,7 @@ ${formData.anexos
                   <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
                     {step.title}
                   </h3>
-                  <p className="text-gray-400 text-sm md:text-base">
-                    {step.description}
-                  </p>
+                  <p className="text-gray-400 text-sm md:text-base">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -452,34 +524,24 @@ ${formData.anexos
                   <span className="text-white">qualidade</span>
                 </h2>
                 <p className="text-gray-400 mb-8 text-lg">
-                  Utilizamos apenas materiais premium e tecnologia de impressão
-                  avançada para garantir que cada tela seja uma verdadeira obra
-                  de arte.
+                  Utilizamos apenas materiais premium e tecnologia de impressão avançada para garantir que cada tela seja uma verdadeira obra de arte.
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">
-                      Canvas 100% algodão, 400g/m²
-                    </span>
+                    <span className="text-white">Canvas 100% algodão, 400g/m²</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">
-                      Tintas pigmentadas resistentes UV
-                    </span>
+                    <span className="text-white">Tintas pigmentadas resistentes UV</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">
-                      Molduras de madeira
-                    </span>
+                    <span className="text-white">Molduras de madeira</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                    <span className="text-white">
-                      Acabamento profissional e pronto a pendurar
-                    </span>
+                    <span className="text-white">Acabamento profissional e pronto a pendurar</span>
                   </div>
                 </div>
               </div>
@@ -498,27 +560,19 @@ ${formData.anexos
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Durabilidade</span>
-                    <span className="text-brand-yellow font-semibold">
-                      50+ anos
-                    </span>
+                    <span className="text-brand-yellow font-semibold">50+ anos</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Resolução mínima</span>
-                    <span className="text-brand-yellow font-semibold">
-                      300 DPI
-                    </span>
+                    <span className="text-brand-yellow font-semibold">300 DPI</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Prazo de produção</span>
-                    <span className="text-brand-yellow font-semibold">
-                      3-7 dias
-                    </span>
+                    <span className="text-brand-yellow font-semibold">3-7 dias</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Garantia</span>
-                    <span className="text-brand-yellow font-semibold">
-                      Vida útil da tela
-                    </span>
+                    <span className="text-brand-yellow font-semibold">Vida útil da tela</span>
                   </div>
                 </div>
               </div>
@@ -537,8 +591,7 @@ ${formData.anexos
                 <span className="text-white">personalizado</span>
               </h2>
               <p className="text-gray-400 text-lg">
-                Use uma imagem do Adobe Stock ou envie a sua fotografia e
-                receba um orçamento à medida.
+                Use uma imagem do Adobe Stock ou envie a sua fotografia e receba um orçamento à medida.
               </p>
             </div>
 
@@ -649,10 +702,7 @@ ${formData.anexos
                   {formData.opcaoImagem === "adobe-stock" ? (
                     <div className="space-y-4">
                       <div>
-                        <Label
-                          htmlFor="codigoAdobeStock"
-                          className="text-white"
-                        >
+                        <Label htmlFor="codigoAdobeStock" className="text-white">
                           Código / nº da imagem Adobe Stock
                         </Label>
                         <Input
@@ -671,10 +721,7 @@ ${formData.anexos
                       </div>
 
                       <div>
-                        <Label
-                          htmlFor="descricaoImagemAdobe"
-                          className="text-white"
-                        >
+                        <Label htmlFor="descricaoImagemAdobe" className="text-white">
                           Observações (opcional)
                         </Label>
                         <Textarea
@@ -708,15 +755,12 @@ ${formData.anexos
                     </div>
                   ) : (
                     <div>
-                      <Label
-                        htmlFor="descricaoImagemPropria"
-                        className="text-white"
-                      >
+                      <Label htmlFor="descricaoImagemPropria" className="text-white">
                         Descrição da sua imagem
                       </Label>
                       <Textarea
                         id="descricaoImagemPropria"
-                        placeholder="Ex: fotografia de família, retrato, paisagem... (pode enviar a fotografia quando responder ao nosso email)"
+                        placeholder="Ex: fotografia de família, retrato, paisagem..."
                         value={formData.descricaoImagem}
                         onChange={(e) =>
                           setFormData({
@@ -811,7 +855,7 @@ ${formData.anexos
                       onUpload={(files) =>
                         setFormData({
                           ...formData,
-                          anexos: files,
+                          anexos: files as any,
                         })
                       }
                       maxFiles={3}
@@ -819,18 +863,12 @@ ${formData.anexos
                       className="w-full mt-2"
                     />
 
-                    {/* 🔹 ESTE BLOCO TEM DE FICAR SEMPRE VISÍVEL, POR ISSO ESTÁ FORA DO IF */}
                     <div className="mt-3 text-xs text-white/60 space-y-1">
                       <p>• Máximo 3 ficheiros, até 10MB cada</p>
                       <p>• Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF</p>
                       <p>• Importante: Fontes devem ser convertidas em linhas antes do envio</p>
-                      <p>
-                        • Os ficheiros serão mencionados no email. Para envio dos ficheiros reais,
-                        utilize email ou WhatsApp.
-                      </p>
                     </div>
 
-                    {/* Lista de ficheiros anexados – só aparece se houver anexos */}
                     {formData.anexos && formData.anexos.length > 0 && (
                       <div className="mt-3">
                         <p className="text-white/60 mb-2 text-sm">Ficheiros anexados:</p>
@@ -858,9 +896,7 @@ ${formData.anexos
                                 onClick={() =>
                                   setFormData({
                                     ...formData,
-                                    anexos: formData.anexos.filter(
-                                      (_: any, i: number) => i !== index
-                                    ),
+                                    anexos: formData.anexos.filter((_: any, i: number) => i !== index),
                                   })
                                 }
                                 className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
@@ -876,10 +912,11 @@ ${formData.anexos
 
                   <Button
                     type="submit"
+                    disabled={submitMutation.isPending}
                     className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
                   >
                     <ArrowRight className="w-4 h-4 mr-2" />
-                    Solicitar orçamento por email
+                    {submitMutation.isPending ? "A enviar..." : "Solicitar orçamento por email"}
                   </Button>
                 </form>
               </CardContent>
@@ -896,20 +933,10 @@ ${formData.anexos
             <span className="text-brand-yellow">obra de arte?</span>
           </h2>
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            Transforme as suas fotografias favoritas ou criações artísticas em
-            telas profissionais que durarão muitos anos.
+            Transforme as suas fotografias favoritas ou criações artísticas em telas profissionais que durarão muitos anos.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
-            >
-              <Link href="/contactos#formulario">
-                Criar minha tela
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
             <Button
               asChild
               variant="outline"
