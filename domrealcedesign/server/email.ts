@@ -13,39 +13,108 @@ const transporter = nodemailer.createTransport({
 
 export async function sendContactEmail(contact: Contact): Promise<boolean> {
   try {
+    const baseUrl = "https://www.domrealce.com";
+
+    const files = contact.ficheiros || [];
+
+    const filesHtml =
+      files.length > 0
+        ? `<ul>
+            ${files
+              .map((entry) => {
+                if (entry.includes("|")) {
+                  const [name, url] = entry.split("|");
+                  const fullUrl = url.startsWith("http")
+                    ? url
+                    : `${baseUrl}${url}`;
+                  return `<li>📎 <strong>${name}</strong> — <a href="${fullUrl}" target="_blank" rel="noreferrer">Abrir / Download</a></li>`;
+                }
+                const fullUrl = entry.startsWith("http")
+                  ? entry
+                  : `${baseUrl}${entry}`;
+                return `<li>📎 <a href="${fullUrl}" target="_blank" rel="noreferrer">${fullUrl}</a></li>`;
+              })
+              .join("")}
+          </ul>`
+        : `<p>—</p>`;
+
+    const filesText =
+      files.length > 0
+        ? files
+            .map((entry) => {
+              if (entry.includes("|")) {
+                const [name, url] = entry.split("|");
+                const fullUrl = url.startsWith("http")
+                  ? url
+                  : `${baseUrl}${url}`;
+                return `• ${name}\n  ${fullUrl}`;
+              }
+              const fullUrl = entry.startsWith("http")
+                ? entry
+                : `${baseUrl}${entry}`;
+              return `• ${fullUrl}`;
+            })
+            .join("\n")
+        : "—";
+
     const mailOptions = {
       from: `"DOMREALCE Website" <${process.env.SMTP_USER}>`,
       replyTo: contact.email,
-      to: 'carloscruz@domrealce.com',
+      to: "carloscruz@domrealce.com",
       subject: `Nova mensagem de contacto - ${contact.nome}`,
       html: `
         <h2>Nova mensagem de contacto recebida</h2>
+
         <p><strong>Nome:</strong> ${contact.nome}</p>
         <p><strong>Email:</strong> ${contact.email}</p>
-        <p><strong>Data:</strong> ${contact.createdAt ? new Date(contact.createdAt).toLocaleString('pt-PT') : new Date().toLocaleString('pt-PT')}</p>
+        <p><strong>Data:</strong> ${
+          contact.createdAt
+            ? new Date(contact.createdAt).toLocaleString("pt-PT")
+            : new Date().toLocaleString("pt-PT")
+        }</p>
+
         <h3>Mensagem:</h3>
-        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-          ${contact.mensagem.replace(/\n/g, '<br>')}
+        <div style="background-color:#f5f5f5;padding:15px;border-radius:5px;margin:10px 0;">
+          ${contact.mensagem.replace(/\n/g, "<br>")}
         </div>
+
+        <h3>Ficheiros enviados pelo cliente:</h3>
+        ${filesHtml}
+
         <hr>
-        <p style="color: #666; font-size: 12px;">
+        <p style="color:#666;font-size:12px;">
           Esta mensagem foi enviada através do formulário de contacto do website da DOMREALCE.
         </p>
       `,
       text: `
-        Nova mensagem de contacto recebida
-        
-        Nome: ${contact.nome}
-        Email: ${contact.email}
-        Data: ${contact.createdAt ? new Date(contact.createdAt).toLocaleString('pt-PT') : new Date().toLocaleString('pt-PT')}
-        
-        Mensagem:
-        ${contact.mensagem}
-        
-        ---
-        Esta mensagem foi enviada através do formulário de contacto do website da DOMREALCE.
-      `
+Nova mensagem de contacto recebida
+
+Nome: ${contact.nome}
+Email: ${contact.email}
+Data: ${
+        contact.createdAt
+          ? new Date(contact.createdAt).toLocaleString("pt-PT")
+          : new Date().toLocaleString("pt-PT")
+      }
+
+Mensagem:
+${contact.mensagem}
+
+Ficheiros enviados pelo cliente:
+${filesText}
+
+---
+Esta mensagem foi enviada através do formulário de contacto do website da DOMREALCE.
+      `,
     };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error("Erro ao enviar email de contacto:", error);
+    return false;
+  }
+}
 
     const info = await transporter.sendMail(mailOptions);
     

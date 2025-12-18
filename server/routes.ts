@@ -26,7 +26,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { protegerAdmin } from "./middleware";
 import { adminAccess } from "./adminMiddleware";
-
+import { randomUUID } from "crypto";
 // ✅ Recriar __dirname para ES Modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -63,6 +63,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const upload = multer({ 
     storage: multer.memoryStorage(),
     limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+  });
+  // Multer específico para o formulário de contacto (até 5 ficheiros, 20MB cada)
+  const contactUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 20 * 1024 * 1024, // 20MB por ficheiro (ajusta se quiseres)
+      files: 5,
+    },
   });
 
   // Auth status endpoint - check if user is authenticated
@@ -886,39 +894,78 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  // Contact form submission endpoint with rate limiting
-  app.post("/api/contact", contactLimiter, async (req, res) => {
+  // Contact form submission endpoint with rate limiting + upload real
+  app.post("/api/contact", contactLimiter, contactUpload.array("files", 5), async (req, res) => {
     try {
-      // Validate the request body
-      const validatedData = insertContactSchema.parse(req.body);
-      
-      // Normalize file URLs if any
-      if (validatedData.ficheiros && validatedData.ficheiros.length > 0) {
-        validatedData.ficheiros = validatedData.ficheiros.map(url => 
-          objectStorageService.normalizeObjectEntityPath(url)
+      const submissionId = randomUUID();
+
+      // 1) Upload dos ficheiros (se existirem) para Object Storage + gerar links públicos
+      const files = (req.files as Express.Multer.File[]) || [];
+
+      const uploadedFileEntries: string[] = [];
+
+      for (const file of files) {
+        // Sanitizar nome (evita caminhos e caracteres estranhos)
+        const originalName = (file.originalname || "ficheiro")
+          .replace(/[/\\?%*:|"<>]/g, "-")
+          .trim();
+
+        const targetPath = `contactos/${submissionId}/${Date.now()}-${originalName}`;
+
+        await objectStorageService.uploadPublicFile(
+          targetPath,
+          file.buffer,
+          file.mimetype
         );
+
+        const publicUrl = `/public-objects/${targetPath}`;
+
+        // Guardamos no formato "nome.ext|/public-objects/..." para o teu endpoint /attachment já entender
+        uploadedFileEntries.push(`${originalName}|${publicUrl}`);
       }
-      
-      // Save contact to storage
+
+      // 2) Validar dados (multipart/form-data chega em req.body como strings)
+      const validatedData = insertContactSchema.parse({
+        ...req.body,
+        ficheiros: uploadedFileEntries,
+      });
+
+      // 3) Normalizar URL (mas só a parte depois do "|")
+      if (validatedData.ficheiros && validatedData.ficheiros.length > 0) {
+        validatedData.ficheiros = validatedData.ficheiros.map((entry) => {
+          if (entry.includes("|")) {
+            const [name, url] = entry.split("|");
+            const normalizedUrl = objectStorageService.normalizeObjectEntityPath(url);
+            return `${name}|${normalizedUrl}`;
+          }
+          return objectStorageService.normalizeObjectEntityPath(entry);
+        });
+      }
+
+      // 4) Guardar contacto
       const contact = await storage.createContact(validatedData);
-      
-      // Send email notifications (don't wait for them)
+
+      // 5) Enviar emails (sem bloquear)
       Promise.all([
         sendContactEmail(contact),
-        sendAutoReplyEmail(contact)
-      ]).catch(error => {
-        console.error('Error sending emails:', error);
+        sendAutoReplyEmail(contact),
+      ]).catch((error) => {
+        console.error("Error sending emails:", error);
       });
-      
-      res.json({ 
-        success: true, 
-        message: "Mensagem enviada com sucesso. Entraremos em contacto brevemente." 
+
+      res.json({
+        success: true,
+        message: "Mensagem enviada com sucesso. Entraremos em contacto brevemente.",
+        files: uploadedFileEntries.map((f) => {
+          const [name, url] = f.split("|");
+          return { name, url };
+        }),
       });
     } catch (error) {
-      console.error('Contact form error:', error);
-      res.status(400).json({ 
-        success: false, 
-        message: "Erro ao enviar mensagem. Por favor, tente novamente." 
+      console.error("Contact form error:", error);
+      res.status(400).json({
+        success: false,
+        message: "Erro ao enviar mensagem. Por favor, tente novamente.",
       });
     }
   });

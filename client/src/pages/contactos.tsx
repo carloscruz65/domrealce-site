@@ -4,10 +4,8 @@ import GoogleMap from "@/components/GoogleMap";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { insertContactSchema, type InsertContact } from "@shared/schema";
+import { insertContactSchema } from "@shared/schema";
 import { z } from "zod";
-import { apiRequest } from "@/lib/queryClient";
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   FileText,
@@ -19,6 +17,14 @@ import {
   Mail,
 } from "lucide-react";
 
+type AnexoItem = {
+  name: string;
+  originalName: string;
+  size: number;
+  uploadURL: string;
+  file: File;
+};
+
 export default function Contactos() {
   const { toast } = useToast();
 
@@ -27,26 +33,72 @@ export default function Contactos() {
     queryKey: ["/api/config/google-maps-key"],
   });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    nome: string;
+    email: string;
+    telefone: string;
+    assunto: string;
+    mensagem: string;
+    anexos: AnexoItem[];
+  }>({
     nome: "",
     email: "",
     telefone: "",
     assunto: "",
     mensagem: "",
-    anexos: [] as any[],
+    anexos: [],
   });
 
   const submitMutation = useMutation({
-    mutationFn: async (data: InsertContact) => {
-      // ATENÇÃO: manter a assinatura correta do apiRequest que estiveres a usar no projeto
-      return await apiRequest("POST", "/api/contact", data);
-    },
-    onSuccess: (data: any) => {
-      toast({
-        title: "Sucesso!",
-        description: data.message || "Mensagem enviada com sucesso!",
-        variant: "default",
+    mutationFn: async () => {
+      // 1) Validação local (sem ficheiros)
+      // Como o backend provavelmente não tem "assunto" no schema,
+      // juntamos o assunto dentro da mensagem para não perder essa info.
+      const payload = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        telefone: formData.telefone?.trim() || undefined,
+        empresa: undefined,
+        mensagem: `${formData.assunto.trim()}\n\n${formData.mensagem.trim()}`.trim(),
+        ficheiros: [],
+      };
+
+      const validatedData = insertContactSchema.parse(payload);
+
+      // 2) FormData com texto + ficheiros reais
+      const fd = new FormData();
+      fd.append("nome", validatedData.nome);
+      fd.append("email", validatedData.email);
+      fd.append("telefone", validatedData.telefone ?? "");
+      fd.append("empresa", validatedData.empresa ?? "");
+      fd.append("mensagem", validatedData.mensagem);
+
+      // IMPORTANTE: backend espera "files"
+      (formData.anexos || []).forEach((a) => {
+        if (a.file) fd.append("files", a.file);
       });
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: fd,
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || data?.success === false) {
+        throw new Error(data?.message || "Erro ao enviar mensagem.");
+      }
+
+      return data;
+    },
+
+    onSuccess: () => {
+      toast({
+        title: "Mensagem enviada",
+        description: "Entraremos em contacto brevemente.",
+      });
+
+      // Limpar formulário
       setFormData({
         nome: "",
         email: "",
@@ -56,44 +108,13 @@ export default function Contactos() {
         anexos: [],
       });
     },
+
     onError: (error: any) => {
-      toast({
-        title: "Erro",
-        description:
-          error.message || "Erro ao enviar mensagem. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const ficheiros =
-        formData.anexos?.map(
-          (file) =>
-            `${file.name} (${(file.size / 1024).toFixed(1)} KB) - ${
-              file.file?.type || "unknown"
-            }`,
-        ) || [];
-
-      const payload: InsertContact = {
-        nome: formData.nome.trim(),
-        email: formData.email.trim(),
-        telefone: formData.telefone?.trim() || undefined,
-        empresa: undefined,
-        mensagem: formData.mensagem.trim(),
-        ficheiros,
-      };
-
-      const validatedData = insertContactSchema.parse(payload);
-      submitMutation.mutate(validatedData);
-    } catch (error) {
-      let errorMessage = "Por favor, verifique os dados inseridos.";
-
+      // Se for erro do Zod, mostramos mensagens mais “humanas”
       if (error instanceof z.ZodError) {
         const issues = error.issues;
+
+        let errorMessage = "Por favor, verifique os dados inseridos.";
         if (
           issues.some(
             (issue) =>
@@ -113,14 +134,27 @@ export default function Contactos() {
         } else if (issues.some((issue) => issue.path[0] === "email")) {
           errorMessage = "Por favor insira um email válido.";
         }
+
+        toast({
+          title: "Erro de validação",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
       }
 
       toast({
-        title: "Erro de validação",
-        description: errorMessage,
+        title: "Erro",
+        description:
+          error?.message || "Erro ao enviar mensagem. Tente novamente.",
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitMutation.mutate();
   };
 
   return (
@@ -408,7 +442,7 @@ export default function Contactos() {
                       accept=".jpg,.jpeg,.png,.tiff,.tif,.svg,.ai,.pdf"
                       onChange={(e) => {
                         const files = Array.from(e.target.files || []);
-                        const fileData = files.map((file) => ({
+                        const fileData: AnexoItem[] = files.map((file) => ({
                           name: file.name,
                           originalName: file.name,
                           size: file.size,
@@ -419,12 +453,14 @@ export default function Contactos() {
                           ...prev,
                           anexos: [...prev.anexos, ...fileData].slice(0, 3),
                         }));
+                        // limpa o input para permitir selecionar o mesmo ficheiro novamente se quiserem
+                        e.currentTarget.value = "";
                       }}
                       className="w-full p-3 bg-gray-900/60 border border-white/10 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-black file:bg-brand-yellow hover:file:bg-brand-yellow/90 file:cursor-pointer"
                     />
 
                     <div className="mt-2 text-xs text-white/60 space-y-1">
-                      <p>• Máximo 3 ficheiros, até 10MB cada</p>
+                      <p>• Máximo 3 ficheiros (no frontend), até 10MB cada</p>
                       <p>
                         • Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF
                       </p>
@@ -433,8 +469,8 @@ export default function Contactos() {
                         convertidas em linhas antes do envio
                       </p>
                       <p>
-                        • Os ficheiros serão mencionados no email. Para envio
-                        dos ficheiros reais, utilize email ou WhatsApp.
+                        • Os ficheiros são enviados e incluídos com link no
+                        email.
                       </p>
                     </div>
 

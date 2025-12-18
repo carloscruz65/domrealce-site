@@ -61,12 +61,28 @@ export async function sendContactEmail(contact: Contact): Promise<boolean> {
         ${
           contact.ficheiros && contact.ficheiros.length > 0
             ? `
-        <h3>Ficheiros mencionados pelo cliente:</h3>
-        <ul>
-          ${contact.ficheiros,['?']?? ""} 
-          ${contact.ficheiros.map((f) => `<li>📎 ${f}</li>`).join("")}
-        </ul>
-        <p><em>Nota: Os ficheiros reais devem ser solicitados directamente ao cliente.</em></p>
+        <h3>Ficheiros enviados pelo cliente:</h3>
+        ${
+          contact.ficheiros && contact.ficheiros.length > 0
+            ? `<ul>
+                ${contact.ficheiros
+                  .map((entry) => {
+                    if (entry.includes("|")) {
+                      const [name, url] = entry.split("|");
+                      const fullUrl = url.startsWith("http")
+                        ? url
+                        : `https://www.domrealce.com${url}`;
+                      return `<li>📎 <strong>${name}</strong> — <a href="${fullUrl}" target="_blank" rel="noreferrer">Abrir / Download</a></li>`;
+                    }
+                    const fullUrl = entry.startsWith("http")
+                      ? entry
+                      : `https://www.domrealce.com${entry}`;
+                    return `<li>📎 <a href="${fullUrl}" target="_blank" rel="noreferrer">${fullUrl}</a></li>`;
+                  })
+                  .join("")}
+              </ul>`
+            : `<p>—</p>`
+        }
         `
             : ""
         }
@@ -131,7 +147,32 @@ export async function sendAutoReplyEmail(contact: Contact): Promise<boolean> {
           ${contact.mensagem.replace(/\n/g, "<br>")}
         </div>
 
-        <p>Cumprimentos,<br><strong>DOMREALCE</strong></p>
+        <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;">
+
+<p style="margin:0 0 6px 0;font-size:14px;">
+  Com os melhores cumprimentos,
+</p>
+
+<p style="margin:0;font-size:16px;font-weight:700;color:#000;">
+  DOMREALCE
+</p>
+
+<p style="margin:6px 0 0 0;font-size:13px;color:#555;">
+  Comunicação Visual · Impressão Digital
+</p>
+
+<p style="margin:10px 0 0 0;font-size:13px;color:#555;">
+  📍 Rua de Rebolido, 42 · 4580-402 Gondalães, Paredes<br>
+  📞 <a href="tel:+351930682725" style="color:#555;text-decoration:none;">+351 930 682 725</a> ·
+  ✉️ <a href="mailto:carloscruz@domrealce.com" style="color:#555;text-decoration:none;">carloscruz@domrealce.com</a>
+</p>
+
+<p style="margin:8px 0 0 0;font-size:12px;color:#777;">
+  <a href="https://www.domrealce.com" target="_blank" style="color:#777;text-decoration:none;">
+    www.domrealce.com
+  </a>
+</p>
+
       `,
       text: `
 Obrigado pelo seu contacto, ${contact.nome}!
