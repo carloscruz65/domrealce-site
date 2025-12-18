@@ -56,8 +56,7 @@ export default function Checkout() {
   const { toast } = useToast();
 
   // ✅ PayPal Client ID (preferência: .env)
-    const PAYPAL_CLIENT_ID =
-    "AUhs9LK2rWuahuEayCJAHu3z2WsVJHRAH4fQeEP1T8nr1zMaAswjSzPaNUIPUK3TBU-tJ5d2RgKpF8wI";
+  const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
   const [paypalReady, setPaypalReady] = useState(false);
 
