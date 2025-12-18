@@ -336,7 +336,7 @@ export const insertOrderSchema = createInsertSchema(orders).pick({
   clienteTelefone: z.string().optional(),
   clienteNIF: z.string().optional(),
   estado: z.enum(["pendente", "paga", "processando", "enviada", "entregue", "cancelada"]).default("pendente"),
-  metodoPagamento: z.enum(["mbway", "multibanco", "payshop", "creditcard"]),
+  metodoPagamento: z.enum(["mbway", "multibanco", "payshop", "creditcard", "paypal"]),
   estadoPagamento: z.enum(["pendente", "pago", "falhado"]).default("pendente"),
   itens: z.array(z.any()).min(1, "Deve ter pelo menos um item"),
   subtotal: z.string().or(z.number()),
