@@ -1,6 +1,8 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
+import ServiceCardsSection from "@/components/services/ServiceCardsSection";
+import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,27 +23,6 @@ import {
 } from "lucide-react";
 
 export default function ServicoImpressaoDigital() {
-  const features = [
-    {
-      icon: <Maximize className="w-6 h-6" />,
-      title: "Tintas Látex Premium",
-      description:
-        "Impressões com tintas látex de alta qualidade, sem odor e resistentes ao desbotamento.",
-    },
-    {
-      icon: <Zap className="w-6 h-6" />,
-      title: "Produção Rápida",
-      description:
-        "Prazos de entrega reduzidos sem comprometer a qualidade de impressão.",
-    },
-    {
-      icon: <Clock className="w-6 h-6" />,
-      title: "Gestão de Prazos",
-      description:
-        "Planeamento de produção para cumprir prazos apertados com segurança.",
-    },
-  ];
-
   const materials = [
     {
       name: "Vinil Autocolante",
@@ -60,13 +41,11 @@ export default function ServicoImpressaoDigital() {
     },
     {
       name: "Lona Perfurada",
-      description:
-        "Permite passagem de vento, ideal para vedações e fachadas.",
+      description: "Permite passagem de vento, ideal para vedações e fachadas.",
       applications: ["Andaimes", "Vedações", "Fachadas"],
     },
   ];
 
-  // Processo simplificado (3 passos), igual em estilo ao de Design Gráfico
   const process = [
     {
       step: "01",
@@ -127,6 +106,142 @@ export default function ServicoImpressaoDigital() {
 
   const galleryImages = galleryData?.images || defaultImages;
 
+  // ✅ Secção normalizada no estilo Design (cards + dropdown), mantendo o <details> existente
+  const tecnologiaCards: ServiceAccordionCard[] = [
+    {
+      key: "materiais-acabamentos",
+      icon: <Maximize className="w-6 h-6" />,
+      title: "Materiais e Acabamentos",
+      intro: "Escolha técnica, acabamento limpo e pensado para durar.",
+      body: (
+        <>
+          <p className="text-gray-300">
+            Trabalhamos com uma seleção de materiais profissionais e acabamentos
+            técnicos pensados para durar. Cada projeto é preparado de acordo com
+            o local de aplicação, exposição ao exterior e objetivo de comunicação,
+            garantindo boa reprodução de cor, estabilidade e durabilidade.
+          </p>
+
+          {/* Dropdown original mantido */}
+          <details className="group mt-4">
+            <summary className="cursor-pointer flex items-center justify-between text-sm text-brand-yellow select-none">
+              <span>Ver materiais e suportes utilizados</span>
+              <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+            </summary>
+
+            <div className="mt-4 space-y-3">
+              <div className="flex items-start gap-3">
+                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                <p className="text-sm text-gray-300">
+                  <span className="text-white font-medium">
+                    Vinis de várias gamas
+                  </span>{" "}
+                  (monoméricos, poliméricos e cast) para montras, viaturas e
+                  sinalética interior e exterior.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                <p className="text-sm text-gray-300">
+                  <span className="text-white font-medium">
+                    Lonas publicitárias
+                  </span>{" "}
+                  (frontlit, backlit e perfuradas) para fachadas, eventos,
+                  vedações e grandes formatos.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                <p className="text-sm text-gray-300">
+                  <span className="text-white font-medium">
+                    Vinil decorativo e jateado
+                  </span>{" "}
+                  para interiores, privacidade em vidro e ambientes mais acolhedores.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                <p className="text-sm text-gray-300">
+                  <span className="text-white font-medium">Suportes rígidos</span>{" "}
+                  como PVC e acrílico, ideais para placas, sinalética e comunicação permanente.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
+                <p className="text-sm text-gray-300">
+                  <span className="text-white font-medium">
+                    Proteção e acabamentos
+                  </span>{" "}
+                  com laminação mate ou brilho, proteção UV e corte de contorno para maior
+                  durabilidade e melhor acabamento visual.
+                </p>
+              </div>
+            </div>
+          </details>
+        </>
+      ),
+    },
+    {
+      key: "tintas",
+      icon: <Palette className="w-6 h-6" />,
+      title: "Tintas Látex Premium",
+      intro: "Sem odor, boa resistência e resultado consistente.",
+      content: [
+        "Tintas látex de alta qualidade, com excelente reprodução de cor.",
+        "Opção indicada para interior e exterior, consoante o material e acabamento.",
+        "Maior resistência ao desbotamento e bom comportamento em uso real.",
+      ],
+    },
+    {
+      key: "producao",
+      icon: <Zap className="w-6 h-6" />,
+      title: "Produção Rápida",
+      intro: "Prazos curtos sem comprometer qualidade.",
+      content: [
+        "Planeamento e produção otimizados para trabalhos urgentes.",
+        "Acabamentos e preparação com controlo de qualidade.",
+        "Entrega ou instalação conforme combinado.",
+      ],
+    },
+    {
+      key: "prazos",
+      icon: <Clock className="w-6 h-6" />,
+      title: "Gestão de Prazos",
+      intro: "Cumprimos prazos apertados com segurança.",
+      content: [
+        "Priorização e calendarização de produção por tipo de trabalho.",
+        "Comunicação clara de prazos e etapas.",
+        "Consistência no resultado final e no timing de entrega.",
+      ],
+    },
+    {
+      key: "durabilidade",
+      icon: <Shield className="w-6 h-6" />,
+      title: "Durabilidade e Materiais Certos",
+      intro: "O material certo para o contexto certo.",
+      content: [
+        "Seleção de materiais conforme exposição ao sol, chuva e desgaste.",
+        "Opções de laminação e proteção UV para maior longevidade.",
+        "Acabamentos limpos para valorizar o projeto.",
+      ],
+    },
+    {
+      key: "qualidade",
+      icon: <Award className="w-6 h-6" />,
+      title: "Qualidade Profissional",
+      intro: "Detalhe, consistência e controlo técnico.",
+      content: [
+        "Verificação técnica do ficheiro (resolução, margens, cortes, cor).",
+        "Produção orientada a consistência e repetibilidade.",
+        "Acabamentos profissionais com rigor de aplicação.",
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
@@ -143,126 +258,14 @@ export default function ServicoImpressaoDigital() {
       />
 
       <main>
-        {/* TECNOLOGIA AVANÇADA */}
-        <section className="pt-8 pb-16 bg-gray-900/40">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-brand-yellow">Tecnologia</span>{" "}
-                <span className="text-white">Avançada</span>
-              </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Equipamentos de impressão digital que garantem qualidade
-                excecional em todos os projetos.
-              </p>
-            </div>
-
-            {/* Cartão grande: Materiais e Acabamentos */}
-            <div className="max-w-5xl mx-auto mb-10">
-              <Card className="bg-black border border-gray-800">
-                <CardContent className="p-6 md:p-8">
-                  <h3 className="text-2xl font-semibold mb-3 text-white">
-                    Materiais e Acabamentos
-                  </h3>
-                  <p className="text-gray-400 text-base mb-4">
-                    Trabalhamos com uma seleção de materiais profissionais e
-                    acabamentos técnicos pensados para durar. Cada projeto é
-                    preparado de acordo com o local de aplicação, exposição ao
-                    exterior e objetivo de comunicação, garantindo sempre boa
-                    reprodução de cor, estabilidade e durabilidade.
-                  </p>
-
-                  <details className="group mt-2">
-                    <summary className="cursor-pointer flex items-center justify-between text-sm text-brand-yellow select-none">
-                      <span>Ver materiais e suportes utilizados</span>
-                      <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
-                    </summary>
-
-                    <div className="mt-4 space-y-3">
-                      <div className="flex items-start gap-3">
-                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                        <p className="text-sm text-gray-300">
-                          <span className="text-white font-medium">
-                            Vinis de várias gamas
-                          </span>{" "}
-                          (monoméricos, poliméricos e cast) para montras,
-                          viaturas e sinalética interior e exterior.
-                        </p>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                        <p className="text-sm text-gray-300">
-                          <span className="text-white font-medium">
-                            Lonas publicitárias
-                          </span>{" "}
-                          (frontlit, backlit e perfuradas) para fachadas,
-                          eventos, vedações e grandes formatos.
-                        </p>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                        <p className="text-sm text-gray-300">
-                          <span className="text-white font-medium">
-                            Vinil decorativo e jateado
-                          </span>{" "}
-                          para interiores, privacidade em vidro e ambientes mais
-                          acolhedores.
-                        </p>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                        <p className="text-sm text-gray-300">
-                          <span className="text-white font-medium">
-                            Suportes rígidos
-                          </span>{" "}
-                          como PVC e acrílico, ideais para placas, sinalética e
-                          comunicação permanente.
-                        </p>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                        <p className="text-sm text-gray-300">
-                          <span className="text-white font-medium">
-                            Proteção e acabamentos
-                          </span>{" "}
-                          com laminação mate ou brilho, proteção UV e corte de
-                          contorno para maior durabilidade e melhor acabamento
-                          visual.
-                        </p>
-                      </div>
-                    </div>
-                  </details>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Linha de 3 cartões: Tintas, Produção, Prazos */}
-            <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <Card
-                  key={index}
-                  className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-                >
-                  <CardContent className="p-6">
-                    <div className="text-brand-yellow mb-4">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-3 text-white">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ✅ TECNOLOGIA AVANÇADA (agora normalizado para cards + dropdown) */}
+        <ServiceCardsSection
+          titleTop="Tecnologia"
+          titleBottom="Avançada"
+          subtitle="Equipamentos e materiais que garantem qualidade excecional em todos os projetos."
+          cards={tecnologiaCards}
+          defaultOpenKey={null}
+        />
 
         {/* PORQUÊ ESCOLHER A NOSSA IMPRESSÃO DIGITAL */}
         <section className="py-16 bg-black border-t border-gray-900">
@@ -278,10 +281,8 @@ export default function ServicoImpressaoDigital() {
               </p>
             </div>
 
-            {/* Selos de qualidade */}
             <div className="max-w-4xl mx-auto mb-12">
               <div className="flex flex-wrap justify-center gap-4">
-                {/* Durabilidade Garantida */}
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
                   <Shield className="w-4 h-4 text-brand-yellow" />
                   <span className="text-sm text-gray-100">
@@ -289,7 +290,6 @@ export default function ServicoImpressaoDigital() {
                   </span>
                 </div>
 
-                {/* Qualidade de Impressão Profissional */}
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
                   <Award className="w-4 h-4 text-brand-yellow" />
                   <span className="text-sm text-gray-100">
@@ -297,7 +297,6 @@ export default function ServicoImpressaoDigital() {
                   </span>
                 </div>
 
-                {/* Pontualidade nos prazos */}
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-brand-yellow/40 bg-gray-900/70">
                   <Clock className="w-4 h-4 text-brand-yellow" />
                   <span className="text-sm text-gray-100">
@@ -307,7 +306,6 @@ export default function ServicoImpressaoDigital() {
               </div>
             </div>
 
-            {/* Argumentos / razões */}
             <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
               <div className="bg-gray-900/60 border border-gray-800 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-2">
@@ -425,8 +423,8 @@ export default function ServicoImpressaoDigital() {
                 <span className="text-brand-yellow">Disponíveis</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Selecionamos materiais que garantem durabilidade, boa
-                reprodução de cor e resistência às condições de utilização.
+                Selecionamos materiais que garantem durabilidade, boa reprodução
+                de cor e resistência às condições de utilização.
               </p>
             </div>
 
@@ -466,7 +464,7 @@ export default function ServicoImpressaoDigital() {
           </div>
         </section>
 
-        {/* PROCESSO – versão minimalista, agora com 3 colunas em desktop */}
+        {/* PROCESSO */}
         <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
