@@ -1,65 +1,51 @@
-import express, { type Express } from "express";
+import type { Express } from "express";
+import type { Server } from "http";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
-import { type Server } from "http";
-import viteConfig from "../vite.config";
-import { nanoid } from "nanoid";
 
-const viteLogger = createLogger();
-
-export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
+export function log(message: string) {
+  console.log(message);
 }
 
 export async function setupVite(app: Express, server: Server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true as const,
-  };
-
-  const vite = await createViteServer({
-    ...viteConfig,
-    configFile: false,
-    customLogger: {
-      ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
-        process.exit(1);
-      },
-    },
-    server: serverOptions,
+  const vite = await (
+    await import("vite")
+  ).createServer({
+    server: { middlewareMode: true },
     appType: "custom",
   });
 
   app.use(vite.middlewares);
+
+  // ✅ API fallback: nunca servir SPA para /api/*
+  app.use("/api", (req, res) => {
+    res.status(404).json({
+      error: "API route not found",
+      method: req.method,
+      path: req.originalUrl,
+    });
+  });
+
+  // ✅ SPA fallback (apenas para rotas não-API)
   app.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-
     try {
-      const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
-        "client",
-        "index.html",
-      );
+      const url = req.originalUrl;
 
-      // always reload the index.html file from disk incase it changes
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      // Segurança extra: se por alguma razão chegar aqui com /api, devolve JSON
+      if (url.startsWith("/api")) {
+        return res.status(404).json({
+          error: "API route not found",
+          method: req.method,
+          path: req.originalUrl,
+        });
+      }
+
+      const indexPath = path.resolve(process.cwd(), "client", "index.html");
+      let template = fs.readFileSync(indexPath, "utf-8");
+
+      template = await vite.transformIndexHtml(url, template);
+
+      res.status(200).set({ "Content-Type": "text/html" }).end(template);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -68,18 +54,30 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  const distPath = path.resolve(process.cwd(), "dist", "public");
 
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
-  }
+  // Static assets
+  app.use(require("express").static(distPath));
 
-  app.use(express.static(distPath));
+  // ✅ API fallback em produção (mesma regra)
+  app.use("/api", (req, res) => {
+    res.status(404).json({
+      error: "API route not found",
+      method: req.method,
+      path: req.originalUrl,
+    });
+  });
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // ✅ SPA fallback (apenas não-API)
+  app.use("*", (req, res) => {
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(404).json({
+        error: "API route not found",
+        method: req.method,
+        path: req.originalUrl,
+      });
+    }
+
+    res.sendFile(path.join(distPath, "index.html"));
   });
 }

@@ -47,14 +47,33 @@ export const products = pgTable("products", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// =======================
+// NEWS (v2) - Projetos/Notícias
+// =======================
 export const news = pgTable("news", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+
+  // v1 (mantido)
   titulo: text("titulo").notNull(),
   descricao: text("descricao").notNull(),
   categoria: text("categoria").notNull(),
-  imagem: text("imagem").notNull(), // Imagem principal (compatibilidade)
-  imagens: text("imagens").array().default([]), // Galeria de imagens
+  imagem: text("imagem").notNull(), // imagem principal (compatibilidade)
+  imagens: text("imagens").array().default([]), // galeria
   tipoGaleria: text("tipo_galeria").default("single"), // single, slide, grid, before-after
+
+  // v2 (novo)
+  subtitulo: text("subtitulo"), // opcional
+  intro: text("intro"), // opcional (2-3 linhas)
+  heroTipo: text("hero_tipo").default("image"), // image | video
+  heroUrl: text("hero_url"), // url de imagem ou vídeo (opcional)
+
+  // Conteúdo modular (JSON)
+  blocks: jsonb("blocks").default(sql`'[]'::jsonb`),
+  review: jsonb("review"), // opcional
+
+  // Serviços relacionados (CTA discreto)
+  relatedServices: text("related_services").array().default([]),
+
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -108,16 +127,16 @@ export const serviceHeros = pgTable("service_heroes", {
   primaryCtaHref: text("primary_cta_href"),
   secondaryCtaText: text("secondary_cta_text"),
   secondaryCtaHref: text("secondary_cta_href"),
-  
+
   // Mobile responsive settings
   mobileTitleSize: text("mobile_title_size"), // e.g. "1rem", "0.9rem"
   mobileDescSize: text("mobile_desc_size"), // e.g. "0.625rem", "0.7rem"
   mobileBadgeSize: text("mobile_badge_size"), // e.g. "0.5rem", "0.6rem"
   mobileSpacing: text("mobile_spacing"), // e.g. "compact", "normal"
   mobileButtonLabels: jsonb("mobile_button_labels"), // { primary: "Projeto", secondary: "Contacto", portfolio: "Portfólio" }
-  mobileHeight: text("mobile_height"), // e.g. "500px", "60vh" - altura mínima em mobile
-  mobileContentAlign: text("mobile_content_align"), // e.g. "top", "center", "bottom" - alinhamento vertical do conteúdo
-  
+  mobileHeight: text("mobile_height"), // e.g. "500px", "60vh"
+  mobileContentAlign: text("mobile_content_align"), // top, center, bottom
+
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -125,7 +144,7 @@ export const serviceHeros = pgTable("service_heroes", {
 export const orders = pgTable("orders", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   numeroEncomenda: text("numero_encomenda").notNull().unique(),
-  
+
   // Dados do cliente
   clienteNome: text("cliente_nome").notNull(),
   clienteEmail: text("cliente_email").notNull(),
@@ -134,29 +153,29 @@ export const orders = pgTable("orders", {
   clienteCodigoPostal: text("cliente_codigo_postal").notNull(),
   clienteCidade: text("cliente_cidade").notNull(),
   clienteNIF: text("cliente_nif"),
-  
-  // Itens da encomenda (JSON array com os produtos)
+
+  // Itens da encomenda
   itens: jsonb("itens").notNull(), // Array de CartItem
-  
+
   // Totais
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   envio: decimal("envio", { precision: 10, scale: 2 }).notNull(),
   iva: decimal("iva", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
-  
-  // Estado da encomenda
+
+  // Estado
   estado: text("estado").notNull().default("pendente"), // pendente, paga, processando, enviada, entregue, cancelada
-  
-  // Dados de pagamento
+
+  // Pagamento
   metodoPagamento: text("metodo_pagamento").notNull(), // mbway, multibanco, payshop, creditcard
   estadoPagamento: text("estado_pagamento").notNull().default("pendente"), // pendente, pago, falhado
-  referenciaIfthenpay: text("referencia_ifthenpay"), // Reference/ID from IfthenPay
-  dadosPagamento: jsonb("dados_pagamento"), // Payment details from IfthenPay
-  
+  referenciaIfthenpay: text("referencia_ifthenpay"),
+  dadosPagamento: jsonb("dados_pagamento"),
+
   // Tracking e notas
   codigoRastreio: text("codigo_rastreio"),
   notasInternas: text("notas_internas"),
-  
+
   // Timestamps
   dataPagamento: timestamp("data_pagamento"),
   dataEnvio: timestamp("data_envio"),
@@ -197,7 +216,67 @@ export const insertProductSchema = createInsertSchema(products).pick({
   destaque: true,
 });
 
+// -----------------------
+// News v2: blocos + review
+// -----------------------
+export const newsHeroTipoSchema = z.enum(["image", "video"]);
+
+export const newsBlockSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("text"),
+    id: z.string().optional(),
+    title: z.string().optional(),
+    content: z.string().min(1),
+  }),
+  z.object({
+    type: z.literal("image"),
+    id: z.string().optional(),
+    title: z.string().optional(),
+    url: z.string().min(1),
+    caption: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal("gallery"),
+    id: z.string().optional(),
+    title: z.string().optional(),
+    layout: z.enum(["grid", "slider"]).optional().default("grid"),
+    images: z
+      .array(
+        z.object({
+          url: z.string().min(1),
+          caption: z.string().optional(),
+        }),
+      )
+      .min(1),
+  }),
+  z.object({
+    type: z.literal("video"),
+    id: z.string().optional(),
+    title: z.string().optional(),
+    url: z.string().min(1),
+    caption: z.string().optional(),
+  }),
+]);
+
+export const newsReviewSchema = z
+  .object({
+    enabled: z.boolean().optional().default(true),
+    score: z.number().min(0).max(10).optional(), // pontuação global
+    criteria: z
+      .array(
+        z.object({
+          label: z.string().min(1),
+          score: z.number().min(0).max(10),
+          notes: z.string().optional(),
+        }),
+      )
+      .optional(),
+    notes: z.string().optional(),
+  })
+  .optional();
+
 export const insertNewsSchema = createInsertSchema(news).pick({
+  // v1
   titulo: true,
   descricao: true,
   categoria: true,
@@ -205,11 +284,31 @@ export const insertNewsSchema = createInsertSchema(news).pick({
   imagens: true,
   tipoGaleria: true,
   data: true,
+
+  // v2
+  subtitulo: true,
+  intro: true,
+  heroTipo: true,
+  heroUrl: true,
+  blocks: true,
+  review: true,
+  relatedServices: true,
 }).extend({
   data: z.string().optional(),
+
+  // v1 compat
   imagem: z.string().optional(),
   imagens: z.array(z.string()).optional().default([]),
   tipoGaleria: z.enum(["single", "slide", "grid", "before-after"]).optional().default("single"),
+
+  // v2
+  subtitulo: z.string().optional(),
+  intro: z.string().optional(),
+  heroTipo: newsHeroTipoSchema.optional().default("image"),
+  heroUrl: z.string().optional(),
+  blocks: z.array(newsBlockSchema).optional().default([]),
+  review: newsReviewSchema,
+  relatedServices: z.array(z.string()).optional().default([]),
 });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({
@@ -233,7 +332,7 @@ export const insertPageConfigSchema = createInsertSchema(pageConfigs).pick({
   section: z.string().min(1, "Secção é obrigatória"),
   element: z.string().min(1, "Elemento é obrigatório"),
   type: z.enum(["text", "color", "size", "image", "number"], {
-    errorMap: () => ({ message: "Tipo deve ser: text, color, size, image ou number" })
+    errorMap: () => ({ message: "Tipo deve ser: text, color, size, image ou number" }),
   }),
   value: z.string().min(1, "Valor é obrigatório"),
   defaultValue: z.string().optional(),
@@ -245,11 +344,15 @@ export const insertServiceGallerySchema = createInsertSchema(serviceGalleries).p
   images: true,
 }).extend({
   serviceId: z.string().min(1, "ID do serviço é obrigatório"),
-  images: z.array(z.object({
-    src: z.string().min(1, "URL da imagem é obrigatória"),
-    alt: z.string(),
-    title: z.string(),
-  })).min(1, "Deve ter pelo menos uma imagem"),
+  images: z
+    .array(
+      z.object({
+        src: z.string().min(1, "URL da imagem é obrigatória"),
+        alt: z.string(),
+        title: z.string(),
+      }),
+    )
+    .min(1, "Deve ter pelo menos uma imagem"),
 });
 
 export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
@@ -287,7 +390,7 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
   gradientOverlay: z.string().nullish(),
   backgroundColor: z.string().nullish(),
   textColor: z.string().nullish(),
-  overlayOpacity: z.union([z.string(), z.number()]).nullish().transform(val => val ? String(val) : null),
+  overlayOpacity: z.union([z.string(), z.number()]).nullish().transform((val) => (val ? String(val) : null)),
   height: z.string().nullish(),
   primaryCtaText: z.string().nullish(),
   primaryCtaHref: z.string().nullish(),
@@ -297,11 +400,13 @@ export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
   mobileDescSize: z.string().nullish(),
   mobileBadgeSize: z.string().nullish(),
   mobileSpacing: z.enum(["compact", "normal"]).nullish(),
-  mobileButtonLabels: z.object({
-    primary: z.string().optional(),
-    secondary: z.string().optional(),
-    portfolio: z.string().optional(),
-  }).nullish(),
+  mobileButtonLabels: z
+    .object({
+      primary: z.string().optional(),
+      secondary: z.string().optional(),
+      portfolio: z.string().optional(),
+    })
+    .nullish(),
   mobileHeight: z.string().nullish(),
   mobileContentAlign: z.enum(["top", "center", "bottom"]).nullish(),
 });

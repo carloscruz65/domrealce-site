@@ -5,6 +5,15 @@ import { ogMetaMiddleware } from "./ogMiddleware";
 
 const app = express();
 
+// ✅ DEBUG: confirma que este ficheiro é mesmo o que está a correr
+log(`✅ BOOT entrypoint: ${import.meta.url}`);
+
+// ✅ DEBUG: marca e loga qualquer chamada /api logo à entrada (não responde, só observa)
+app.use("/api", (req, _res, next) => {
+  log(`🔎 API IN: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // Security headers
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -12,21 +21,16 @@ app.use((req, res, next) => {
   res.setHeader("X-XSS-Protection", "1; mode=block");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+
   res.setHeader(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      // scripts (site + GA + Maps + PayPal)
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
-      // CSS
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // fonts
       "font-src 'self' https://fonts.gstatic.com",
-      // imagens (inclui PayPal se for preciso mostrar logos)
       "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
-      // pedidos XHR/fetch (PayPal SDK também fala com os servidores dele)
       "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
-      // iframes/popups (ESSENCIAL para o botão PayPal funcionar)
       "frame-src https://www.paypal.com https://www.sandbox.paypal.com",
     ].join("; ")
   );
@@ -37,10 +41,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Logger só para /api (mantém o teu)
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  const p = req.path;
+  let capturedJsonResponse: Record<string, any> | undefined;
 
   const originalResJson = res.json;
   res.json = function (bodyJson, ...args) {
@@ -50,14 +55,10 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
+    if (p.startsWith("/api")) {
+      let logLine = `${req.method} ${p} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      if (logLine.length > 120) logLine = logLine.slice(0, 119) + "…";
       log(logLine);
     }
   });
@@ -68,15 +69,32 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
-    throw err;
+  // ✅ 404 JSON para /api/* que não exista (ANTES do Vite/Static)
+  app.use("/api", (req, res) => {
+    // header para confirmar no DevTools
+    res.setHeader("X-DOMREALCE-API-404", "1");
+    res.status(404).json({
+      error: "API route not found",
+      method: req.method,
+      path: req.originalUrl,
+    });
   });
 
-  // Middleware para meta tags Open Graph (antes do Vite/Static)
-  app.use(ogMetaMiddleware);
+  // Error handler (sem throw)
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err?.status || err?.statusCode || 500;
+    const message = err?.message || "Internal Server Error";
+    if (res.headersSent) return;
+    res.status(status).json({ message });
+    log(`❌ Error ${status}: ${message}`);
+    if (err?.stack) log(err.stack);
+  });
+
+  // OG middleware só para frontend (nunca /api)
+  app.use((req, res, next) => {
+    if (req.originalUrl.startsWith("/api/")) return next();
+    return ogMetaMiddleware(req, res, next);
+  });
 
   if (app.get("env") === "development") {
     await setupVite(app, server);
