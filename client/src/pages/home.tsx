@@ -1,5 +1,4 @@
 import { lazy, Suspense } from "react";
-
 import Navigation from "@/components/navigation";
 import StaticHero from "@/components/StaticHero";
 import ServicesSection from "@/components/services-section"; // opcional se quiseres tirar o lazy
@@ -12,6 +11,7 @@ import { usePageConfig } from "@/hooks/use-page-config";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import HomeFeaturedWallpapers from "@/components/HomeFeaturedWallpapers";
 
 // carregados de forma preguiçosa (abaixo da dobra)
 const LazyServicesSection = lazy(() => import("@/components/services-section"));
