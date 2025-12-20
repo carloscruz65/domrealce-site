@@ -91,7 +91,7 @@ export default function Home() {
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-black/60 p-5">
-              <p className="text-xs uppercase tracking-[0.18em] text-brand-coral mb-1">
+              <p className="text-xs uppercase tracking-[0.18em] text-brand-yellow mb-1">
                 Foco
               </p>
               <h3 className="text-lg font-semibold mb-2">

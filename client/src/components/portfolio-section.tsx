@@ -6,7 +6,7 @@ import type { Product } from "@shared/schema";
 const titleColors = [
   "text-brand-yellow",
   "text-brand-turquoise",
-  "text-brand-coral",
+  "text-brand-yellow",
 ];
 
 // Extend Product locally to include the new DB column returned by the API
@@ -100,7 +100,7 @@ export default function PortfolioSection() {
                   <p className="text-white/80 mb-3">{product.descricao}</p>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-brand-coral font-semibold group-hover:animate-glow">
+                    <span className="text-brand-yellow font-semibold group-hover:animate-glow">
                       {product.preco}
                     </span>
 

@@ -337,12 +337,12 @@ export const insertNewsSchema = createInsertSchema(news)
       .default("single"),
 
     // v2
-    subtitulo: z.string().optional(),
-    intro: z.string().optional(),
+    subtitulo: z.string().nullish(),
+    intro: z.string().nullish(),
     heroTipo: newsHeroTipoSchema.optional().default("image"),
-    heroUrl: z.string().optional(),
+    heroUrl: z.string().nullish(),
     blocks: z.array(newsBlockSchema).optional().default([]),
-    review: newsReviewSchema,
+    review: newsReviewSchema.nullish(),
     relatedServices: z.array(z.string()).optional().default([]),
   });
 
