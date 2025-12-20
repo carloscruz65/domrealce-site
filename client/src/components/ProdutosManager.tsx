@@ -18,6 +18,7 @@ interface Produto {
   imagem: string;
   categoria: string;
   destaque?: boolean;
+  categoryPath?: string;
 }
 
 export default function ProdutosManager() {
@@ -129,6 +130,16 @@ export default function ProdutosManager() {
                 data-testid="input-categoria"
               />
             </div>
+            <div>
+              <Label>Caminho da Categoria (URL)</Label>
+              <Input
+                value={formData.categoryPath || ''}
+                onChange={(e) => setFormData({ ...formData, categoryPath: e.target.value })}
+                data-testid="input-category-path"
+                placeholder="Ex: /loja/papel-de-parede/texturas"
+              />
+              <p className="text-xs text-gray-400 mt-1">Caminho completo para a categoria na loja</p>
+            </div>
             <div className="flex gap-2">
               <Button onClick={handleSave} data-testid="button-save">
                 <Save className="mr-2 h-4 w-4" /> Guardar
@@ -152,6 +163,9 @@ export default function ProdutosManager() {
                 <div>
                   <h3 className="font-semibold">{produto.titulo}</h3>
                   <p className="text-sm text-muted-foreground">{produto.categoria} • {produto.preco}</p>
+                  {produto.categoryPath && (
+                    <p className="text-xs text-gray-500">{produto.categoryPath}</p>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2">
