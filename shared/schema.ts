@@ -1,5 +1,14 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, decimal, boolean, index, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  varchar,
+  timestamp,
+  decimal,
+  boolean,
+  index,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -16,7 +25,9 @@ export const sessions = pgTable(
 
 // Updated users table for Replit Auth
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
@@ -26,7 +37,9 @@ export const users = pgTable("users", {
 });
 
 export const contacts = pgTable("contacts", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   nome: text("nome").notNull(),
   email: text("email").notNull(),
   telefone: text("telefone"),
@@ -37,13 +50,16 @@ export const contacts = pgTable("contacts", {
 });
 
 export const products = pgTable("products", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   titulo: text("titulo").notNull(),
   descricao: text("descricao").notNull(),
   preco: text("preco").notNull(),
   imagem: text("imagem").notNull(),
   categoria: text("categoria").notNull(),
   destaque: boolean("destaque").default(false),
+  categoryPath: varchar("category_path", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -51,7 +67,9 @@ export const products = pgTable("products", {
 // NEWS (v2) - Projetos/Notícias
 // =======================
 export const news = pgTable("news", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
 
   // v1 (mantido)
   titulo: text("titulo").notNull(),
@@ -79,7 +97,9 @@ export const news = pgTable("news", {
 });
 
 export const slides = pgTable("slides", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   image: text("image").notNull(),
   title: text("title").notNull(),
   text: text("text").notNull(),
@@ -89,7 +109,9 @@ export const slides = pgTable("slides", {
 });
 
 export const pageConfigs = pgTable("page_configs", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   page: text("page").notNull(), // home, about, services, portfolio, contact, etc.
   section: text("section").notNull(), // hero, features, about, etc.
   element: text("element").notNull(), // title, subtitle, description, image, etc.
@@ -102,7 +124,9 @@ export const pageConfigs = pgTable("page_configs", {
 });
 
 export const serviceGalleries = pgTable("service_galleries", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   serviceId: text("service_id").notNull().unique(), // design-grafico, impressao-digital, etc.
   images: jsonb("images").notNull(), // Array de { src, alt, title }
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -110,7 +134,9 @@ export const serviceGalleries = pgTable("service_galleries", {
 });
 
 export const serviceHeros = pgTable("service_heroes", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   serviceId: text("service_id").notNull().unique(), // design-grafico, impressao-digital, etc.
   badge: text("badge"),
   title: text("title").notNull(),
@@ -142,7 +168,9 @@ export const serviceHeros = pgTable("service_heroes", {
 });
 
 export const orders = pgTable("orders", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   numeroEncomenda: text("numero_encomenda").notNull().unique(),
 
   // Dados do cliente
@@ -191,21 +219,23 @@ export const insertUserSchema = createInsertSchema(users).pick({
   profileImageUrl: true,
 });
 
-export const insertContactSchema = createInsertSchema(contacts).pick({
-  nome: true,
-  email: true,
-  telefone: true,
-  empresa: true,
-  mensagem: true,
-  ficheiros: true,
-}).extend({
-  email: z.string().email("Email inválido"),
-  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  mensagem: z.string().min(10, "Mensagem deve ter pelo menos 10 caracteres"),
-  telefone: z.string().optional(),
-  empresa: z.string().optional(),
-  ficheiros: z.array(z.string()).optional().default([]),
-});
+export const insertContactSchema = createInsertSchema(contacts)
+  .pick({
+    nome: true,
+    email: true,
+    telefone: true,
+    empresa: true,
+    mensagem: true,
+    ficheiros: true,
+  })
+  .extend({
+    email: z.string().email("Email inválido"),
+    nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+    mensagem: z.string().min(10, "Mensagem deve ter pelo menos 10 caracteres"),
+    telefone: z.string().optional(),
+    empresa: z.string().optional(),
+    ficheiros: z.array(z.string()).optional().default([]),
+  });
 
 export const insertProductSchema = createInsertSchema(products).pick({
   titulo: true,
@@ -275,41 +305,46 @@ export const newsReviewSchema = z
   })
   .optional();
 
-export const insertNewsSchema = createInsertSchema(news).pick({
-  // v1
-  titulo: true,
-  descricao: true,
-  categoria: true,
-  imagem: true,
-  imagens: true,
-  tipoGaleria: true,
-  data: true,
+export const insertNewsSchema = createInsertSchema(news)
+  .pick({
+    // v1
+    titulo: true,
+    descricao: true,
+    categoria: true,
+    imagem: true,
+    imagens: true,
+    tipoGaleria: true,
+    data: true,
 
-  // v2
-  subtitulo: true,
-  intro: true,
-  heroTipo: true,
-  heroUrl: true,
-  blocks: true,
-  review: true,
-  relatedServices: true,
-}).extend({
-  data: z.string().optional(),
+    // v2
+    subtitulo: true,
+    intro: true,
+    heroTipo: true,
+    heroUrl: true,
+    blocks: true,
+    review: true,
+    relatedServices: true,
+  })
+  .extend({
+    data: z.string().optional(),
 
-  // v1 compat
-  imagem: z.string().optional(),
-  imagens: z.array(z.string()).optional().default([]),
-  tipoGaleria: z.enum(["single", "slide", "grid", "before-after"]).optional().default("single"),
+    // v1 compat
+    imagem: z.string().optional(),
+    imagens: z.array(z.string()).optional().default([]),
+    tipoGaleria: z
+      .enum(["single", "slide", "grid", "before-after"])
+      .optional()
+      .default("single"),
 
-  // v2
-  subtitulo: z.string().optional(),
-  intro: z.string().optional(),
-  heroTipo: newsHeroTipoSchema.optional().default("image"),
-  heroUrl: z.string().optional(),
-  blocks: z.array(newsBlockSchema).optional().default([]),
-  review: newsReviewSchema,
-  relatedServices: z.array(z.string()).optional().default([]),
-});
+    // v2
+    subtitulo: z.string().optional(),
+    intro: z.string().optional(),
+    heroTipo: newsHeroTipoSchema.optional().default("image"),
+    heroUrl: z.string().optional(),
+    blocks: z.array(newsBlockSchema).optional().default([]),
+    review: newsReviewSchema,
+    relatedServices: z.array(z.string()).optional().default([]),
+  });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({
   image: true,
@@ -319,140 +354,170 @@ export const insertSlideSchema = createInsertSchema(slides).pick({
   active: true,
 });
 
-export const insertPageConfigSchema = createInsertSchema(pageConfigs).pick({
-  page: true,
-  section: true,
-  element: true,
-  type: true,
-  value: true,
-  defaultValue: true,
-  metadata: true,
-}).extend({
-  page: z.string().min(1, "Página é obrigatória"),
-  section: z.string().min(1, "Secção é obrigatória"),
-  element: z.string().min(1, "Elemento é obrigatório"),
-  type: z.enum(["text", "color", "size", "image", "number"], {
-    errorMap: () => ({ message: "Tipo deve ser: text, color, size, image ou number" }),
-  }),
-  value: z.string().min(1, "Valor é obrigatório"),
-  defaultValue: z.string().optional(),
-  metadata: z.string().optional(),
-});
-
-export const insertServiceGallerySchema = createInsertSchema(serviceGalleries).pick({
-  serviceId: true,
-  images: true,
-}).extend({
-  serviceId: z.string().min(1, "ID do serviço é obrigatório"),
-  images: z
-    .array(
-      z.object({
-        src: z.string().min(1, "URL da imagem é obrigatória"),
-        alt: z.string(),
-        title: z.string(),
+export const insertPageConfigSchema = createInsertSchema(pageConfigs)
+  .pick({
+    page: true,
+    section: true,
+    element: true,
+    type: true,
+    value: true,
+    defaultValue: true,
+    metadata: true,
+  })
+  .extend({
+    page: z.string().min(1, "Página é obrigatória"),
+    section: z.string().min(1, "Secção é obrigatória"),
+    element: z.string().min(1, "Elemento é obrigatório"),
+    type: z.enum(["text", "color", "size", "image", "number"], {
+      errorMap: () => ({
+        message: "Tipo deve ser: text, color, size, image ou number",
       }),
-    )
-    .min(1, "Deve ter pelo menos uma imagem"),
-});
+    }),
+    value: z.string().min(1, "Valor é obrigatório"),
+    defaultValue: z.string().optional(),
+    metadata: z.string().optional(),
+  });
 
-export const insertServiceHeroSchema = createInsertSchema(serviceHeros).pick({
-  serviceId: true,
-  badge: true,
-  title: true,
-  subtitle: true,
-  description: true,
-  backgroundImage: true,
-  backgroundTexture: true,
-  gradientOverlay: true,
-  backgroundColor: true,
-  textColor: true,
-  overlayOpacity: true,
-  height: true,
-  primaryCtaText: true,
-  primaryCtaHref: true,
-  secondaryCtaText: true,
-  secondaryCtaHref: true,
-  mobileTitleSize: true,
-  mobileDescSize: true,
-  mobileBadgeSize: true,
-  mobileSpacing: true,
-  mobileButtonLabels: true,
-  mobileHeight: true,
-  mobileContentAlign: true,
-}).extend({
-  serviceId: z.string().min(1, "ID do serviço é obrigatório"),
-  title: z.string().min(1, "Título é obrigatório"),
-  badge: z.string().nullish(),
-  subtitle: z.string().nullish(),
-  description: z.string().nullish(),
-  backgroundImage: z.string().nullish(),
-  backgroundTexture: z.string().nullish(),
-  gradientOverlay: z.string().nullish(),
-  backgroundColor: z.string().nullish(),
-  textColor: z.string().nullish(),
-  overlayOpacity: z.union([z.string(), z.number()]).nullish().transform((val) => (val ? String(val) : null)),
-  height: z.string().nullish(),
-  primaryCtaText: z.string().nullish(),
-  primaryCtaHref: z.string().nullish(),
-  secondaryCtaText: z.string().nullish(),
-  secondaryCtaHref: z.string().nullish(),
-  mobileTitleSize: z.string().nullish(),
-  mobileDescSize: z.string().nullish(),
-  mobileBadgeSize: z.string().nullish(),
-  mobileSpacing: z.enum(["compact", "normal"]).nullish(),
-  mobileButtonLabels: z
-    .object({
-      primary: z.string().optional(),
-      secondary: z.string().optional(),
-      portfolio: z.string().optional(),
-    })
-    .nullish(),
-  mobileHeight: z.string().nullish(),
-  mobileContentAlign: z.enum(["top", "center", "bottom"]).nullish(),
-});
+export const insertServiceGallerySchema = createInsertSchema(serviceGalleries)
+  .pick({
+    serviceId: true,
+    images: true,
+  })
+  .extend({
+    serviceId: z.string().min(1, "ID do serviço é obrigatório"),
+    images: z
+      .array(
+        z.object({
+          src: z.string().min(1, "URL da imagem é obrigatória"),
+          alt: z.string(),
+          title: z.string(),
+        }),
+      )
+      .min(1, "Deve ter pelo menos uma imagem"),
+  });
 
-export const insertOrderSchema = createInsertSchema(orders).pick({
-  numeroEncomenda: true,
-  clienteNome: true,
-  clienteEmail: true,
-  clienteTelefone: true,
-  clienteMorada: true,
-  clienteCodigoPostal: true,
-  clienteCidade: true,
-  clienteNIF: true,
-  itens: true,
-  subtotal: true,
-  envio: true,
-  iva: true,
-  total: true,
-  estado: true,
-  metodoPagamento: true,
-  estadoPagamento: true,
-  referenciaIfthenpay: true,
-  dadosPagamento: true,
-  codigoRastreio: true,
-  notasInternas: true,
-}).extend({
-  clienteNome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  clienteEmail: z.string().email("Email inválido"),
-  clienteMorada: z.string().min(5, "Morada deve ter pelo menos 5 caracteres"),
-  clienteCodigoPostal: z.string().min(8, "Código postal inválido"),
-  clienteCidade: z.string().min(2, "Cidade deve ter pelo menos 2 caracteres"),
-  clienteTelefone: z.string().optional(),
-  clienteNIF: z.string().optional(),
-  estado: z.enum(["pendente", "paga", "processando", "enviada", "entregue", "cancelada"]).default("pendente"),
-  metodoPagamento: z.enum(["mbway", "multibanco", "payshop", "creditcard", "paypal"]),
-  estadoPagamento: z.enum(["pendente", "pago", "falhado"]).default("pendente"),
-  itens: z.array(z.any()).min(1, "Deve ter pelo menos um item"),
-  subtotal: z.string().or(z.number()),
-  envio: z.string().or(z.number()),
-  iva: z.string().or(z.number()),
-  total: z.string().or(z.number()),
-  referenciaIfthenpay: z.string().optional(),
-  dadosPagamento: z.any().optional(),
-  codigoRastreio: z.string().optional(),
-  notasInternas: z.string().optional(),
-});
+export const insertServiceHeroSchema = createInsertSchema(serviceHeros)
+  .pick({
+    serviceId: true,
+    badge: true,
+    title: true,
+    subtitle: true,
+    description: true,
+    backgroundImage: true,
+    backgroundTexture: true,
+    gradientOverlay: true,
+    backgroundColor: true,
+    textColor: true,
+    overlayOpacity: true,
+    height: true,
+    primaryCtaText: true,
+    primaryCtaHref: true,
+    secondaryCtaText: true,
+    secondaryCtaHref: true,
+    mobileTitleSize: true,
+    mobileDescSize: true,
+    mobileBadgeSize: true,
+    mobileSpacing: true,
+    mobileButtonLabels: true,
+    mobileHeight: true,
+    mobileContentAlign: true,
+  })
+  .extend({
+    serviceId: z.string().min(1, "ID do serviço é obrigatório"),
+    title: z.string().min(1, "Título é obrigatório"),
+    badge: z.string().nullish(),
+    subtitle: z.string().nullish(),
+    description: z.string().nullish(),
+    backgroundImage: z.string().nullish(),
+    backgroundTexture: z.string().nullish(),
+    gradientOverlay: z.string().nullish(),
+    backgroundColor: z.string().nullish(),
+    textColor: z.string().nullish(),
+    overlayOpacity: z
+      .union([z.string(), z.number()])
+      .nullish()
+      .transform((val) => (val ? String(val) : null)),
+    height: z.string().nullish(),
+    primaryCtaText: z.string().nullish(),
+    primaryCtaHref: z.string().nullish(),
+    secondaryCtaText: z.string().nullish(),
+    secondaryCtaHref: z.string().nullish(),
+    mobileTitleSize: z.string().nullish(),
+    mobileDescSize: z.string().nullish(),
+    mobileBadgeSize: z.string().nullish(),
+    mobileSpacing: z.enum(["compact", "normal"]).nullish(),
+    mobileButtonLabels: z
+      .object({
+        primary: z.string().optional(),
+        secondary: z.string().optional(),
+        portfolio: z.string().optional(),
+      })
+      .nullish(),
+    mobileHeight: z.string().nullish(),
+    mobileContentAlign: z.enum(["top", "center", "bottom"]).nullish(),
+  });
+
+export const insertOrderSchema = createInsertSchema(orders)
+  .pick({
+    numeroEncomenda: true,
+    clienteNome: true,
+    clienteEmail: true,
+    clienteTelefone: true,
+    clienteMorada: true,
+    clienteCodigoPostal: true,
+    clienteCidade: true,
+    clienteNIF: true,
+    itens: true,
+    subtotal: true,
+    envio: true,
+    iva: true,
+    total: true,
+    estado: true,
+    metodoPagamento: true,
+    estadoPagamento: true,
+    referenciaIfthenpay: true,
+    dadosPagamento: true,
+    codigoRastreio: true,
+    notasInternas: true,
+  })
+  .extend({
+    clienteNome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+    clienteEmail: z.string().email("Email inválido"),
+    clienteMorada: z.string().min(5, "Morada deve ter pelo menos 5 caracteres"),
+    clienteCodigoPostal: z.string().min(8, "Código postal inválido"),
+    clienteCidade: z.string().min(2, "Cidade deve ter pelo menos 2 caracteres"),
+    clienteTelefone: z.string().optional(),
+    clienteNIF: z.string().optional(),
+    estado: z
+      .enum([
+        "pendente",
+        "paga",
+        "processando",
+        "enviada",
+        "entregue",
+        "cancelada",
+      ])
+      .default("pendente"),
+    metodoPagamento: z.enum([
+      "mbway",
+      "multibanco",
+      "payshop",
+      "creditcard",
+      "paypal",
+    ]),
+    estadoPagamento: z
+      .enum(["pendente", "pago", "falhado"])
+      .default("pendente"),
+    itens: z.array(z.any()).min(1, "Deve ter pelo menos um item"),
+    subtotal: z.string().or(z.number()),
+    envio: z.string().or(z.number()),
+    iva: z.string().or(z.number()),
+    total: z.string().or(z.number()),
+    referenciaIfthenpay: z.string().optional(),
+    dadosPagamento: z.any().optional(),
+    codigoRastreio: z.string().optional(),
+    notasInternas: z.string().optional(),
+  });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;

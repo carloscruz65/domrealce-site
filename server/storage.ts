@@ -512,9 +512,24 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(contacts).orderBy(desc(contacts.createdAt));
   }
 
-  async getFeaturedProducts(): Promise<Product[]> {
-    return await db.select().from(products).where(eq(products.destaque, true)).orderBy(desc(products.createdAt));
+  async getFeaturedProducts(): Promise<any[]> {
+    return await db
+      .select({
+        id: products.id,
+        titulo: products.titulo,
+        descricao: products.descricao,
+        preco: products.preco,
+        imagem: products.imagem,
+        categoria: products.categoria,
+        destaque: products.destaque,
+        createdAt: products.createdAt,
+        categoryPath: products.categoryPath,
+      })
+      .from(products)
+      .where(eq(products.destaque, true))
+      .orderBy(desc(products.createdAt));
   }
+
 
   async getRecentNews(): Promise<News[]> {
     return await db.select().from(news).orderBy(desc(news.data)).limit(3);
