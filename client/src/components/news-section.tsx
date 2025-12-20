@@ -50,54 +50,53 @@ export default function NewsSection() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {news.map((article, index) => (
-            <article 
+            <Link 
               key={article.id} 
-              className="bg-[#0a0a0a] border border-[#333] rounded-2xl overflow-hidden hover-lift transform-3d scroll-animate hover-tilt cursor-pointer"
-              style={{
-                animationDelay: `${index * 0.1}s`
-              }}
+              href={`/noticia/${article.id}`}
+              className="block"
             >
-              <div className="relative overflow-hidden">
-                <img 
-                  src={article.imagem} 
-                  alt={article.titulo} 
-                  loading="lazy"
-                  width={400}
-                  height={192}
-                  className="w-full h-48 object-cover hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <span className={`${categoryColors[index % categoryColors.length]} px-3 py-1 rounded-full text-sm font-semibold animate-bounce-subtle`}>
-                    {article.categoria}
-                  </span>
-                  <span className="text-white/60 text-sm ml-3">
-                    {new Date(article.data || article.createdAt!).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' })}
+              <article 
+                className="bg-[#0a0a0a] border border-[#333] rounded-2xl overflow-hidden hover-lift transform-3d scroll-animate hover-tilt cursor-pointer h-full"
+                style={{
+                  animationDelay: `${index * 0.1}s`
+                }}
+              >
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={article.imagem} 
+                    alt={article.titulo} 
+                    loading="lazy"
+                    width={400}
+                    height={192}
+                    className="w-full h-48 object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center mb-3">
+                    <span className={`${categoryColors[index % categoryColors.length]} px-3 py-1 rounded-full text-sm font-semibold animate-bounce-subtle`}>
+                      {article.categoria}
+                    </span>
+                    <span className="text-white/60 text-sm ml-3">
+                      {new Date(article.data || article.createdAt!).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </span>
+                  </div>
+                  <h4 className={`text-xl font-heading font-semibold mb-3 text-white ${titleHoverColors[index % titleHoverColors.length]} transition-colors`}>
+                    {article.titulo}
+                  </h4>
+
+                  <p className="text-white/80 mb-4">
+                    {article.descricao.length > 200
+                      ? `${article.descricao.slice(0, 200)}…`
+                      : article.descricao}
+                  </p>
+
+                  <span className="text-brand-turquoise font-semibold inline-flex items-center group">
+                    Ler mais <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" size={16} />
                   </span>
                 </div>
-                <h4 className={`text-xl font-heading font-semibold mb-3 text-white ${titleHoverColors[index % titleHoverColors.length]} transition-colors cursor-pointer hover:animate-pulse-brand`}>
-                  {article.titulo}
-                </h4>
-
-                <p className="text-white/80 mb-4">
-                  {article.descricao.length > 200
-                    ? `${article.descricao.slice(0, 200)}…`
-                    : article.descricao}
-                </p>
-
-                <Button 
-                  asChild
-                  variant="link" 
-                  className="text-brand-turquoise hover:text-brand-turquoise font-semibold transition-colors p-0 hover-lift group"
-                >
-                  <Link href={`/noticias#${article.id}`}>
-                    Ler mais <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" size={16} />
-                  </Link>
-                </Button>
-              </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
 
