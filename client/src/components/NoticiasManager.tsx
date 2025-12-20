@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Save, X, ImagePlus, Images, Grid3x3, ArrowLeftRight } from "lucide-react";
+import { Plus, Edit, Trash2, Save, X, ImagePlus, Images, Grid3x3, ArrowLeftRight, Video, Link as LinkIcon } from "lucide-react";
 import ImageUploader from "@/components/ImageUploader";
 
 interface Noticia {
@@ -19,6 +19,8 @@ interface Noticia {
   imagem: string;
   imagens?: string[];
   tipoGaleria?: "single" | "slide" | "grid" | "before-after";
+  heroTipo?: "image" | "video";
+  heroUrl?: string;
   data: string;
 }
 
@@ -34,7 +36,9 @@ export default function NoticiasManager() {
   const [editing, setEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Noticia>>({
     tipoGaleria: "single",
-    imagens: []
+    imagens: [],
+    heroTipo: "image",
+    heroUrl: ""
   });
   const [novaImagem, setNovaImagem] = useState("");
 
@@ -49,7 +53,7 @@ export default function NoticiasManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia criada com sucesso!" });
-      setFormData({ tipoGaleria: "single", imagens: [] });
+      setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
       setEditing(null);
     },
   });
@@ -60,7 +64,7 @@ export default function NoticiasManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia atualizada!" });
-      setFormData({ tipoGaleria: "single", imagens: [] });
+      setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
       setEditing(null);
     },
   });
@@ -151,13 +155,15 @@ export default function NoticiasManager() {
     setFormData({
       ...noticia,
       imagens: noticia.imagens || [],
-      tipoGaleria: noticia.tipoGaleria || "single"
+      tipoGaleria: noticia.tipoGaleria || "single",
+      heroTipo: noticia.heroTipo || "image",
+      heroUrl: noticia.heroUrl || ""
     });
   };
 
   const handleCancel = () => {
     setEditing(null);
-    setFormData({ tipoGaleria: "single", imagens: [] });
+    setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
     setNovaImagem("");
   };
 
@@ -248,6 +254,82 @@ export default function NoticiasManager() {
                   })}
                 </div>
               </RadioGroup>
+            </div>
+
+            {/* Tipo de Conteúdo Principal */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Conteúdo Principal (Hero)</h3>
+              <RadioGroup 
+                value={formData.heroTipo || "image"} 
+                onValueChange={(value) => setFormData({ ...formData, heroTipo: value as "image" | "video" })}
+              >
+                <div className="flex gap-4">
+                  <Label
+                    htmlFor="hero-image"
+                    className={`flex items-center space-x-2 border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+                      formData.heroTipo === "image" 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-muted hover:border-primary/50'
+                    }`}
+                  >
+                    <RadioGroupItem value="image" id="hero-image" />
+                    <ImagePlus className="h-5 w-5" />
+                    <span className="font-semibold">Imagem</span>
+                  </Label>
+                  <Label
+                    htmlFor="hero-video"
+                    className={`flex items-center space-x-2 border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+                      formData.heroTipo === "video" 
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-muted hover:border-primary/50'
+                    }`}
+                  >
+                    <RadioGroupItem value="video" id="hero-video" />
+                    <Video className="h-5 w-5" />
+                    <span className="font-semibold">Vídeo</span>
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              {/* URL do Vídeo */}
+              {formData.heroTipo === "video" && (
+                <div className="space-y-4 p-4 border border-gray-700 rounded-lg bg-gray-800/50">
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      <LinkIcon className="h-4 w-4" />
+                      URL do Vídeo (OneDrive, YouTube, Vimeo, etc.)
+                    </Label>
+                    <Input
+                      value={formData.heroUrl || ''}
+                      onChange={(e) => setFormData({ ...formData, heroUrl: e.target.value })}
+                      placeholder="https://onedrive.live.com/... ou https://youtube.com/..."
+                      className="mt-2"
+                      data-testid="input-video-url"
+                    />
+                    <p className="text-xs text-gray-400 mt-2">
+                      Cole o link direto do vídeo (OneDrive, YouTube, Vimeo) ou faça upload abaixo
+                    </p>
+                  </div>
+                  
+                  <div className="border-t border-gray-700 pt-4">
+                    <Label>Ou faça upload de um vídeo</Label>
+                    <ImageUploader
+                      label=""
+                      value={formData.heroUrl || ''}
+                      onChange={(url) => setFormData({ ...formData, heroUrl: url })}
+                      folder="noticias/videos"
+                    />
+                  </div>
+
+                  {formData.heroUrl && (
+                    <div className="mt-2 p-2 bg-gray-900 rounded">
+                      <p className="text-sm text-gray-300 break-all">
+                        <strong>URL atual:</strong> {formData.heroUrl}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Gestão de Imagens */}
