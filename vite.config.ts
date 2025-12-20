@@ -16,6 +16,22 @@ export default defineConfig({
         ]
       : []),
   ],
+
+  server: {
+    // permite hosts dinâmicos do Replit
+    allowedHosts: [
+      ".replit.dev",
+      ".worf.replit.dev",
+      "3bf90cb8-837d-49dd-b68d-11cd7e048610-00-o0m5ewcnxm8z.worf.replit.dev",
+    ],
+
+    // regras de acesso ao filesystem
+    fs: {
+      strict: true,
+      deny: ["**/.*"],
+    },
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
@@ -23,15 +39,11 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
+
   root: path.resolve(import.meta.dirname, "client"),
+
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-  },
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
   },
 });
