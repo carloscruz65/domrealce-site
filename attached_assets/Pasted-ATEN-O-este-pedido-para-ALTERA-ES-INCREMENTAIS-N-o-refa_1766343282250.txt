@@ -1,0 +1,51 @@
+ATENÇÃO: este pedido é para ALTERAÇÕES INCREMENTAIS.
+Não refatorar, não reorganizar, não simplificar código existente.
+Não alterar layout, estilos ou lógica que já esteja funcional.
+
+Contexto:
+O site DOMREALCE já está estável.
+Os cartões da Home, cartões da página de Notícias e o layout da página de detalhe da notícia estão validados e NÃO devem ser alterados.
+O sistema de partilha atual está correto e NÃO deve ser modificado fora do pedido abaixo.
+
+Objetivo:
+Adicionar uma secção editorial interna (“Nota do atelier / Crítica”) às Notícias, sem refazer o site.
+
+Alterações permitidas APENAS:
+1) Base de dados:
+   - Adicionar colunas à tabela de notícias existente:
+     - nota_editorial (TEXT, nullable)
+     - pontuacao (INTEGER, nullable)
+   - Não remover nem alterar colunas existentes.
+   - Criar migration adequada ao stack atual.
+
+2) Backend:
+   - Atualizar APENAS as rotas existentes:
+     - POST /api/admin/noticias
+     - PUT /api/admin/noticias/:id
+     - GET /api/admin/noticias
+   - Incluir leitura/gravação de notaEditorial e pontuacao.
+   - Manter todos os campos atuais intactos.
+
+3) Shared schema / types:
+   - Atualizar o tipo News/Noticia existente para incluir:
+     - notaEditorial?: string | null
+     - pontuacao?: number | null
+   - Não renomear campos existentes.
+
+4) Editor (client/src/components/NoticiasManager.tsx):
+   - Acrescentar campos no formulário:
+     - Textarea para notaEditorial
+     - Select para pontuacao (0=sem pontuação, 1–5)
+   - Integrar nos fluxos existentes (formData, resetForm, handleEdit, handleSave).
+   - Não alterar outros campos, layout ou comportamento.
+
+5) Frontend da notícia (client/src/pages/noticia-detalhes.tsx):
+   - Mostrar a nota editorial num bloco discreto “Nota do atelier” apenas se existir.
+   - Mostrar a pontuação (ex: 4/5) apenas se existir.
+   - Não mover nem duplicar secções existentes.
+
+Regras finais:
+- Não reescrever ficheiros completos se não for estritamente necessário.
+- Não criar novos endpoints.
+- Não alterar CSS global nem componentes partilhados.
+- No final, listar exatamente os ficheiros alterados e o motivo de cada alteração.

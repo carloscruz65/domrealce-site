@@ -99,6 +99,10 @@ export const news = pgTable("news", {
   publishedAt: timestamp("published_at"), // data de publicação efetiva
   layoutGaleria: text("layout_galeria").default("grid"), // single, slider, grid, beforeAfter
 
+  // v4: Nota editorial
+  notaEditorial: text("nota_editorial"), // Nota do atelier / crítica (opcional)
+  pontuacao: text("pontuacao"), // Pontuação 0-5 (opcional, "0" = sem pontuação)
+
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -348,6 +352,10 @@ export const insertNewsSchema = createInsertSchema(news)
     published: true,
     publishedAt: true,
     layoutGaleria: true,
+
+    // v4
+    notaEditorial: true,
+    pontuacao: true,
   })
   .extend({
     data: z.string().optional(),
@@ -375,6 +383,10 @@ export const insertNewsSchema = createInsertSchema(news)
     published: z.boolean().optional().default(false),
     publishedAt: z.string().nullish(),
     layoutGaleria: z.enum(["single", "slider", "grid", "beforeAfter"]).optional().default("grid"),
+
+    // v4
+    notaEditorial: z.string().nullish(),
+    pontuacao: z.string().nullish(),
   });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({
