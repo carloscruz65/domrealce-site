@@ -35,6 +35,12 @@ const serviceNames: Record<string, string> = {
   'telas-artisticas': 'Telas Artísticas',
   'autocolantes': 'Autocolantes',
   'decoracao-viaturas': 'Decoração de Viaturas',
+  'decoracao-viaturas-particulares': 'Viaturas Particulares',
+  'decoracao-viaturas-comerciais': 'Veículos Comerciais',
+  'decoracao-viaturas-competicao': 'Viaturas de Competição',
+  'decoracao-viaturas-motos': 'Motociclos',
+  'decoracao-viaturas-camioes': 'Camiões e Atrelados',
+  'decoracao-viaturas-maquinas': 'Máquinas Industriais',
   'espacos-comerciais': 'Espaços Comerciais',
   'peliculas-protecao-solar': 'Películas de Proteção Solar'
 };
@@ -296,7 +302,13 @@ function ServicesGalleryList({ onSelectService }: ServicesGalleryListProps) {
     { id: 'papel-parede', name: 'Papel de Parede', description: 'Grande variedade de texturas em catálogo interativo' },
     { id: 'telas-artisticas', name: 'Telas Artísticas', description: 'Transforme fotografias em obras de arte' },
     { id: 'autocolantes', name: 'Autocolantes', description: 'Autocolantes personalizados com corte de contorno' },
-    { id: 'decoracao-viaturas', name: 'Decoração de Viaturas', description: 'Car wrapping e personalização de frotas' },
+    { id: 'decoracao-viaturas', name: 'Decoração de Viaturas', description: 'Página principal de decoração de viaturas', isCategory: true },
+    { id: 'decoracao-viaturas-particulares', name: '↳ Viaturas Particulares', description: 'Personalização e detalhes para viaturas pessoais', indent: true },
+    { id: 'decoracao-viaturas-comerciais', name: '↳ Veículos Comerciais', description: 'Rotulagem e publicidade móvel para empresas', indent: true },
+    { id: 'decoracao-viaturas-competicao', name: '↳ Viaturas de Competição', description: 'Decoração para desportos motorizados', indent: true },
+    { id: 'decoracao-viaturas-motos', name: '↳ Motociclos', description: 'Personalização de depósitos e carenagens', indent: true },
+    { id: 'decoracao-viaturas-camioes', name: '↳ Camiões e Atrelados', description: 'Grande formato para transporte e logística', indent: true },
+    { id: 'decoracao-viaturas-maquinas', name: '↳ Máquinas Industriais', description: 'Identificação e sinalização de equipamentos', indent: true },
     { id: 'espacos-comerciais', name: 'Espaços Comerciais', description: 'Sinalização e decoração para negócios' },
     { id: 'peliculas-protecao-solar', name: 'Películas de Proteção Solar', description: 'Proteção UV e controlo térmico para vidros' }
   ];

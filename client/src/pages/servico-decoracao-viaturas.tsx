@@ -25,60 +25,68 @@ import {
 } from "lucide-react";
 
 // Configuração de imagens por sub-serviço (desacoplado)
+// Os IDs correspondem aos usados no admin para gestão via ServiceGalleryEditor
 const subServiceConfig: Record<string, {
+  apiId: string; // ID para buscar galeria da API
   heroImage: string;
   heroAlt: string;
-  galleryImages: Array<{ src: string; alt: string; title: string }>;
+  defaultGalleryImages: Array<{ src: string; alt: string; title: string }>;
 }> = {
   particulares: {
+    apiId: "decoracao-viaturas-particulares",
     heroImage: "/public-objects/servicos/decoracao-viaturas/particulares.webp",
     heroAlt: "Personalização de viaturas particulares DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/decoracao-viaturas/particulares-1.webp", alt: "Viatura particular personalizada", title: "Personalização Discreta" },
       { src: "/public-objects/servicos/decoracao-viaturas/particulares-2.webp", alt: "Faixas decorativas em viatura", title: "Faixas Decorativas" },
       { src: "/public-objects/servicos/decoracao-viaturas/particulares-3.webp", alt: "Detalhes em vinil", title: "Detalhes Personalizados" },
     ],
   },
   comerciais: {
+    apiId: "decoracao-viaturas-comerciais",
     heroImage: "/public-objects/servicos/decoracao-viaturas/comerciais.webp",
     heroAlt: "Decoração de veículos comerciais DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/decoracao-viaturas/comerciais-1.webp", alt: "Carrinha comercial decorada", title: "Rotulagem Comercial" },
       { src: "/public-objects/servicos/decoracao-viaturas/comerciais-2.webp", alt: "Frota com identidade visual", title: "Identificação de Frota" },
       { src: "/public-objects/servicos/decoracao-viaturas/comerciais-3.webp", alt: "Publicidade móvel", title: "Publicidade Móvel" },
     ],
   },
   competicao: {
+    apiId: "decoracao-viaturas-competicao",
     heroImage: "/public-objects/servicos/decoracao-viaturas/competicao.webp",
     heroAlt: "Decoração de viaturas de competição DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/decoracao-viaturas/competicao-1.webp", alt: "Viatura de rally decorada", title: "Patrocinadores" },
       { src: "/public-objects/servicos/decoracao-viaturas/competicao-2.webp", alt: "Numeração de competição", title: "Numeração Oficial" },
       { src: "/public-objects/servicos/decoracao-viaturas/competicao-3.webp", alt: "Layout de pista", title: "Design de Competição" },
     ],
   },
   motos: {
+    apiId: "decoracao-viaturas-motos",
     heroImage: "/public-objects/servicos/decoracao-viaturas/motos.webp",
     heroAlt: "Decoração de motociclos DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/decoracao-viaturas/motos-1.webp", alt: "Motociclo personalizado", title: "Design Único" },
       { src: "/public-objects/servicos/decoracao-viaturas/motos-2.webp", alt: "Proteção de depósito", title: "Proteção de Depósito" },
       { src: "/public-objects/servicos/decoracao-viaturas/motos-3.webp", alt: "Detalhes especiais", title: "Efeitos Especiais" },
     ],
   },
   camioes: {
+    apiId: "decoracao-viaturas-camioes",
     heroImage: "/public-objects/servicos/decoracao-viaturas/camioes.webp",
     heroAlt: "Decoração de camiões e atrelados DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/decoracao-viaturas/camioes-1.webp", alt: "Camião com rotulagem completa", title: "Rotulagem Total" },
       { src: "/public-objects/servicos/decoracao-viaturas/camioes-2.webp", alt: "Atrelado decorado", title: "Grande Formato" },
       { src: "/public-objects/servicos/decoracao-viaturas/camioes-3.webp", alt: "Frota de transporte", title: "Identificação de Frota" },
     ],
   },
   maquinas: {
+    apiId: "decoracao-viaturas-maquinas",
     heroImage: "/public-objects/servicos/maquinas/hero.webp",
     heroAlt: "Máquina industrial com decoração DOMREALCE",
-    galleryImages: [
+    defaultGalleryImages: [
       { src: "/public-objects/servicos/maquinas/maquina-1.webp", alt: "Escavadora decorada", title: "Máquinas de Construção" },
       { src: "/public-objects/servicos/maquinas/maquina-2.webp", alt: "Empilhador com identificação", title: "Equipamento Logístico" },
       { src: "/public-objects/servicos/maquinas/maquina-3.webp", alt: "Grua com sinalização", title: "Sinalização de Segurança" },
@@ -139,14 +147,19 @@ export default function ServicoDecoracaoViaturas() {
     });
   }
 
-  // Galeria específica por sub-serviço (usa config local ou fallback para API)
+  // Galeria específica por sub-serviço ativo (busca da API com o ID correto)
+  const activeConfig = getSubServiceConfig(activeVehicle);
+  const activeApiId = activeConfig?.apiId || "decoracao-viaturas";
+  
   const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
-    queryKey: ["/api/service-galleries", "decoracao-viaturas"],
+    queryKey: ["/api/service-galleries", activeApiId],
+    enabled: hasSelection, // Só busca quando há seleção
   });
   
-  // Usa imagens específicas do sub-serviço ativo, senão usa galeria da API ou fallback
-  const activeConfig = getSubServiceConfig(activeVehicle);
-  const galleryImages = activeConfig?.galleryImages || galleryData?.images || defaultImages;
+  // Usa imagens da API se disponíveis, senão usa defaults do config local
+  const galleryImages = galleryData?.images?.length 
+    ? galleryData.images 
+    : activeConfig?.defaultGalleryImages || defaultImages;
 
   const vehicleTypes: Array<{
     key: VehicleKey;
