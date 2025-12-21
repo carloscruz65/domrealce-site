@@ -1311,13 +1311,21 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const { id } = req.params;
       const newsData = insertNewsSchema.parse(req.body);
 
+      // Helper to convert string to Date
+      const toDate = (val: any): Date | undefined => {
+        if (!val) return undefined;
+        if (val instanceof Date) return val;
+        if (typeof val === "string") return new Date(val);
+        return undefined;
+      };
+
+      // Convert string dates to Date objects for timestamp fields
       const processedData = {
         ...newsData,
-        data: newsData.data
-          ? typeof newsData.data === "object"
-            ? newsData.data
-            : new Date(newsData.data as string)
-          : undefined
+        data: toDate(newsData.data),
+        publishedAt: toDate(newsData.publishedAt),
+        createdAt: undefined,
+        updatedAt: undefined,
       };
 
       const noticia = await storage.updateNews(id, processedData as any);
