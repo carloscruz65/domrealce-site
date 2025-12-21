@@ -16,7 +16,7 @@ import {
   MessageCircle,
   Link as LinkIcon,
 } from "lucide-react";
-import type { News } from "@shared/schema";
+import type { News, MediaItem } from "@shared/schema";
 
 function formatarData(data: string | Date) {
   return new Date(data).toLocaleDateString("pt-PT", {
@@ -65,12 +65,23 @@ export default function NoticiaDetalhes() {
     return noticias.find((n) => n.id?.toString() === noticiaId);
   }, [noticias, noticiaId]);
 
-  const imagens = useMemo(() => {
+  const mediaItems = useMemo((): MediaItem[] => {
     if (!noticia) return [];
+    // Usar campo media v3 se existir
+    // @ts-ignore
+    if (noticia.media && Array.isArray(noticia.media) && noticia.media.length > 0) {
+      // @ts-ignore
+      return noticia.media;
+    }
+    // Fallback para campos v1 (imagens/imagem)
     // @ts-ignore
     const arr = noticia?.imagens?.length ? noticia.imagens : noticia?.imagem ? [noticia.imagem] : [];
-    return (arr || []).filter(Boolean);
+    return (arr || []).filter(Boolean).map((url: string) => ({ type: "image" as const, url, caption: "" }));
   }, [noticia]);
+
+  const imagens = useMemo(() => {
+    return mediaItems.filter(m => m.type === "image").map(m => m.url);
+  }, [mediaItems]);
 
   const canonicalUrl = useMemo(() => {
     if (!noticiaId) return "";
@@ -314,17 +325,28 @@ export default function NoticiaDetalhes() {
             </div>
           </div>
 
-          {/* Hero / Galeria */}
-          {imagens.length > 0 && (
+          {/* Hero / Galeria com legendas */}
+          {mediaItems.length > 0 && (
             <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-4 group">
-              <div className="aspect-[16/9] relative">
-                <img
-                  src={imagens[Math.min(indiceImagem, imagens.length - 1)]}
-                  alt={`${noticia.titulo} - Imagem ${indiceImagem + 1}`}
-                  className="w-full h-full object-cover"
-                />
+              <figure className="aspect-[16/9] relative">
+                {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
+                  <div className="w-full h-full flex items-center justify-center bg-black">
+                    <iframe
+                      src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
+                    alt={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption || `${noticia.titulo} - Imagem ${indiceImagem + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                )}
 
-                {imagens.length > 1 && (
+                {mediaItems.length > 1 && (
                   <>
                     <Button
                       size="icon"
@@ -345,11 +367,20 @@ export default function NoticiaDetalhes() {
                     </Button>
 
                     <div className="absolute top-4 right-4 bg-black/80 text-white px-4 py-2 rounded-full font-semibold">
-                      {indiceImagem + 1} / {imagens.length}
+                      {indiceImagem + 1} / {mediaItems.length}
                     </div>
                   </>
                 )}
-              </div>
+
+                {/* Legenda (figcaption) */}
+                {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption && (
+                  <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8">
+                    <p className="text-white text-sm md:text-base">
+                      {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption}
+                    </p>
+                  </figcaption>
+                )}
+              </figure>
             </div>
           )}
 

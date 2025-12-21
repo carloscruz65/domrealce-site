@@ -1,46 +1,73 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Save, X, ImagePlus, Images, Grid3x3, ArrowLeftRight, Video, Link as LinkIcon } from "lucide-react";
+import { 
+  Plus, Edit, Trash2, Save, X, Image as ImageIcon, Video, 
+  ChevronUp, ChevronDown, Search, Filter, Eye, EyeOff, GripVertical
+} from "lucide-react";
 import ImageUploader from "@/components/ImageUploader";
+
+interface MediaItem {
+  type: "image" | "video";
+  url: string;
+  caption?: string;
+}
 
 interface Noticia {
   id: string;
   titulo: string;
   descricao: string;
+  summary?: string;
   categoria: string;
   imagem: string;
-  imagens?: string[];
-  tipoGaleria?: "single" | "slide" | "grid" | "before-after";
-  heroTipo?: "image" | "video";
-  heroUrl?: string;
+  media?: MediaItem[];
+  layoutGaleria?: "single" | "slider" | "grid" | "beforeAfter";
+  published?: boolean;
+  publishedAt?: string;
   data: string;
+  createdAt?: string;
 }
 
-const GALLERY_TYPES = [
-  { value: "single", label: "Imagem Única", icon: ImagePlus, description: "Uma só imagem de destaque" },
-  { value: "slide", label: "Slideshow", icon: Images, description: "Carrossel de imagens" },
-  { value: "grid", label: "Grelha", icon: Grid3x3, description: "Múltiplas imagens em grelha" },
-  { value: "before-after", label: "Antes/Depois", icon: ArrowLeftRight, description: "Comparação de 2 imagens" },
+const CATEGORIAS = [
+  "Projetos",
+  "Novidades", 
+  "Dicas",
+  "Eventos",
+  "Parcerias",
+  "Outros"
+];
+
+const LAYOUTS = [
+  { value: "single", label: "Imagem Única" },
+  { value: "slider", label: "Slideshow" },
+  { value: "grid", label: "Grelha" },
+  { value: "beforeAfter", label: "Antes/Depois" },
 ];
 
 export default function NoticiasManager() {
   const { toast } = useToast();
   const [editing, setEditing] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft">("all");
+  
   const [formData, setFormData] = useState<Partial<Noticia>>({
-    tipoGaleria: "single",
-    imagens: [],
-    heroTipo: "image",
-    heroUrl: ""
+    titulo: "",
+    descricao: "",
+    summary: "",
+    categoria: "Projetos",
+    media: [],
+    layoutGaleria: "grid",
+    published: false
   });
-  const [novaImagem, setNovaImagem] = useState("");
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
     queryKey: ['/api/admin/noticias'],
@@ -48,14 +75,24 @@ export default function NoticiasManager() {
   
   const noticias = noticiasData?.noticias || [];
 
+  const filteredNoticias = noticias.filter(n => {
+    const matchesSearch = n.titulo.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === "all" 
+      || (filterStatus === "published" && n.published) 
+      || (filterStatus === "draft" && !n.published);
+    return matchesSearch && matchesStatus;
+  });
+
   const createMutation = useMutation({
     mutationFn: (data: Partial<Noticia>) => apiRequest('POST', '/api/admin/noticias', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia criada com sucesso!" });
-      setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
-      setEditing(null);
+      resetForm();
     },
+    onError: (error: any) => {
+      toast({ title: "Erro ao criar", description: error.message, variant: "destructive" });
+    }
   });
 
   const updateMutation = useMutation({
@@ -64,9 +101,11 @@ export default function NoticiasManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/noticias'] });
       toast({ title: "Notícia atualizada!" });
-      setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
-      setEditing(null);
+      resetForm();
     },
+    onError: (error: any) => {
+      toast({ title: "Erro ao atualizar", description: error.message, variant: "destructive" });
+    }
   });
 
   const deleteMutation = useMutation({
@@ -77,382 +116,487 @@ export default function NoticiasManager() {
     },
   });
 
-  const handleSave = () => {
-    // Validações básicas
-    if (!formData.titulo || !formData.descricao || !formData.categoria) {
-      toast({ 
-        title: "Campos obrigatórios em falta", 
-        description: "Preencha título, descrição e categoria",
-        variant: "destructive" 
-      });
-      return;
-    }
-
-    // Validação de imagens conforme tipo de galeria
-    if (formData.tipoGaleria === "single" && !formData.imagem) {
-      toast({ 
-        title: "Imagem necessária", 
-        description: "Adicione uma imagem para o tipo 'Imagem Única'",
-        variant: "destructive" 
-      });
-      return;
-    }
-
-    if (formData.tipoGaleria === "before-after" && (!formData.imagens || formData.imagens.length !== 2)) {
-      toast({ 
-        title: "Duas imagens necessárias", 
-        description: "O tipo 'Antes/Depois' requer exatamente 2 imagens",
-        variant: "destructive" 
-      });
-      return;
-    }
-
-    if ((formData.tipoGaleria === "slide" || formData.tipoGaleria === "grid") && (!formData.imagens || formData.imagens.length === 0)) {
-      toast({ 
-        title: "Imagens necessárias", 
-        description: "Adicione pelo menos uma imagem à galeria",
-        variant: "destructive" 
-      });
-      return;
-    }
-
-    // Preparar dados para envio
-    const dataToSave = { ...formData };
-    
-    // Se não é tipo "single", usar a primeira imagem do array como imagem principal
-    if (formData.tipoGaleria !== "single" && formData.imagens && formData.imagens.length > 0) {
-      dataToSave.imagem = formData.imagens[0];
-    }
-
-    if (editing === 'new') {
-      createMutation.mutate(dataToSave);
-    } else if (editing) {
-      updateMutation.mutate({ id: editing, data: dataToSave });
-    }
-  };
-
-  const adicionarImagem = () => {
-    if (!novaImagem.trim()) return;
-    
-    const imagens = formData.imagens || [];
-    setFormData({ 
-      ...formData, 
-      imagens: [...imagens, novaImagem.trim()] 
-    });
-    setNovaImagem("");
-  };
-
-  const removerImagem = (index: number) => {
-    const imagens = formData.imagens || [];
-    setFormData({ 
-      ...formData, 
-      imagens: imagens.filter((_, i) => i !== index) 
+  const resetForm = () => {
+    setEditing(null);
+    setFormData({
+      titulo: "",
+      descricao: "",
+      summary: "",
+      categoria: "Projetos",
+      media: [],
+      layoutGaleria: "grid",
+      published: false
     });
   };
 
   const handleEdit = (noticia: Noticia) => {
     setEditing(noticia.id);
+    
+    // Map backend tipoGaleria to frontend layoutGaleria
+    const reverseLayoutMap: Record<string, "single" | "slider" | "grid" | "beforeAfter"> = {
+      "single": "single",
+      "slide": "slider",
+      "grid": "grid",
+      "before-after": "beforeAfter"
+    };
+    
+    // Build media from legacy fields if media is empty
+    let media = noticia.media || [];
+    // @ts-ignore
+    if (media.length === 0 && noticia.imagens?.length > 0) {
+      // @ts-ignore
+      media = noticia.imagens.map((url: string) => ({ type: "image" as const, url, caption: "" }));
+    } else if (media.length === 0 && noticia.imagem) {
+      media = [{ type: "image" as const, url: noticia.imagem, caption: "" }];
+    }
+    
     setFormData({
       ...noticia,
-      imagens: noticia.imagens || [],
-      tipoGaleria: noticia.tipoGaleria || "single",
-      heroTipo: noticia.heroTipo || "image",
-      heroUrl: noticia.heroUrl || ""
+      media,
+      // @ts-ignore
+      layoutGaleria: noticia.layoutGaleria || reverseLayoutMap[noticia.tipoGaleria || "grid"] || "grid",
+      published: noticia.published ?? false
     });
   };
 
-  const handleCancel = () => {
-    setEditing(null);
-    setFormData({ tipoGaleria: "single", imagens: [], heroTipo: "image", heroUrl: "" });
-    setNovaImagem("");
+  const handleSave = () => {
+    if (!formData.titulo?.trim()) {
+      toast({ title: "Título obrigatório", variant: "destructive" });
+      return;
+    }
+
+    const media = formData.media || [];
+    const imageMedia = media.filter(m => m.type === "image");
+    
+    // Map frontend layout values to backend schema values
+    const layoutMap: Record<string, string> = {
+      "single": "single",
+      "slider": "slide",
+      "grid": "grid", 
+      "beforeAfter": "before-after"
+    };
+    
+    const dataToSave = {
+      ...formData,
+      descricao: formData.descricao || formData.summary || "Projeto visual",
+      imagem: imageMedia.length > 0 ? imageMedia[0].url : formData.imagem || "",
+      imagens: imageMedia.map(m => m.url),
+      tipoGaleria: layoutMap[formData.layoutGaleria || "grid"] || "grid",
+      publishedAt: formData.published && !formData.publishedAt ? new Date().toISOString() : formData.publishedAt,
+      categoria: formData.categoria || "Projetos"
+    };
+
+    if (editing && editing !== "new") {
+      updateMutation.mutate({ id: editing, data: dataToSave });
+    } else {
+      createMutation.mutate(dataToSave);
+    }
   };
 
-  if (isLoading) return <div className="p-4">A carregar...</div>;
+  const addMediaItem = (type: "image" | "video") => {
+    const media = formData.media || [];
+    setFormData({
+      ...formData,
+      media: [...media, { type, url: "", caption: "" }]
+    });
+  };
+
+  const updateMediaItem = (index: number, field: keyof MediaItem, value: string) => {
+    const media = [...(formData.media || [])];
+    media[index] = { ...media[index], [field]: value };
+    setFormData({ ...formData, media });
+  };
+
+  const removeMediaItem = (index: number) => {
+    const media = [...(formData.media || [])];
+    media.splice(index, 1);
+    setFormData({ ...formData, media });
+  };
+
+  const moveMediaItem = (index: number, direction: "up" | "down") => {
+    const media = [...(formData.media || [])];
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= media.length) return;
+    
+    [media[index], media[newIndex]] = [media[newIndex], media[index]];
+    setFormData({ ...formData, media });
+  };
+
+  if (isLoading) {
+    return <div className="p-4 text-white">A carregar...</div>;
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">Gestão de Notícias</h2>
-          <p className="text-muted-foreground">Criar e editar artigos com galerias de imagens</p>
+    <div className="space-y-6">
+      {/* Header com pesquisa e filtros */}
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div className="flex gap-3 flex-1 w-full md:w-auto">
+          <div className="relative flex-1 md:max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Pesquisar por título..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-gray-800 border-gray-700 text-white"
+              data-testid="input-search-noticias"
+            />
+          </div>
+          <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v as any)}>
+            <SelectTrigger className="w-40 bg-gray-800 border-gray-700 text-white">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              <SelectItem value="published">Publicadas</SelectItem>
+              <SelectItem value="draft">Rascunhos</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        {!editing && (
-          <Button onClick={() => setEditing('new')} data-testid="button-nova-noticia">
-            <Plus className="mr-2 h-4 w-4" /> Nova Notícia
-          </Button>
-        )}
+        <Button 
+          onClick={() => setEditing("new")} 
+          className="bg-brand-yellow text-black hover:bg-yellow-500"
+          data-testid="button-nova-noticia"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Nova Notícia
+        </Button>
       </div>
 
+      {/* Formulário de edição */}
       {editing && (
-        <Card>
+        <Card className="bg-gray-900 border-gray-700">
           <CardHeader>
-            <CardTitle>{editing === 'new' ? 'Criar Notícia' : 'Editar Notícia'}</CardTitle>
-            <CardDescription>Preencha os campos para criar uma notícia com galeria de imagens</CardDescription>
+            <CardTitle className="text-white flex items-center justify-between">
+              {editing === "new" ? "Nova Notícia" : "Editar Notícia"}
+              <Button variant="ghost" size="icon" onClick={resetForm}>
+                <X className="h-5 w-5" />
+              </Button>
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Informações Básicas */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Informações Básicas</h3>
-              <div>
-                <Label>Título *</Label>
+            {/* Campos básicos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-white">Título *</Label>
                 <Input
-                  value={formData.titulo || ''}
+                  value={formData.titulo || ""}
                   onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
                   placeholder="Título da notícia"
+                  className="bg-gray-800 border-gray-700 text-white"
                   data-testid="input-titulo"
                 />
               </div>
-              <div>
-                <Label>Descrição *</Label>
-                <Textarea
-                  rows={4}
-                  value={formData.descricao || ''}
-                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                  placeholder="Descrição completa da notícia"
-                  data-testid="input-descricao"
-                />
-              </div>
-              <div>
-                <Label>Categoria *</Label>
-                <Input
-                  value={formData.categoria || ''}
-                  onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
-                  placeholder="Ex: Novidades, Projetos, etc"
-                  data-testid="input-categoria"
-                />
+              <div className="space-y-2">
+                <Label className="text-white">Categoria</Label>
+                <Select 
+                  value={formData.categoria || "Projetos"} 
+                  onValueChange={(v) => setFormData({ ...formData, categoria: v })}
+                >
+                  <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIAS.map(cat => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            {/* Tipo de Galeria */}
+            <div className="space-y-2">
+              <Label className="text-white">Resumo Curto (opcional)</Label>
+              <Input
+                value={formData.summary || ""}
+                onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                placeholder="Breve descrição para listagem e redes sociais"
+                className="bg-gray-800 border-gray-700 text-white"
+                data-testid="input-summary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-white">Descrição (opcional)</Label>
+              <Textarea
+                value={formData.descricao || ""}
+                onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                placeholder="Texto completo da notícia (se necessário)"
+                className="bg-gray-800 border-gray-700 text-white min-h-[100px]"
+                data-testid="input-descricao"
+              />
+            </div>
+
+            {/* Estado e Layout */}
+            <div className="flex flex-wrap gap-6 items-center p-4 bg-gray-800 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={formData.published ?? false}
+                  onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
+                  data-testid="switch-published"
+                />
+                <Label className="text-white flex items-center gap-2">
+                  {formData.published ? (
+                    <>
+                      <Eye className="h-4 w-4 text-green-400" />
+                      Publicado
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      Rascunho
+                    </>
+                  )}
+                </Label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Label className="text-white">Layout da Galeria:</Label>
+                <Select 
+                  value={formData.layoutGaleria || "grid"} 
+                  onValueChange={(v) => setFormData({ ...formData, layoutGaleria: v as any })}
+                >
+                  <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LAYOUTS.map(layout => (
+                      <SelectItem key={layout.value} value={layout.value}>{layout.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Galeria de Media */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Tipo de Galeria</h3>
-              <RadioGroup 
-                value={formData.tipoGaleria || "single"} 
-                onValueChange={(value) => setFormData({ ...formData, tipoGaleria: value as any })}
-              >
-                <div className="grid grid-cols-2 gap-4">
-                  {GALLERY_TYPES.map((type) => {
-                    const Icon = type.icon;
-                    return (
-                      <Label
-                        key={type.value}
-                        htmlFor={type.value}
-                        className={`flex flex-col items-start space-y-2 border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                          formData.tipoGaleria === type.value 
-                            ? 'border-primary bg-primary/5' 
-                            : 'border-muted hover:border-primary/50'
-                        }`}
+              <div className="flex items-center justify-between">
+                <Label className="text-white text-lg font-semibold">Galeria</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addMediaItem("image")}
+                    className="border-gray-600 text-white hover:bg-gray-700"
+                    data-testid="button-add-image"
+                  >
+                    <ImageIcon className="h-4 w-4 mr-2" />
+                    Imagem
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addMediaItem("video")}
+                    className="border-gray-600 text-white hover:bg-gray-700"
+                    data-testid="button-add-video"
+                  >
+                    <Video className="h-4 w-4 mr-2" />
+                    Vídeo
+                  </Button>
+                </div>
+              </div>
+
+              {/* Lista de items de media */}
+              <div className="space-y-3">
+                {(formData.media || []).map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="flex gap-3 p-4 bg-gray-800 rounded-lg border border-gray-700"
+                  >
+                    {/* Controlos de ordem */}
+                    <div className="flex flex-col justify-center gap-1">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => moveMediaItem(index, "up")}
+                        disabled={index === 0}
+                        className="h-6 w-6"
                       >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value={type.value} id={type.value} />
-                          <Icon className="h-5 w-5" />
-                          <span className="font-semibold">{type.label}</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground ml-6">{type.description}</p>
-                      </Label>
-                    );
-                  })}
-                </div>
-              </RadioGroup>
-            </div>
-
-            {/* Tipo de Conteúdo Principal */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Conteúdo Principal (Hero)</h3>
-              <RadioGroup 
-                value={formData.heroTipo || "image"} 
-                onValueChange={(value) => setFormData({ ...formData, heroTipo: value as "image" | "video" })}
-              >
-                <div className="flex gap-4">
-                  <Label
-                    htmlFor="hero-image"
-                    className={`flex items-center space-x-2 border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                      formData.heroTipo === "image" 
-                        ? 'border-primary bg-primary/5' 
-                        : 'border-muted hover:border-primary/50'
-                    }`}
-                  >
-                    <RadioGroupItem value="image" id="hero-image" />
-                    <ImagePlus className="h-5 w-5" />
-                    <span className="font-semibold">Imagem</span>
-                  </Label>
-                  <Label
-                    htmlFor="hero-video"
-                    className={`flex items-center space-x-2 border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                      formData.heroTipo === "video" 
-                        ? 'border-primary bg-primary/5' 
-                        : 'border-muted hover:border-primary/50'
-                    }`}
-                  >
-                    <RadioGroupItem value="video" id="hero-video" />
-                    <Video className="h-5 w-5" />
-                    <span className="font-semibold">Vídeo</span>
-                  </Label>
-                </div>
-              </RadioGroup>
-
-              {/* URL do Vídeo */}
-              {formData.heroTipo === "video" && (
-                <div className="space-y-4 p-4 border border-gray-700 rounded-lg bg-gray-800/50">
-                  <div>
-                    <Label className="flex items-center gap-2">
-                      <LinkIcon className="h-4 w-4" />
-                      URL do Vídeo (OneDrive, YouTube, Vimeo, etc.)
-                    </Label>
-                    <Input
-                      value={formData.heroUrl || ''}
-                      onChange={(e) => setFormData({ ...formData, heroUrl: e.target.value })}
-                      placeholder="https://onedrive.live.com/... ou https://youtube.com/..."
-                      className="mt-2"
-                      data-testid="input-video-url"
-                    />
-                    <p className="text-xs text-gray-400 mt-2">
-                      Cole o link direto do vídeo (OneDrive, YouTube, Vimeo) ou faça upload abaixo
-                    </p>
-                  </div>
-                  
-                  <div className="border-t border-gray-700 pt-4">
-                    <Label>Ou faça upload de um vídeo</Label>
-                    <ImageUploader
-                      label=""
-                      value={formData.heroUrl || ''}
-                      onChange={(url) => setFormData({ ...formData, heroUrl: url })}
-                      folder="noticias/videos"
-                    />
-                  </div>
-
-                  {formData.heroUrl && (
-                    <div className="mt-2 p-2 bg-gray-900 rounded">
-                      <p className="text-sm text-gray-300 break-all">
-                        <strong>URL atual:</strong> {formData.heroUrl}
-                      </p>
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <GripVertical className="h-4 w-4 text-gray-500 mx-auto" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => moveMediaItem(index, "down")}
+                        disabled={index === (formData.media?.length || 0) - 1}
+                        className="h-6 w-6"
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
 
-            {/* Gestão de Imagens */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Imagens</h3>
-              
-              {/* Imagem única para tipo "single" */}
-              {formData.tipoGaleria === "single" && (
-                <ImageUploader
-                  label="Imagem de Destaque *"
-                  value={formData.imagem || ''}
-                  onChange={(url) => setFormData({ ...formData, imagem: url })}
-                  folder="noticias"
-                />
-              )}
-
-              {/* Galeria para outros tipos */}
-              {formData.tipoGaleria !== "single" && (
-                <div>
-                  <Label>
-                    Adicionar Imagens à Galeria 
-                    {formData.tipoGaleria === "before-after" && " (Exatamente 2 imagens)"}
-                    {formData.tipoGaleria && " *"}
-                  </Label>
-                  
-                  <ImageUploader
-                    label=""
-                    value={novaImagem}
-                    onChange={(url) => {
-                      if (url) {
-                        const imagens = formData.imagens || [];
-                        setFormData({ 
-                          ...formData, 
-                          imagens: [...imagens, url] 
-                        });
-                        setNovaImagem("");
-                      }
-                    }}
-                    folder="noticias"
-                  />
-                  
-                  {/* Preview das imagens */}
-                  {formData.imagens && formData.imagens.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      {formData.imagens.map((img, index) => (
-                        <div key={index} className="relative group">
-                          <img src={img} alt={`Imagem ${index + 1}`} className="w-full h-32 object-cover rounded" />
-                          <div className="absolute top-1 right-1">
-                            <Button 
-                              size="sm" 
-                              variant="destructive" 
-                              onClick={() => removerImagem(index)}
-                              className="h-6 w-6 p-0"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                          <div className="absolute bottom-1 left-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                            {formData.tipoGaleria === "before-after" 
-                              ? index === 0 ? "Antes" : "Depois" 
-                              : `Imagem ${index + 1}`}
-                          </div>
-                        </div>
-                      ))}
+                    {/* Preview */}
+                    <div className="w-24 h-24 bg-gray-700 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {item.url ? (
+                        item.type === "image" ? (
+                          <img src={item.url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <Video className="h-8 w-8 text-gray-400" />
+                        )
+                      ) : (
+                        item.type === "image" ? (
+                          <ImageIcon className="h-8 w-8 text-gray-500" />
+                        ) : (
+                          <Video className="h-8 w-8 text-gray-500" />
+                        )
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+
+                    {/* Campos */}
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={item.type === "image" ? "default" : "secondary"}>
+                          {item.type === "image" ? "Imagem" : "Vídeo"}
+                        </Badge>
+                        <span className="text-xs text-gray-400">#{index + 1}</span>
+                      </div>
+
+                      {item.type === "image" ? (
+                        <ImageUploader
+                          label=""
+                          value={item.url}
+                          onChange={(url) => updateMediaItem(index, "url", url)}
+                          folder="noticias"
+                        />
+                      ) : (
+                        <Input
+                          value={item.url}
+                          onChange={(e) => updateMediaItem(index, "url", e.target.value)}
+                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                          className="bg-gray-700 border-gray-600 text-white"
+                        />
+                      )}
+
+                      <Input
+                        value={item.caption || ""}
+                        onChange={(e) => updateMediaItem(index, "caption", e.target.value)}
+                        placeholder="Legenda (opcional)"
+                        className="bg-gray-700 border-gray-600 text-white"
+                        data-testid={`input-caption-${index}`}
+                      />
+                    </div>
+
+                    {/* Remover */}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeMediaItem(index)}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </Button>
+                  </div>
+                ))}
+
+                {(!formData.media || formData.media.length === 0) && (
+                  <div className="text-center py-8 text-gray-400 border-2 border-dashed border-gray-700 rounded-lg">
+                    Clique em "Imagem" ou "Vídeo" para adicionar items à galeria
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex gap-2">
+            {/* Botões de ação */}
+            <div className="flex gap-3 pt-4 border-t border-gray-700">
               <Button 
-                onClick={handleSave} 
-                data-testid="button-save"
+                onClick={handleSave}
                 disabled={createMutation.isPending || updateMutation.isPending}
+                className="bg-brand-yellow text-black hover:bg-yellow-500"
+                data-testid="button-save"
               >
-                <Save className="mr-2 h-4 w-4" /> 
+                <Save className="h-4 w-4 mr-2" />
                 {createMutation.isPending || updateMutation.isPending ? "A guardar..." : "Guardar"}
               </Button>
-              <Button variant="outline" onClick={handleCancel} data-testid="button-cancel">
-                <X className="mr-2 h-4 w-4" /> Cancelar
+              <Button variant="outline" onClick={resetForm} className="border-gray-600">
+                Cancelar
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
+      {/* Lista de notícias */}
       <div className="grid gap-4">
-        {noticias?.map((noticia: Noticia) => (
-          <Card key={noticia.id} data-testid={`card-noticia-${noticia.id}`}>
-            <CardContent className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-4 flex-1">
-                {noticia.imagem && (
-                  <img src={noticia.imagem} alt={noticia.titulo} className="w-16 h-16 object-cover rounded" />
-                )}
-                <div className="flex-1">
-                  <h3 className="font-semibold">{noticia.titulo}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {noticia.descricao?.substring(0, 80)}{noticia.descricao?.length > 80 ? '...' : ''}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                      {GALLERY_TYPES.find(t => t.value === (noticia.tipoGaleria || "single"))?.label}
-                    </span>
-                    {noticia.imagens && noticia.imagens.length > 0 && (
-                      <span className="text-xs text-muted-foreground">
-                        {noticia.imagens.length} imagens
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleEdit(noticia)} data-testid={`button-edit-${noticia.id}`}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(noticia.id)} data-testid={`button-delete-${noticia.id}`}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+        {filteredNoticias.length === 0 ? (
+          <Card className="bg-gray-900 border-gray-700">
+            <CardContent className="py-12 text-center text-gray-400">
+              {searchTerm || filterStatus !== "all" 
+                ? "Nenhuma notícia encontrada com esses filtros" 
+                : "Ainda não há notícias. Crie a primeira!"}
             </CardContent>
           </Card>
-        ))}
+        ) : (
+          filteredNoticias.map((noticia) => (
+            <Card key={noticia.id} className="bg-gray-900 border-gray-700">
+              <CardContent className="p-4">
+                <div className="flex gap-4 items-start">
+                  {/* Thumbnail */}
+                  <div className="w-20 h-20 bg-gray-800 rounded overflow-hidden flex-shrink-0">
+                    {noticia.imagem || (noticia.media && noticia.media.length > 0) ? (
+                      <img 
+                        src={noticia.media?.[0]?.url || noticia.imagem} 
+                        alt="" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon className="h-8 w-8 text-gray-600" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start gap-2 mb-1">
+                      <h3 className="text-white font-medium truncate">{noticia.titulo}</h3>
+                      <Badge variant={noticia.published ? "default" : "secondary"} className="flex-shrink-0">
+                        {noticia.published ? "Publicado" : "Rascunho"}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-400 mb-2">
+                      {noticia.categoria} • {noticia.media?.length || 0} items • {new Date(noticia.data || noticia.createdAt || "").toLocaleDateString("pt-PT")}
+                    </p>
+                    {noticia.summary && (
+                      <p className="text-sm text-gray-300 line-clamp-1">{noticia.summary}</p>
+                    )}
+                  </div>
+
+                  {/* Ações */}
+                  <div className="flex gap-2 flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleEdit(noticia)}
+                      className="border-gray-600 hover:bg-gray-700"
+                      data-testid={`button-edit-${noticia.id}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        if (confirm("Eliminar esta notícia?")) {
+                          deleteMutation.mutate(noticia.id);
+                        }
+                      }}
+                      className="border-gray-600 hover:bg-red-900/30 text-red-400"
+                      data-testid={`button-delete-${noticia.id}`}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
