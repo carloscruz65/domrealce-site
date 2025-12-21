@@ -24,7 +24,72 @@ import {
   Shield,
 } from "lucide-react";
 
-// Imagens padrão
+// Configuração de imagens por sub-serviço (desacoplado)
+const subServiceConfig: Record<string, {
+  heroImage: string;
+  heroAlt: string;
+  galleryImages: Array<{ src: string; alt: string; title: string }>;
+}> = {
+  particulares: {
+    heroImage: "/public-objects/servicos/decoracao-viaturas/particulares.webp",
+    heroAlt: "Personalização de viaturas particulares DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/decoracao-viaturas/particulares-1.webp", alt: "Viatura particular personalizada", title: "Personalização Discreta" },
+      { src: "/public-objects/servicos/decoracao-viaturas/particulares-2.webp", alt: "Faixas decorativas em viatura", title: "Faixas Decorativas" },
+      { src: "/public-objects/servicos/decoracao-viaturas/particulares-3.webp", alt: "Detalhes em vinil", title: "Detalhes Personalizados" },
+    ],
+  },
+  comerciais: {
+    heroImage: "/public-objects/servicos/decoracao-viaturas/comerciais.webp",
+    heroAlt: "Decoração de veículos comerciais DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-1.webp", alt: "Carrinha comercial decorada", title: "Rotulagem Comercial" },
+      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-2.webp", alt: "Frota com identidade visual", title: "Identificação de Frota" },
+      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-3.webp", alt: "Publicidade móvel", title: "Publicidade Móvel" },
+    ],
+  },
+  competicao: {
+    heroImage: "/public-objects/servicos/decoracao-viaturas/competicao.webp",
+    heroAlt: "Decoração de viaturas de competição DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/decoracao-viaturas/competicao-1.webp", alt: "Viatura de rally decorada", title: "Patrocinadores" },
+      { src: "/public-objects/servicos/decoracao-viaturas/competicao-2.webp", alt: "Numeração de competição", title: "Numeração Oficial" },
+      { src: "/public-objects/servicos/decoracao-viaturas/competicao-3.webp", alt: "Layout de pista", title: "Design de Competição" },
+    ],
+  },
+  motos: {
+    heroImage: "/public-objects/servicos/decoracao-viaturas/motos.webp",
+    heroAlt: "Decoração de motociclos DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/decoracao-viaturas/motos-1.webp", alt: "Motociclo personalizado", title: "Design Único" },
+      { src: "/public-objects/servicos/decoracao-viaturas/motos-2.webp", alt: "Proteção de depósito", title: "Proteção de Depósito" },
+      { src: "/public-objects/servicos/decoracao-viaturas/motos-3.webp", alt: "Detalhes especiais", title: "Efeitos Especiais" },
+    ],
+  },
+  camioes: {
+    heroImage: "/public-objects/servicos/decoracao-viaturas/camioes.webp",
+    heroAlt: "Decoração de camiões e atrelados DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/decoracao-viaturas/camioes-1.webp", alt: "Camião com rotulagem completa", title: "Rotulagem Total" },
+      { src: "/public-objects/servicos/decoracao-viaturas/camioes-2.webp", alt: "Atrelado decorado", title: "Grande Formato" },
+      { src: "/public-objects/servicos/decoracao-viaturas/camioes-3.webp", alt: "Frota de transporte", title: "Identificação de Frota" },
+    ],
+  },
+  maquinas: {
+    heroImage: "/public-objects/servicos/maquinas/hero.webp",
+    heroAlt: "Máquina industrial com decoração DOMREALCE",
+    galleryImages: [
+      { src: "/public-objects/servicos/maquinas/maquina-1.webp", alt: "Escavadora decorada", title: "Máquinas de Construção" },
+      { src: "/public-objects/servicos/maquinas/maquina-2.webp", alt: "Empilhador com identificação", title: "Equipamento Logístico" },
+      { src: "/public-objects/servicos/maquinas/maquina-3.webp", alt: "Grua com sinalização", title: "Sinalização de Segurança" },
+    ],
+  },
+};
+
+// Imagem de fallback para sub-serviços sem configuração
+const defaultHeroImage = "/public-objects/servicos/decoracao-viaturas.webp";
+
+// Imagens padrão para galeria (fallback)
 const defaultImages = [
   {
     src: "https://images.unsplash.com/photo-1483721310020-03333e577078?w=800&q=80",
@@ -42,6 +107,12 @@ const defaultImages = [
     title: "Instalação Profissional",
   },
 ];
+
+// Helper para obter configuração do sub-serviço
+function getSubServiceConfig(key: string | null) {
+  if (!key) return null;
+  return subServiceConfig[key] || null;
+}
 
 type VehicleKey =
   | "particulares"
@@ -68,10 +139,14 @@ export default function ServicoDecoracaoViaturas() {
     });
   }
 
+  // Galeria específica por sub-serviço (usa config local ou fallback para API)
   const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
     queryKey: ["/api/service-galleries", "decoracao-viaturas"],
   });
-  const galleryImages = galleryData?.images || defaultImages;
+  
+  // Usa imagens específicas do sub-serviço ativo, senão usa galeria da API ou fallback
+  const activeConfig = getSubServiceConfig(activeVehicle);
+  const galleryImages = activeConfig?.galleryImages || galleryData?.images || defaultImages;
 
   const vehicleTypes: Array<{
     key: VehicleKey;
@@ -274,8 +349,8 @@ export default function ServicoDecoracaoViaturas() {
               title="Rotulagem comercial que trabalha por si"
               subtitle="Publicidade móvel, clara e profissional"
               description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
-              imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
-              imageAlt="Decoração de veículos comerciais DOMREALCE"
+              imageSrc={subServiceConfig.comerciais.heroImage}
+              imageAlt={subServiceConfig.comerciais.heroAlt}
               primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
             />
           )}
@@ -287,8 +362,8 @@ export default function ServicoDecoracaoViaturas() {
               title="Decoração para viaturas de competição"
               subtitle="Rápido, limpo e com presença"
               description="Autocolantes de patrocinadores, numeração e layouts para pista."
-              imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
-              imageAlt="Decoração de viaturas de competição DOMREALCE"
+              imageSrc={subServiceConfig.competicao.heroImage}
+              imageAlt={subServiceConfig.competicao.heroAlt}
               primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
             />
           )}
@@ -368,8 +443,8 @@ export default function ServicoDecoracaoViaturas() {
                   <div className="h-full">
                     <div className="relative w-full h-full min-h-[320px] md:min-h-[500px] rounded-2xl overflow-hidden border border-white/5">
                       <img
-                        src="/public-objects/servicos/decoracao-viaturas.webp"
-                        alt="Personalização de viaturas DOMREALCE"
+                        src={subServiceConfig.particulares.heroImage}
+                        alt={subServiceConfig.particulares.heroAlt}
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                       />
@@ -387,14 +462,24 @@ export default function ServicoDecoracaoViaturas() {
               title="Motociclos com identidade"
               subtitle="Peças, detalhes e impacto"
               description="Personalização em vinil para depósitos, carenagens e detalhes."
-              imageSrc="/public-objects/servicos/decoracao-viaturas.webp"
-              imageAlt="Decoração de motociclos DOMREALCE"
+              imageSrc={subServiceConfig.motos.heroImage}
+              imageAlt={subServiceConfig.motos.heroAlt}
               primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
             />
           )}
 
-          {activeVehicle === "maquinas" && <MachinesSection />}
-          {activeVehicle === "camioes" && <TrucksSection />}
+          {activeVehicle === "maquinas" && (
+            <MachinesSection 
+              heroImage={subServiceConfig.maquinas.heroImage}
+              heroAlt={subServiceConfig.maquinas.heroAlt}
+            />
+          )}
+          {activeVehicle === "camioes" && (
+            <TrucksSection 
+              heroImage={subServiceConfig.camioes.heroImage}
+              heroAlt={subServiceConfig.camioes.heroAlt}
+            />
+          )}
 
           <ServicesAvailableSection services={services} />
 

@@ -24,7 +24,15 @@
 
         /* ======================================================= */
 
-        export function TrucksSection() {
+        interface TrucksSectionProps {
+          heroImage?: string;
+          heroAlt?: string;
+        }
+
+        export function TrucksSection({ 
+          heroImage = "/public-objects/servicos/decoracao-viaturas/camioes.webp",
+          heroAlt = "Decoração de camiões e atrelados DOMREALCE"
+        }: TrucksSectionProps) {
           return (
             <section className="py-16 bg-black border-t border-gray-900">
               <div className="container mx-auto px-4">
@@ -71,9 +79,12 @@
 
                     {/* Imagem */}
                     <div className="relative aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden border border-gray-800 bg-gray-900/60">
-                      <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-400">
-                        Imagem / exemplo (camião ou atrelado com decoração DOMREALCE)
-                      </div>
+                      <img
+                        src={heroImage}
+                        alt={heroAlt}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                     </div>
                   </div>
                 </div>

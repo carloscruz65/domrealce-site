@@ -15,7 +15,15 @@ const content =
   "px-4 md:px-6 pb-6 pt-4 text-sm text-gray-300 leading-relaxed " +
   "bg-black/40 border-t border-gray-800";
 
-export function MachinesSection() {
+interface MachinesSectionProps {
+  heroImage?: string;
+  heroAlt?: string;
+}
+
+export function MachinesSection({ 
+  heroImage = "/public-objects/servicos/maquinas/hero.webp",
+  heroAlt = "Máquina industrial com decoração finalizada"
+}: MachinesSectionProps) {
   return (
     <section className="py-16 bg-black border-t border-gray-900">
       <div className="container mx-auto px-4">
@@ -68,10 +76,9 @@ export function MachinesSection() {
             {/* Imagem */}
             <div className="w-full">
               <div className="relative aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden border border-gray-800 bg-gray-900/60">
-                {/* Troca para a tua imagem real */}
                 <img
-                  src="/public-objects/servicos/maquinas/hero.webp"
-                  alt="Máquina industrial com decoração finalizada"
+                  src={heroImage}
+                  alt={heroAlt}
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />

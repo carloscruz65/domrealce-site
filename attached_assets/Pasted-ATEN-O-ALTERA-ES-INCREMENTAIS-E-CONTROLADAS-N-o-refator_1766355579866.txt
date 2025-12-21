@@ -1,0 +1,49 @@
+ATENÇÃO: ALTERAÇÕES INCREMENTAIS E CONTROLADAS.
+Não refatorar o site.
+Não alterar layout, design, textos ou comportamento que já estejam funcionais.
+Não mexer em outras páginas de serviços além de “Decoração de Viaturas”.
+
+Contexto:
+No site DOMREALCE, a página de serviços “Decoração de Viaturas” contém vários sub-serviços
+(ex.: viaturas particulares, viaturas de competição, máquinas, etc.).
+
+Problema atual:
+Todos os sub-serviços estão a reutilizar o mesmo hero e o mesmo conjunto de imagens.
+Quando se altera o hero ou imagens de um sub-serviço, isso afeta todos os outros.
+Isto indica que os dados visuais estão acoplados de forma global.
+
+Objetivo:
+Permitir que CADA sub-serviço dentro de “Decoração de Viaturas” tenha o seu próprio conjunto
+de imagens (hero e/ou galeria), sem afetar os outros sub-serviços.
+
+Requisitos obrigatórios:
+1) Manter os componentes visuais existentes (Hero, cards, layout, CSS).
+2) NÃO criar novos layouts.
+3) NÃO alterar páginas que já estão corretas.
+4) Resolver apenas o problema de acoplamento de imagens/heros.
+5) Cada sub-serviço deve passar a usar as suas próprias imagens,
+   baseando-se nas imagens que JÁ EXISTEM atualmente em cada sub-serviço.
+
+Implementação esperada:
+- Identificar onde o hero/imagens estão definidos de forma partilhada.
+- Desacoplar os dados (imagens/textos) do componente visual.
+- Passar a usar dados específicos por sub-serviço (via props, config local ou estrutura equivalente).
+- Cada página ou sub-secção deve referenciar apenas as suas próprias imagens existentes.
+- NÃO duplicar imagens desnecessariamente.
+- NÃO mover imagens de pastas já existentes sem necessidade.
+
+Restrições importantes:
+- Não alterar nomes de componentes existentes.
+- Não renomear rotas.
+- Não alterar textos de marketing já escritos.
+- Não alterar lógica de navegação.
+- Não tocar em Home, Notícias ou outros Serviços.
+
+Validação final obrigatória:
+- Alterar imagens de um sub-serviço NÃO pode alterar imagens dos outros.
+- O build deve continuar a passar.
+- O comportamento visual deve permanecer igual, apenas com imagens independentes.
+
+No final:
+- Listar exatamente quais ficheiros foram alterados.
+- Explicar em 1–2 frases o que foi feito em cada ficheiro.
