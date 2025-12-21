@@ -35,6 +35,8 @@ interface Noticia {
   publishedAt?: string;
   data: string;
   createdAt?: string;
+  notaEditorial?: string | null;
+  pontuacao?: string | null;
 }
 
 const CATEGORIAS = [
@@ -66,7 +68,9 @@ export default function NoticiasManager() {
     categoria: "Projetos",
     media: [],
     layoutGaleria: "grid",
-    published: false
+    published: false,
+    notaEditorial: "",
+    pontuacao: ""
   });
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
@@ -125,7 +129,9 @@ export default function NoticiasManager() {
       categoria: "Projetos",
       media: [],
       layoutGaleria: "grid",
-      published: false
+      published: false,
+      notaEditorial: "",
+      pontuacao: ""
     });
   };
 
@@ -155,7 +161,9 @@ export default function NoticiasManager() {
       media,
       // @ts-ignore
       layoutGaleria: noticia.layoutGaleria || reverseLayoutMap[noticia.tipoGaleria || "grid"] || "grid",
-      published: noticia.published ?? false
+      published: noticia.published ?? false,
+      notaEditorial: noticia.notaEditorial || "",
+      pontuacao: noticia.pontuacao || ""
     });
   };
 
@@ -363,6 +371,42 @@ export default function NoticiasManager() {
                     {LAYOUTS.map(layout => (
                       <SelectItem key={layout.value} value={layout.value}>{layout.label}</SelectItem>
                     ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Nota Editorial */}
+            <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
+              <Label className="text-white text-lg font-semibold">Nota do Atelier</Label>
+              
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Comentário editorial (opcional)</Label>
+                <Textarea
+                  value={formData.notaEditorial || ""}
+                  onChange={(e) => setFormData({ ...formData, notaEditorial: e.target.value })}
+                  placeholder="Comentário interno ou crítica sobre o projeto..."
+                  className="bg-gray-700 border-gray-600 text-white min-h-[80px]"
+                  data-testid="input-nota-editorial"
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Label className="text-gray-300 text-sm">Pontuação:</Label>
+                <Select 
+                  value={formData.pontuacao || ""} 
+                  onValueChange={(v) => setFormData({ ...formData, pontuacao: v })}
+                >
+                  <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Sem pontuação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Sem pontuação</SelectItem>
+                    <SelectItem value="1">1/5 - Fraco</SelectItem>
+                    <SelectItem value="2">2/5 - Razoável</SelectItem>
+                    <SelectItem value="3">3/5 - Bom</SelectItem>
+                    <SelectItem value="4">4/5 - Muito Bom</SelectItem>
+                    <SelectItem value="5">5/5 - Excelente</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
