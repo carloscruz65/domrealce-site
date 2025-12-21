@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual - Modelo de Notícias DOMREALCE</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+            background: #f9f9f9;
+        }
+        h1 { 
+            color: #1a1a1a; 
+            border-bottom: 3px solid #FFD700; 
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #2c2c2c; 
+            margin-top: 40px;
+            background: #FFD700;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        h3 { 
+            color: #444; 
+            margin-top: 25px;
+            border-left: 4px solid #FFD700;
+            padding-left: 12px;
+        }
+        .box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .box.important {
+            border-left: 4px solid #FFD700;
+            background: #fffef5;
+        }
+        .box.warning {
+            border-left: 4px solid #e74c3c;
+            background: #fdf2f2;
+        }
+        .box.tip {
+            border-left: 4px solid #27ae60;
+            background: #f2fdf5;
+        }
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #FFD700;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background: #FFD700;
+            color: #1a1a1a;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .file-path {
+            background: #e8e8e8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        @media print {
+            body { background: white; }
+            .box { break-inside: avoid; }
+            h2 { break-after: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <h1>📰 Manual do Modelo de Notícias</h1>
+    <p><strong>DOMREALCE - Guia de Manutenção</strong></p>
+    <p>Este manual explica como funciona o sistema de notícias, onde estão os ficheiros importantes, e como fazer alterações.</p>
+
+    <h2>1. Estrutura do Modelo de Notícias</h2>
+    
+    <p>Cada notícia tem vários campos (informações) que podes preencher. Aqui está a explicação de cada um:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th>O que é</th>
+                <th>Obrigatório?</th>
+                <th>Exemplo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>id</code></td>
+                <td>Identificador único (criado automaticamente)</td>
+                <td>Automático</td>
+                <td>abc123-def456</td>
+            </tr>
+            <tr>
+                <td><code>titulo</code></td>
+                <td>O título principal da notícia</td>
+                <td>✅ Sim</td>
+                <td>"Nova Decoração de Viatura"</td>
+            </tr>
+            <tr>
+                <td><code>descricao</code></td>
+                <td>Texto completo da notícia</td>
+                <td>✅ Sim</td>
+                <td>"Realizámos um novo projeto..."</td>
+            </tr>
+            <tr>
+                <td><code>categoria</code></td>
+                <td>Tipo de notícia (Projetos, Novidades, etc.)</td>
+                <td>✅ Sim</td>
+                <td>"Projetos"</td>
+            </tr>
+            <tr>
+                <td><code>imagem</code></td>
+                <td>Imagem principal de capa</td>
+                <td>✅ Sim</td>
+                <td>URL da imagem</td>
+            </tr>
+            <tr>
+                <td><code>imagens</code></td>
+                <td>Lista de imagens adicionais para galeria</td>
+                <td>❌ Opcional</td>
+                <td>Lista de URLs</td>
+            </tr>
+            <tr>
+                <td><code>tipoGaleria</code></td>
+                <td>Como mostrar as imagens</td>
+                <td>❌ Opcional</td>
+                <td>"single", "slide", "grid", "before-after"</td>
+            </tr>
+            <tr>
+                <td><code>heroTipo</code></td>
+                <td>Tipo de conteúdo principal</td>
+                <td>❌ Opcional</td>
+                <td>"image" ou "video"</td>
+            </tr>
+            <tr>
+                <td><code>heroUrl</code></td>
+                <td>URL do vídeo (se heroTipo = video)</td>
+                <td>❌ Opcional</td>
+                <td>Link do YouTube/OneDrive</td>
+            </tr>
+            <tr>
+                <td><code>data</code></td>
+                <td>Data da publicação</td>
+                <td>✅ Sim</td>
+                <td>"2025-12-21"</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Onde Estão os Ficheiros Importantes</h2>
+
+    <div class="box important">
+        <h3>🗂️ Ficheiros Principais</h3>
+        
+        <p><strong>1. Definição da Estrutura (Schema)</strong></p>
+        <div class="file-path">📁 shared/schema.ts</div>
+        <p>Este ficheiro define TODOS os campos que uma notícia pode ter. É aqui que adicionas novos campos.</p>
+
+        <p><strong>2. Editor de Notícias (Admin)</strong></p>
+        <div class="file-path">📁 client/src/components/NoticiasManager.tsx</div>
+        <p>Este é o formulário que usas no painel de administração para criar/editar notícias.</p>
+
+        <p><strong>3. Rotas da API (Backend)</strong></p>
+        <div class="file-path">📁 server/routes.ts</div>
+        <p>Processa os pedidos quando guardas ou carregas notícias.</p>
+
+        <p><strong>4. Página da Notícia (Frontend)</strong></p>
+        <div class="file-path">📁 client/src/pages/noticia-detalhes.tsx</div>
+        <p>Mostra a notícia ao público quando visitam o site.</p>
+    </div>
+
+    <h2>3. Como Adicionar um Novo Campo</h2>
+
+    <p>Imagina que queres adicionar um campo "autor" às notícias. Segue estes passos:</p>
+
+    <div class="box">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <strong>Atualizar o Schema</strong>
+                <p>Abre <code>shared/schema.ts</code> e procura a tabela <code>news</code>. Adiciona o novo campo:</p>
+                <pre>autor: text("autor"),  // Nome do autor da notícia</pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <strong>Sincronizar a Base de Dados</strong>
+                <p>No terminal do Replit, executa:</p>
+                <pre>npm run db:push</pre>
+                <p>Isto adiciona a nova coluna à base de dados.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <strong>Adicionar ao Editor</strong>
+                <p>Abre <code>client/src/components/NoticiasManager.tsx</code> e adiciona:</p>
+                <ul>
+                    <li>O campo na interface <code>Noticia</code></li>
+                    <li>Um Input no formulário para o utilizador preencher</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <strong>Mostrar na Página Pública</strong>
+                <p>Abre <code>client/src/pages/noticia-detalhes.tsx</code> e adiciona o código para mostrar o autor.</p>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Como Editar Dados na Base de Dados</h2>
+
+    <h3>Opção A: Painel de Base de Dados do Replit (Mais Fácil)</h3>
+    
+    <div class="box tip">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <p>No Replit, clica no ícone <strong>"Database"</strong> na barra lateral esquerda (parece um cilindro).</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <p>Procura a tabela <strong>"news"</strong> na lista de tabelas.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <p>Clica numa linha para editar os valores diretamente. É como uma folha de Excel!</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <p>As alterações são guardadas automaticamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Opção B: Comandos SQL (Para Utilizadores Avançados)</h3>
+
+    <div class="box">
+        <p><strong>Ver todas as notícias:</strong></p>
+        <pre>SELECT * FROM news;</pre>
+
+        <p><strong>Alterar o título de uma notícia específica:</strong></p>
+        <pre>UPDATE news 
+SET titulo = 'Novo Título Aqui' 
+WHERE id = 'abc123-def456';</pre>
+
+        <p><strong>Adicionar uma nova notícia:</strong></p>
+        <pre>INSERT INTO news (id, titulo, descricao, categoria, imagem, data) 
+VALUES (
+    gen_random_uuid(), 
+    'Título da Notícia', 
+    'Descrição completa...', 
+    'Projetos', 
+    '/public-objects/noticias/imagem.webp', 
+    '2025-12-21'
+);</pre>
+
+        <p><strong>Apagar uma notícia:</strong></p>
+        <pre>DELETE FROM news WHERE id = 'abc123-def456';</pre>
+    </div>
+
+    <div class="box warning">
+        <h3>⚠️ Atenção!</h3>
+        <ul>
+            <li><strong>Faz sempre backup antes</strong> de editar diretamente a base de dados</li>
+            <li>O formato da data deve ser: <code>AAAA-MM-DD</code> (ex: 2025-12-21)</li>
+            <li>URLs de imagens devem começar com <code>/public-objects/</code></li>
+            <li>O campo <code>id</code> nunca deve ser alterado manualmente</li>
+        </ul>
+    </div>
+
+    <h2>5. Tipos de Galeria Disponíveis</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Valor</th>
+                <th>Descrição</th>
+                <th>Quando Usar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>single</code></td>
+                <td>Uma só imagem de destaque</td>
+                <td>Notícias simples com uma foto</td>
+            </tr>
+            <tr>
+                <td><code>slide</code></td>
+                <td>Carrossel de imagens (passa automaticamente)</td>
+                <td>Mostrar várias fotos de um projeto</td>
+            </tr>
+            <tr>
+                <td><code>grid</code></td>
+                <td>Grelha de imagens (todas visíveis)</td>
+                <td>Galeria de fotos para explorar</td>
+            </tr>
+            <tr>
+                <td><code>before-after</code></td>
+                <td>Comparação antes/depois com slider</td>
+                <td>Mostrar transformações (2 imagens)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6. Tipos de Conteúdo Principal (Hero)</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Valor</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>image</code></td>
+                <td>Mostra uma imagem no topo da notícia (padrão)</td>
+            </tr>
+            <tr>
+                <td><code>video</code></td>
+                <td>Mostra um vídeo no topo da notícia (usa heroUrl para o link)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="box tip">
+        <h3>💡 Dica para Vídeos</h3>
+        <p>Podes usar links de:</p>
+        <ul>
+            <li><strong>YouTube:</strong> https://youtube.com/watch?v=...</li>
+            <li><strong>Vimeo:</strong> https://vimeo.com/...</li>
+            <li><strong>OneDrive:</strong> Link de partilha direto</li>
+            <li><strong>Upload direto:</strong> Usa o botão de upload no editor</li>
+        </ul>
+    </div>
+
+    <h2>7. Resumo Rápido</h2>
+
+    <div class="box important">
+        <table>
+            <tr>
+                <th>O que quero fazer?</th>
+                <th>Onde vou?</th>
+            </tr>
+            <tr>
+                <td>Criar/editar notícias</td>
+                <td>Painel Admin → Notícias</td>
+            </tr>
+            <tr>
+                <td>Adicionar novo campo</td>
+                <td><code>shared/schema.ts</code></td>
+            </tr>
+            <tr>
+                <td>Modificar o formulário</td>
+                <td><code>client/src/components/NoticiasManager.tsx</code></td>
+            </tr>
+            <tr>
+                <td>Editar dados diretamente</td>
+                <td>Replit → Database → tabela "news"</td>
+            </tr>
+            <tr>
+                <td>Ver como aparece ao público</td>
+                <td><code>client/src/pages/noticia-detalhes.tsx</code></td>
+            </tr>
+        </table>
+    </div>
+
+    <hr style="margin-top: 40px;">
+    <p style="text-align: center; color: #666; font-size: 14px;">
+        <strong>DOMREALCE</strong> - Manual de Manutenção do Sistema de Notícias<br>
+        Versão 1.0 - Dezembro 2025
+    </p>
+
+</body>
+</html>
