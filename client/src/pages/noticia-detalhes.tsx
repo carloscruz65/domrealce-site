@@ -405,6 +405,26 @@ export default function NoticiaDetalhes() {
             </div>
           )}
 
+          {/* Nota do Atelier */}
+          {(noticia.notaEditorial || noticia.pontuacao) && (
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-6 bg-brand-yellow rounded-full"></div>
+                <h3 className="text-lg font-semibold text-brand-yellow">Nota do Atelier</h3>
+                {noticia.pontuacao && parseInt(noticia.pontuacao) > 0 && (
+                  <Badge className="bg-brand-yellow/20 text-brand-yellow border-brand-yellow/30 ml-auto">
+                    {noticia.pontuacao}/5
+                  </Badge>
+                )}
+              </div>
+              {noticia.notaEditorial && (
+                <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                  {noticia.notaEditorial}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* CTA discreto */}
           <div className="bg-gray-900 rounded-lg p-6 mb-6">
             <h3 className="text-lg font-semibold mb-2">
