@@ -92,8 +92,16 @@ export const news = pgTable("news", {
   // Serviços relacionados (CTA discreto)
   relatedServices: text("related_services").array().default([]),
 
+  // v3: Galeria com legendas (media items)
+  media: jsonb("media").default(sql`'[]'::jsonb`), // Array de { type: "image"|"video", url: string, caption?: string }
+  summary: text("summary"), // resumo curto opcional
+  published: boolean("published").default(false), // rascunho ou publicado
+  publishedAt: timestamp("published_at"), // data de publicação efetiva
+  layoutGaleria: text("layout_galeria").default("grid"), // single, slider, grid, beforeAfter
+
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const slides = pgTable("slides", {
@@ -305,6 +313,15 @@ export const newsReviewSchema = z
   })
   .optional();
 
+// Schema para itens de media (galeria com legendas)
+export const mediaItemSchema = z.object({
+  type: z.enum(["image", "video"]),
+  url: z.string().min(1),
+  caption: z.string().optional(),
+});
+
+export type MediaItem = z.infer<typeof mediaItemSchema>;
+
 export const insertNewsSchema = createInsertSchema(news)
   .pick({
     // v1
@@ -324,6 +341,13 @@ export const insertNewsSchema = createInsertSchema(news)
     blocks: true,
     review: true,
     relatedServices: true,
+
+    // v3
+    media: true,
+    summary: true,
+    published: true,
+    publishedAt: true,
+    layoutGaleria: true,
   })
   .extend({
     data: z.string().optional(),
@@ -344,6 +368,13 @@ export const insertNewsSchema = createInsertSchema(news)
     blocks: z.array(newsBlockSchema).optional().default([]),
     review: newsReviewSchema.nullish(),
     relatedServices: z.array(z.string()).optional().default([]),
+
+    // v3
+    media: z.array(mediaItemSchema).optional().default([]),
+    summary: z.string().nullish(),
+    published: z.boolean().optional().default(false),
+    publishedAt: z.string().nullish(),
+    layoutGaleria: z.enum(["single", "slider", "grid", "beforeAfter"]).optional().default("grid"),
   });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({

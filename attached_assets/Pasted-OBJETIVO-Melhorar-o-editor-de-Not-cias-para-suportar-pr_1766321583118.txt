@@ -1,0 +1,66 @@
+OBJETIVO: Melhorar o editor de Notícias para suportar “projetos visuais” com galeria de imagens/vídeos e legendas por item, sem exigir texto longo.
+
+CONTEXTO: Site DOMREALCE (React+Vite, Express). Já existe sistema de notícias mas o editor/CMS não está 100% estável. Quero editar notícias pelo browser (admin) e publicar rápido.
+
+REQUISITOS DO EDITOR (UI):
+
+Lista de notícias com: pesquisar por título, filtrar por estado (publicado/rascunho), botão “Nova notícia”, editar/apagar.
+
+Formulário de notícia com campos mínimos:
+
+título (obrigatório)
+
+resumo curto (opcional)
+
+categoria (dropdown)
+
+estado: rascunho/publicado
+
+data de publicação (auto se publicar)
+
+Galeria principal (o mais importante):
+
+adicionar item de galeria: imagem (upload) ou vídeo (URL embed)
+
+para cada item: legenda (texto curto)
+
+ordenar itens (drag and drop ou botões subir/descer)
+
+remover item
+
+pré-visualização (thumbnail)
+
+Suportar layouts no frontend sem complicar: single, slider, grid, beforeAfter (opcional). No editor basta dropdown “Layout da galeria”.
+
+Upload de imagem deve gravar no Object Storage e salvar URL no item.
+
+REQUISITOS DA BASE DE DADOS / MODELO:
+
+A notícia deve suportar uma lista media (JSON) com itens tipo:
+{ type: "image" | "video", url: string, caption?: string }
+
+Guardar coverImageUrl (pode ser a primeira imagem da galeria por defeito)
+
+Campos: title, summary, category, published, publishedAt, createdAt, updatedAt, media
+
+REQUISITOS DO FRONTEND (exibição pública):
+
+Página da notícia deve renderizar a galeria com legendas por item (figcaption).
+
+Se não existir texto longo, a página continua perfeita (galeria + título + resumo).
+
+Lista de notícias e “últimas 3” na Home devem funcionar com este modelo.
+
+DEFINITION OF DONE / TESTES:
+
+Consigo criar uma notícia só com 4 imagens, cada uma com legenda, publicar e ver no site.
+
+Consigo editar ordem das imagens e confirmar que muda na página pública.
+
+Consigo trocar uma imagem existente por outra (sem criar duplicados).
+
+O editor não quebra se eu tiver 1 imagem ou 12.
+
+“Últimas 3 notícias” aparecem na Home com imagem de capa + título + resumo.
+
+IMPORTANTE: Faz as alterações com o mínimo de refactor. Mantém as rotas públicas existentes se possível. Se tiveres de criar endpoints novos, mantém compatibilidade. Mostra-me no final: quais ficheiros foram alterados e como testar.
