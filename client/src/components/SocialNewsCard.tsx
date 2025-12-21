@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { MouseEvent } from "react";
 import { Link, useLocation } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,20 @@ import {
 } from "lucide-react";
 import type { News } from "@shared/schema";
 
+type Variant = "full" | "compact";
+
 function getCanonicalUrl(id: string) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   return `${origin}/noticia/${id}`;
 }
 
-export default function SocialNewsCard({ noticia }: { noticia: News }) {
+export default function SocialNewsCard({
+  noticia,
+  variant = "full",
+}: {
+  noticia: News;
+  variant?: Variant;
+}) {
   const [, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
 
@@ -43,7 +52,7 @@ export default function SocialNewsCard({ noticia }: { noticia: News }) {
   const descricao = noticia.descricao || "";
   const preview = descricao.slice(0, 120);
 
-  const irParaDetalhes = (e?: React.MouseEvent) => {
+  const irParaDetalhes = (e?: MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -51,7 +60,7 @@ export default function SocialNewsCard({ noticia }: { noticia: News }) {
     setLocation(`/noticia/${noticia.id}`);
   };
 
-  const partilharFacebook = (e: React.MouseEvent) => {
+  const partilharFacebook = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     window.open(
@@ -63,23 +72,22 @@ export default function SocialNewsCard({ noticia }: { noticia: News }) {
     );
   };
 
-  const partilharWhatsapp = (e: React.MouseEvent) => {
+  const partilharWhatsapp = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const texto = `DOMREALCE | ${noticia.titulo}\n${canonicalUrl}`;
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(texto)}`,
-      "_blank"
-    );
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank");
   };
 
-  const copiarLink = async (e: React.MouseEvent) => {
+  const copiarLink = async (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     await navigator.clipboard.writeText(canonicalUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };
+
+  const isCompact = variant === "compact";
 
   return (
     <Link href={`/noticia/${noticia.id}`}>
@@ -107,65 +115,81 @@ export default function SocialNewsCard({ noticia }: { noticia: News }) {
           </div>
         )}
 
+        {/* Conteúdo abaixo da imagem */}
         <div className="p-4 flex-1 flex flex-col">
-          <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
-            <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              <span>DOMREALCE</span>
+          {/* COMPACT: só “teaser” (igual Home: simples e clicável) */}
+          {isCompact ? (
+            <div className="mt-auto">
+              <button
+                className="text-brand-yellow font-semibold text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all"
+                onClick={irParaDetalhes}
+              >
+                Ler mais <span aria-hidden>→</span>
+              </button>
             </div>
-            <div className="h-3 w-px bg-gray-700" />
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>{noticia.data ? formatarData(noticia.data) : "Recente"}</span>
-            </div>
-          </div>
+          ) : (
+            /* FULL: meta + preview + redes + botão */
+            <>
+              <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <span>DOMREALCE</span>
+                </div>
+                <div className="h-3 w-px bg-gray-700" />
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  <span>{noticia.data ? formatarData(noticia.data) : "Recente"}</span>
+                </div>
+              </div>
 
-          <p className="text-sm text-gray-300 mb-3 line-clamp-2 leading-relaxed flex-1">
-            {preview}
-            {descricao.length > 120 && "..."}
-          </p>
+              <p className="text-sm text-gray-300 mb-3 line-clamp-2 leading-relaxed flex-1">
+                {preview}
+                {descricao.length > 120 && "..."}
+              </p>
 
-          <div className="flex gap-2 mb-3 flex-nowrap">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 px-2.5 text-xs text-blue-400 border-blue-400/30 hover:bg-blue-500/10"
-              onClick={partilharFacebook}
-            >
-              <Facebook className="h-4 w-4 mr-1.5" />
-              FB
-            </Button>
+              <div className="flex gap-2 mb-3 flex-nowrap">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2.5 text-xs text-blue-400 border-blue-400/30 hover:bg-blue-500/10"
+                  onClick={partilharFacebook}
+                >
+                  <Facebook className="h-4 w-4 mr-1.5" />
+                  FB
+                </Button>
 
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 px-2.5 text-xs text-green-300 border-green-300/30 hover:bg-green-500/10"
-              onClick={partilharWhatsapp}
-            >
-              <MessageCircle className="h-4 w-4 mr-1.5" />
-              WhatsApp
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2.5 text-xs text-green-300 border-green-300/30 hover:bg-green-500/10"
+                  onClick={partilharWhatsapp}
+                >
+                  <MessageCircle className="h-4 w-4 mr-1.5" />
+                  WhatsApp
+                </Button>
 
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 px-2.5 text-xs text-pink-300 border-pink-300/30 hover:bg-pink-500/10"
-              onClick={copiarLink}
-            >
-              <LinkIcon className="h-4 w-4 mr-1.5" />
-              {copied ? "Copiado" : "Link"}
-            </Button>
-          </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2.5 text-xs text-pink-300 border-pink-300/30 hover:bg-pink-500/10"
+                  onClick={copiarLink}
+                >
+                  <LinkIcon className="h-4 w-4 mr-1.5" />
+                  {copied ? "Copiado" : "Link"}
+                </Button>
+              </div>
 
-          <div className="pt-3 border-t border-gray-800 flex justify-end">
-            <Button
-              size="sm"
-              className="bg-brand-yellow text-black hover:bg-brand-yellow/90 text-xs h-7 px-3"
-              onClick={irParaDetalhes}
-            >
-              Ver Mais
-            </Button>
-          </div>
+              <div className="pt-3 border-t border-gray-800 flex justify-end">
+                <Button
+                  size="sm"
+                  className="bg-brand-yellow text-black hover:bg-brand-yellow/90 text-xs h-7 px-3"
+                  onClick={irParaDetalhes}
+                >
+                  Ver Mais
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </Card>
     </Link>

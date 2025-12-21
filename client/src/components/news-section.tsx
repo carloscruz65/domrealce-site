@@ -86,9 +86,7 @@ export default function NewsSection() {
                   </h4>
 
                   <p className="text-white/80 mb-4">
-                    {article.descricao.length > 200
-                      ? `${article.descricao.slice(0, 200)}…`
-                      : article.descricao}
+                    {article.resumoCurto || article.resumo || article.excerpt || ""}
                   </p>
 
                   <span className="text-brand-turquoise font-semibold inline-flex items-center group">

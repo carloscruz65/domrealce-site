@@ -111,7 +111,7 @@ export default function Noticias() {
           </div>
         </div>
       </section>
-
+      
       {/* Filtros */}
       <section className="pt-0 pb-4 border-b border-border">
         <div className="container mx-auto px-4">
@@ -180,10 +180,12 @@ export default function Noticias() {
 
           {!isLoading && !error && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {noticiasFiltradas.map((noticia) => (
-                  <SocialNewsCard key={noticia.id} noticia={noticia} />
-                ))}
+              <div className="mt-8 noticias-listagem">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {noticiasFiltradas.map((noticia) => (
+                    <SocialNewsCard key={noticia.id} noticia={noticia} variant="compact" />
+                  ))}
+                </div>
               </div>
 
               {noticiasFiltradas.length === 0 && (

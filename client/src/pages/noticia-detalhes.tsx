@@ -76,11 +76,13 @@ export default function NoticiaDetalhes() {
     // Fallback para campos v1 (imagens/imagem)
     // @ts-ignore
     const arr = noticia?.imagens?.length ? noticia.imagens : noticia?.imagem ? [noticia.imagem] : [];
-    return (arr || []).filter(Boolean).map((url: string) => ({ type: "image" as const, url, caption: "" }));
+    return (arr || [])
+      .filter(Boolean)
+      .map((url: string) => ({ type: "image" as const, url, caption: "" }));
   }, [noticia]);
 
   const imagens = useMemo(() => {
-    return mediaItems.filter(m => m.type === "image").map(m => m.url);
+    return mediaItems.filter((m) => m.type === "image").map((m) => m.url);
   }, [mediaItems]);
 
   const canonicalUrl = useMemo(() => {
@@ -110,7 +112,9 @@ export default function NoticiaDetalhes() {
     const descricao = (noticia.descricao || "").slice(0, 160);
 
     const updateMetaTag = (property: string, content: string) => {
-      let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+      let meta = document.querySelector(
+        `meta[property="${property}"]`
+      ) as HTMLMetaElement | null;
       if (!meta) {
         meta = document.createElement("meta");
         meta.setAttribute("property", property);
@@ -197,6 +201,7 @@ export default function NoticiaDetalhes() {
     await copiarLink();
   };
 
+  // ✅ ShareBar minimal: “Partilhar” + ícones alinhados numa linha
   const ShareBar = ({ className = "" }: { className?: string }) => (
     <div
       className={[
@@ -205,18 +210,16 @@ export default function NoticiaDetalhes() {
         className,
       ].join(" ")}
     >
-      <div className="text-sm text-gray-300">
-        Partilhar: Facebook · WhatsApp · Instagram (copiar link)
-      </div>
+      <div className="text-sm text-gray-300">Partilhar</div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button
           variant="outline"
           size="sm"
           onClick={partilharFacebook}
           className="text-blue-400 border-blue-400/30 hover:bg-blue-500/10"
         >
-          <Facebook className="h-5 w-5 mr-2" />
+          <Facebook className="h-4 w-4 mr-2" />
           Facebook
         </Button>
 
@@ -226,7 +229,7 @@ export default function NoticiaDetalhes() {
           onClick={partilharWhatsapp}
           className="text-green-300 border-green-300/30 hover:bg-green-500/10"
         >
-          <MessageCircle className="h-5 w-5 mr-2" />
+          <MessageCircle className="h-4 w-4 mr-2" />
           WhatsApp
         </Button>
 
@@ -236,18 +239,8 @@ export default function NoticiaDetalhes() {
           onClick={copiarLink}
           className="text-pink-300 border-pink-300/30 hover:bg-pink-500/10"
         >
-          <LinkIcon className="h-5 w-5 mr-2" />
-          {copied ? "Link copiado" : "Copiar link"}
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={partilharNativoOuCopiar}
-          className="text-gray-300 border-gray-600 hover:bg-gray-700"
-        >
-          <Share2 className="h-5 w-5 mr-2" />
-          Partilhar
+          <LinkIcon className="h-4 w-4 mr-2" />
+          {copied ? "Copiado" : "Copiar link"}
         </Button>
       </div>
     </div>
@@ -269,8 +262,12 @@ export default function NoticiaDetalhes() {
       <div className="bg-background min-h-screen">
         <Navigation />
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl font-heading font-bold mb-4">Notícia não encontrada</h1>
-          <p className="text-muted-foreground mb-8">A notícia que procura não existe ou foi removida.</p>
+          <h1 className="text-4xl font-heading font-bold mb-4">
+            Notícia não encontrada
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            A notícia que procura não existe ou foi removida.
+          </p>
           <Button
             onClick={() => setLocation("/noticias")}
             className="bg-brand-yellow text-black hover:bg-brand-yellow/90"
@@ -341,7 +338,10 @@ export default function NoticiaDetalhes() {
                 ) : (
                   <img
                     src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
-                    alt={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption || `${noticia.titulo} - Imagem ${indiceImagem + 1}`}
+                    alt={
+                      mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption ||
+                      `${noticia.titulo} - Imagem ${indiceImagem + 1}`
+                    }
                     className="w-full h-full object-cover"
                   />
                 )}
@@ -390,20 +390,26 @@ export default function NoticiaDetalhes() {
           {/* Intro curta */}
           {intro && (
             <div className="prose prose-invert prose-lg max-w-none mb-6">
-              <p className="text-lg leading-relaxed text-gray-200 whitespace-pre-wrap">{intro}</p>
+              <p className="text-lg leading-relaxed text-gray-200 whitespace-pre-wrap">
+                {intro}
+              </p>
             </div>
           )}
 
           {/* Corpo */}
           {body && (
             <div className="prose prose-invert prose-lg max-w-none mb-10">
-              <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">{body}</p>
+              <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
+                {body}
+              </p>
             </div>
           )}
 
           {/* CTA discreto */}
           <div className="bg-gray-900 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold mb-2">Quer discutir um projeto semelhante?</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              Quer discutir um projeto semelhante?
+            </h3>
             <p className="text-gray-300 mb-4">
               Envie fotos, medidas aproximadas e prazos. Respondemos com proposta técnica e próximos passos.
             </p>
@@ -414,9 +420,6 @@ export default function NoticiaDetalhes() {
               Falar connosco
             </Button>
           </div>
-
-          {/* Partilha (fim) */}
-          <ShareBar />
         </div>
       </article>
 
