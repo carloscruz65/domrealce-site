@@ -1489,6 +1489,111 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   });
 
   // =========================================
+  // SERVICE GALLERIES API routes
+  // =========================================
+  
+  // Public endpoint - get gallery for a service
+  app.get("/api/service-galleries/:serviceId", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { serviceId } = req.params;
+      const gallery = await storage.getServiceGallery(serviceId);
+      
+      if (!gallery) {
+        return res.json({ images: [], requestId });
+      }
+      
+      res.json({ images: gallery.images || [], requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/service-galleries/:serviceId failed", error);
+      res.status(500).json({ error: "Failed to fetch service gallery", requestId });
+    }
+  });
+  
+  // Admin endpoints - list all galleries
+  app.get("/api/admin/service-galleries", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const galleries = await storage.getAllServiceGalleries();
+      res.json({ galleries, requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/admin/service-galleries failed", error);
+      res.status(500).json({ error: "Failed to fetch service galleries", requestId });
+    }
+  });
+  
+  // Admin endpoint - update/create gallery for a service
+  app.put("/api/admin/service-galleries/:serviceId", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { serviceId } = req.params;
+      const { images } = req.body;
+      
+      const parseResult = insertServiceGallerySchema.safeParse({
+        serviceId,
+        images: images || []
+      });
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          error: "Validation failed", 
+          details: parseResult.error.errors,
+          requestId 
+        });
+      }
+      
+      const gallery = await storage.upsertServiceGallery(parseResult.data);
+      res.json({ success: true, gallery, requestId });
+    } catch (error) {
+      logRouteError(requestId, "PUT /api/admin/service-galleries/:serviceId failed", error);
+      res.status(500).json({ error: "Failed to update service gallery", requestId });
+    }
+  });
+
+  // =========================================
+  // SERVICE HEROES API routes
+  // =========================================
+  
+  // Public endpoint - get hero for a service
+  app.get("/api/service-heroes/:serviceId", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { serviceId } = req.params;
+      const hero = await storage.getServiceHero(serviceId);
+      res.json({ hero, requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/service-heroes/:serviceId failed", error);
+      res.status(500).json({ error: "Failed to fetch service hero", requestId });
+    }
+  });
+  
+  // Admin endpoint - update/create hero for a service
+  app.put("/api/admin/service-heroes/:serviceId", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { serviceId } = req.params;
+      const parseResult = insertServiceHeroSchema.safeParse({
+        ...req.body,
+        serviceId
+      });
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          error: "Validation failed", 
+          details: parseResult.error.errors,
+          requestId 
+        });
+      }
+      
+      const hero = await storage.upsertServiceHero(parseResult.data);
+      res.json({ success: true, hero, requestId });
+    } catch (error) {
+      logRouteError(requestId, "PUT /api/admin/service-heroes/:serviceId failed", error);
+      res.status(500).json({ error: "Failed to update service hero", requestId });
+    }
+  });
+
+  // =========================================
   // VISUAL EDITOR API routes
   // =========================================
   app.get("/api/editor/page/:route", getPageContent);

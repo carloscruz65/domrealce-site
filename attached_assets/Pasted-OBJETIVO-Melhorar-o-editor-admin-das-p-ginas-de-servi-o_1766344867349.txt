@@ -1,0 +1,65 @@
+OBJETIVO:
+Melhorar o editor/admin das páginas de serviços para permitir trocar, adicionar, remover e reordenar imagens de cada serviço sem alterar o código público das páginas, mantendo todas as alterações recentes já feitas no frontend.
+
+CONTEXTO IMPORTANTE (OBRIGATÓRIO RESPEITAR):
+
+As páginas públicas de serviços já foram alteradas recentemente (layout, hero, estrutura de cards, distribuição desktop/mobile, identidade visual).
+
+NÃO refatorar, simplificar ou recriar os componentes das páginas de serviços.
+
+NÃO alterar classes, layout, hierarquia visual, nem lógica existente no frontend das páginas de serviço.
+
+O trabalho já feito tem de ser preservado a 100%.
+
+O objetivo é apenas adaptar o editor/admin para editar os dados que essas páginas já consomem.
+
+REQUISITOS DO EDITOR (ADMIN):
+
+Página “Serviços” no admin com lista dos serviços existentes (nome + rota/slug).
+
+Ao abrir um serviço no editor:
+
+mostrar as imagens atuais da galeria (thumbnails)
+
+permitir adicionar nova imagem (upload)
+
+permitir substituir uma imagem existente (trocar ficheiro mantendo posição)
+
+permitir remover imagem
+
+permitir reordenar imagens (drag & drop ou botões subir/descer)
+
+guardar alterações sem quebrar o frontend
+
+REQUISITOS DE DADOS / BACKEND:
+
+As imagens devem continuar a ser servidas ao frontend no mesmo formato e estrutura que as páginas de serviços já esperam hoje.
+
+Se existir endpoint atual (ex: /api/services/:id/images ou semelhante), deve ser reutilizado ou estendido, não substituído.
+
+As imagens devem ser guardadas no Object Storage e referenciadas por URL.
+
+Manter compatibilidade total com React Query já usado no frontend.
+
+REQUISITOS DO FRONTEND (PÁGINAS PÚBLICAS):
+
+As páginas de serviço não devem sofrer alterações visuais.
+
+Apenas passam a refletir imediatamente as alterações feitas no editor (imagens trocadas/reordenadas).
+
+Desktop e mobile devem continuar iguais ao estado atual.
+
+DEFINITION OF DONE / TESTES OBRIGATÓRIOS:
+
+Consigo trocar uma imagem existente de um serviço e ver a página pública atualizada.
+
+Consigo reordenar 5–6 imagens e o frontend respeita a ordem.
+
+Nenhuma página de serviço perde layout, classes ou estrutura.
+
+Nenhum erro visual aparece em mobile ou desktop.
+
+O Agent lista claramente quais ficheiros foram alterados (admin, backend) e confirma que os componentes públicos não foram modificados.
+
+IMPORTANTE:
+Trabalhar com o mínimo de alterações possível. Priorizar extensão do editor/admin em vez de refactor. Manter compatibilidade com o código atual.
