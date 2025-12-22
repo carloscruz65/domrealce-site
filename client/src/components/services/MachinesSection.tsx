@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const item =
   "border-b border-gray-800 last:border-b-0";
@@ -15,15 +16,39 @@ const content =
   "px-4 md:px-6 pb-6 pt-4 text-sm text-gray-300 leading-relaxed " +
   "bg-black/40 border-t border-gray-800";
 
+interface HeroApiResponse {
+  hero: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: string;
+  } | null;
+}
+
 interface MachinesSectionProps {
+  serviceId?: string;
   heroImage?: string;
   heroAlt?: string;
 }
 
 export function MachinesSection({ 
-  heroImage = "/public-objects/servicos/maquinas/hero.webp",
+  serviceId = "decoracao-viaturas-maquinas",
+  heroImage: propHeroImage = "/public-objects/servicos/maquinas/hero.webp",
   heroAlt = "Máquina industrial com decoração finalizada"
 }: MachinesSectionProps) {
+  const { data: apiData } = useQuery<HeroApiResponse>({
+    queryKey: ["/api/service-heroes", serviceId],
+    enabled: !!serviceId,
+    staleTime: 0,
+    refetchOnMount: true,
+  });
+
+  const heroData = apiData?.hero;
+  const heroImage = heroData?.backgroundImage || propHeroImage;
+  const heroTitle = heroData?.title || "Máquinas industriais";
+  const heroSubtitle = heroData?.subtitle || "Identificação técnica e decoração funcional";
+  const heroDescription = heroData?.description || "Planeamento técnico e decoração funcional para máquinas de construção, elevação e logística, com base no modelo real da máquina e no trabalho que faz todos os dias.";
   return (
     <section className="py-16 bg-black border-t border-gray-900">
       <div className="container mx-auto px-4">
@@ -41,18 +66,16 @@ export function MachinesSection({
             {/* Texto */}
             <div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-[1.05]">
-                <span className="text-white">Máquinas industriais</span>{" "}
+                <span className="text-white">{heroTitle}</span>{" "}
                 <span className="text-brand-yellow">& equipamentos pesados</span>
               </h2>
 
               <p className="mt-5 text-brand-yellow text-xl md:text-2xl font-semibold">
-                Identificação técnica e decoração funcional
+                {heroSubtitle}
               </p>
 
               <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed max-w-xl">
-                Planeamento técnico e decoração funcional para máquinas de construção,
-                elevação e logística, com base no modelo real da máquina e no trabalho
-                que faz todos os dias.
+                {heroDescription}
               </p>
 
               <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3">

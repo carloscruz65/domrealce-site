@@ -319,6 +319,7 @@ ${formData.anexos
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="papel-parede"
         badge="Papel de Parede Premium"
         badgeIcon={<Wallpaper className="w-4 h-4" />}
         title="Papel de parede à medida do seu espaço"

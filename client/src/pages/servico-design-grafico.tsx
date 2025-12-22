@@ -182,6 +182,7 @@ export default function ServicoDesignGrafico() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="design-grafico"
         badge="Design Gráfico Profissional"
         badgeIcon={<Palette className="w-4 h-4" />}
         title="Identidade Visual que marca a diferença"

@@ -247,6 +247,7 @@ export default function ServicoImpressaoDigital() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="impressao-digital"
         badge="Impressão Digital Profissional"
         badgeIcon={<Printer className="w-4 h-4" />}
         title="Impressão Digital de grande formato"
@@ -254,7 +255,6 @@ export default function ServicoImpressaoDigital() {
         description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
         imageSrc="/public-objects/servicos/impressao-digital.webp"
         imageAlt="Impressão Digital DOMREALCE"
-        imageClassName="translate-y-10 md:translate-y-16"
       />
 
       <main>

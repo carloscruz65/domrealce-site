@@ -357,6 +357,7 @@ export default function ServicoDecoracaoViaturas() {
           {/* Secção específica por escolha */}
           {activeVehicle === "comerciais" && (
             <ServiceHeroTwoColumn
+              serviceId="decoracao-viaturas-comerciais"
               badge="Veículos comerciais"
               badgeIcon={<Truck className="w-4 h-4" />}
               title="Rotulagem comercial que trabalha por si"
@@ -370,6 +371,7 @@ export default function ServicoDecoracaoViaturas() {
 
           {activeVehicle === "competicao" && (
             <ServiceHeroTwoColumn
+              serviceId="decoracao-viaturas-competicao"
               badge="Competição"
               badgeIcon={<Car className="w-4 h-4" />}
               title="Decoração para viaturas de competição"
@@ -470,6 +472,7 @@ export default function ServicoDecoracaoViaturas() {
 
           {activeVehicle === "motos" && (
             <ServiceHeroTwoColumn
+              serviceId="decoracao-viaturas-motos"
               badge="Motociclos"
               badgeIcon={<Bike className="w-4 h-4" />}
               title="Motociclos com identidade"

@@ -2,11 +2,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+
+interface HeroApiResponse {
+  hero: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: string;
+    primaryCtaText?: string;
+    primaryCtaHref?: string;
+    secondaryCtaText?: string;
+    secondaryCtaHref?: string;
+  } | null;
+}
 
 interface ServiceHeroTwoColumnProps {
+  serviceId?: string;
   badge?: string;
   badgeIcon?: React.ReactNode;
-  title: string;
+  title?: string;
   subtitle?: string;
   description?: string;
   imageSrc?: string;
@@ -14,22 +30,44 @@ interface ServiceHeroTwoColumnProps {
   primaryCta?: { text: string; href: string };
   secondaryCta?: { text: string; href: string };
   imagePosition?: "left" | "right";
-  children?: React.ReactNode; //
+  children?: React.ReactNode;
 }
 
 export default function ServiceHeroTwoColumn({
-  badge,
+  serviceId,
+  badge: propBadge,
   badgeIcon,
-  title,
-  subtitle,
-  description,
-  imageSrc = "/public-objects/servicos/placeholder.webp",
+  title: propTitle,
+  subtitle: propSubtitle,
+  description: propDescription,
+  imageSrc: propImageSrc = "/public-objects/servicos/placeholder.webp",
   imageAlt = "Serviço DOMREALCE",
-  primaryCta = { text: "Pedir Orçamento", href: "/contactos#formulario" },
-  secondaryCta = { text: "Ver Portfolio", href: "/portfolio" },
+  primaryCta: propPrimaryCta = { text: "Pedir Orçamento", href: "/contactos#formulario" },
+  secondaryCta: propSecondaryCta = { text: "Ver Portfolio", href: "/portfolio" },
   imagePosition = "right",
-  children, //
+  children,
 }: ServiceHeroTwoColumnProps) {
+  const { data: apiData } = useQuery<HeroApiResponse>({
+    queryKey: ["/api/service-heroes", serviceId],
+    enabled: !!serviceId,
+    staleTime: 0, // Always fetch fresh data for hero content
+    refetchOnMount: true,
+  });
+
+  const heroData = apiData?.hero;
+  const badge = heroData?.badge || propBadge;
+  const title = heroData?.title || propTitle || "Serviço";
+  const subtitle = heroData?.subtitle || propSubtitle;
+  const description = heroData?.description || propDescription;
+  const imageSrc = heroData?.backgroundImage || propImageSrc;
+  const primaryCta = {
+    text: heroData?.primaryCtaText || propPrimaryCta.text,
+    href: heroData?.primaryCtaHref || propPrimaryCta.href,
+  };
+  const secondaryCta = {
+    text: heroData?.secondaryCtaText || propSecondaryCta.text,
+    href: heroData?.secondaryCtaHref || propSecondaryCta.href,
+  };
   const textContent = (
     <div className="flex flex-col justify-center h-full py-8 md:py-12 lg:py-16">
       {badge && (

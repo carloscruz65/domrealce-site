@@ -168,6 +168,7 @@ export default function ServicoEspacosComerciais() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="espacos-comerciais"
         badge="Espaços comerciais"
         badgeIcon={<Building2 className="w-4 h-4" />}
         title="Decoração de espaços comerciais"

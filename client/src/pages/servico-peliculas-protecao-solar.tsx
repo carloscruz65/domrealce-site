@@ -188,6 +188,7 @@ export default function ServicoPeliculasProtecaoSolar() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="peliculas-protecao-solar"
         badge="Películas de proteção solar"
         badgeIcon={<Sun className="w-4 h-4" />}
         title="Películas de proteção solar e segurança"

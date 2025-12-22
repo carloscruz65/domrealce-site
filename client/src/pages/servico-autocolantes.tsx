@@ -205,6 +205,7 @@ export default function ServicoAutocolantes() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="autocolantes"
         badge="Autocolantes profissionais"
         badgeIcon={<Sticker className="w-4 h-4" />}
         title="Autocolantes e etiquetas com corte de contorno"

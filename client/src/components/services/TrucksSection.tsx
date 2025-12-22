@@ -2,6 +2,7 @@
         import { Truck, ChevronDown } from "lucide-react";
         import { Button } from "@/components/ui/button";
         import { Link } from "wouter";
+        import { useQuery } from "@tanstack/react-query";
 
         /* ====== estilos reutilizáveis (iguais às Máquinas) ====== */
 
@@ -22,17 +23,41 @@
           "group-open:rotate-180 rounded-full border border-gray-700 " +
           "bg-black/20 p-0.5 group-hover:border-brand-yellow/60 group-hover:bg-black/40";
 
+        interface HeroApiResponse {
+          hero: {
+            badge?: string;
+            title?: string;
+            subtitle?: string;
+            description?: string;
+            backgroundImage?: string;
+          } | null;
+        }
+
         /* ======================================================= */
 
         interface TrucksSectionProps {
+          serviceId?: string;
           heroImage?: string;
           heroAlt?: string;
         }
 
         export function TrucksSection({ 
-          heroImage = "/public-objects/servicos/decoracao-viaturas/camioes.webp",
+          serviceId = "decoracao-viaturas-camioes",
+          heroImage: propHeroImage = "/public-objects/servicos/decoracao-viaturas/camioes.webp",
           heroAlt = "Decoração de camiões e atrelados DOMREALCE"
         }: TrucksSectionProps) {
+          const { data: apiData } = useQuery<HeroApiResponse>({
+            queryKey: ["/api/service-heroes", serviceId],
+            enabled: !!serviceId,
+            staleTime: 0,
+            refetchOnMount: true,
+          });
+
+          const heroData = apiData?.hero;
+          const heroImage = heroData?.backgroundImage || propHeroImage;
+          const heroTitle = heroData?.title || "Camiões &";
+          const heroSubtitle = heroData?.subtitle || "Grande formato com leitura à distância";
+          const heroDescription = heroData?.description || "Rotulagem e decoração para transporte e logística: projetos criados de raiz ou reprodução/renovação de decorações existentes. Pensado para superfícies grandes, durabilidade e impacto visual diário na estrada.";
           return (
             <section className="py-16 bg-black border-t border-gray-900">
               <div className="container mx-auto px-4">
@@ -48,18 +73,16 @@
                     {/* Texto */}
                     <div>
                       <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-[1.05]">
-                        <span className="text-white">Camiões &</span>{" "}
+                        <span className="text-white">{heroTitle}</span>{" "}
                         <span className="text-brand-yellow">atrelados</span>
                       </h2>
 
                       <p className="mt-5 text-brand-yellow text-xl md:text-2xl font-semibold">
-                        Grande formato com leitura à distância
+                        {heroSubtitle}
                       </p>
 
                       <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed max-w-xl">
-                        Rotulagem e decoração para transporte e logística: projetos criados de raiz
-                        ou reprodução/renovação de decorações existentes. Pensado para superfícies
-                        grandes, durabilidade e impacto visual diário na estrada.
+                        {heroDescription}
                       </p>
 
                       <div className="mt-7 flex flex-col sm:flex-row gap-3">

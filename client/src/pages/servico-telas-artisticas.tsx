@@ -354,6 +354,7 @@ export default function ServicoTelasArtisticas() {
       <Navigation />
 
       <ServiceHeroTwoColumn
+        serviceId="telas-artisticas"
         badge="Telas Artísticas Premium"
         badgeIcon={<Image className="w-4 h-4" />}
         title="Transforme fotografias em obras de arte"
