@@ -51,26 +51,149 @@ interface ValidationErrors {
   backgroundImage?: string;
 }
 
-export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEditorProps) {
-  const [heroData, setHeroData] = useState<HeroData>({
+// Defaults para cada serviço quando não há dados na base de dados
+const serviceDefaults: Record<string, Partial<HeroData>> = {
+  'design-grafico': {
+    title: 'Design Gráfico',
+    subtitle: 'Identidade visual profissional',
+    description: 'Criação de logótipos, materiais gráficos e branding completo para a sua marca.',
+    badge: 'Criatividade',
+    backgroundImage: '/public-objects/servicos/design-grafico.webp',
+  },
+  'impressao-digital': {
+    title: 'Impressão Digital',
+    subtitle: 'Qualidade superior em todos os formatos',
+    description: 'Impressão de alta qualidade em diversos materiais e formatos.',
+    badge: 'Qualidade',
+    backgroundImage: '/public-objects/servicos/impressao-digital.webp',
+  },
+  'papel-parede': {
+    title: 'Papel de Parede',
+    subtitle: 'Transforme os seus espaços',
+    description: 'Grande variedade de texturas e padrões em catálogo interativo.',
+    badge: 'Decoração',
+    backgroundImage: '/public-objects/servicos/papel-parede.webp',
+  },
+  'telas-artisticas': {
+    title: 'Telas Artísticas',
+    subtitle: 'Arte para as suas paredes',
+    description: 'Transforme fotografias em obras de arte impressas em tela de alta qualidade.',
+    badge: 'Arte',
+    backgroundImage: '/public-objects/servicos/telas-artisticas.webp',
+  },
+  'autocolantes': {
+    title: 'Autocolantes',
+    subtitle: 'Personalização versátil',
+    description: 'Autocolantes personalizados com corte de contorno para diversas aplicações.',
+    badge: 'Versatilidade',
+    backgroundImage: '/public-objects/servicos/autocolantes.webp',
+  },
+  'decoracao-viaturas': {
+    title: 'Decoração de Viaturas',
+    subtitle: 'Transforme a sua frota',
+    description: 'Car wrapping e personalização de frotas para empresas e particulares.',
+    badge: 'Mobilidade',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas.webp',
+  },
+  'decoracao-viaturas-particulares': {
+    title: 'Viaturas Particulares',
+    subtitle: 'Personalização exclusiva',
+    description: 'Trabalhos personalizados em viaturas particulares, avaliados individualmente.',
+    badge: 'Particulares',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas/particulares.webp',
+  },
+  'decoracao-viaturas-comerciais': {
+    title: 'Veículos Comerciais',
+    subtitle: 'Publicidade móvel',
+    description: 'Rotulagem e publicidade móvel para empresas e frotas comerciais.',
+    badge: 'Comercial',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas/comerciais.webp',
+  },
+  'decoracao-viaturas-competicao': {
+    title: 'Viaturas de Competição',
+    subtitle: 'Design de alta performance',
+    description: 'Decoração profissional para desportos motorizados e competição.',
+    badge: 'Competição',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas/competicao.webp',
+  },
+  'decoracao-viaturas-motos': {
+    title: 'Motociclos',
+    subtitle: 'Personalização de duas rodas',
+    description: 'Personalização de depósitos, carenagens e acessórios para motociclos.',
+    badge: 'Motos',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas/motos.webp',
+  },
+  'decoracao-viaturas-camioes': {
+    title: 'Camiões e Atrelados',
+    subtitle: 'Grande formato',
+    description: 'Rotulagem e identificação para transporte e logística.',
+    badge: 'Transporte',
+    backgroundImage: '/public-objects/servicos/decoracao-viaturas/camioes.webp',
+  },
+  'decoracao-viaturas-maquinas': {
+    title: 'Máquinas Industriais',
+    subtitle: 'Sinalização industrial',
+    description: 'Identificação e sinalização de equipamentos industriais.',
+    badge: 'Industrial',
+    backgroundImage: '/public-objects/servicos/maquinas/hero.webp',
+  },
+  'espacos-comerciais': {
+    title: 'Espaços Comerciais',
+    subtitle: 'Sinalização profissional',
+    description: 'Sinalização e decoração para negócios, lojas e escritórios.',
+    badge: 'Negócio',
+    backgroundImage: '/public-objects/servicos/espacos-comerciais.webp',
+  },
+  'peliculas-protecao-solar': {
+    title: 'Películas de Proteção Solar',
+    subtitle: 'Conforto e eficiência',
+    description: 'Proteção UV e controlo térmico para vidros de edifícios e viaturas.',
+    badge: 'Proteção',
+    backgroundImage: '/public-objects/servicos/peliculas-solar-protecao.webp',
+  },
+};
+
+function getDefaultHeroData(serviceId: string, serviceName: string): HeroData {
+  const defaults = serviceDefaults[serviceId] || {};
+  return {
     serviceId,
-    title: "",
-    backgroundImage: "",
-  });
+    title: defaults.title || serviceName,
+    subtitle: defaults.subtitle || '',
+    description: defaults.description || '',
+    badge: defaults.badge || '',
+    backgroundImage: defaults.backgroundImage || '/public-objects/servicos/default.webp',
+    primaryCtaText: 'Falar connosco',
+    primaryCtaHref: '/contacto',
+    secondaryCtaText: 'Ver Portfolio',
+    secondaryCtaHref: '/portfolio',
+  };
+}
+
+interface ApiResponse {
+  hero: HeroData | null;
+  requestId: string;
+}
+
+export default function HeroEditor({ serviceId, serviceName, onBack }: HeroEditorProps) {
+  const [heroData, setHeroData] = useState<HeroData>(() => getDefaultHeroData(serviceId, serviceName));
   const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
   const [showPreview, setShowPreview] = useState(true);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const { toast } = useToast();
 
-  const { data, isLoading } = useQuery<HeroData>({
+  const { data, isLoading } = useQuery<ApiResponse>({
     queryKey: ['/api/service-heroes', serviceId],
   });
 
   useEffect(() => {
-    if (data) {
-      setHeroData(data);
+    if (data?.hero) {
+      // Merge dados da API com defaults
+      setHeroData({ ...getDefaultHeroData(serviceId, serviceName), ...data.hero });
+    } else if (data && !data.hero) {
+      // Sem dados na API, usar defaults
+      setHeroData(getDefaultHeroData(serviceId, serviceName));
     }
-  }, [data]);
+  }, [data, serviceId, serviceName]);
 
   const validateFields = (): boolean => {
     const newErrors: ValidationErrors = {};
