@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceGallery from "@/components/service-gallery";
@@ -24,22 +24,55 @@ import {
   Shield,
 } from "lucide-react";
 
+/**
+ * Tipagem da resposta da API do HERO (igual ao que o ServiceHeroTwoColumn usa)
+ * GET /api/service-heroes/:serviceId  (via react-query queryKey)
+ */
+interface HeroApiResponse {
+  hero: {
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: string;
+    primaryCtaText?: string;
+    primaryCtaHref?: string;
+    secondaryCtaText?: string;
+    secondaryCtaHref?: string;
+  } | null;
+}
+
 // Configuração de imagens por sub-serviço (desacoplado)
-// Os IDs correspondem aos usados no admin para gestão via ServiceGalleryEditor
-const subServiceConfig: Record<string, {
-  apiId: string; // ID para buscar galeria da API
-  heroImage: string;
-  heroAlt: string;
-  defaultGalleryImages: Array<{ src: string; alt: string; title: string }>;
-}> = {
+// Os IDs correspondem aos usados no admin para gestão via ServiceGalleryEditor + ServiceHeroes
+const subServiceConfig: Record<
+  string,
+  {
+    apiId: string; // ID para buscar hero/galeria da API
+    heroImage: string;
+    heroAlt: string;
+    defaultGalleryImages: Array<{ src: string; alt: string; title: string }>;
+  }
+> = {
   particulares: {
     apiId: "decoracao-viaturas-particulares",
     heroImage: "/public-objects/servicos/decoracao-viaturas/particulares.webp",
     heroAlt: "Personalização de viaturas particulares DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/decoracao-viaturas/particulares-1.webp", alt: "Viatura particular personalizada", title: "Personalização Discreta" },
-      { src: "/public-objects/servicos/decoracao-viaturas/particulares-2.webp", alt: "Faixas decorativas em viatura", title: "Faixas Decorativas" },
-      { src: "/public-objects/servicos/decoracao-viaturas/particulares-3.webp", alt: "Detalhes em vinil", title: "Detalhes Personalizados" },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/particulares-1.webp",
+        alt: "Viatura particular personalizada",
+        title: "Personalização Discreta",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/particulares-2.webp",
+        alt: "Faixas decorativas em viatura",
+        title: "Faixas Decorativas",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/particulares-3.webp",
+        alt: "Detalhes em vinil",
+        title: "Detalhes Personalizados",
+      },
     ],
   },
   comerciais: {
@@ -47,9 +80,21 @@ const subServiceConfig: Record<string, {
     heroImage: "/public-objects/servicos/decoracao-viaturas/comerciais.webp",
     heroAlt: "Decoração de veículos comerciais DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-1.webp", alt: "Carrinha comercial decorada", title: "Rotulagem Comercial" },
-      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-2.webp", alt: "Frota com identidade visual", title: "Identificação de Frota" },
-      { src: "/public-objects/servicos/decoracao-viaturas/comerciais-3.webp", alt: "Publicidade móvel", title: "Publicidade Móvel" },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/comerciais-1.webp",
+        alt: "Carrinha comercial decorada",
+        title: "Rotulagem Comercial",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/comerciais-2.webp",
+        alt: "Frota com identidade visual",
+        title: "Identificação de Frota",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/comerciais-3.webp",
+        alt: "Publicidade móvel",
+        title: "Publicidade Móvel",
+      },
     ],
   },
   competicao: {
@@ -57,9 +102,21 @@ const subServiceConfig: Record<string, {
     heroImage: "/public-objects/servicos/decoracao-viaturas/competicao.webp",
     heroAlt: "Decoração de viaturas de competição DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/decoracao-viaturas/competicao-1.webp", alt: "Viatura de rally decorada", title: "Patrocinadores" },
-      { src: "/public-objects/servicos/decoracao-viaturas/competicao-2.webp", alt: "Numeração de competição", title: "Numeração Oficial" },
-      { src: "/public-objects/servicos/decoracao-viaturas/competicao-3.webp", alt: "Layout de pista", title: "Design de Competição" },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/competicao-1.webp",
+        alt: "Viatura de rally decorada",
+        title: "Patrocinadores",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/competicao-2.webp",
+        alt: "Numeração de competição",
+        title: "Numeração Oficial",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/competicao-3.webp",
+        alt: "Layout de pista",
+        title: "Design de Competição",
+      },
     ],
   },
   motos: {
@@ -67,9 +124,21 @@ const subServiceConfig: Record<string, {
     heroImage: "/public-objects/servicos/decoracao-viaturas/motos.webp",
     heroAlt: "Decoração de motociclos DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/decoracao-viaturas/motos-1.webp", alt: "Motociclo personalizado", title: "Design Único" },
-      { src: "/public-objects/servicos/decoracao-viaturas/motos-2.webp", alt: "Proteção de depósito", title: "Proteção de Depósito" },
-      { src: "/public-objects/servicos/decoracao-viaturas/motos-3.webp", alt: "Detalhes especiais", title: "Efeitos Especiais" },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/motos-1.webp",
+        alt: "Motociclo personalizado",
+        title: "Design Único",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/motos-2.webp",
+        alt: "Proteção de depósito",
+        title: "Proteção de Depósito",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/motos-3.webp",
+        alt: "Detalhes especiais",
+        title: "Efeitos Especiais",
+      },
     ],
   },
   camioes: {
@@ -77,9 +146,21 @@ const subServiceConfig: Record<string, {
     heroImage: "/public-objects/servicos/decoracao-viaturas/camioes.webp",
     heroAlt: "Decoração de camiões e atrelados DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/decoracao-viaturas/camioes-1.webp", alt: "Camião com rotulagem completa", title: "Rotulagem Total" },
-      { src: "/public-objects/servicos/decoracao-viaturas/camioes-2.webp", alt: "Atrelado decorado", title: "Grande Formato" },
-      { src: "/public-objects/servicos/decoracao-viaturas/camioes-3.webp", alt: "Frota de transporte", title: "Identificação de Frota" },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/camioes-1.webp",
+        alt: "Camião com rotulagem completa",
+        title: "Rotulagem Total",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/camioes-2.webp",
+        alt: "Atrelado decorado",
+        title: "Grande Formato",
+      },
+      {
+        src: "/public-objects/servicos/decoracao-viaturas/camioes-3.webp",
+        alt: "Frota de transporte",
+        title: "Identificação de Frota",
+      },
     ],
   },
   maquinas: {
@@ -87,15 +168,24 @@ const subServiceConfig: Record<string, {
     heroImage: "/public-objects/servicos/maquinas/hero.webp",
     heroAlt: "Máquina industrial com decoração DOMREALCE",
     defaultGalleryImages: [
-      { src: "/public-objects/servicos/maquinas/maquina-1.webp", alt: "Escavadora decorada", title: "Máquinas de Construção" },
-      { src: "/public-objects/servicos/maquinas/maquina-2.webp", alt: "Empilhador com identificação", title: "Equipamento Logístico" },
-      { src: "/public-objects/servicos/maquinas/maquina-3.webp", alt: "Grua com sinalização", title: "Sinalização de Segurança" },
+      {
+        src: "/public-objects/servicos/maquinas/maquina-1.webp",
+        alt: "Escavadora decorada",
+        title: "Máquinas de Construção",
+      },
+      {
+        src: "/public-objects/servicos/maquinas/maquina-2.webp",
+        alt: "Empilhador com identificação",
+        title: "Equipamento Logístico",
+      },
+      {
+        src: "/public-objects/servicos/maquinas/maquina-3.webp",
+        alt: "Grua com sinalização",
+        title: "Sinalização de Segurança",
+      },
     ],
   },
 };
-
-// Imagem de fallback para sub-serviços sem configuração
-const defaultHeroImage = "/public-objects/servicos/decoracao-viaturas.webp";
 
 // Imagens padrão para galeria (fallback)
 const defaultImages = [
@@ -142,24 +232,41 @@ export default function ServicoDecoracaoViaturas() {
     // scroll depois do React aplicar o DOM
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        revealRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        revealRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       });
     });
   }
 
-  // Galeria específica por sub-serviço ativo (busca da API com o ID correto)
+  // Config + API ID do sub-serviço ativo
   const activeConfig = getSubServiceConfig(activeVehicle);
-  const activeApiId = activeConfig?.apiId || "decoracao-viaturas";
-  
-  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
+
+  // 🔧 importante: não cair em "decoracao-viaturas" (genérico)
+  const activeApiId = activeConfig?.apiId || "decoracao-viaturas-particulares";
+
+  // Galeria específica por sub-serviço ativo
+  const {
+    data: galleryData,
+    isLoading: galleryLoading,
+    isFetching: galleryFetching,
+    isError: galleryError,
+  } = useQuery<{ images: typeof defaultImages }>({
     queryKey: ["/api/service-galleries", activeApiId],
-    enabled: hasSelection, // Só busca quando há seleção
+    enabled: hasSelection,
   });
-  
-  // Usa imagens da API se disponíveis, senão usa defaults do config local
-  const galleryImages = galleryData?.images?.length 
-    ? galleryData.images 
-    : activeConfig?.defaultGalleryImages || defaultImages;
+  const cmsHasImages = Boolean(galleryData?.images?.length);
+
+  // Enquanto carrega, não mostramos defaults
+  const isGalleryLoading =
+    hasSelection && (galleryLoading || galleryFetching) && !galleryData;
+
+  const galleryImages = cmsHasImages
+    ? galleryData!.images
+    : isGalleryLoading
+      ? []
+      : (activeConfig?.defaultGalleryImages || defaultImages);
 
   const vehicleTypes: Array<{
     key: VehicleKey;
@@ -197,7 +304,12 @@ export default function ServicoDecoracaoViaturas() {
       icon: <Car className="w-8 h-8" />,
       title: "Viaturas de competição",
       description: "Decoração para desportos motorizados.",
-      features: ["Patrocinadores", "Numeração", "Layouts rápidos", "Materiais específicos"],
+      features: [
+        "Patrocinadores",
+        "Numeração",
+        "Layouts rápidos",
+        "Materiais específicos",
+      ],
     },
     {
       key: "camioes",
@@ -216,7 +328,12 @@ export default function ServicoDecoracaoViaturas() {
       icon: <Bike className="w-8 h-8" />,
       title: "Motociclos",
       description: "Personalização para motociclos.",
-      features: ["Designs únicos", "Proteção do depósito", "Detalhes especiais", "Efeitos"],
+      features: [
+        "Designs únicos",
+        "Proteção do depósito",
+        "Detalhes especiais",
+        "Efeitos",
+      ],
     },
     {
       key: "maquinas",
@@ -263,12 +380,22 @@ export default function ServicoDecoracaoViaturas() {
     {
       title: "Rotulação publicitária",
       description: "Aplicação de logótipos e informação comercial.",
-      benefits: ["Publicidade móvel", "Imagem profissional", "Alcance geográfico", "Custo-benefício"],
+      benefits: [
+        "Publicidade móvel",
+        "Imagem profissional",
+        "Alcance geográfico",
+        "Custo-benefício",
+      ],
     },
     {
       title: "Wrapping parcial",
       description: "Decoração de áreas específicas da viatura.",
-      benefits: ["Custo reduzido", "Impacto visual", "Flexibilidade", "Fácil manutenção"],
+      benefits: [
+        "Custo reduzido",
+        "Impacto visual",
+        "Flexibilidade",
+        "Fácil manutenção",
+      ],
     },
     {
       title: "Identificação de frota",
@@ -278,16 +405,41 @@ export default function ServicoDecoracaoViaturas() {
     {
       title: "Produção + aplicação",
       description: "Impressão no nosso espaço e aplicação conforme o contexto.",
-      benefits: ["Controlo de qualidade", "Planeamento", "Acabamento", "Durabilidade"],
+      benefits: [
+        "Controlo de qualidade",
+        "Planeamento",
+        "Acabamento",
+        "Durabilidade",
+      ],
     },
   ];
 
   const process = [
-    { step: "01", title: "Consulta e levantamento", description: "Objetivo, superfícies e restrições." },
-    { step: "02", title: "Design e aprovação", description: "Proposta visual e confirmação final." },
-    { step: "03", title: "Produção", description: "Impressão e preparação com controlo de qualidade." },
-    { step: "04", title: "Aplicação profissional", description: "No nosso espaço ou no local do cliente." },
-    { step: "05", title: "Entrega e manutenção", description: "Verificação final e recomendações." },
+    {
+      step: "01",
+      title: "Consulta e levantamento",
+      description: "Objetivo, superfícies e restrições.",
+    },
+    {
+      step: "02",
+      title: "Design e aprovação",
+      description: "Proposta visual e confirmação final.",
+    },
+    {
+      step: "03",
+      title: "Produção",
+      description: "Impressão e preparação com controlo de qualidade.",
+    },
+    {
+      step: "04",
+      title: "Aplicação profissional",
+      description: "No nosso espaço ou no local do cliente.",
+    },
+    {
+      step: "05",
+      title: "Entrega e manutenção",
+      description: "Verificação final e recomendações.",
+    },
   ];
 
   return (
@@ -312,7 +464,8 @@ export default function ServicoDecoracaoViaturas() {
             </h1>
 
             <p className="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-              Começa por escolher o tipo de veículo. O resto abre a seguir (sem assustar com o tamanho).
+              Começa por escolher o tipo de veículo. O resto abre a seguir (sem
+              assustar com o tamanho).
             </p>
           </div>
 
@@ -325,7 +478,9 @@ export default function ServicoDecoracaoViaturas() {
                 <CardContent className="p-6 h-full flex flex-col">
                   <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
 
-                  <h3 className="text-xl font-semibold mb-3 text-white">{vehicle.title}</h3>
+                  <h3 className="text-xl font-semibold mb-3 text-white">
+                    {vehicle.title}
+                  </h3>
                   <p className="text-gray-400 mb-4">{vehicle.description}</p>
 
                   <div className="space-y-2 mb-6">
@@ -355,9 +510,25 @@ export default function ServicoDecoracaoViaturas() {
       {hasSelection && (
         <div ref={revealRef} className="scroll-mt-28">
           {/* Secção específica por escolha */}
+          {activeVehicle === "particulares" && (
+            <ServiceHeroTwoColumn
+              serviceId={subServiceConfig.particulares.apiId}
+              badge="Particulares"
+              badgeIcon={<Car className="w-4 h-4" />}
+              title="Viaturas particulares"
+              subtitle="Personalização e detalhes"
+              description="Trabalhos personalizados em viaturas particulares, avaliados caso a caso, com atenção à segurança, estética e durabilidade dos materiais aplicados."
+              imageSrc={subServiceConfig.particulares.heroImage}
+              imageAlt={subServiceConfig.particulares.heroAlt}
+              primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+              secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+              imagePosition="right"
+            />
+          )}
+
           {activeVehicle === "comerciais" && (
             <ServiceHeroTwoColumn
-              serviceId="decoracao-viaturas-comerciais"
+              serviceId={subServiceConfig.comerciais.apiId}
               badge="Veículos comerciais"
               badgeIcon={<Truck className="w-4 h-4" />}
               title="Rotulagem comercial que trabalha por si"
@@ -365,13 +536,16 @@ export default function ServicoDecoracaoViaturas() {
               description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
               imageSrc={subServiceConfig.comerciais.heroImage}
               imageAlt={subServiceConfig.comerciais.heroAlt}
-              primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+              primaryCta={{
+                text: "Pedir orçamento",
+                href: "/contactos#formulario",
+              }}
             />
           )}
 
           {activeVehicle === "competicao" && (
             <ServiceHeroTwoColumn
-              serviceId="decoracao-viaturas-competicao"
+              serviceId={subServiceConfig.competicao.apiId}
               badge="Competição"
               badgeIcon={<Car className="w-4 h-4" />}
               title="Decoração para viaturas de competição"
@@ -379,100 +553,16 @@ export default function ServicoDecoracaoViaturas() {
               description="Autocolantes de patrocinadores, numeração e layouts para pista."
               imageSrc={subServiceConfig.competicao.heroImage}
               imageAlt={subServiceConfig.competicao.heroAlt}
-              primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+              primaryCta={{
+                text: "Pedir orçamento",
+                href: "/contactos#formulario",
+              }}
             />
-          )}
-
-          {/* ✅ HERO CUSTOM para Particulares: distribui conteúdo pela altura da imagem */}
-          {activeVehicle === "particulares" && (
-            <section className="bg-[#050505] pt-20 md:pt-24 pb-8 md:pb-12 border-b border-white/5">
-              <div className="container mx-auto px-4">
-                <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-stretch min-h-[400px] md:min-h-[500px]">
-                  {/* TEXTO */}
-                  <div className="md:h-full md:flex md:flex-col md:justify-between">
-                    {/* TOP */}
-                    <div>
-                      <div className="mb-4">
-                        <Badge
-                          variant="outline"
-                          className="border-brand-yellow text-brand-yellow inline-flex items-center gap-2"
-                        >
-                          <Car className="w-4 h-4" />
-                          Particulares
-                        </Badge>
-                      </div>
-
-                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight text-white">
-                        Personalização e detalhes
-                      </h1>
-
-                      <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed max-w-xl">
-                        Trabalhos personalizados em viaturas particulares, avaliados individualmente para garantir
-                        segurança, qualidade e bom resultado final.
-                      </p>
-
-                      {/* LISTA: sobe e fica mais “colada” ao texto */}
-                      <ul className="mt-7 space-y-3 text-sm md:text-base text-gray-300">
-                        <li className="flex gap-3">
-                          <span className="text-brand-yellow">•</span>
-                          Faixas decorativas e detalhes visuais
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="text-brand-yellow">•</span>
-                          Autocolantes personalizados
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="text-brand-yellow">•</span>
-                          Identificação discreta ou estética
-                        </li>
-                        <li className="flex gap-3">
-                          <span className="text-brand-yellow">•</span>
-                          Aplicações em peças simples e acessíveis
-                        </li>
-                      </ul>
-                    </div>
-
-                    {/* BOTTOM: botões descem e alinham com a base da imagem */}
-                    <div className="mt-8 md:mt-0 pt-6 md:pt-10 flex flex-wrap gap-3">
-                      <Button
-                        asChild
-                        className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 px-6"
-                      >
-                        <Link href="/contactos#formulario">
-                          Falar connosco
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Link>
-                      </Button>
-
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-6"
-                      >
-                        <Link href="/portfolio">Ver Portfólio</Link>
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* IMAGEM */}
-                  <div className="h-full">
-                    <div className="relative w-full h-full min-h-[320px] md:min-h-[500px] rounded-2xl overflow-hidden border border-white/5">
-                      <img
-                        src={subServiceConfig.particulares.heroImage}
-                        alt={subServiceConfig.particulares.heroAlt}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
           )}
 
           {activeVehicle === "motos" && (
             <ServiceHeroTwoColumn
-              serviceId="decoracao-viaturas-motos"
+              serviceId={subServiceConfig.motos.apiId}
               badge="Motociclos"
               badgeIcon={<Bike className="w-4 h-4" />}
               title="Motociclos com identidade"
@@ -480,31 +570,52 @@ export default function ServicoDecoracaoViaturas() {
               description="Personalização em vinil para depósitos, carenagens e detalhes."
               imageSrc={subServiceConfig.motos.heroImage}
               imageAlt={subServiceConfig.motos.heroAlt}
-              primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+              primaryCta={{
+                text: "Pedir orçamento",
+                href: "/contactos#formulario",
+              }}
             />
           )}
 
           {activeVehicle === "maquinas" && (
-            <MachinesSection 
+            <MachinesSection
               heroImage={subServiceConfig.maquinas.heroImage}
               heroAlt={subServiceConfig.maquinas.heroAlt}
             />
           )}
+
           {activeVehicle === "camioes" && (
-            <TrucksSection 
+            <TrucksSection
               heroImage={subServiceConfig.camioes.heroImage}
               heroAlt={subServiceConfig.camioes.heroAlt}
             />
           )}
 
           <ServicesAvailableSection services={services} />
+          {hasSelection && (
+            galleryImages.length > 0 ? (
+              <ServiceGallery
+                title="Galeria de trabalhos"
+                description="Alguns exemplos de projetos realizados pela nossa equipa."
+                images={galleryImages}
+                columns={3}
+              />
+            ) : (galleryLoading || galleryFetching) ? (
+              <section className="w-full py-10">
+                ... skeleton ...
+              </section>
+            ) : (
+              <section className="w-full py-10">
+                <div className="mx-auto max-w-6xl px-4">
+                  <h2 className="text-2xl font-semibold text-white">Galeria de trabalhos</h2>
+                  <p className="text-sm text-white/70">
+                    Ainda não há imagens para este serviço.
+                  </p>
+                </div>
+              </section>
+            )
+          )}
 
-          <ServiceGallery
-            title="Galeria de trabalhos"
-            description="Alguns exemplos de projetos realizados pela nossa equipa."
-            images={galleryImages}
-            columns={3}
-          />
 
           <section className="pt-8 pb-16 bg-gray-900/40">
             <div className="container mx-auto px-4">
@@ -514,7 +625,8 @@ export default function ServicoDecoracaoViaturas() {
                   <span className="text-brand-yellow">premium</span>
                 </h2>
                 <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                  Utilizamos materiais de marcas reconhecidas e adequados ao uso real.
+                  Utilizamos materiais de marcas reconhecidas e adequados ao uso
+                  real.
                 </p>
               </div>
 
@@ -525,20 +637,32 @@ export default function ServicoDecoracaoViaturas() {
                     className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
                   >
                     <CardContent className="p-6">
-                      <h3 className="text-xl font-semibold mb-3 text-brand-yellow">{material.name}</h3>
-                      <p className="text-gray-400 mb-4">{material.description}</p>
+                      <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
+                        {material.name}
+                      </h3>
+                      <p className="text-gray-400 mb-4">
+                        {material.description}
+                      </p>
 
                       <div className="mb-4">
-                        <span className="text-sm text-gray-500">Durabilidade:</span>
+                        <span className="text-sm text-gray-500">
+                          Durabilidade:
+                        </span>
                         <span className="text-brand-yellow font-semibold ml-2">
                           {material.durability}
                         </span>
                       </div>
 
-                      <span className="text-sm text-gray-500 mb-2 block">Aplicações:</span>
+                      <span className="text-sm text-gray-500 mb-2 block">
+                        Aplicações:
+                      </span>
                       <div className="flex flex-wrap gap-2">
                         {material.applications.map((app, i) => (
-                          <Badge key={i} variant="outline" className="border-brand-yellow text-brand-yellow">
+                          <Badge
+                            key={i}
+                            variant="outline"
+                            className="border-brand-yellow text-brand-yellow"
+                          >
                             {app}
                           </Badge>
                         ))}
@@ -558,7 +682,8 @@ export default function ServicoDecoracaoViaturas() {
                   <span className="text-brand-yellow">profissional</span>
                 </h2>
                 <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                  Metodologia que garante consistência, qualidade e durabilidade.
+                  Metodologia que garante consistência, qualidade e
+                  durabilidade.
                 </p>
               </div>
 
@@ -573,8 +698,12 @@ export default function ServicoDecoracaoViaturas() {
                         {step.step}
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold mb-1 text-white">{step.title}</h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
+                        <h3 className="text-lg font-semibold mb-1 text-white">
+                          {step.title}
+                        </h3>
+                        <p className="text-gray-400 text-sm leading-relaxed">
+                          {step.description}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -595,7 +724,9 @@ export default function ServicoDecoracaoViaturas() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Garantia de aplicação: 2 anos</span>
+                      <span className="text-white">
+                        Garantia de aplicação: 2 anos
+                      </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
@@ -611,8 +742,12 @@ export default function ServicoDecoracaoViaturas() {
                 <div className="bg-black rounded-2xl p-8 border border-gray-800">
                   <div className="text-center mb-2">
                     <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                    <h3 className="text-2xl font-semibold mb-2 text-white">Experiência comprovada</h3>
-                    <p className="text-gray-400">Décadas de prática em comunicação visual aplicada.</p>
+                    <h3 className="text-2xl font-semibold mb-2 text-white">
+                      Experiência comprovada
+                    </h3>
+                    <p className="text-gray-400">
+                      Décadas de prática em comunicação visual aplicada.
+                    </p>
                   </div>
                 </div>
               </div>

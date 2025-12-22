@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
@@ -33,6 +34,28 @@ interface ServiceHeroTwoColumnProps {
   children?: React.ReactNode;
 }
 
+function HeroSkeleton() {
+  return (
+      <section className="w-full pt-24 md:pt-28 pb-10">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
+          <div className="space-y-4">
+            <div className="h-6 w-32 rounded bg-white/10 animate-pulse" />
+            <div className="h-10 w-3/4 rounded bg-white/10 animate-pulse" />
+            <div className="h-6 w-2/3 rounded bg-white/10 animate-pulse" />
+            <div className="h-20 w-full rounded bg-white/10 animate-pulse" />
+            <div className="flex gap-3 pt-2">
+              <div className="h-9 w-32 rounded bg-white/10 animate-pulse" />
+              <div className="h-9 w-32 rounded bg-white/10 animate-pulse" />
+            </div>
+          </div>
+          <div className="aspect-[16/10] w-full rounded-2xl bg-white/10 animate-pulse" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ServiceHeroTwoColumn({
   serviceId,
   badge: propBadge,
@@ -40,117 +63,130 @@ export default function ServiceHeroTwoColumn({
   title: propTitle,
   subtitle: propSubtitle,
   description: propDescription,
-  imageSrc: propImageSrc = "/public-objects/servicos/placeholder.webp",
-  imageAlt = "Serviço DOMREALCE",
-  primaryCta: propPrimaryCta = { text: "Pedir Orçamento", href: "/contactos#formulario" },
-  secondaryCta: propSecondaryCta = { text: "Ver Portfolio", href: "/portfolio" },
+  imageSrc: propImageSrc,
+  imageAlt: propImageAlt,
+  primaryCta: propPrimaryCta,
+  secondaryCta: propSecondaryCta,
   imagePosition = "right",
   children,
 }: ServiceHeroTwoColumnProps) {
-  const { data: apiData } = useQuery<HeroApiResponse>({
-    queryKey: ["/api/service-heroes", serviceId],
-    enabled: !!serviceId,
-    staleTime: 0, // Always fetch fresh data for hero content
-    refetchOnMount: true,
+  const cmsEnabled = Boolean(serviceId && serviceId.trim() !== "");
+
+  const { data, isLoading, isFetching, isError } = useQuery<HeroApiResponse>({
+    queryKey: cmsEnabled ? ["/api/service-heroes", serviceId] : ["__no_cms__"],
+    enabled: cmsEnabled,
+    // Não precisamos de staleTime aqui; o QueryClient global já vai tratar disso.
+    refetchOnWindowFocus: false,
   });
 
-  const heroData = apiData?.hero;
-  const badge = heroData?.badge || propBadge;
-  const title = heroData?.title || propTitle || "Serviço";
-  const subtitle = heroData?.subtitle || propSubtitle;
-  const description = heroData?.description || propDescription;
-  const imageSrc = heroData?.backgroundImage || propImageSrc;
-  const primaryCta = {
-    text: heroData?.primaryCtaText || propPrimaryCta.text,
-    href: heroData?.primaryCtaHref || propPrimaryCta.href,
-  };
-  const secondaryCta = {
-    text: heroData?.secondaryCtaText || propSecondaryCta.text,
-    href: heroData?.secondaryCtaHref || propSecondaryCta.href,
-  };
-  const textContent = (
-    <div className="flex flex-col justify-center h-full py-8 md:py-12 lg:py-16">
-      {badge && (
-        <Badge 
-          variant="outline" 
-          className="w-fit mb-4 text-brand-yellow border-brand-yellow/30 bg-brand-yellow/10"
-        >
-          {badgeIcon && <span className="mr-2">{badgeIcon}</span>}
-          {badge}
-        </Badge>
-      )}
-      
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-        {title}
-      </h1>
-      
-      {subtitle && (
-        <p className="text-xl md:text-2xl text-brand-yellow font-medium mb-4">
-          {subtitle}
-        </p>
-      )}
-      
-      {description && (
-        <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6 max-w-xl">
-          {description}
-        </p>
-      )}
+  // ✅ REGRA ANTI-FLASH:
+  // Se CMS está ativo e ainda está a carregar (e não temos dados), mostramos skeleton.
+  if (cmsEnabled && (isLoading || isFetching) && !data) {
+    return <HeroSkeleton />;
+  }
 
-      {children && (
-        <div className="mt-6">
-          {children}
-        </div>
+  const cmsHero = data?.hero ?? null;
+
+  // Se vier CMS com conteúdo útil, usamos CMS. Se não vier (ou erro), fallback para props.
+  const resolved = {
+    badge: cmsHero?.badge ?? propBadge,
+    title: cmsHero?.title ?? propTitle,
+    subtitle: cmsHero?.subtitle ?? propSubtitle,
+    description: cmsHero?.description ?? propDescription,
+    imageSrc: cmsHero?.backgroundImage ?? propImageSrc,
+    imageAlt: propImageAlt ?? "Imagem do serviço",
+    primaryCta: cmsHero?.primaryCtaText && cmsHero?.primaryCtaHref
+      ? { text: cmsHero.primaryCtaText, href: cmsHero.primaryCtaHref }
+      : propPrimaryCta,
+    secondaryCta: cmsHero?.secondaryCtaText && cmsHero?.secondaryCtaHref
+      ? { text: cmsHero.secondaryCtaText, href: cmsHero.secondaryCtaHref }
+      : propSecondaryCta,
+  };
+
+  const ImageBlock = (
+    <div className="relative overflow-hidden rounded-2xl">
+      {resolved.imageSrc ? (
+        <img
+          src={resolved.imageSrc}
+          alt={resolved.imageAlt}
+          className="w-full h-full object-cover aspect-[16/10]"
+          loading="eager"
+        />
+      ) : (
+        <div className="aspect-[16/10] w-full bg-white/5" />
       )}
-      
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Link href={primaryCta.href}>
-          <Button 
-            className="bg-[#FFD700] hover:bg-[#e6c200] text-black font-semibold px-6 py-3"
-            data-testid="button-hero-primary-cta"
-          >
-            {primaryCta.text}
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </Link>
-        <Link href={secondaryCta.href}>
-          <Button 
-            variant="outline" 
-            className="border-white/30 text-white hover:bg-white/10 px-6 py-3"
-            data-testid="button-hero-secondary-cta"
-          >
-            {secondaryCta.text}
-          </Button>
-        </Link>
-      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
     </div>
   );
 
-  const imageContent = (
-    <div className="relative h-[300px] md:h-[400px] lg:h-full w-full overflow-hidden rounded-2xl">
-      <img
-        src={imageSrc}
-        alt={imageAlt}
-        className="w-full h-full object-cover"
-        loading="eager"
-        decoding="async"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+  const TextBlock = (
+    <div className="space-y-4">
+      {resolved.badge ? (
+        <div className="flex items-center gap-2">
+          {badgeIcon ? <span className="text-brand-yellow">{badgeIcon}</span> : null}
+          <Badge className="bg-white/10 text-white border border-white/10">
+            {resolved.badge}
+          </Badge>
+        </div>
+      ) : null}
+
+      {resolved.title ? (
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+          {resolved.title}
+        </h1>
+      ) : null}
+
+      {resolved.subtitle ? (
+        <p className="text-base md:text-lg text-white/80">{resolved.subtitle}</p>
+      ) : null}
+
+      {resolved.description ? (
+        <p className="text-sm md:text-base text-white/70 leading-relaxed">
+          {resolved.description}
+        </p>
+      ) : null}
+
+      {isError && cmsEnabled ? (
+        <p className="text-xs text-red-400">
+          (Aviso) Falha ao carregar o CMS. A usar conteúdo base.
+        </p>
+      ) : null}
+
+      <div className="flex flex-wrap gap-3 pt-2">
+        {resolved.primaryCta?.href && resolved.primaryCta?.text ? (
+          <Link href={resolved.primaryCta.href}>
+            <Button className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
+              {resolved.primaryCta.text} <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        ) : null}
+
+        {resolved.secondaryCta?.href && resolved.secondaryCta?.text ? (
+          <Link href={resolved.secondaryCta.href}>
+            <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+              {resolved.secondaryCta.text}
+            </Button>
+          </Link>
+        ) : null}
+      </div>
+
+      {children}
     </div>
   );
 
   return (
-    <section className="bg-[#050505] pt-20 md:pt-24 pb-8 md:pb-12 border-b border-white/5">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center min-h-[400px] md:min-h-[500px]">
+    <section className="w-full pt-24 md:pt-28 pb-12">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           {imagePosition === "left" ? (
             <>
-              <div className="order-2 md:order-1">{imageContent}</div>
-              <div className="order-1 md:order-2">{textContent}</div>
+              {ImageBlock}
+              {TextBlock}
             </>
           ) : (
             <>
-              <div>{textContent}</div>
-              <div>{imageContent}</div>
+              {TextBlock}
+              {ImageBlock}
             </>
           )}
         </div>

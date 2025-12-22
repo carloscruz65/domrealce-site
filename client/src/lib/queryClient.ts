@@ -46,8 +46,17 @@ export const queryClient = new QueryClient({
     queries: {
       queryFn: getQueryFn({ on401: "throw" }),
       refetchInterval: false,
+
+      // Mantém estável (não refetch ao mudar de tab)
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+
+      // MUITO IMPORTANTE: quando entras/voltas a uma página, revalida
+      refetchOnMount: "always",
+      refetchOnReconnect: true,
+
+      // Antes estava Infinity (cache eterna). Agora: cache rápida mas atualizável.
+      staleTime: 30_000, // 30s
+
       retry: false,
     },
     mutations: {
