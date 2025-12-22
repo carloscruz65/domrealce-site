@@ -142,3 +142,11 @@ logs
 # Ensure important directories are included
 !client/public/**
 !server/public/**
+node_modules
+.env
+dist
+build
+# Replit state folder
+.local/state/replit/agent/
+.local/state/replit/agent/*
+.local/
