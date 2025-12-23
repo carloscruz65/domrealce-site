@@ -1,0 +1,57 @@
+Contexto:
+Tenho um editor (tipo CMS) para serviços/notícias/galerias num projeto React + Tailwind (Replit).
+O editor já permite:
+- Upload de imagens
+- Inserção por URL manual
+- Biblioteca local (mas só mostra imagens inseridas neste editor)
+
+Problema:
+A “Biblioteca” atual só mostra imagens que foram adicionadas neste editor específico.
+Eu preciso de acesso a TODAS as imagens já existentes no App/Object Storage do projeto,
+para poder reutilizá-las em qualquer editor/serviço/notícia.
+
+Objetivo principal:
+Criar uma Biblioteca Global de Imagens baseada no storage existente.
+
+Regras importantes:
+- Alterações mínimas (diff mínimo).
+- Não refatorar o sistema de upload existente.
+- Não quebrar o comportamento atual (upload + URL manual).
+- Não criar comentários públicos ou permissões novas.
+- No final, indicar exatamente que ficheiros foram alterados.
+
+Funcionalidades desejadas:
+1) Biblioteca Global
+   - A aba “Biblioteca” deve listar TODAS as imagens existentes no App/Object Storage.
+   - Mostrar miniatura, nome do ficheiro e URL completa.
+   - Clicar numa imagem insere automaticamente a URL no campo “URL da imagem”.
+
+2) Organização básica (simples, não exagerar):
+   - Agrupar por pasta se existir (ex: /servicos/, /produtos/, /noticias/).
+   - Se não for possível, pelo menos ordenação por data (mais recentes primeiro).
+
+3) Manter comportamento atual:
+   - Aba “Upload” continua igual.
+   - Aba “URL” continua igual (importante para bancos externos tipo OneDrive).
+
+4) Backend / API:
+   - Criar (ou reutilizar) um endpoint tipo:
+     GET /api/admin/media
+     que devolve a lista de imagens do storage.
+   - Não expor isto no frontend público (apenas admin).
+
+5) UX mínima mas funcional:
+   - Loading state (“A carregar imagens…”).
+   - Se não houver imagens, mostrar mensagem clara.
+   - Não deixar ecrã preto em caso de erro.
+
+Notas técnicas:
+- O projeto já usa React, Tailwind e provavelmente Object Storage/App Storage do Replit.
+- O editor atual já faz upload, logo o storage já existe e está funcional.
+- A dificuldade atual é apenas listar e reutilizar imagens já existentes.
+- A URL manual deve manter-se porque posso usar imagens externas (ex: OneDrive).
+
+Entrega esperada:
+- Biblioteca global funcional no editor.
+- Código limpo e estável.
+- Lista dos ficheiros alterados.
