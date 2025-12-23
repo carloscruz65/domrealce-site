@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -32,12 +31,28 @@ interface ServiceHeroTwoColumnProps {
   secondaryCta?: { text: string; href: string };
   imagePosition?: "left" | "right";
   children?: React.ReactNode;
+
+  /** ✅ Novo: quando true, o conteúdo não fica preso ao container (full width). */
+  fullBleed?: boolean;
+
+  /** ✅ Novo: permite alinhar o hero com a largura dos cards sem mexer aqui outra vez. */
+  contentClassName?: string;
 }
 
-function HeroSkeleton() {
+function HeroSkeleton({
+  fullBleed = false,
+  contentClassName,
+}: {
+  fullBleed?: boolean;
+  contentClassName?: string;
+}) {
+  const wrapperClass = fullBleed
+    ? "w-full px-4"
+    : contentClassName ?? "mx-auto max-w-7xl px-4";
+
   return (
-      <section className="w-full pt-24 md:pt-28 pb-10">
-      <div className="mx-auto max-w-6xl px-4">
+    <section className="w-full pt-24 md:pt-28 pb-10">
+      <div className={wrapperClass}>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           <div className="space-y-4">
             <div className="h-6 w-32 rounded bg-white/10 animate-pulse" />
@@ -69,25 +84,29 @@ export default function ServiceHeroTwoColumn({
   secondaryCta: propSecondaryCta,
   imagePosition = "right",
   children,
+
+  fullBleed = false,
+  contentClassName,
 }: ServiceHeroTwoColumnProps) {
   const cmsEnabled = Boolean(serviceId && serviceId.trim() !== "");
 
   const { data, isLoading, isFetching, isError } = useQuery<HeroApiResponse>({
     queryKey: cmsEnabled ? ["/api/service-heroes", serviceId] : ["__no_cms__"],
     enabled: cmsEnabled,
-    // Não precisamos de staleTime aqui; o QueryClient global já vai tratar disso.
     refetchOnWindowFocus: false,
   });
 
+  const wrapperClass = fullBleed
+    ? "w-full px-4"
+    : contentClassName ?? "mx-auto max-w-7xl px-4";
+
   // ✅ REGRA ANTI-FLASH:
-  // Se CMS está ativo e ainda está a carregar (e não temos dados), mostramos skeleton.
   if (cmsEnabled && (isLoading || isFetching) && !data) {
-    return <HeroSkeleton />;
+    return <HeroSkeleton fullBleed={fullBleed} contentClassName={contentClassName} />;
   }
 
   const cmsHero = data?.hero ?? null;
 
-  // Se vier CMS com conteúdo útil, usamos CMS. Se não vier (ou erro), fallback para props.
   const resolved = {
     badge: cmsHero?.badge ?? propBadge,
     title: cmsHero?.title ?? propTitle,
@@ -95,12 +114,14 @@ export default function ServiceHeroTwoColumn({
     description: cmsHero?.description ?? propDescription,
     imageSrc: cmsHero?.backgroundImage ?? propImageSrc,
     imageAlt: propImageAlt ?? "Imagem do serviço",
-    primaryCta: cmsHero?.primaryCtaText && cmsHero?.primaryCtaHref
-      ? { text: cmsHero.primaryCtaText, href: cmsHero.primaryCtaHref }
-      : propPrimaryCta,
-    secondaryCta: cmsHero?.secondaryCtaText && cmsHero?.secondaryCtaHref
-      ? { text: cmsHero.secondaryCtaText, href: cmsHero.secondaryCtaHref }
-      : propSecondaryCta,
+    primaryCta:
+      cmsHero?.primaryCtaText && cmsHero?.primaryCtaHref
+        ? { text: cmsHero.primaryCtaText, href: cmsHero.primaryCtaHref }
+        : propPrimaryCta,
+    secondaryCta:
+      cmsHero?.secondaryCtaText && cmsHero?.secondaryCtaHref
+        ? { text: cmsHero.secondaryCtaText, href: cmsHero.secondaryCtaHref }
+        : propSecondaryCta,
   };
 
   const ImageBlock = (
@@ -124,14 +145,14 @@ export default function ServiceHeroTwoColumn({
       {resolved.badge ? (
         <div className="flex items-center gap-2">
           {badgeIcon ? <span className="text-brand-yellow">{badgeIcon}</span> : null}
-          <Badge className="bg-white/10 text-white border border-white/10">
+          <span className="inline-flex items-center rounded-full bg-brand-yellow text-black px-3 py-1 text-xs font-semibold">
             {resolved.badge}
-          </Badge>
+          </span>
         </div>
       ) : null}
 
       {resolved.title ? (
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-brand-yellow">
           {resolved.title}
         </h1>
       ) : null}
@@ -175,8 +196,8 @@ export default function ServiceHeroTwoColumn({
   );
 
   return (
-    <section className="w-full pt-24 md:pt-28 pb-12">
-      <div className="mx-auto max-w-6xl px-4">
+    <section className="w-full pt-28 md:pt-32 pb-12">
+      <div className={wrapperClass}>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           {imagePosition === "left" ? (
             <>

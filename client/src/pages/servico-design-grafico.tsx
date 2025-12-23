@@ -2,15 +2,11 @@ import React from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
-import { Button } from "@/components/ui/button";
+import ServiceGallery from "@/components/service-gallery";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Palette,
-  CheckCircle,
-  Star,
-  ArrowRight,
   Target,
   Layers,
   Eye,
@@ -18,6 +14,30 @@ import {
   FileImage,
   Play,
 } from "lucide-react";
+
+/* ======================================================
+   Galeria (fallback)
+====================================================== */
+// ✅ IMPORTANT: Igual ao serviceId do hero para não ir buscar imagens erradas do CMS
+const SERVICE_GALLERY_KEY = "design-grafico";
+
+const defaultImages = [
+  {
+    src: "https://images.unsplash.com/photo-1526498460520-4c246339dccb?w=1200&q=80",
+    alt: "Maquete de identidade visual aplicada em papelaria",
+    title: "Aplicação de marca",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+    alt: "Projeto de design em ambiente digital",
+    title: "Design digital",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80",
+    alt: "Planeamento e estratégia visual para uma marca",
+    title: "Estratégia visual",
+  },
+];
 
 /* ======================================================
    Card Accordion
@@ -49,9 +69,7 @@ function CardAccordion({
   return (
     <Card
       className={`h-full bg-black border transition-all duration-300 ${
-        isOpen
-          ? "border-brand-yellow"
-          : "border-gray-800 hover:border-brand-yellow"
+        isOpen ? "border-brand-yellow" : "border-gray-800 hover:border-brand-yellow"
       }`}
     >
       <CardContent className="p-6 h-full flex flex-col">
@@ -68,9 +86,7 @@ function CardAccordion({
 
               <h3 className="text-xl font-semibold text-white">{title}</h3>
 
-              {intro && (
-                <p className="mt-2 text-gray-400 text-sm">{intro}</p>
-              )}
+              {intro ? <p className="mt-2 text-gray-400 text-sm">{intro}</p> : null}
             </div>
 
             {/* TRIÂNGULO */}
@@ -113,6 +129,15 @@ function CardAccordion({
 ====================================================== */
 
 export default function ServicoDesignGrafico() {
+  // ✅ CMS primeiro; se vier vazio, usamos fallback
+  const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
+    queryKey: ["/api/service-galleries", SERVICE_GALLERY_KEY],
+  });
+
+  const cmsImages = galleryData?.images;
+  const galleryImages =
+    cmsImages && cmsImages.length > 0 ? cmsImages : defaultImages;
+
   const [openKey, setOpenKey] = React.useState<string | null>(null);
 
   function toggleCard(key: string) {
@@ -155,9 +180,7 @@ export default function ServicoDesignGrafico() {
       icon: <FileImage className="w-6 h-6" />,
       title: "Material Publicitário",
       intro: "Comunicação visual em todos os formatos.",
-      content: [
-        "Criação de material promocional e identidade visual para múltiplos suportes.",
-      ],
+      content: ["Criação de material promocional e identidade visual para múltiplos suportes."],
     },
     {
       key: "digital",
@@ -171,9 +194,7 @@ export default function ServicoDesignGrafico() {
       icon: <Target className="w-6 h-6" />,
       title: "Estratégia Visual",
       intro: "Design alinhado com objetivos.",
-      content: [
-        "Alinhamento da comunicação visual com a mensagem e objetivos do negócio.",
-      ],
+      content: ["Alinhamento da comunicação visual com a mensagem e objetivos do negócio."],
     },
   ];
 
@@ -214,6 +235,16 @@ export default function ServicoDesignGrafico() {
                   content={item.content}
                 />
               ))}
+            </div>
+
+            {/* ✅ Galeria (abaixo dos cards, como secção visual extra) */}
+            <div className="mt-12">
+              <ServiceGallery
+                images={galleryImages}
+                title="Exemplos de ambientes"
+                description="Algumas inspirações de aplicação em diferentes estilos e formatos."
+                columns={3}
+              />
             </div>
           </div>
         </section>
