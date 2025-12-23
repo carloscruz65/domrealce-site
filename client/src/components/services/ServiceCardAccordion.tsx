@@ -66,12 +66,16 @@ export default function ServiceCardAccordion({
         <div
           className={[
             "overflow-hidden transition-all duration-300 ease-out",
-            isOpen ? "max-h-[900px] opacity-100 mt-5" : "max-h-0 opacity-0 mt-0",
+            isOpen
+              ? "max-h-[900px] opacity-100 mt-5"
+              : "max-h-0 opacity-0 mt-0",
           ].join(" ")}
         >
           <div className="pt-4 border-t border-white/5">
             {body ? (
-              <div className="text-sm text-gray-300 leading-relaxed">{body}</div>
+              <div className="text-sm text-gray-300 leading-relaxed">
+                {body}
+              </div>
             ) : content?.length ? (
               <ul className="space-y-3 text-sm text-gray-300">
                 {content.map((line, i) => (

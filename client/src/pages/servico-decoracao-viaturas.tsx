@@ -27,6 +27,8 @@ import {
 /**
  * Tipagem da resposta da API do HERO (igual ao que o ServiceHeroTwoColumn usa)
  * GET /api/service-heroes/:serviceId  (via react-query queryKey)
+ *
+ * (Nota: pode não estar a ser usado diretamente aqui, mas deixo por consistência com o teu projeto.)
  */
 interface HeroApiResponse {
   hero: {
@@ -451,120 +453,201 @@ export default function ServicoDecoracaoViaturas() {
           {/* GRID */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {vehicleTypes.map((vehicle) => (
-              <React.Fragment key={vehicle.key}>
-                <div className="scroll-mt-28">
-                  <Card className="h-full bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300">
-                    <CardContent className="p-6 h-full flex flex-col">
-                      <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
+              <div key={vehicle.key} className="scroll-mt-28">
+                <Card className="h-full bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300">
+                  <CardContent className="p-6 h-full flex flex-col">
+                    <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
 
-                      <h3 className="text-xl font-semibold mb-3 text-white">
-                        {vehicle.title}
-                      </h3>
-                      <p className="text-gray-400 mb-4">{vehicle.description}</p>
+                    <h3 className="text-xl font-semibold mb-3 text-white">
+                      {vehicle.title}
+                    </h3>
+                    <p className="text-gray-400 mb-4">{vehicle.description}</p>
 
-                      <div className="space-y-2 mb-6">
-                        {vehicle.features.map((feature, i) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full flex-shrink-0" />
-                            <span className="text-sm text-gray-300">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="space-y-2 mb-6">
+                      {vehicle.features.map((feature, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full flex-shrink-0" />
+                          <span className="text-sm text-gray-300">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
 
-                      <Button
-                        onClick={() => openVehicle(vehicle.key)}
-                        className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
+                    <Button
+                      onClick={() => openVehicle(vehicle.key)}
+                      className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
+                    >
+                      {activeVehicle === vehicle.key ? "Fechar" : "Ver mais"}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+
+                    {/* ✅ MOBILE: revelação dentro do próprio card (mantém o comportamento atual) */}
+                    {activeVehicle === vehicle.key && (
+                      <div
+                        className="block md:hidden mt-5 pt-5 border-t border-gray-800"
+                        ref={(node) => {
+                          revealRefs.current[vehicle.key] = node;
+                        }}
                       >
-                        {activeVehicle === vehicle.key ? "Fechar" : "Ver mais"}
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
+                        {vehicle.key === "particulares" && (
+                          <ServiceHeroTwoColumn
+                            serviceId={subServiceConfig.particulares.apiId}
+                            badge="Particulares"
+                            badgeIcon={<Car className="w-4 h-4" />}
+                            title="Viaturas particulares"
+                            subtitle="Personalização e detalhes"
+                            description="Trabalhos personalizados em viaturas particulares, avaliados caso a caso, com atenção à segurança, estética e durabilidade dos materiais aplicados."
+                            imageSrc={subServiceConfig.particulares.heroImage}
+                            imageAlt={subServiceConfig.particulares.heroAlt}
+                            primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                            secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+                            imagePosition="right"
+                          />
+                        )}
 
-                {/* REVELAÇÃO: aparece logo depois do cartão clicado, a ocupar a linha toda */}
-                {activeVehicle === vehicle.key && (
-                  <div
-                    ref={(node) => {
-                      revealRefs.current[vehicle.key] = node;
-                    }}
-                    className="md:col-span-2 lg:col-span-3 scroll-mt-28"
-                  >
-                    {vehicle.key === "particulares" && (
-                      <ServiceHeroTwoColumn
-                        serviceId={subServiceConfig.particulares.apiId}
-                        badge="Particulares"
-                        badgeIcon={<Car className="w-4 h-4" />}
-                        title="Viaturas particulares"
-                        subtitle="Personalização e detalhes"
-                        description="Trabalhos personalizados em viaturas particulares, avaliados caso a caso, com atenção à segurança, estética e durabilidade dos materiais aplicados."
-                        imageSrc={subServiceConfig.particulares.heroImage}
-                        imageAlt={subServiceConfig.particulares.heroAlt}
-                        primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
-                        secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
-                        imagePosition="right"
-                      />
-                    )}
+                        {vehicle.key === "comerciais" && (
+                          <ServiceHeroTwoColumn
+                            serviceId={subServiceConfig.comerciais.apiId}
+                            badge="Veículos comerciais"
+                            badgeIcon={<Truck className="w-4 h-4" />}
+                            title="Rotulagem comercial que trabalha por si"
+                            subtitle="Publicidade móvel, clara e profissional"
+                            description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
+                            imageSrc={subServiceConfig.comerciais.heroImage}
+                            imageAlt={subServiceConfig.comerciais.heroAlt}
+                            primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                          />
+                        )}
 
-                    {vehicle.key === "comerciais" && (
-                      <ServiceHeroTwoColumn
-                        serviceId={subServiceConfig.comerciais.apiId}
-                        badge="Veículos comerciais"
-                        badgeIcon={<Truck className="w-4 h-4" />}
-                        title="Rotulagem comercial que trabalha por si"
-                        subtitle="Publicidade móvel, clara e profissional"
-                        description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
-                        imageSrc={subServiceConfig.comerciais.heroImage}
-                        imageAlt={subServiceConfig.comerciais.heroAlt}
-                        primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
-                      />
-                    )}
+                        {vehicle.key === "competicao" && (
+                          <ServiceHeroTwoColumn
+                            serviceId={subServiceConfig.competicao.apiId}
+                            badge="Competição"
+                            badgeIcon={<Car className="w-4 h-4" />}
+                            title="Decoração para viaturas de competição"
+                            subtitle="Rápido, limpo e com presença"
+                            description="Autocolantes de patrocinadores, numeração e layouts para pista."
+                            imageSrc={subServiceConfig.competicao.heroImage}
+                            imageAlt={subServiceConfig.competicao.heroAlt}
+                            primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                          />
+                        )}
 
-                    {vehicle.key === "competicao" && (
-                      <ServiceHeroTwoColumn
-                        serviceId={subServiceConfig.competicao.apiId}
-                        badge="Competição"
-                        badgeIcon={<Car className="w-4 h-4" />}
-                        title="Decoração para viaturas de competição"
-                        subtitle="Rápido, limpo e com presença"
-                        description="Autocolantes de patrocinadores, numeração e layouts para pista."
-                        imageSrc={subServiceConfig.competicao.heroImage}
-                        imageAlt={subServiceConfig.competicao.heroAlt}
-                        primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
-                      />
-                    )}
+                        {vehicle.key === "motos" && (
+                          <ServiceHeroTwoColumn
+                            serviceId={subServiceConfig.motos.apiId}
+                            badge="Motociclos"
+                            badgeIcon={<Bike className="w-4 h-4" />}
+                            title="Motociclos com identidade"
+                            subtitle="Peças, detalhes e impacto"
+                            description="Personalização em vinil para depósitos, carenagens e detalhes."
+                            imageSrc={subServiceConfig.motos.heroImage}
+                            imageAlt={subServiceConfig.motos.heroAlt}
+                            primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                          />
+                        )}
 
-                    {vehicle.key === "motos" && (
-                      <ServiceHeroTwoColumn
-                        serviceId={subServiceConfig.motos.apiId}
-                        badge="Motociclos"
-                        badgeIcon={<Bike className="w-4 h-4" />}
-                        title="Motociclos com identidade"
-                        subtitle="Peças, detalhes e impacto"
-                        description="Personalização em vinil para depósitos, carenagens e detalhes."
-                        imageSrc={subServiceConfig.motos.heroImage}
-                        imageAlt={subServiceConfig.motos.heroAlt}
-                        primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
-                      />
-                    )}
+                        {vehicle.key === "maquinas" && (
+                          <MachinesSection
+                            heroImage={subServiceConfig.maquinas.heroImage}
+                            heroAlt={subServiceConfig.maquinas.heroAlt}
+                          />
+                        )}
 
-                    {vehicle.key === "maquinas" && (
-                      <MachinesSection
-                        heroImage={subServiceConfig.maquinas.heroImage}
-                        heroAlt={subServiceConfig.maquinas.heroAlt}
-                      />
+                        {vehicle.key === "camioes" && (
+                          <TrucksSection
+                            heroImage={subServiceConfig.camioes.heroImage}
+                            heroAlt={subServiceConfig.camioes.heroAlt}
+                          />
+                        )}
+                      </div>
                     )}
-
-                    {vehicle.key === "camioes" && (
-                      <TrucksSection
-                        heroImage={subServiceConfig.camioes.heroImage}
-                        heroAlt={subServiceConfig.camioes.heroAlt}
-                      />
-                    )}
-                  </div>
-                )}
-              </React.Fragment>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
+
+            {/* ✅ DESKTOP: UMA única revelação no fim (sem baralhar a grid) */}
+            {activeVehicle && (
+              <div className="hidden md:block md:col-span-2 lg:col-span-3 scroll-mt-28">
+                <div
+                  ref={(node) => {
+                    revealRefs.current[activeVehicle] = node;
+                  }}
+                >
+                  {activeVehicle === "particulares" && (
+                    <ServiceHeroTwoColumn
+                      serviceId={subServiceConfig.particulares.apiId}
+                      badge="Particulares"
+                      badgeIcon={<Car className="w-4 h-4" />}
+                      title="Viaturas particulares"
+                      subtitle="Personalização e detalhes"
+                      description="Trabalhos personalizados em viaturas particulares, avaliados caso a caso, com atenção à segurança, estética e durabilidade dos materiais aplicados."
+                      imageSrc={subServiceConfig.particulares.heroImage}
+                      imageAlt={subServiceConfig.particulares.heroAlt}
+                      primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                      secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+                      imagePosition="right"
+                    />
+                  )}
+
+                  {activeVehicle === "comerciais" && (
+                    <ServiceHeroTwoColumn
+                      serviceId={subServiceConfig.comerciais.apiId}
+                      badge="Veículos comerciais"
+                      badgeIcon={<Truck className="w-4 h-4" />}
+                      title="Rotulagem comercial que trabalha por si"
+                      subtitle="Publicidade móvel, clara e profissional"
+                      description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
+                      imageSrc={subServiceConfig.comerciais.heroImage}
+                      imageAlt={subServiceConfig.comerciais.heroAlt}
+                      primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                    />
+                  )}
+
+                  {activeVehicle === "competicao" && (
+                    <ServiceHeroTwoColumn
+                      serviceId={subServiceConfig.competicao.apiId}
+                      badge="Competição"
+                      badgeIcon={<Car className="w-4 h-4" />}
+                      title="Decoração para viaturas de competição"
+                      subtitle="Rápido, limpo e com presença"
+                      description="Autocolantes de patrocinadores, numeração e layouts para pista."
+                      imageSrc={subServiceConfig.competicao.heroImage}
+                      imageAlt={subServiceConfig.competicao.heroAlt}
+                      primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                    />
+                  )}
+
+                  {activeVehicle === "motos" && (
+                    <ServiceHeroTwoColumn
+                      serviceId={subServiceConfig.motos.apiId}
+                      badge="Motociclos"
+                      badgeIcon={<Bike className="w-4 h-4" />}
+                      title="Motociclos com identidade"
+                      subtitle="Peças, detalhes e impacto"
+                      description="Personalização em vinil para depósitos, carenagens e detalhes."
+                      imageSrc={subServiceConfig.motos.heroImage}
+                      imageAlt={subServiceConfig.motos.heroAlt}
+                      primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+                    />
+                  )}
+
+                  {activeVehicle === "maquinas" && (
+                    <MachinesSection
+                      heroImage={subServiceConfig.maquinas.heroImage}
+                      heroAlt={subServiceConfig.maquinas.heroAlt}
+                    />
+                  )}
+
+                  {activeVehicle === "camioes" && (
+                    <TrucksSection
+                      heroImage={subServiceConfig.camioes.heroImage}
+                      heroAlt={subServiceConfig.camioes.heroAlt}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

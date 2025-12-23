@@ -394,14 +394,14 @@ export default function NoticiasManager() {
               <div className="flex items-center gap-4">
                 <Label className="text-gray-300 text-sm">Pontuação:</Label>
                 <Select 
-                  value={formData.pontuacao || ""} 
-                  onValueChange={(v) => setFormData({ ...formData, pontuacao: v })}
+                  value={formData.pontuacao || "none"} 
+                  onValueChange={(v) => setFormData({ ...formData, pontuacao: v === "none" ? "" : v })}
                 >
                   <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
                     <SelectValue placeholder="Sem pontuação" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Sem pontuação</SelectItem>
+                    <SelectItem value="none">Sem pontuação</SelectItem>
                     <SelectItem value="1">1/5 - Fraco</SelectItem>
                     <SelectItem value="2">2/5 - Razoável</SelectItem>
                     <SelectItem value="3">3/5 - Bom</SelectItem>

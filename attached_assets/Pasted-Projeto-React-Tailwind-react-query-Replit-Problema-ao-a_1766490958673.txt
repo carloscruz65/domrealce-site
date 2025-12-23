@@ -1,0 +1,46 @@
+Projeto React + Tailwind + react-query (Replit).
+Problema: ao abrir o editor para editar a única notícia existente, a página fica toda preta (UI some ou texto invisível). Suspeito que isto começou depois de alterações para adicionar “críticas/avaliação controlada por mim”.
+
+REGRAS IMPORTANTES:
+- Fazer alteração mínima (diff mínimo). Não refatorar o projeto.
+- Não mexer em componentes que não sejam o editor/admin de notícias e CSS global estritamente necessário.
+- No final, devolver o ficheiro completo corrigido + indicar exatamente quais ficheiros foram alterados.
+
+OBJETIVOS:
+1) Corrigir o ecrã preto no editor de notícias (página deve renderizar sempre).
+2) Confirmar se JÁ EXISTE no editor um campo para “crítica/testemunho/avaliação controlada pelo admin”.
+   - Se existir, garantir que não quebra a renderização (defaults seguros + UI visível).
+   - Se NÃO existir, adicionar de forma mínima e segura:
+     * Campo “avaliacao” (número 0-5 ou 0-10) e campo “critica” (texto) OU “testemunhoEditorial”.
+     * Estes campos só são editáveis no admin (não são comentários públicos).
+     * Guardar no mesmo payload de update/create da notícia.
+3) Garantir compatibilidade com tema dark:
+   - Inputs/textareas/editor com text-white e placeholders visíveis.
+   - Se for TipTap/ProseMirror: garantir CSS .ProseMirror { color:#fff } e usar wrapper "prose prose-invert max-w-none".
+   - Se for Quill: garantir cor do texto no .ql-editor e toolbar visível.
+4) Robustez contra crash por dados undefined:
+   - Antes de usar .map() ou JSON.parse, validar tipos.
+   - Defaults seguros:
+     const title = news?.title ?? "";
+     const content = news?.content ?? "";
+     const images = Array.isArray(news?.images) ? news.images : [];
+     const critica = news?.critica ?? news?.testemunhoEditorial ?? "";
+     const avaliacao = typeof news?.avaliacao === "number" ? news.avaliacao : 0;
+5) UX:
+   - Mostrar "A carregar..." enquanto a query carrega.
+   - Mostrar "Erro ao carregar a notícia" se falhar, com detalhe no console.
+   - NUNCA deixar a página ficar vazia/preta.
+
+PASSOS QUE QUERO QUE SIGAS:
+A) Encontrar o ficheiro do editor de notícias (ex: client/src/pages/admin/noticias*.tsx).
+B) Abrir/inspecionar console/logs: identificar se o “preto” é crash (erro JS) ou CSS (texto invisível).
+C) Aplicar o fix correto:
+   - Se crash: corrigir os acessos a campos undefined (safe defaults) e validações de tipos.
+   - Se CSS: corrigir classes e/ou adicionar CSS global mínimo para o editor.
+D) Verificar especificamente se “crítica/avaliação controlada por mim” está implementada:
+   - Se sim: indicar onde (campo(s) e nome(s) no código/payload) e garantir que renderiza.
+   - Se não: implementar com mínimos campos e salvar no backend usando o endpoint já existente.
+E) Devolver o ficheiro completo corrigido e lista de ficheiros alterados.
+
+NOTA:
+O bug pode ter sido causado por um campo novo (critica/avaliacao) inexistente no backend ou por renderização de um valor inesperado (null/undefined/object) no editor. Corrigir isso sem quebrar as notícias existentes.
