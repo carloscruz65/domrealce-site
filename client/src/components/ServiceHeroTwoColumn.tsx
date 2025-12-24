@@ -32,26 +32,39 @@ interface ServiceHeroTwoColumnProps {
   imagePosition?: "left" | "right";
   children?: React.ReactNode;
 
-  /** ✅ Novo: quando true, o conteúdo não fica preso ao container (full width). */
+  /** ✅ quando true, o conteúdo não fica preso ao container (full width) */
   fullBleed?: boolean;
 
-  /** ✅ Novo: permite alinhar o hero com a largura dos cards sem mexer aqui outra vez. */
+  /** ✅ permite alinhar o hero com a largura dos cards */
   contentClassName?: string;
+
+  /** ✅ Novo: modo compacto (para abrir dentro de cards/listagens, reduz muito os espaçamentos) */
+  compact?: boolean;
+
+  /** ✅ Novo: evita repetir o título quando o card já o mostra */
+  hideTitle?: boolean;
 }
 
 function HeroSkeleton({
   fullBleed = false,
   contentClassName,
+  compact = false,
 }: {
   fullBleed?: boolean;
   contentClassName?: string;
+  compact?: boolean;
 }) {
   const wrapperClass = fullBleed
     ? "w-full px-4"
     : contentClassName ?? "mx-auto max-w-7xl px-4";
 
+  // ✅ compact: corta o “buraco” no topo quando usado dentro de um card
+  const sectionPadding = compact
+    ? "pt-6 md:pt-10 pb-8"
+    : "pt-24 md:pt-28 pb-10";
+
   return (
-    <section className="w-full pt-24 md:pt-28 pb-10">
+    <section className={`w-full ${sectionPadding}`}>
       <div className={wrapperClass}>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           <div className="space-y-4">
@@ -87,6 +100,9 @@ export default function ServiceHeroTwoColumn({
 
   fullBleed = false,
   contentClassName,
+
+  compact = false,
+  hideTitle = false,
 }: ServiceHeroTwoColumnProps) {
   const cmsEnabled = Boolean(serviceId && serviceId.trim() !== "");
 
@@ -100,9 +116,15 @@ export default function ServiceHeroTwoColumn({
     ? "w-full px-4"
     : contentClassName ?? "mx-auto max-w-7xl px-4";
 
-  // ✅ REGRA ANTI-FLASH:
+  // ✅ Anti-flash
   if (cmsEnabled && (isLoading || isFetching) && !data) {
-    return <HeroSkeleton fullBleed={fullBleed} contentClassName={contentClassName} />;
+    return (
+      <HeroSkeleton
+        fullBleed={fullBleed}
+        contentClassName={contentClassName}
+        compact={compact}
+      />
+    );
   }
 
   const cmsHero = data?.hero ?? null;
@@ -151,7 +173,8 @@ export default function ServiceHeroTwoColumn({
         </div>
       ) : null}
 
-      {resolved.title ? (
+      {/* ✅ evita repetição do título quando já existe no card */}
+      {!hideTitle && resolved.title ? (
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-brand-yellow">
           {resolved.title}
         </h1>
@@ -184,7 +207,10 @@ export default function ServiceHeroTwoColumn({
 
         {resolved.secondaryCta?.href && resolved.secondaryCta?.text ? (
           <Link href={resolved.secondaryCta.href}>
-            <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+            <Button
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10"
+            >
               {resolved.secondaryCta.text}
             </Button>
           </Link>
@@ -195,8 +221,11 @@ export default function ServiceHeroTwoColumn({
     </div>
   );
 
+  // ✅ compact: corta o espaço no topo e no fundo quando está aberto dentro do card
+  const sectionPadding = compact ? "pt-6 md:pt-10 pb-8" : "pt-28 md:pt-32 pb-12";
+
   return (
-    <section className="w-full pt-28 md:pt-32 pb-12">
+    <section className={`w-full ${sectionPadding}`}>
       <div className={wrapperClass}>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           {imagePosition === "left" ? (
