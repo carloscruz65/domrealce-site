@@ -62,6 +62,7 @@ const WhatsAppFAB = lazy(() => import("@/components/whatsapp-fab"));
 const PerformanceOptimizer = lazy(() => import("@/components/performance-optimizer"));
 const PerformancePreloader = lazy(() => import("@/components/performance-preloader"));
 const VisualEditorToolbar = lazy(() => import("@/components/visual-editor").then(m => ({ default: m.VisualEditorToolbar })));
+const ScrollToTopButton = lazy(() => import("@/components/ScrollToTopButton"));
 
 // Contexto importado diretamente (necessário para providers)
 import { VisualEditorProvider } from "@/contexts/VisualEditorContext";
@@ -217,6 +218,7 @@ function App() {
           <Router />
           <Suspense fallback={null}>
             <WhatsAppFAB />
+            <ScrollToTopButton />
           </Suspense>
         </VisualEditorProvider>
       </TooltipProvider>

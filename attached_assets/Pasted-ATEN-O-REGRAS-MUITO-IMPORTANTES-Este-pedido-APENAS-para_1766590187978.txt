@@ -1,0 +1,68 @@
+ATENÇÃO — REGRAS MUITO IMPORTANTES
+
+Este pedido é APENAS para acrescentar funcionalidades.
+NÃO é para refatorar, reorganizar, renomear ou “melhorar” código existente.
+
+REGRAS OBRIGATÓRIAS (NÃO VIOLAR):
+- NÃO apagar código existente.
+- NÃO alterar lógica já implementada.
+- NÃO mover ficheiros existentes.
+- NÃO mudar nomes de componentes, props ou estados.
+- NÃO refatorar páginas de serviço.
+- NÃO alterar comportamento atual do “Ver mais”.
+- NÃO tocar em backend, API, rotas ou queries.
+- Alterações devem ser mínimas, localizadas e seguras.
+
+====================================================
+OBJETIVO 1 — BOTÃO GLOBAL “SUBIR AO TOPO”
+====================================================
+
+Quero um botão com ícone de seta que permita voltar ao topo da página.
+
+Requisitos:
+- Criar UM componente reutilizável (ex: ScrollToTopButton).
+- O botão deve:
+  - Aparecer apenas após algum scroll (ex: >300px).
+  - Ter position: fixed (canto inferior direito).
+  - NÃO tapar o botão de WhatsApp.
+  - Ao clicar fazer scroll suave para o topo.
+- O botão deve aparecer em TODAS as páginas do site.
+
+Importante:
+- Integrar este componente UMA ÚNICA VEZ no layout global
+  (ex: App.tsx, main layout ou ficheiro equivalente).
+- NÃO adicionar o botão página a página.
+
+====================================================
+OBJETIVO 2 — NAVEGAÇÃO DENTRO DOS SERVIÇOS (VIATURAS)
+====================================================
+
+Na página:
+client/src/pages/servico-decoracao-viaturas.tsx
+
+Quando um tipo de veículo está aberto (activeVehicle),
+quero uma pequena barra de navegação NO TOPO do bloco aberto.
+
+Essa barra deve ter:
+- “Voltar aos serviços” → fecha o activeVehicle e faz scroll para a grelha.
+- “Anterior” → abre o serviço anterior na lista vehicleTypes.
+- “Fechar” → comportamento igual ao botão atual.
+- “Seguinte” → abre o serviço seguinte na lista vehicleTypes.
+
+Requisitos:
+- Funcionar em mobile e desktop.
+- Não alterar o layout existente dos cartões.
+- Não duplicar código desnecessariamente.
+- Não remover o botão “Ver mais / Fechar” atual.
+- A navegação deve respeitar a ordem atual do array vehicleTypes.
+
+====================================================
+ENTREGA ESPERADA
+====================================================
+
+- Criar apenas os ficheiros estritamente necessários.
+- Alterar apenas os ficheiros indispensáveis.
+- Não introduzir regressões.
+- Manter todo o comportamento atual intacto.
+
+Se algum ponto não for claro, ASSUMIR A SOLUÇÃO MAIS CONSERVADORA.

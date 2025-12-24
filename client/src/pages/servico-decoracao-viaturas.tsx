@@ -17,11 +17,15 @@ import {
   Car,
   Star,
   ArrowRight,
+  ArrowLeft,
   Truck,
   Bike,
   Bus,
   Settings,
   Shield,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 /**
@@ -248,6 +252,7 @@ export default function ServicoDecoracaoViaturas() {
 
   // refs por "bloco aberto" para scroll ao abrir (junto do cartão)
   const revealRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
   const hasSelection = Boolean(activeVehicle);
 
@@ -365,6 +370,69 @@ export default function ServicoDecoracaoViaturas() {
     },
   ];
 
+  const vehicleKeys = vehicleTypes.map(v => v.key);
+  const currentIndex = activeVehicle ? vehicleKeys.indexOf(activeVehicle) : -1;
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex >= 0 && currentIndex < vehicleKeys.length - 1;
+
+  const goToPrev = () => {
+    if (hasPrev) openVehicle(vehicleKeys[currentIndex - 1]);
+  };
+  const goToNext = () => {
+    if (hasNext) openVehicle(vehicleKeys[currentIndex + 1]);
+  };
+  const closeAndScrollToGrid = () => {
+    setActiveVehicle(null);
+    requestAnimationFrame(() => {
+      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const VehicleSubNav = () => (
+    <div className="flex flex-wrap items-center justify-between gap-2 mb-4 p-3 bg-gray-800/80 rounded-lg border border-gray-700">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={closeAndScrollToGrid}
+        className="text-brand-yellow hover:text-yellow-400 text-xs sm:text-sm"
+      >
+        <ArrowLeft className="w-4 h-4 mr-1" />
+        Voltar aos serviços
+      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={goToPrev}
+          disabled={!hasPrev}
+          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span className="hidden sm:inline">Anterior</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setActiveVehicle(null)}
+          className="text-gray-300 hover:text-white text-xs sm:text-sm"
+        >
+          <X className="w-4 h-4 mr-1" />
+          Fechar
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={goToNext}
+          disabled={!hasNext}
+          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm"
+        >
+          <span className="hidden sm:inline">Seguinte</span>
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+
   const materials = [
     {
       name: "Vinil cast premium",
@@ -451,7 +519,7 @@ export default function ServicoDecoracaoViaturas() {
           </div>
 
           {/* GRID */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 scroll-mt-28">
             {vehicleTypes.map((vehicle) => (
               <div key={vehicle.key} className="scroll-mt-28">
                 <Card className="h-full bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300">
@@ -488,6 +556,7 @@ export default function ServicoDecoracaoViaturas() {
                           revealRefs.current[vehicle.key] = node;
                         }}
                       >
+                        <VehicleSubNav />
                         {vehicle.key === "particulares" && (
                           <ServiceHeroTwoColumn
                             serviceId={subServiceConfig.particulares.apiId}
@@ -574,6 +643,7 @@ export default function ServicoDecoracaoViaturas() {
                     revealRefs.current[activeVehicle] = node;
                   }}
                 >
+                  <VehicleSubNav />
                   {activeVehicle === "particulares" && (
                     <ServiceHeroTwoColumn
                       serviceId={subServiceConfig.particulares.apiId}
