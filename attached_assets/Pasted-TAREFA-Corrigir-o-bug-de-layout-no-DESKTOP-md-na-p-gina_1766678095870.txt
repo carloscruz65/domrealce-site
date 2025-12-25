@@ -1,0 +1,35 @@
+TAREFA: Corrigir o bug de layout no DESKTOP (md+) na página de “Decoração de Viaturas”, onde ao abrir um cartão (“Ver mais”) aparece: parte do detalhe, depois aparecem cartões de outros serviços, e só depois o resto do detalhe. O MOBILE ESTÁ CORRETO E NÃO PODE SER ALTERADO.
+
+REGRAS OBRIGATÓRIAS (NÃO NEGOCIÁVEIS):
+1) PROIBIDO refatorar, renomear variáveis, reorganizar imports, alterar textos, ou mudar estilos globais.
+2) PROIBIDO mexer em qualquer comportamento/markup do MOBILE (até md). Não alterar blocos com `md:hidden` nem a lógica mobile de abrir/fechar.
+3) PROIBIDO mexer nos componentes: `ServiceHeroTwoColumn`, `MachinesSection`, `TrucksSection`, `ServicesAvailableSection`, `ServiceGallery`. Só podes editar a página da listagem (onde estão os cartões e o openVehicle).
+4) Objetivo: existir APENAS UM render do detalhe no desktop. Não pode haver um detalhe “solto” acima do grid e outro dentro do grid.
+5) Não usar layouts duplicados (nada de `md:hidden` + `hidden md:block` para o mesmo detalhe em paralelo).
+
+O QUE DEVE FICAR NO FINAL (COMPORTAMENTO):
+- MOBILE: quando `activeVehicle` existe, deve aparecer SÓ o detalhe (como já está). Sem cartões a aparecer no meio.
+- DESKTOP (md+): ao clicar “Ver mais”, o detalhe deve aparecer “logo a seguir” ao cartão, empurrando os outros para baixo, SEM cartões no meio do detalhe.
+
+IMPLEMENTAÇÃO PERMITIDA (escolhe uma e só uma, a mais segura):
+A) “2 GRIDS + DETALHE NO MEIO” no desktop:
+   - Renderiza grid de cartões ATÉ ao fim da row onde está o cartão aberto,
+   - Depois renderiza o detalhe (col-span-full),
+   - Depois renderiza o resto dos cartões numa segunda grid.
+   - Isto evita o bug de “mistura” e garante previsibilidade.
+   - Atenção: NÃO renderizar detalhe fora do bloco desktop. Não pode existir `renderVehicleDetails(activeVehicle)` fora do fluxo do desktop escolhido.
+
+OU
+
+B) “DESKTOP IGUAL AO MOBILE” (fallback ultra seguro):
+   - Quando `activeVehicle` existe, esconder a grid completa também no desktop (`activeVehicle ? hidden : grid`) e mostrar apenas o detalhe + subnav.
+   - Ao clicar “Voltar aos serviços”, volta a mostrar a grid.
+
+PASSOS DE DIAGNÓSTICO OBRIGATÓRIOS (ANTES DE EDITAR):
+1) No ficheiro da página, procura por `renderVehicleDetails(` e garante que no desktop só existe 1 local de render (1 bloco), e que não há render “solto” acima do grid.
+2) Procura por qualquer `hidden md:block` / `md:hidden` que possa estar a duplicar o detalhe no desktop. Se existir duplicação, remover a duplicação no desktop mantendo o mobile intacto.
+
+SAÍDA ESPERADA:
+- Um único commit/alteração no ficheiro da página.
+- Alterações mínimas e localizadas.
+- MOBILE visual e comportamento permanecem iguais.
