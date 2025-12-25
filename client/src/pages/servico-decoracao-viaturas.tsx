@@ -678,38 +678,24 @@ export default function ServicoDecoracaoViaturas() {
             </div>
           )}
 
-          {/* ✅ DESKTOP: grid A + detalhe + grid B (um único render controlado) */}
+          {/* ✅ DESKTOP: grid escondida quando há seleção */}
           <div ref={gridRef} className="scroll-mt-28">
-            {/* Desktop sem seleção: só grid */}
-            {!activeVehicle ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {vehicleTypes.map(renderVehicleCard)}
+            {/* Grid de cartões: escondida quando há seleção */}
+            <div className={`${activeVehicle ? "hidden" : "grid"} md:grid-cols-2 lg:grid-cols-3 gap-8`}>
+              {vehicleTypes.map(renderVehicleCard)}
+            </div>
+
+            {/* Desktop: detalhe (só visível quando há seleção) */}
+            {activeVehicle && (
+              <div
+                className="hidden md:block mt-8 scroll-mt-28"
+                ref={(node) => {
+                  if (activeVehicle) revealRefs.current[activeVehicle] = node;
+                }}
+              >
+                <VehicleSubNav />
+                {renderVehicleDetails(activeVehicle)}
               </div>
-            ) : (
-              <>
-                {/* Desktop com seleção */}
-                <div className="hidden md:block">
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {desktopBefore.map(renderVehicleCard)}
-                  </div>
-
-                  <div
-                    className="mt-8 scroll-mt-28"
-                    ref={(node) => {
-                      if (activeVehicle) revealRefs.current[activeVehicle] = node;
-                    }}
-                  >
-                    <VehicleSubNav />
-                    {activeVehicle ? renderVehicleDetails(activeVehicle) : null}
-                  </div>
-
-                  {desktopAfter.length > 0 ? (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-                      {desktopAfter.map(renderVehicleCard)}
-                    </div>
-                  ) : null}
-                </div>
-              </>
             )}
           </div>
         </div>
