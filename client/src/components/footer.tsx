@@ -2,6 +2,7 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import logoDomrealce from "@/assets/domrealce-logo.png";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -288,6 +289,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <ScrollToTopButton />
     </footer>
   );
 }

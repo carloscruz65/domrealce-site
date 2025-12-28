@@ -651,18 +651,9 @@ export default function ServicoDecoracaoViaturas() {
               <span className="text-white">veículos</span>
             </h2>
 
-            <span className="text-sm uppercase tracking-wide text-brand-yellow">
-              Serviços de comunicação visual
-            </span>
-
             <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
               Comunicação visual aplicada a todo o tipo de veículos
             </h1>
-
-            <p className="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-              Começa por escolher o tipo de veículo. O resto abre a seguir (sem
-              assustar com o tamanho).
-            </p>
           </div>
 
           {/* ✅ MOBILE: detalhe sozinho */}
