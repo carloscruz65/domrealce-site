@@ -1,39 +1,45 @@
 interface StaticHeroProps {
-  imageSrc: string; // versão desktop, ideal 1600–1920px
-  mobileImageSrc?: string; // versão mobile, ideal 800–1000px
+  imageSrc: string;            // desktop: 1900x1069
+  mobileImageSrc?: string;     // mobile: 800x800
+  imageSrcMobile?: string;
   alt?: string;
+  priority?: boolean;
 }
 
 export default function StaticHero({
   imageSrc,
   mobileImageSrc,
-  alt = "DOMREALCE - Comunicação Visual"
+  imageSrcMobile,
+  alt = "DOMREALCE - Comunicação Visual",
+  priority = false,
 }: StaticHeroProps) {
-
-  // fallback seguro: se não houver mobile image, usa desktop
-  const mobileUrl =
-    mobileImageSrc ||
-    (imageSrc.endsWith(".webp")
-      ? imageSrc.replace(".webp", "-mobile.webp")
-      : imageSrc);
+  const mobileUrl = imageSrcMobile || mobileImageSrc;
 
   return (
     <section className="relative w-full overflow-hidden bg-black">
-      <img
-        src={mobileUrl} // mobile primeiro para pre-render
-        srcSet={`
-          ${mobileUrl} 800w,
-          ${imageSrc} 1600w,
-          ${imageSrc} 1920w
-        `}
-        sizes="(max-width: 768px) 100vw, 100vw"
-        alt={alt}
-        className="w-full h-auto block object-cover"
-        loading="eager"
-        decoding="async"
-        width={1920}
-        height={900} // ajusta conforme a tua imagem real
-      />
+      <div className="relative w-full aspect-square md:aspect-[16/9]">
+        <picture>
+          {/* ✅ MOBILE FORÇADO */}
+          {mobileUrl && (
+            <source
+              media="(max-width: 768px)"
+              srcSet={mobileUrl}
+            />
+          )}
+
+          {/* DESKTOP */}
+          <img
+            src={imageSrc}
+            alt={alt}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={priority ? "high" : "auto"}
+            width={1900}
+            height={1069}
+          />
+        </picture>
+      </div>
     </section>
   );
 }

@@ -1,29 +1,19 @@
 import { lazy, Suspense } from "react";
 import Navigation from "@/components/navigation";
 import StaticHero from "@/components/StaticHero";
-import ServicesSection from "@/components/services-section"; // opcional se quiseres tirar o lazy
-import PortfolioSection from "@/components/portfolio-section"; // idem
-import NewsSection from "@/components/news-section"; // idem
-import ClientLogos from "@/components/ClientLogos"; // idem
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
-import { usePageConfig } from "@/hooks/use-page-config";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import HomeFeaturedWallpapers from "@/components/HomeFeaturedWallpapers";
 
 // carregados de forma preguiçosa (abaixo da dobra)
 const LazyServicesSection = lazy(() => import("@/components/services-section"));
-const LazyPortfolioSection = lazy(
-  () => import("@/components/portfolio-section")
-);
+const LazyPortfolioSection = lazy(() => import("@/components/portfolio-section"));
 const LazyNewsSection = lazy(() => import("@/components/news-section"));
 const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 export default function Home() {
-  const { getConfig, isLoading } = usePageConfig("home");
-
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       <SEOHead
@@ -36,11 +26,13 @@ export default function Home() {
 
       <Navigation />
 
-      {/* HERO – imagem estática para carregamento rápido */}
+      {/* HERO – LCP: imagem com prioridade + versão mobile */}
       <section className="mt-16">
         <StaticHero
           imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
+          imageSrcMobile="/public-objects/inicio/slider/bem-vindo-domrealce-mobile.webp"
           alt="Bem-vindos à DOMREALCE - Comunicação Visual"
+          priority
         />
       </section>
 
@@ -52,9 +44,9 @@ export default function Home() {
           </h2>
 
           <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Criamos soluções de impressão, decoração e design que ajudam empresas 
-            a destacarem-se no seu mercado. Com produção própria em Paredes e 
-            experiência acumulada ao longo de várias décadas, tratamos cada projeto 
+            Criamos soluções de impressão, decoração e design que ajudam empresas
+            a destacarem-se no seu mercado. Com produção própria em Paredes e
+            experiência acumulada ao longo de várias décadas, tratamos cada projeto
             com rigor técnico e atenção ao detalhe.
           </p>
         </div>
@@ -108,22 +100,18 @@ export default function Home() {
 
       {/* SECÇÕES ABAIXO DA DOBRA EM LAZY + SUSPENSE */}
       <Suspense fallback={null}>
-        {/* SERVIÇOS */}
         <section className="bg-[#050505]">
           <LazyServicesSection />
         </section>
 
-        {/* PORTFÓLIO */}
         <section className="bg-[#050505]">
           <LazyPortfolioSection />
         </section>
 
-        {/* NOTÍCIAS */}
         <section className="bg-[#050505]">
           <LazyNewsSection />
         </section>
 
-        {/* CLIENTES */}
         <section className="bg-[#050505]">
           <LazyClientLogos />
         </section>
@@ -148,6 +136,7 @@ export default function Home() {
                   <span>Falar com a DOMREALCE</span>
                 </Link>
               </Button>
+
               <Button
                 variant="outline"
                 className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black flex items-center justify-center gap-2"

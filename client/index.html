@@ -6,8 +6,8 @@
 
     <!-- SEO Meta Tags -->
     <title>DOMREALCE - Comunicação Visual e Impressão Digital | Portugal</title>
-    <meta name="description" content="DOMREALCE - Especialista em comunicação visual, impressão digital, papel de parede, decoração de viaturas e sinalética comercial. 40 anos de experiência em Lisboa." />
-    <meta name="keywords" content="comunicação visual, impressão digital, papel de parede, decoração viaturas, sinalética, publicidade, Lisboa, Portugal, DOMREALCE" />
+    <meta name="description" content="DOMREALCE - Especialista em comunicação visual, impressão digital, papel de parede, decoração de viaturas e sinalética comercial. Décadas de experiência no Norte de Portugal." />
+    <meta name="keywords" content="comunicação visual, impressão digital, papel de parede, decoração viaturas, sinalética, publicidade, Paredes Porto, Portugal, DOMREALCE" />
     <meta name="author" content="DOMREALCE" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.domrealce.com/" />
@@ -16,7 +16,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.domrealce.com/" />
     <meta property="og:title" content="DOMREALCE - Comunicação Visual e Impressão Digital" />
-    <meta property="og:description" content="Especialista em comunicação visual, impressão digital e papel de parede com 40 anos de experiência em Lisboa, Portugal." />
+    <meta property="og:description" content="Especialista em comunicação visual, impressão digital e papel de parede com Décadas de experiência em Paredes Porto, Portugal." />
     <meta property="og:image" content="https://www.domrealce.com/og-image.jpg" />
     <meta property="og:locale" content="pt_PT" />
     <meta property="og:site_name" content="DOMREALCE" />
@@ -25,7 +25,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.domrealce.com/" />
     <meta name="twitter:title" content="DOMREALCE - Comunicação Visual e Impressão Digital" />
-    <meta name="twitter:description" content="Especialista em comunicação visual, impressão digital e papel de parede com 40 anos de experiência em Lisboa, Portugal." />
+    <meta name="twitter:description" content="Especialista em comunicação visual, impressão digital e papel de parede com Décadas de experiência em Paredes Porto, Portugal." />
     <meta name="twitter:image" content="https://www.domrealce.com/og-image.jpg" />
 
     <!-- Favicon -->
@@ -47,7 +47,7 @@
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "PT",
-        "addressLocality": "Lisboa"
+        "addressLocality": "Porto"
       },
       "geo": {
         "@type": "GeoCoordinates",
@@ -96,11 +96,13 @@
     }
     </script>
 
-    <!-- Preload critical fonts -->
+    <!-- Google Fonts (sem preload hack para reduzir render-blocking duplicado) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"></noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+    />
 
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
@@ -109,11 +111,23 @@
     <link rel="dns-prefetch" href="//api.ifthenpay.com">
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Preload LCP image - versões desktop e mobile -->
-    <link rel="preload" as="image" href="/public-objects/inicio/slider/camiao-corrida-reboconorte.webp" fetchpriority="high" media="(min-width: 768px)">
-    <link rel="preload" as="image" href="/public-objects/inicio/slider/camiao-corrida-reboconorte-mobile.webp" fetchpriority="high" media="(max-width: 767px)">
-
+    <!-- Preload LCP image - alinhado com o HERO atual -->
+    <link
+      rel="preload"
+      as="image"
+      href="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
+      fetchpriority="high"
+      media="(min-width: 768px)"
+    >
+    <link
+      rel="preload"
+      as="image"
+      href="/public-objects/inicio/slider/bem-vindo-domrealce-mobile.webp"
+      fetchpriority="high"
+      media="(max-width: 767px)"
+    >
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
