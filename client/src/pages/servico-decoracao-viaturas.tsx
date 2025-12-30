@@ -271,15 +271,28 @@ export default function ServicoDecoracaoViaturas() {
   const hasSelection = Boolean(activeVehicle);
   const desktopCols = useDesktopCols();
 
+  const sectionRef = useRef<HTMLElement | null>(null);
+
   function openVehicle(key: VehicleKey) {
     setActiveVehicle((prev) => {
       const next = prev === key ? null : key;
 
-      requestAnimationFrame(() => {
-        if (!next) return;
-        const el = revealRefs.current[next];
-        el?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+      if (next) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            const headerOffset = 100;
+            const section = sectionRef.current;
+            if (section) {
+              const elementPosition = section.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+              });
+            }
+          }, 50);
+        });
+      }
 
       return next;
     });
@@ -643,7 +656,7 @@ export default function ServicoDecoracaoViaturas() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      <section className="pt-10 pb-16 bg-gray-900/40 scroll-mt-28">
+      <section ref={sectionRef} className="pt-10 pb-16 bg-gray-900/40 scroll-mt-28">
         <div className="container mx-auto px-4 pt-8">
           <div className={`${activeVehicle ? "hidden md:block" : ""} text-center mb-12 pt-16`}>
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
