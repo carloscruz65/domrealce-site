@@ -5,15 +5,13 @@ export function useScrollToTop() {
   const [location] = useLocation();
 
   useEffect(() => {
-    // Check if URL has a hash for scrolling to specific element
     const hash = window.location.hash;
     
     if (hash) {
-      // Wait for page to render then scroll to element (longer timeout for lazy loading)
-      const scrollToHash = () => {
+      const scrollToElement = () => {
         const element = document.querySelector(hash);
         if (element) {
-          const headerOffset = 100; // Account for fixed header
+          const headerOffset = 100;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -25,17 +23,22 @@ export function useScrollToTop() {
         }
         return false;
       };
+
+      // Retry mechanism for lazy-loaded content (up to 2 seconds)
+      let attempts = 0;
+      const maxAttempts = 20;
       
-      // Try immediately, then retry with delays for lazy-loaded content
-      if (!scrollToHash()) {
-        setTimeout(() => {
-          if (!scrollToHash()) {
-            setTimeout(scrollToHash, 300);
-          }
-        }, 150);
-      }
+      const tryScroll = () => {
+        if (scrollToElement()) return;
+        attempts++;
+        if (attempts < maxAttempts) {
+          requestAnimationFrame(() => setTimeout(tryScroll, 100));
+        }
+      };
+      
+      // Start after a brief delay to let initial render complete
+      setTimeout(tryScroll, 50);
     } else {
-      // Default behavior - scroll to top
       window.scrollTo({
         top: 0,
         left: 0,
