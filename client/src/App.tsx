@@ -83,7 +83,7 @@ declare global {
 }
 
 function Router() {
-  //useScrollToTop();
+  useScrollToTop();
   const [location] = useLocation();
   
   // Detectar se está rodando no Replit

@@ -34,7 +34,11 @@ const sizeOptions: SizeOption[] = [
 ];
 
 export default function LojaQuadrosCanvas() {
-  const { data: images, isLoading, error } = useQuery({
+  const {
+    data: images,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["/api/loja/images"],
   });
 
@@ -50,14 +54,13 @@ export default function LojaQuadrosCanvas() {
   };
 
   const canvasCoversRaw =
-    (images as { images: string[] })?.images
-      ?.filter(
-        (path: string) =>
-          path
-            .toLowerCase()
-            .includes("quadros-em-canvas/capas-quadros-em-canvas") &&
-          path.toLowerCase().endsWith(".webp")
-      ) || [];
+    (images as { images: string[] })?.images?.filter(
+      (path: string) =>
+        path
+          .toLowerCase()
+          .includes("quadros-em-canvas/capas-quadros-em-canvas") &&
+        path.toLowerCase().endsWith(".webp"),
+    ) || [];
 
   const seenNames = new Set<string>();
 
@@ -65,7 +68,10 @@ export default function LojaQuadrosCanvas() {
     canvasCoversRaw
       ?.map((path: string) => {
         const fileName =
-          path.split("/").pop()?.replace(/\.(jpg|jpeg|png|gif|webp)$/i, "") || "";
+          path
+            .split("/")
+            .pop()
+            ?.replace(/\.(jpg|jpeg|png|gif|webp)$/i, "") || "";
 
         const displayName =
           displayNameOverrides[fileName] ||
@@ -83,19 +89,21 @@ export default function LojaQuadrosCanvas() {
         const normalizedName = normalize(fileName);
 
         const categoryImages =
-          (images as { images: string[] })?.images?.filter((imgPath: string) => {
-            const pathLower = imgPath.toLowerCase();
-            if (!pathLower.includes("quadros-em-canvas/quadros-em-canvas/"))
-              return false;
+          (images as { images: string[] })?.images?.filter(
+            (imgPath: string) => {
+              const pathLower = imgPath.toLowerCase();
+              if (!pathLower.includes("quadros-em-canvas/quadros-em-canvas/"))
+                return false;
 
-            const parts = imgPath.split("/");
-            const folder = parts[3]; // mantém a tua lógica
-            return (
-              folder &&
-              normalize(folder) === normalizedName &&
-              /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath)
-            );
-          }) ?? [];
+              const parts = imgPath.split("/");
+              const folder = parts[3]; // mantém a tua lógica
+              return (
+                folder &&
+                normalize(folder) === normalizedName &&
+                /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath)
+              );
+            },
+          ) ?? [];
 
         const normalizedKey = normalize(fileName);
         if (seenNames.has(normalizedKey)) return null;
@@ -110,9 +118,9 @@ export default function LojaQuadrosCanvas() {
       })
       ?.filter(
         (
-          c: (CanvasCover & { canvasCount: number }) | null
+          c: (CanvasCover & { canvasCount: number }) | null,
         ): c is CanvasCover & { canvasCount: number } =>
-          c !== null && c.canvasCount > 0
+          c !== null && c.canvasCount > 0,
       ) || [];
 
   if (isLoading) {
@@ -196,8 +204,8 @@ export default function LojaQuadrosCanvas() {
           </p>
 
           <p className="text-gray-500 text-sm mt-3 max-w-3xl">
-            Impressão profissional em canvas premium, montado manualmente em chassi
-            de madeira no nosso atelier.
+            Impressão profissional em canvas premium, montado manualmente em
+            chassi de madeira no nosso atelier.
           </p>
         </div>
       </div>
@@ -266,7 +274,8 @@ export default function LojaQuadrosCanvas() {
                     {option.width}×{option.height}
                   </div>
                   <div className="text-[#FFD700] font-bold text-lg">
-                    <Euro className="inline w-4 h-4" /> {option.price.toFixed(2)}
+                    <Euro className="inline w-4 h-4" />{" "}
+                    {option.price.toFixed(2)}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">+ IVA (23%)</div>
                 </CardContent>

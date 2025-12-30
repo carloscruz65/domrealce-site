@@ -9,8 +9,8 @@ export function useScrollToTop() {
     const hash = window.location.hash;
     
     if (hash) {
-      // Wait for page to render then scroll to element
-      setTimeout(() => {
+      // Wait for page to render then scroll to element (longer timeout for lazy loading)
+      const scrollToHash = () => {
         const element = document.querySelector(hash);
         if (element) {
           const headerOffset = 100; // Account for fixed header
@@ -21,8 +21,19 @@ export function useScrollToTop() {
             top: offsetPosition,
             behavior: "smooth"
           });
+          return true;
         }
-      }, 100);
+        return false;
+      };
+      
+      // Try immediately, then retry with delays for lazy-loaded content
+      if (!scrollToHash()) {
+        setTimeout(() => {
+          if (!scrollToHash()) {
+            setTimeout(scrollToHash, 300);
+          }
+        }, 150);
+      }
     } else {
       // Default behavior - scroll to top
       window.scrollTo({

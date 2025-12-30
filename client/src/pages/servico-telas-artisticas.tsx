@@ -13,6 +13,7 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
+  ArrowUpRight,
   Frame,
   Brush,
   Camera,
