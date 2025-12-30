@@ -4,6 +4,8 @@ import { ArrowLeft, Eye } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import { ArrowUpRight } from "lucide-react";
+
 
 
 
@@ -100,6 +102,16 @@ export default function LojaPapelParede() {
           </h1>
           <p className="text-gray-300 text-lg">
             Escolha entre as nossas texturas disponíveis para personalizar o seu espaço
+          </p>
+          <p className="text-gray-400 text-sm mt-2">
+            Se não encontrar a textura ideal,&nbsp;
+            <Link
+              href="/servico-papel-parede#orcamento"
+              className="inline-flex items-center gap-1 text-[#FFD700] font-medium hover:underline underline-offset-4"
+            >
+              visite a nossa secção de serviços de papel de parede personalizado
+              <ArrowUpRight className="h-3 w-3 translate-y-[1px]" />
+            </Link>
           </p>
         </div>
       </div>

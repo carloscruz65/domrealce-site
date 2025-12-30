@@ -330,7 +330,7 @@ export default function LojaCanvasDetalhes() {
                 {/* Preview Sidebar */}
                 <div>
                   <h4 className="font-bold mb-4 text-[#FFD700]">Detalhes do Quadro</h4>
-                  
+
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Categoria:</span>
@@ -346,9 +346,24 @@ export default function LojaCanvasDetalhes() {
                     </div>
                   </div>
 
+                  {/* Produção (valor percebido) */}
+                  <div className="mb-6 p-4 bg-[#0a0a0a] border border-[#333] rounded-lg">
+                    <h5 className="font-semibold mb-2 text-[#FFD700]">Produção</h5>
+                    <ul className="space-y-1 text-sm text-gray-300">
+                      <li>• Impressão profissional com cores consistentes</li>
+                      <li>• Controlo de qualidade antes do envio</li>
+                      <li>• Pronto a pendurar</li>
+                    </ul>
+                  </div>
+
                   {/* Quick Size Selection */}
                   <div className="mb-6">
-                    <h5 className="font-semibold mb-3">Tamanho:</h5>
+                    <h5 className="font-semibold mb-2">Tamanho:</h5>
+
+                    <p className="text-xs text-gray-400 mb-3">
+                      Produzido sob encomenda após confirmação do tamanho.
+                    </p>
+
                     <Select value={selectedSize} onValueChange={setSelectedSize}>
                       <SelectTrigger className="bg-[#0a0a0a] border-[#333]">
                         <SelectValue placeholder="Escolha o tamanho" />
@@ -364,7 +379,6 @@ export default function LojaCanvasDetalhes() {
                           </SelectItem>
                         ))}
                       </SelectContent>
-
                     </Select>
                   </div>
 

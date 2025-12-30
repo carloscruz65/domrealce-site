@@ -114,6 +114,11 @@ function Router() {
     }
   }, [location]);
 
+  export default function App() {
+    const [location] = useLocation();
+
+    useScrollToTop(location);
+
   return (
     <>
       <SEO />
@@ -158,6 +163,9 @@ function Router() {
           <Route path="/obrigado" component={Obrigado} />
           <Route path="/pagamento-erro" component={PagamentoErro} />
           <Route path="/contactos-maquinas" component={ContactosMaquinas} />
+
+          {showEditor && location.startsWith('/editor') && <VisualEditorToolbar />}
+          
           <Route component={NotFound} />
         </Switch>
       </Suspense>

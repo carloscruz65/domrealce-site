@@ -45,9 +45,15 @@ export default function ServicoTelasArtisticas() {
     largura: "",
     altura: "",
     quantidade: "1",
-    opcaoImagem: "adobe-stock", // 'adobe-stock' ou 'propria'
+
+    // ✅ novo (sem Adobe)
+    opcaoImagem: "aconselhamento", // 'referencia' | 'aconselhamento'
     descricaoImagem: "",
-    codigoAdobeStock: "",
+
+    // ✅ novos campos universais
+    linkReferencia: "",
+    origemReferencia: "",
+
     mensagem: "",
     nome: "",
     email: "",
@@ -57,37 +63,52 @@ export default function ServicoTelasArtisticas() {
 
   const submitMutation = useMutation({
     mutationFn: async () => {
-      // Validação extra: Adobe Stock precisa de código
-      if (formData.opcaoImagem === "adobe-stock") {
-        const hasCode = formData.codigoAdobeStock.trim() !== "";
-        if (!hasCode) {
+      // ✅ Validação extra (sem Adobe)
+      if (formData.opcaoImagem === "referencia") {
+        const hasLink = formData.linkReferencia.trim() !== "";
+        const hasOrigem = formData.origemReferencia.trim() !== "";
+        const hasDesc = formData.descricaoImagem.trim() !== "";
+
+        if (!hasLink && !hasOrigem && !hasDesc) {
           throw new Error(
-            "Para imagens do Adobe Stock, é obrigatório indicar o código ou número da imagem."
+            "Indique pelo menos um destes elementos: link da imagem, onde encontrou, ou uma breve descrição do que procura."
           );
         }
       }
 
-      // Montar mensagem final (igual ao Contactos: tudo vai dentro de "mensagem")
+      if (formData.opcaoImagem === "aconselhamento") {
+        if (formData.descricaoImagem.trim() === "") {
+          throw new Error(
+            "Por favor descreva o estilo/ideia pretendida para podermos aconselhar."
+          );
+        }
+      }
+
+      // ✅ Montar info da imagem (universal)
       const imagemInfo =
-        formData.opcaoImagem === "adobe-stock"
+        formData.opcaoImagem === "referencia"
           ? [
-              "Imagem: Adobe Stock",
-              `- Código / nº da imagem: ${formData.codigoAdobeStock || "-"}`,
+              "Imagem: Link / Referência",
+              formData.linkReferencia
+                ? `- Link: ${formData.linkReferencia}`
+                : "",
+              formData.origemReferencia
+                ? `- Onde encontrou: ${formData.origemReferencia}`
+                : "",
               formData.descricaoImagem
-                ? `- Observações: ${formData.descricaoImagem}`
+                ? `- Notas: ${formData.descricaoImagem}`
                 : "",
             ]
               .filter(Boolean)
               .join("\n")
           : [
-              "Imagem: Própria",
-              formData.descricaoImagem
-                ? `- Descrição: ${formData.descricaoImagem}`
-                : "- Descrição: -",
+              "Imagem: Aconselhamento (sem imagem definida)",
+              `- Descrição/ideia: ${formData.descricaoImagem}`,
+              "- Nota: podemos sugerir imagens/visuais adequados ao estilo pretendido.",
             ].join("\n");
 
       const detalhesTelas = [
-        "=== Pedido de Orçamento: Tela Artística ===",
+        "=== Pedido de Orçamento: Telas Artísticas ===",
         `Medidas: ${formData.largura} cm x ${formData.altura} cm`,
         `Quantidade: ${formData.quantidade} tela(s)`,
         "",
@@ -146,9 +167,10 @@ export default function ServicoTelasArtisticas() {
         largura: "",
         altura: "",
         quantidade: "1",
-        opcaoImagem: "adobe-stock",
+        opcaoImagem: "aconselhamento",
         descricaoImagem: "",
-        codigoAdobeStock: "",
+        linkReferencia: "",
+        origemReferencia: "",
         mensagem: "",
         nome: "",
         email: "",
@@ -285,7 +307,7 @@ export default function ServicoTelasArtisticas() {
       step: "01",
       title: "Seleção da imagem",
       description:
-        "Escolhe uma imagem da nossa loja, do Adobe Stock ou envia a tua própria fotografia.",
+        "Envie uma fotografia, um link/referência, ou descreva o estilo pretendido. Nós ajudamos a escolher o visual ideal.",
     },
     {
       step: "02",
@@ -602,7 +624,10 @@ export default function ServicoTelasArtisticas() {
         </section>
 
         {/* Orçamento personalizado */}
-        <section className="py-16 bg-black border-t border-gray-900">
+        <section
+          id="orcamento"
+            className="py-16 bg-black border-t border-gray-900 scroll-mt-24"
+          >
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
@@ -611,8 +636,7 @@ export default function ServicoTelasArtisticas() {
                   <span className="text-white">personalizado</span>
                 </h2>
                 <p className="text-gray-400 text-lg">
-                  Use uma imagem do Adobe Stock ou envie a sua fotografia e receba
-                  um orçamento à medida.
+                  Envie um link/referência ou descreva a ideia. Se não tiver imagem, nós ajudamos a escolher.
                 </p>
               </div>
 
@@ -682,15 +706,17 @@ export default function ServicoTelasArtisticas() {
                       />
                     </div>
 
+                    {/* ✅ Opção de imagem (nova, sem Adobe) */}
                     <div>
-                      <Label className="text-white">Opção de imagem</Label>
-                      <div className="flex gap-4 mt-2">
+                      <Label className="text-white">Imagem / Referência</Label>
+
+                      <div className="flex flex-col sm:flex-row gap-4 mt-2">
                         <label className="flex items-center text-white">
                           <input
                             type="radio"
                             name="opcaoImagem"
-                            value="adobe-stock"
-                            checked={formData.opcaoImagem === "adobe-stock"}
+                            value="referencia"
+                            checked={formData.opcaoImagem === "referencia"}
                             onChange={(e) =>
                               setFormData({
                                 ...formData,
@@ -699,14 +725,15 @@ export default function ServicoTelasArtisticas() {
                             }
                             className="mr-2"
                           />
-                          Adobe Stock
+                          Tenho um link ou referência
                         </label>
+
                         <label className="flex items-center text-white">
                           <input
                             type="radio"
                             name="opcaoImagem"
-                            value="propria"
-                            checked={formData.opcaoImagem === "propria"}
+                            value="aconselhamento"
+                            checked={formData.opcaoImagem === "aconselhamento"}
                             onChange={(e) =>
                               setFormData({
                                 ...formData,
@@ -715,42 +742,61 @@ export default function ServicoTelasArtisticas() {
                             }
                             className="mr-2"
                           />
-                          Imagem própria
+                          Preciso de ajuda a escolher
                         </label>
                       </div>
+
+                      <p className="mt-2 text-sm text-gray-400">
+                        Pode enviar um link de qualquer site (Instagram, Pinterest, lojas, etc.) ou pedir aconselhamento.
+                      </p>
                     </div>
 
-                    {formData.opcaoImagem === "adobe-stock" ? (
+                    {formData.opcaoImagem === "referencia" ? (
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="codigoAdobeStock" className="text-white">
-                            Código / nº da imagem Adobe Stock
+                          <Label htmlFor="linkReferencia" className="text-white">
+                            Link da imagem (opcional)
                           </Label>
                           <Input
-                            id="codigoAdobeStock"
-                            placeholder="Ex: 123456789"
-                            value={formData.codigoAdobeStock}
+                            id="linkReferencia"
+                            type="url"
+                            placeholder="Cole aqui o link (https://...)"
+                            value={formData.linkReferencia}
                             onChange={(e) =>
                               setFormData({
                                 ...formData,
-                                codigoAdobeStock: e.target.value,
+                                linkReferencia: e.target.value,
                               })
                             }
                             className="bg-gray-900 border-gray-700 text-white"
-                            required
                           />
                         </div>
 
                         <div>
-                          <Label
-                            htmlFor="descricaoImagemAdobe"
-                            className="text-white"
-                          >
-                            Observações (opcional)
+                          <Label htmlFor="origemReferencia" className="text-white">
+                            Onde encontrou? (opcional)
+                          </Label>
+                          <Input
+                            id="origemReferencia"
+                            placeholder="Ex: Instagram, Pinterest, site, loja online..."
+                            value={formData.origemReferencia}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                origemReferencia: e.target.value,
+                              })
+                            }
+                            className="bg-gray-900 border-gray-700 text-white"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="descricaoImagem" className="text-white">
+                            Notas / detalhes (opcional)
                           </Label>
                           <Textarea
-                            id="descricaoImagemAdobe"
-                            placeholder="Notas adicionais sobre a imagem ou composição..."
+                            id="descricaoImagem"
+                            placeholder="Ex: estilo, cores, composição, se quer parecido ou igual..."
                             value={formData.descricaoImagem}
                             onChange={(e) =>
                               setFormData({
@@ -764,30 +810,19 @@ export default function ServicoTelasArtisticas() {
 
                         <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
                           <p className="text-brand-yellow text-sm">
-                            💡 <strong>Dica:</strong> pode procurar a imagem em{" "}
-                            <a
-                              href="https://stock.adobe.com/pt"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="underline"
-                            >
-                              Adobe Stock
-                            </a>{" "}
-                            e copiar o código/número para aqui.
+                            💡 <strong>Dica:</strong> se não tiver link, indique onde viu a imagem e descreva o máximo possível.
+                            Nós tentamos encontrar uma alternativa muito próxima.
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div>
-                        <Label
-                          htmlFor="descricaoImagemPropria"
-                          className="text-white"
-                        >
-                          Descrição da sua imagem
+                        <Label htmlFor="descricaoImagemAjuda" className="text-white">
+                          Descreva o que pretende (obrigatório)
                         </Label>
                         <Textarea
-                          id="descricaoImagemPropria"
-                          placeholder="Ex: fotografia de família, retrato, paisagem..."
+                          id="descricaoImagemAjuda"
+                          placeholder="Ex: preto e branco, minimalista, natureza, abstrato, retrato, cores quentes..."
                           value={formData.descricaoImagem}
                           onChange={(e) =>
                             setFormData({

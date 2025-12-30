@@ -36,11 +36,17 @@ export default function ServicoPapelParede() {
     largura: "",
     altura: "",
     quantidade: "1",
-    opcaoImagem: "adobe-stock", // 'adobe-stock' ou 'propria'
+
+    // ✅ novas opções (sem Adobe)
+    opcaoImagem: "aconselhamento", // 'referencia' | 'aconselhamento'
     descricaoImagem: "",
-    codigoAdobeStock: "",
+
+    // ✅ reaproveitado como link universal (qualquer site)
     linkImagemAdobe: "",
+
+    // ✅ reaproveitado como "onde encontrou / referência"
     informacoesImagemAdobe: "",
+
     mensagem: "",
     nome: "",
     email: "",
@@ -53,16 +59,23 @@ export default function ServicoPapelParede() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação para Adobe Stock
-    if (formData.opcaoImagem === "adobe-stock") {
-      const hasCode = formData.codigoAdobeStock.trim() !== "";
+    // ✅ Validações novas (sem Adobe)
+    if (formData.opcaoImagem === "referencia") {
       const hasLink = formData.linkImagemAdobe.trim() !== "";
-      const hasInfo = formData.informacoesImagemAdobe.trim() !== "";
+      const hasWhere = formData.informacoesImagemAdobe.trim() !== "";
+      const hasDesc = formData.descricaoImagem.trim() !== "";
 
-      if (!hasCode && !hasLink && !hasInfo) {
+      if (!hasLink && !hasWhere && !hasDesc) {
         alert(
-          "Para imagens do Adobe Stock, é obrigatório fornecer pelo menos um dos seguintes: código da imagem, link da imagem ou informações da imagem."
+          "Indique pelo menos um destes elementos: link da imagem, onde encontrou, ou uma breve descrição do que procura."
         );
+        return;
+      }
+    }
+
+    if (formData.opcaoImagem === "aconselhamento") {
+      if (formData.descricaoImagem.trim() === "") {
+        alert("Por favor descreva o estilo/ideia pretendida para podermos aconselhar.");
         return;
       }
     }
@@ -70,26 +83,21 @@ export default function ServicoPapelParede() {
     setIsSubmitting(true);
 
     try {
-      // Construir info da imagem
+      // ✅ Construir info da imagem (universal)
       let imagemInfo = "";
-      if (formData.opcaoImagem === "adobe-stock") {
-        imagemInfo = `Adobe Stock:
-${formData.codigoAdobeStock ? `📝 Código: ${formData.codigoAdobeStock}` : ""}
+      if (formData.opcaoImagem === "referencia") {
+        imagemInfo = `Referência / Link
 ${formData.linkImagemAdobe ? `🔗 Link: ${formData.linkImagemAdobe}` : ""}
 ${
   formData.informacoesImagemAdobe
-    ? `ℹ️ Informações: ${formData.informacoesImagemAdobe}`
+    ? `📍 Onde encontrou: ${formData.informacoesImagemAdobe}`
     : ""
 }
-${
-  formData.descricaoImagem
-    ? `📝 Descrição: ${formData.descricaoImagem}`
-    : ""
-}`.trim();
+${formData.descricaoImagem ? `📝 Notas: ${formData.descricaoImagem}` : ""}`.trim();
       } else {
-        imagemInfo = `Imagem própria
-${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : ""}
-(Nota: posso enviar a imagem em resposta a este email ou via WhatsApp.)`.trim();
+        imagemInfo = `Aconselhamento (sem imagem definida)
+📝 Descrição/ideia: ${formData.descricaoImagem}
+(Nota: podemos sugerir imagens/visuais adequados ao espaço e ao estilo pretendido.)`.trim();
       }
 
       // Mensagem final enviada para /api/contact (vai por email interno e auto-reply)
@@ -98,7 +106,7 @@ ${formData.descricaoImagem ? `📝 Descrição: ${formData.descricaoImagem}` : "
 📐 Medidas: ${formData.largura} m x ${formData.altura} m
 📦 Quantidade: ${formData.quantidade} parede(s)
 
-🖼️ Imagem:
+🖼️ Imagem / Referência:
 ${imagemInfo}
 
 👤 Contacto:
@@ -152,9 +160,8 @@ ${formData.anexos
         largura: "",
         altura: "",
         quantidade: "1",
-        opcaoImagem: "adobe-stock",
+        opcaoImagem: "aconselhamento",
         descricaoImagem: "",
-        codigoAdobeStock: "",
         linkImagemAdobe: "",
         informacoesImagemAdobe: "",
         mensagem: "",
@@ -175,13 +182,13 @@ ${formData.anexos
       step: "01",
       title: "Escolha da imagem",
       description:
-        "Escolhe uma textura da nossa loja ou seleciona uma imagem no Adobe Stock.",
+        "Escolha uma textura da nossa loja ou envie um link/referência. Se preferir, nós ajudamos a escolher o visual ideal.",
     },
     {
       step: "02",
       title: "Medidas personalizadas",
       description:
-        "Indica as dimensões exatas (largura x altura) e a quantidade de paredes.",
+        "Indique as dimensões exatas (largura x altura) e a quantidade de paredes.",
     },
     {
       step: "03",
@@ -193,7 +200,7 @@ ${formData.anexos
       step: "04",
       title: "Produção",
       description:
-        "Preparamos e produzimos o papel de parede com a imagem escolhida.",
+        "Preparamos e produzimos o papel de parede com a solução visual escolhida.",
     },
     {
       step: "05",
@@ -301,7 +308,8 @@ ${formData.anexos
       src: "https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80",
       alt: "Papel de parede para quarto",
       title: "Ambientes acolhedores",
-    },
+      title2: "Ambientes acolhedores",
+    } as any,
     {
       src: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=800&q=80",
       alt: "Papel de parede artístico",
@@ -331,7 +339,6 @@ ${formData.anexos
       />
 
       <main>
-        {/* ✅ Catálogo Interativo (normalizado para cards + dropdown) */}
         <ServiceCardsSection
           titleTop="Catálogo"
           titleBottom="interativo"
@@ -340,7 +347,6 @@ ${formData.anexos
           defaultOpenKey={null}
         />
 
-        {/* Galeria */}
         <ServiceGallery
           images={galleryImages}
           title="Exemplos de ambientes"
@@ -357,17 +363,9 @@ ${formData.anexos
                 <span className="text-brand-yellow">funciona</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Pode escolher uma textura da nossa loja ou utilizar uma imagem do{" "}
-                <a
-                  href="https://stock.adobe.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-brand-yellow hover:text-brand-yellow/80 underline"
-                >
-                  Adobe Stock
-                </a>
-                . Para Adobe Stock, bastam o número, o link ou as informações da
-                imagem.
+                Pode escolher uma textura da nossa loja ou enviar um link/referência.
+                Se não tiver imagem definida, nós ajudamos a escolher a solução visual
+                mais adequada ao seu espaço.
               </p>
             </div>
 
@@ -463,7 +461,10 @@ ${formData.anexos
         </section>
 
         {/* Orçamento personalizado */}
-        <section className="py-16 bg-black border-t border-gray-900">
+        <section
+          id="orcamento"
+          className="py-16 bg-black border-t border-gray-900 scroll-mt-24"
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
@@ -472,8 +473,7 @@ ${formData.anexos
                   <span className="text-white">personalizado</span>
                 </h2>
                 <p className="text-gray-400 text-lg">
-                  Escolha entre Adobe Stock ou envie a sua própria imagem e receba
-                  um orçamento à medida.
+                  Envie um link/referência ou descreva a ideia. Se não tiver imagem, nós ajudamos a escolher.
                 </p>
               </div>
 
@@ -543,15 +543,16 @@ ${formData.anexos
                       />
                     </div>
 
+                    {/* ✅ Opção de imagem (nova) */}
                     <div>
-                      <Label className="text-white">Opção de imagem</Label>
-                      <div className="flex gap-4 mt-2">
+                      <Label className="text-white">Imagem / Referência</Label>
+                      <div className="flex flex-col sm:flex-row gap-4 mt-2">
                         <label className="flex items-center text-white">
                           <input
                             type="radio"
                             name="opcaoImagem"
-                            value="adobe-stock"
-                            checked={formData.opcaoImagem === "adobe-stock"}
+                            value="referencia"
+                            checked={formData.opcaoImagem === "referencia"}
                             onChange={(e) =>
                               setFormData({
                                 ...formData,
@@ -560,14 +561,15 @@ ${formData.anexos
                             }
                             className="mr-2"
                           />
-                          Adobe Stock
+                          Tenho um link ou referência
                         </label>
+
                         <label className="flex items-center text-white">
                           <input
                             type="radio"
                             name="opcaoImagem"
-                            value="propria"
-                            checked={formData.opcaoImagem === "propria"}
+                            value="aconselhamento"
+                            checked={formData.opcaoImagem === "aconselhamento"}
                             onChange={(e) =>
                               setFormData({
                                 ...formData,
@@ -576,42 +578,26 @@ ${formData.anexos
                             }
                             className="mr-2"
                           />
-                          Imagem própria
+                          Preciso de ajuda a escolher
                         </label>
                       </div>
+
+                      <p className="mt-2 text-sm text-gray-400">
+                        Pode enviar um link de qualquer site (Pinterest, Instagram, lojas, etc.) ou pedir aconselhamento.
+                      </p>
                     </div>
 
-                    {formData.opcaoImagem === "adobe-stock" ? (
+                    {/* ✅ Condicional nova */}
+                    {formData.opcaoImagem === "referencia" ? (
                       <div className="space-y-4">
                         <div>
-                          <Label
-                            htmlFor="codigoAdobeStock"
-                            className="text-white"
-                          >
-                            Código Adobe Stock (se disponível)
-                          </Label>
-                          <Input
-                            id="codigoAdobeStock"
-                            placeholder="Ex: 123456789"
-                            value={formData.codigoAdobeStock}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                codigoAdobeStock: e.target.value,
-                              })
-                            }
-                            className="bg-gray-900 border-gray-700 text-white"
-                          />
-                        </div>
-
-                        <div>
                           <Label htmlFor="linkImagemAdobe" className="text-white">
-                            Link da imagem Adobe Stock (se disponível)
+                            Link da imagem (opcional)
                           </Label>
                           <Input
                             id="linkImagemAdobe"
                             type="url"
-                            placeholder="https://stock.adobe.com/..."
+                            placeholder="Cole aqui o link (https://...)"
                             value={formData.linkImagemAdobe}
                             onChange={(e) =>
                               setFormData({
@@ -628,11 +614,11 @@ ${formData.anexos
                             htmlFor="informacoesImagemAdobe"
                             className="text-white"
                           >
-                            Informações da imagem (título, autor, etc.)
+                            Onde encontrou? (opcional)
                           </Label>
-                          <Textarea
+                          <Input
                             id="informacoesImagemAdobe"
-                            placeholder="Ex: título da imagem, nome do autor, palavras-chave..."
+                            placeholder="Ex: Pinterest, Instagram, site, loja online..."
                             value={formData.informacoesImagemAdobe}
                             onChange={(e) =>
                               setFormData({
@@ -646,11 +632,11 @@ ${formData.anexos
 
                         <div>
                           <Label htmlFor="descricaoImagem" className="text-white">
-                            Descrição adicional (opcional)
+                            Notas / detalhes (opcional)
                           </Label>
                           <Textarea
                             id="descricaoImagem"
-                            placeholder="Ex: preferências de cores, estilo, detalhes específicos..."
+                            placeholder="Ex: cores a manter, estilo, se quer parecido ou igual, divisão em painéis..."
                             value={formData.descricaoImagem}
                             onChange={(e) =>
                               setFormData({
@@ -664,23 +650,22 @@ ${formData.anexos
 
                         <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
                           <p className="text-brand-yellow text-sm">
-                            💡 <strong>Dica:</strong> forneça pelo menos um dos
-                            seguintes: código da imagem, link direto ou informações
-                            detalhadas. Assim conseguimos localizar a imagem correta.
+                            💡 <strong>Dica:</strong> se não tiver link, indique onde viu a imagem e descreva o máximo possível.
+                            Nós tentamos encontrar uma alternativa muito próxima.
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div>
                         <Label
-                          htmlFor="descricaoImagemPropria"
+                          htmlFor="descricaoImagemAjuda"
                           className="text-white"
                         >
-                          Descrição da sua imagem
+                          Descreva o que pretende (obrigatório)
                         </Label>
                         <Textarea
-                          id="descricaoImagemPropria"
-                          placeholder="Ex: logo da empresa, foto de família, imagem específica..."
+                          id="descricaoImagemAjuda"
+                          placeholder="Ex: estilo mármore branco, tons neutros, tema tropical, padrão geométrico, quarto de criança..."
                           value={formData.descricaoImagem}
                           onChange={(e) =>
                             setFormData({
@@ -918,7 +903,7 @@ ${formData.anexos
               <span className="text-brand-yellow">espaço?</span>
             </h2>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Envie-nos as medidas e a imagem que pretende utilizar e criamos um
+              Envie-nos as medidas e a referência (ou descreva a ideia) e criamos um
               projeto de papel de parede à medida do seu ambiente.
             </p>
 

@@ -285,7 +285,7 @@ export default function LojaTexturaDetalhes() {
                     <span className="text-[#FFD700] font-bold text-xl">€{basePrice}/m²</span>
                   </div>
                   <p className="text-xs text-gray-400 mt-2">
-                    *Medidas e personalização no carrinho
+                    *Preço calculado com base nas medidas reais da parede e opções escolhidas. Produção sob encomenda.
                   </p>
                 </div>
 
@@ -395,18 +395,11 @@ export default function LojaTexturaDetalhes() {
 
                       {/* Navigation Info */}
                       {textureImages.length > 1 && (
-                        <div className="mb-4 p-3 bg-[#111111] rounded border border-[#333]">
-                          <p className="text-sm text-gray-300 text-center">
-                            Use as setas para navegar entre texturas
-                          </p>
-                          <div className="flex items-center justify-center gap-2 mt-2 text-xs text-gray-400">
-                            <ChevronLeft className="w-4 h-4" />
-                            <span>Anterior</span>
-                            <span>•</span>
-                            <span>Seguinte</span>
-                            <ChevronRight className="w-4 h-4" />
+                          <div className="mb-4 p-3 bg-[#111111] rounded border border-[#333]">
+                            <p className="text-sm text-gray-300 text-center">
+                              Pré-visualização ilustrativa do padrão.
+                            </p>
                           </div>
-                        </div>
                       )}
                       
                       {/* Category */}

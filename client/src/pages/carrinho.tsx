@@ -1,28 +1,33 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Trash2, Plus, Minus, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import { PaypalButton } from "@/components/PaypalButton";
 
 // Unified CartItem interface that supports both product types
 interface CartItem {
   id: string;
-  type: 'papel-parede' | 'quadros-canvas';
+  type: "papel-parede" | "quadros-canvas";
   // Wallpaper properties
   textureName?: string;
   textureImage?: string;
   category?: string;
   preco?: number;
-  acabamento?: 'brilho' | 'mate';
+  acabamento?: "brilho" | "mate";
   laminacao?: boolean;
-  tipoCola?: 'com-cola' | 'sem-cola';
-  // Canvas properties  
+  tipoCola?: "com-cola" | "sem-cola";
+  // Canvas properties
   canvasName?: string;
   canvasImage?: string;
   tamanho?: string;
@@ -42,11 +47,13 @@ export default function Carrinho() {
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     // Load cart from localStorage
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       const items = JSON.parse(savedCart);
+
       // Add default values if not exists
       const itemsWithDefaults = items.map((item: CartItem) => ({
         ...item,
@@ -55,41 +62,63 @@ export default function Carrinho() {
         altura: item.altura || 0,
         larguraCm: item.larguraCm || 0,
         alturaCm: item.alturaCm || 0,
-        area: item.area || Math.max(0.01, (item.largura || 0) * (item.altura || 0)),
-        tipoCola: item.tipoCola || 'com-cola'
+        area:
+          item.area ||
+          Math.max(0.01, (item.largura || 0) * (item.altura || 0)),
+        tipoCola: item.tipoCola || "com-cola",
       }));
+
       setCartItems(itemsWithDefaults);
     }
     setIsLoading(false);
   }, []);
 
   const updateCartInStorage = (items: CartItem[]) => {
-    localStorage.setItem('cart', JSON.stringify(items));
+    localStorage.setItem("cart", JSON.stringify(items));
     setCartItems(items);
   };
 
   const updateItem = (id: string, updates: Partial<CartItem>) => {
-    const updatedItems = cartItems.map(item => {
-      if (item.id === id) {
-        const updatedItem = { ...item, ...updates };
-        
-        // Calculate area if dimensions changed (for wallpaper)
-        if (item.type === 'papel-parede' && ('largura' in updates || 'altura' in updates || 'larguraCm' in updates || 'alturaCm' in updates)) {
-          const largura = updatedItem.largura || 0;
-          const altura = updatedItem.altura || 0;
-          updatedItem.area = Math.max(0.01, largura * altura);
-          
-          // Recalculate total price for wallpaper
-          const area = updatedItem.area || 0.01;
-          const basePrice = (updatedItem.preco || 0) * area;
-          const laminacaoPrice = updatedItem.laminacao ? 8 * area : 0;
-          updatedItem.precoTotal = basePrice + laminacaoPrice;
-        }
-        
-        return updatedItem;
+    const updatedItems = cartItems.map((item) => {
+      if (item.id !== id) return item;
+
+      const updatedItem: CartItem = { ...item, ...updates };
+
+      // ✅ Recalcular SEMPRE que:
+      // - mudam medidas
+      // - muda laminação
+      // - muda material
+      // - (ou muda preco)
+      const shouldRecalcWallpaper =
+        item.type === "papel-parede" &&
+        ("largura" in updates ||
+          "altura" in updates ||
+          "larguraCm" in updates ||
+          "alturaCm" in updates ||
+          "laminacao" in updates ||
+          "material" in updates ||
+          "preco" in updates);
+
+      if (shouldRecalcWallpaper) {
+        const largura = updatedItem.largura || 0;
+        const altura = updatedItem.altura || 0;
+
+        updatedItem.area = Math.max(0.01, largura * altura);
+
+        const area = updatedItem.area;
+        const basePrice = (updatedItem.preco || 0) * area;
+
+        // Laminação só conta no Vinil
+        const material = updatedItem.material || "papel";
+        const laminacaoPrice =
+          material === "vinil" && updatedItem.laminacao ? 8 * area : 0;
+
+        updatedItem.precoTotal = basePrice + laminacaoPrice;
       }
-      return item;
+
+      return updatedItem;
     });
+
     updateCartInStorage(updatedItems);
   };
 
@@ -99,7 +128,7 @@ export default function Carrinho() {
   };
 
   const removeItem = (id: string) => {
-    const updatedItems = cartItems.filter(item => item.id !== id);
+    const updatedItems = cartItems.filter((item) => item.id !== id);
     updateCartInStorage(updatedItems);
     toast({
       title: "Item removido",
@@ -109,7 +138,7 @@ export default function Carrinho() {
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('cart');
+    localStorage.removeItem("cart");
     toast({
       title: "Carrinho limpo",
       description: "Todos os produtos foram removidos do carrinho.",
@@ -118,7 +147,7 @@ export default function Carrinho() {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      return total + (item.precoTotal * (item.quantidade || 1));
+      return total + item.precoTotal * (item.quantidade || 1);
     }, 0);
   };
 
@@ -131,7 +160,7 @@ export default function Carrinho() {
       subtotal,
       shipping,
       iva,
-      total: subtotalWithShipping + iva
+      total: subtotalWithShipping + iva,
     };
   };
 
@@ -148,7 +177,7 @@ export default function Carrinho() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
-      
+
       {/* Header */}
       <div className="bg-[#111111] border-b border-[#333] mt-16">
         <div className="container mx-auto px-4 py-8">
@@ -204,8 +233,16 @@ export default function Carrinho() {
                       {/* Product Image */}
                       <div className="md:col-span-1">
                         <img
-                          src={item.type === 'papel-parede' ? item.textureImage : item.canvasImage}
-                          alt={item.type === 'papel-parede' ? item.textureName : item.canvasName}
+                          src={
+                            item.type === "papel-parede"
+                              ? item.textureImage
+                              : item.canvasImage
+                          }
+                          alt={
+                            item.type === "papel-parede"
+                              ? item.textureName
+                              : item.canvasName
+                          }
                           className="w-full aspect-square object-cover rounded-lg border border-[#333]"
                         />
                       </div>
@@ -214,81 +251,152 @@ export default function Carrinho() {
                       <div className="md:col-span-2 space-y-4">
                         <div>
                           <h3 className="text-lg font-bold text-[#FFD700] mb-2">
-                            {item.type === 'papel-parede' ? item.textureName : item.canvasName}
+                            {item.type === "papel-parede"
+                              ? item.textureName
+                              : item.canvasName}
                           </h3>
                           <Badge className="bg-[#20B2AA] text-black">
-                            {item.type === 'papel-parede' ? 'PAPEL DE PAREDE' : 'QUADROS EM CANVAS'}
+                            {item.type === "papel-parede"
+                              ? "PAPEL DE PAREDE"
+                              : "QUADROS EM CANVAS"}
                           </Badge>
                         </div>
 
                         {/* Canvas Size Display */}
-                        {item.type === 'quadros-canvas' && (
+                        {item.type === "quadros-canvas" && (
                           <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#333] space-y-1">
                             <div className="flex justify-between">
-                              <span className="text-sm text-gray-400">Tamanho:</span>
+                              <span className="text-sm text-gray-400">
+                                Tamanho:
+                              </span>
                               <span className="text-sm font-semibold text-gray-300">
                                 {item.tamanho}cm
-                              </span>
-                            </div>
-
-                            <div className="flex justify-between">
-                              <span className="text-sm text-gray-400">Dimensões:</span>
-                              <span className="text-sm text-gray-300">
-                                {item.larguraCm}×{item.alturaCm}cm
                               </span>
                             </div>
                           </div>
                         )}
 
-
                         {/* Wallpaper Options */}
-                        {item.type === 'papel-parede' && (
+                        {item.type === "papel-parede" && (
                           <div className="space-y-3">
-                            {/* Acabamento */}
+                            {/* Material (Papel vs Vinil) */}
                             <div>
                               <label className="block text-sm font-medium text-[#FFD700] mb-2">
-                                Acabamento
+                                Material
                               </label>
-                              <Select 
-                                value={item.acabamento || 'mate'} 
-                                onValueChange={(value: 'brilho' | 'mate') => updateItem(item.id, { acabamento: value })}
-                              >
-                                <SelectTrigger className="bg-[#0a0a0a] border-[#333] text-white">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="bg-[#111111] border-[#333]">
-                                  <SelectItem value="brilho" className="text-white hover:bg-[#333]">
-                                    <div className="flex items-center gap-2">
-                                      <Sparkles className="h-4 w-4" />
-                                      Brilho
-                                    </div>
-                                  </SelectItem>
-                                  <SelectItem value="mate" className="text-white hover:bg-[#333]">
-                                    <div className="flex items-center gap-2">
-                                      <div className="h-4 w-4 bg-gray-400 rounded-full"></div>
-                                      Mate
-                                    </div>
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
+
+                              <div className="grid grid-cols-2 gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    // ao escolher papel, limpamos opções que só fazem sentido no vinil
+                                    updateItem(item.id, {
+                                      material: "papel",
+                                      laminacao: false,
+                                      acabamento: undefined,
+                                    });
+                                  }}
+                                  className={[
+                                    "px-3 py-2 rounded border text-sm font-semibold transition",
+                                    (item.material || "papel") === "papel"
+                                      ? "border-[#FFD700] bg-[#FFD700] text-black"
+                                      : "border-[#333] bg-[#0a0a0a] text-gray-300 hover:bg-[#111111]",
+                                  ].join(" ")}
+                                >
+                                  Papel de Parede
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    // ao escolher vinil, damos defaults úteis
+                                    updateItem(item.id, {
+                                      material: "vinil",
+                                      acabamento: item.acabamento || "mate",
+                                      laminacao: item.laminacao || false,
+                                    });
+                                  }}
+                                  className={[
+                                    "px-3 py-2 rounded border text-sm font-semibold transition",
+                                    (item.material || "papel") === "vinil"
+                                      ? "border-[#FFD700] bg-[#FFD700] text-black"
+                                      : "border-[#333] bg-[#0a0a0a] text-gray-300 hover:bg-[#111111]",
+                                  ].join(" ")}
+                                >
+                                  Vinil
+                                </button>
+                              </div>
+
+                              {/* Micro texto de contexto */}
+                              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                                {((item.material || "papel") === "vinil")
+                                  ? "Vinil recomendado para superfícies laváveis e zonas de maior desgaste."
+                                  : "Papel de parede para aplicação interior. Cola não incluída."}
+                              </p>
                             </div>
 
-                            {/* Laminação */}
-                            <div className="flex items-center gap-3">
-                              <input
-                                type="checkbox"
-                                id={`laminacao-${item.id}`}
-                                checked={item.laminacao || false}
-                                onChange={(e) => updateItem(item.id, { laminacao: e.target.checked })}
-                                className="rounded border-[#333] bg-[#0a0a0a] text-[#FFD700] focus:ring-[#FFD700]"
-                              />
-                              <label htmlFor={`laminacao-${item.id}`} className="text-sm text-gray-300 flex-1">
-                                Laminação (+€8/m²) - Proteção contra riscos e raios UV
-                              </label>
-                              <Sparkles className="h-4 w-4 text-[#FFD700]" />
-                            </div>
+                            {/* Aviso cola (apenas para Papel) */}
+                            {(item.material || "papel") === "papel" && (
+                              <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#333]">
+                                <p className="text-xs text-gray-300 leading-relaxed">
+                                  <span className="text-[#FFD700] font-semibold">Nota:</span>{" "}
+                                  A cola não está incluída. Podemos fornecer ou recomendar a cola adequada, conforme o tipo de parede.
+                                </p>
+                              </div>
+                            )}
 
-                            {/* Dimensions for wallpaper */}
+                            {/* Opções de Vinil (apenas quando material=vinil) */}
+                            {(item.material || "papel") === "vinil" && (
+                              <>
+                                {/* Acabamento (Mate/Brilho) */}
+                                <div>
+                                  <label className="block text-sm font-medium text-[#FFD700] mb-2">
+                                    Acabamento
+                                  </label>
+                                  <Select
+                                    value={item.acabamento || "mate"}
+                                    onValueChange={(value: "brilho" | "mate") =>
+                                      updateItem(item.id, { acabamento: value })
+                                    }
+                                  >
+                                    <SelectTrigger className="bg-[#0a0a0a] border-[#333] text-white">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-[#111111] border-[#333]">
+                                      <SelectItem value="brilho" className="text-white hover:bg-[#333]">
+                                        <div className="flex items-center gap-2">
+                                          <Sparkles className="h-4 w-4" />
+                                          Brilho
+                                        </div>
+                                      </SelectItem>
+                                      <SelectItem value="mate" className="text-white hover:bg-[#333]">
+                                        <div className="flex items-center gap-2">
+                                          <div className="h-4 w-4 bg-gray-400 rounded-full" />
+                                          Mate
+                                        </div>
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                {/* Laminação (só vinil) */}
+                                <div className="flex items-center gap-3">
+                                  <input
+                                    type="checkbox"
+                                    id={`laminacao-${item.id}`}
+                                    checked={item.laminacao || false}
+                                    onChange={(e) => updateItem(item.id, { laminacao: e.target.checked })}
+                                    className="rounded border-[#333] bg-[#0a0a0a] text-[#FFD700] focus:ring-[#FFD700]"
+                                  />
+                                  <label htmlFor={`laminacao-${item.id}`} className="text-sm text-gray-300 flex-1">
+                                    Laminação (opcional) - Proteção contra riscos e raios UV
+                                  </label>
+                                  <Sparkles className="h-4 w-4 text-[#FFD700]" />
+                                </div>
+                              </>
+                            )}
+
+                            {/* Medidas (sempre, porque é sob medida) */}
                             <div className="grid grid-cols-2 gap-3">
                               <div>
                                 <label className="block text-sm font-medium text-[#FFD700] mb-2">
@@ -296,7 +404,7 @@ export default function Carrinho() {
                                 </label>
                                 <input
                                   type="number"
-                                  value={item.larguraCm || ''}
+                                  value={item.larguraCm || ""}
                                   onChange={(e) => {
                                     const numericValue = parseFloat(e.target.value);
                                     if (!isNaN(numericValue) && numericValue > 0) {
@@ -308,13 +416,14 @@ export default function Carrinho() {
                                   data-testid="input-largura-cm"
                                 />
                               </div>
+
                               <div>
                                 <label className="block text-sm font-medium text-[#FFD700] mb-2">
                                   Altura (cm)
                                 </label>
                                 <input
                                   type="number"
-                                  value={item.alturaCm || ''}
+                                  value={item.alturaCm || ""}
                                   onChange={(e) => {
                                     const numericValue = parseFloat(e.target.value);
                                     if (!isNaN(numericValue) && numericValue > 0) {
@@ -327,6 +436,11 @@ export default function Carrinho() {
                                 />
                               </div>
                             </div>
+
+                            {/* Texto por baixo das medidas */}
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                              As medidas indicadas serão usadas para produzir o papel de parede à medida exata da sua parede.
+                            </p>
                           </div>
                         )}
 
@@ -339,7 +453,12 @@ export default function Carrinho() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, (item.quantidade || 1) - 1)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id,
+                                  (item.quantidade || 1) - 1
+                                )
+                              }
                               disabled={(item.quantidade || 1) <= 1}
                               className="border-[#333] text-white hover:bg-[#333]"
                             >
@@ -351,7 +470,12 @@ export default function Carrinho() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, (item.quantidade || 1) + 1)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id,
+                                  (item.quantidade || 1) + 1
+                                )
+                              }
                               className="border-[#333] text-white hover:bg-[#333]"
                             >
                               <Plus className="h-4 w-4" />
@@ -363,36 +487,57 @@ export default function Carrinho() {
                       {/* Price & Actions */}
                       <div className="md:col-span-1 text-right space-y-4">
                         <div>
-                          {item.type === 'papel-parede' && (
+                          {item.type === "papel-parede" && (
                             <>
-                              <p className="text-sm text-[#FFD700]">Preço por m²:</p>
-                              <p className="text-md font-semibold text-white">€{item.preco}/m²</p>
+                              <p className="text-sm text-[#FFD700]">
+                                Preço por m²:
+                              </p>
+                              <p className="text-md font-semibold text-white">
+                                €{item.preco}/m²
+                              </p>
                               {item.laminacao && (
-                                <p className="text-xs text-gray-400">+ €8/m² laminação</p>
+                                <p className="text-xs text-gray-400">
+                                  + €8/m² laminação
+                                </p>
                               )}
                               <div className="mt-2 pt-2 border-t border-[#333]">
-                                <p className="text-sm text-[#FFD700]">Total área ({((item.largura || 0) * (item.altura || 0)).toFixed(2)} m²):</p>
-                                <p className="text-lg font-semibold text-[#FFD700]">€{item.precoTotal.toFixed(2)}</p>
+                                <p className="text-sm text-[#FFD700]">
+                                  Total área (
+                                  {((item.largura || 0) * (item.altura || 0)).toFixed(2)}{" "}
+                                  m²):
+                                </p>
+                                <p className="text-lg font-semibold text-[#FFD700]">
+                                  €{item.precoTotal.toFixed(2)}
+                                </p>
                               </div>
                             </>
                           )}
-                          
-                          {item.type === 'quadros-canvas' && (
+
+                          {item.type === "quadros-canvas" && (
                             <>
-                              <p className="text-sm text-[#FFD700]">Preço base:</p>
-                              <p className="text-md font-semibold text-white">€{(item.precoBase || 0).toFixed(2)}</p>
+                              <p className="text-sm text-[#FFD700]">
+                                Preço base:
+                              </p>
+                              <p className="text-md font-semibold text-white">
+                                €{(item.precoBase || 0).toFixed(2)}
+                              </p>
                               <div className="mt-2 pt-2 border-t border-[#333]">
-                                <p className="text-sm text-[#FFD700]">Total (c/ IVA):</p>
-                                <p className="text-lg font-semibold text-[#FFD700]">€{item.precoTotal.toFixed(2)}</p>
+                                <p className="text-sm text-[#FFD700]">
+                                  Total (c/ IVA):
+                                </p>
+                                <p className="text-lg font-semibold text-[#FFD700]">
+                                  €{item.precoTotal.toFixed(2)}
+                                </p>
                               </div>
                             </>
                           )}
-                          
+
                           <p className="text-sm text-gray-400 mt-2">
-                            Final: €{(item.precoTotal * (item.quantidade || 1)).toFixed(2)}
+                            Final: €
+                            {(item.precoTotal * (item.quantidade || 1)).toFixed(2)}
                           </p>
                         </div>
-                        
+
                         <Button
                           variant="outline"
                           size="sm"
@@ -416,11 +561,13 @@ export default function Carrinho() {
                   <h3 className="text-xl font-bold mb-4 text-[#FFD700]">
                     Resumo do Pedido
                   </h3>
-                  
+
                   <div className="space-y-3 mb-6 text-gray-300">
                     <div className="flex justify-between">
                       <span className="text-gray-300">Subtotal:</span>
-                      <span className="text-gray-300">€{totals.subtotal.toFixed(2)}</span>
+                      <span className="text-gray-300">
+                        €{totals.subtotal.toFixed(2)}
+                      </span>
                     </div>
 
                     <div className="flex justify-between">
@@ -440,52 +587,42 @@ export default function Carrinho() {
 
                     <div className="flex justify-between">
                       <span className="text-gray-300">IVA (23%):</span>
-                      <span className="text-gray-300">€{totals.iva.toFixed(2)}</span>
+                      <span className="text-gray-300">
+                        €{totals.iva.toFixed(2)}
+                      </span>
                     </div>
 
                     <div className="flex justify-between font-bold text-lg border-t border-[#333] pt-3">
                       <span className="text-gray-300">Total:</span>
-                      <span className="text-[#FFD700]">€{totals.total.toFixed(2)}</span>
+                      <span className="text-[#FFD700]">
+                        €{totals.total.toFixed(2)}
+                      </span>
                     </div>
                   </div>
 
                   {totals.subtotal < 100 && (
                     <div className="mb-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
                       <p className="text-xs text-blue-200">
-                        💡 Adicione mais €{(100 - totals.subtotal).toFixed(2)} para envio gratuito!
+                        💡 Adicione mais €{(100 - totals.subtotal).toFixed(2)} para
+                        envio gratuito!
                       </p>
                     </div>
                   )}
-                  
-                  <div className="mt-4">
-                    <button
-                      className="text-xs text-brand-yellow underline"
-                      onClick={() => {
-                        console.log("Simulação de pagamento OK (sem PayPal)");
 
-                        // limpar carrinho
-                        localStorage.removeItem("cart");
-
-                        // redirecionar para página de sucesso
-                        window.location.href = "/obrigado";
-                      }}
-                    >
-                      Testar fluxo de pagamento (sem pagar)
-                    </button>
-                  </div>
-
-                  
                   <Link href="/checkout">
-                    <Button 
+                    <Button
                       className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3"
                       data-testid="button-finalizar-compra"
                     >
                       Finalizar Compra
                     </Button>
                   </Link>
-                  
+
                   <Link href="/loja">
-                    <Button variant="outline" className="w-full mt-3 border-[#333] text-white hover:bg-[#333]">
+                    <Button
+                      variant="outline"
+                      className="w-full mt-3 border-[#333] text-white hover:bg-[#333]"
+                    >
                       Continuar Comprando
                     </Button>
                   </Link>
