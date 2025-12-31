@@ -19,12 +19,13 @@ import { PaypalButton } from "@/components/PaypalButton";
 
 interface CartItem {
   id: string;
-  textureName: string;
-  textureImage: string;
-  category: string;
-  preco: number;
-  acabamento: "brilho" | "mate";
-  laminacao: boolean;
+  type?: "papel-parede" | "quadros-canvas";
+  textureName?: string;
+  textureImage?: string;
+  category?: string;
+  preco?: number;
+  acabamento?: "brilho" | "mate";
+  laminacao?: boolean;
   tipoCola?: "com-cola" | "sem-cola";
   largura?: number;
   altura?: number;
@@ -33,6 +34,13 @@ interface CartItem {
   area?: number;
   precoTotal: number;
   quantidade?: number;
+  quantity?: number;
+
+  // Canvas
+  canvasName?: string;
+  canvasImage?: string;
+  tamanho?: string;
+
   [key: string]: any;
 }
 
@@ -63,6 +71,12 @@ export default function Checkout() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // ✅ Método de entrega vindo do carrinho (obrigatório)
+  const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickup" | null>(null);
+
+  // ✅ Consentimento de marketing (RGPD): desmarcado por defeito
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+
   // Dados do cliente
   const [customerData, setCustomerData] = useState({
     nome: "",
@@ -81,6 +95,8 @@ export default function Checkout() {
 
   // Estado para rastrear erros de validação
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+
+  const isPickup = deliveryMethod === "pickup";
 
   // ✅ Carrega o SDK do PayPal APENAS quando o utilizador escolhe PayPal
   useEffect(() => {
@@ -112,19 +128,37 @@ export default function Checkout() {
   }, [paymentData.metodoPagamento, PAYPAL_CLIENT_ID, toast]);
 
   useEffect(() => {
+    // ✅ Validar método de entrega vindo do carrinho
+    const savedDelivery = localStorage.getItem("domrealce_delivery_method");
+    if (savedDelivery !== "delivery" && savedDelivery !== "pickup") {
+      toast({
+        title: "Método de entrega obrigatório",
+        description:
+          "Por favor, escolha 'Envio por transportadora' ou 'Levantar na loja' no carrinho.",
+        variant: "destructive",
+      });
+      setLocation("/carrinho");
+      return;
+    }
+    setDeliveryMethod(savedDelivery);
+
     // Carregar carrinho do localStorage
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       const items = JSON.parse(savedCart);
 
-      // Verificar se há itens sem medidas
-      const itemsSemMedidas = items.filter(
-        (item: CartItem) =>
+      // Verificar se há itens sem medidas (apenas para papel de parede)
+      const itemsSemMedidas = items.filter((item: CartItem) => {
+        const type = item.type || (item.tamanho ? "quadros-canvas" : "papel-parede");
+        if (type === "quadros-canvas") return false;
+
+        return (
           !item.larguraCm ||
           !item.alturaCm ||
           item.larguraCm === 0 ||
-          item.alturaCm === 0,
-      );
+          item.alturaCm === 0
+        );
+      });
 
       if (itemsSemMedidas.length > 0) {
         toast({
@@ -146,10 +180,13 @@ export default function Checkout() {
   const totalCarrinho = cartItems.reduce(
     (total, item) =>
       total + item.precoTotal * (item.quantidade || item.quantity || 1),
-    0,
+    0
   );
 
-  const custoEnvio = totalCarrinho >= 100 ? 0 : 10;
+  // ✅ Portes: pickup = 0
+  const custoEnvio =
+    deliveryMethod === "pickup" ? 0 : totalCarrinho >= 100 ? 0 : 10;
+
   const ivaRate = 0.23; // 23% IVA em Portugal
   const totalSemIva = totalCarrinho + custoEnvio;
   const valorIva = totalSemIva * ivaRate;
@@ -157,6 +194,9 @@ export default function Checkout() {
 
   // Função para validar um campo específico
   const validateField = (fieldName: string, value: string): string => {
+    // ✅ Se for levantamento na loja, morada/cp/cidade deixam de ser obrigatórios
+    const addressOptional = isPickup;
+
     switch (fieldName) {
       case "nome":
         if (!value) return "Nome é obrigatório";
@@ -173,20 +213,27 @@ export default function Checkout() {
         if (!phoneRegex.test(value.replace(/\s/g, "")))
           return "Telefone deve ter 9 dígitos";
         return "";
+
       case "morada":
+        if (addressOptional) return "";
         if (!value) return "Morada é obrigatória";
         if (value.length < 5) return "Morada deve ter pelo menos 5 caracteres";
         return "";
+
       case "codigoPostal":
+        if (addressOptional) return "";
         if (!value) return "Código postal é obrigatório";
         const postalRegex = /^\d{4}-\d{3}$/;
         if (!postalRegex.test(value))
           return "Código postal deve ter formato 0000-000";
         return "";
+
       case "cidade":
+        if (addressOptional) return "";
         if (!value) return "Cidade é obrigatória";
         if (value.length < 2) return "Cidade deve ter pelo menos 2 caracteres";
         return "";
+
       case "nif":
         if (value && value.length !== 9) return "NIF deve ter 9 dígitos";
         if (value && !/^\d{9}$/.test(value))
@@ -204,7 +251,7 @@ export default function Checkout() {
     Object.keys(customerData).forEach((fieldName) => {
       const error = validateField(
         fieldName,
-        customerData[fieldName as keyof typeof customerData],
+        customerData[fieldName as keyof typeof customerData]
       );
       if (error) {
         errors[fieldName] = error;
@@ -213,6 +260,11 @@ export default function Checkout() {
 
     if (!paymentData.metodoPagamento) {
       errors.metodoPagamento = "Método de pagamento é obrigatório";
+    }
+
+    // ✅ Segurança extra
+    if (!deliveryMethod) {
+      errors.metodoEntrega = "Método de entrega é obrigatório";
     }
 
     setFieldErrors(errors);
@@ -257,7 +309,7 @@ export default function Checkout() {
     if (!validateAllFields()) {
       toast({
         title: "Dados incompletos",
-        description: "Por favor, preencha todos os dados antes de pagar.",
+        description: "Por favor, preencha os dados obrigatórios antes de pagar.",
         variant: "destructive",
       });
       return;
@@ -278,10 +330,17 @@ export default function Checkout() {
         clienteNome: customerData.nome,
         clienteEmail: customerData.email,
         clienteTelefone: customerData.telefone,
+
+        // ✅ Se for pickup, estes campos podem ir vazios (mantemos para faturação se o cliente preencher)
         clienteMorada: customerData.morada,
         clienteCodigoPostal: customerData.codigoPostal,
         clienteCidade: customerData.cidade,
+
         clienteNIF: customerData.nif || undefined,
+
+        metodoEntrega: deliveryMethod, // ✅ já tinhas
+        marketingOptIn: Boolean(marketingOptIn), // ✅ NOVO
+
         itens: cartItems,
         subtotal: totalCarrinho.toString(),
         envio: custoEnvio.toString(),
@@ -290,12 +349,18 @@ export default function Checkout() {
         metodoPagamento: "paypal",
         estado: "paga",
         estadoPagamento: "pago",
-        referenciaIfthenpay: paypalDetails?.id || paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id || "PAYPAL-" + timestamp,
+        referenciaIfthenpay:
+          paypalDetails?.id ||
+          paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id ||
+          "PAYPAL-" + timestamp,
         dadosPagamento: {
           paypalOrderId: paypalDetails?.id,
           paypalPayerId: paypalDetails?.payer?.payer_id,
           paypalPayerEmail: paypalDetails?.payer?.email_address,
-          paypalPayerName: paypalDetails?.payer?.name?.given_name + " " + paypalDetails?.payer?.name?.surname,
+          paypalPayerName:
+            paypalDetails?.payer?.name?.given_name +
+            " " +
+            paypalDetails?.payer?.name?.surname,
           captureId: paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id,
           status: paypalDetails?.status,
         },
@@ -323,12 +388,13 @@ export default function Checkout() {
 
       // Redirecionar para página de confirmação
       setLocation(`/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`);
-
     } catch (error: any) {
       console.error("Erro ao processar encomenda PayPal:", error);
       toast({
         title: "Erro ao processar encomenda",
-        description: error.message || "O pagamento foi feito mas houve um erro ao guardar. Contacte-nos.",
+        description:
+          error.message ||
+          "O pagamento foi feito mas houve um erro ao guardar. Contacte-nos.",
         variant: "destructive",
       });
     } finally {
@@ -371,10 +437,17 @@ export default function Checkout() {
         clienteNome: customerData.nome,
         clienteEmail: customerData.email,
         clienteTelefone: customerData.telefone,
+
+        // ✅ pickup: opcionais
         clienteMorada: customerData.morada,
         clienteCodigoPostal: customerData.codigoPostal,
         clienteCidade: customerData.cidade,
+
         clienteNIF: customerData.nif || undefined,
+
+        metodoEntrega: deliveryMethod, // ✅ já tinhas
+        marketingOptIn: Boolean(marketingOptIn), // ✅ NOVO
+
         itens: cartItems,
         subtotal: totalCarrinho.toString(),
         envio: custoEnvio.toString(),
@@ -452,14 +525,14 @@ export default function Checkout() {
         monitorMBWayPayment(
           result.data.requestId,
           numeroEncomenda,
-          orderResult.order.id,
+          orderResult.order.id
         );
       } else {
         showPaymentInstructions(
           method,
           result.data,
           numeroEncomenda,
-          orderResult.order.id,
+          orderResult.order.id
         );
       }
     } catch (error) {
@@ -480,7 +553,7 @@ export default function Checkout() {
   const monitorMBWayPayment = async (
     requestId: string,
     numeroEncomenda: string,
-    orderId: string,
+    orderId: string
   ) => {
     const maxAttempts = 48;
     let attempts = 0;
@@ -548,7 +621,7 @@ export default function Checkout() {
     method: string,
     data: any,
     numeroEncomenda: string,
-    orderId: string,
+    orderId: string
   ) => {
     if (method === "multibanco") {
       toast({
@@ -567,11 +640,13 @@ export default function Checkout() {
         data,
         amount: totalFinal,
         customerData,
-      }),
+        metodoEntrega: deliveryMethod, // ✅ já tinhas
+        marketingOptIn: Boolean(marketingOptIn), // ✅ NOVO
+      })
     );
 
     setLocation(
-      `/instrucoes-pagamento?method=${method}&numeroEncomenda=${numeroEncomenda}`,
+      `/instrucoes-pagamento?method=${method}&numeroEncomenda=${numeroEncomenda}`
     );
   };
 
@@ -605,10 +680,20 @@ export default function Checkout() {
                   Dados de Facturação
                 </CardTitle>
               </CardHeader>
+
               <CardContent className="space-y-4">
-                {/* ... (mantém o resto do teu formulário exatamente como estava) ... */}
-                {/* Colei o teu formulário no bloco grande original; aqui deixei abreviado para não mexer nele. */}
-                {/* Se quiseres, eu reenfio o formulário inteiro sem abreviar, mas como já o tinhas, não alterei. */}
+                {isPickup && (
+                  <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
+                    <p className="text-sm text-gray-300">
+                      ✅ Selecionou{" "}
+                      <span className="text-[#FFD700] font-semibold">
+                        Levantar na loja
+                      </span>
+                      . A morada é opcional (caso queira que fique na fatura).
+                    </p>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="nome" className="text-gray-300">
@@ -617,9 +702,7 @@ export default function Checkout() {
                     <Input
                       id="nome"
                       value={customerData.nome}
-                      onChange={(e) =>
-                        updateCustomerData("nome", e.target.value)
-                      }
+                      onChange={(e) => updateCustomerData("nome", e.target.value)}
                       className={`bg-[#0a0a0a] text-white ${
                         fieldErrors.nome
                           ? "border-red-500 focus:border-red-500"
@@ -633,6 +716,7 @@ export default function Checkout() {
                       </p>
                     )}
                   </div>
+
                   <div>
                     <Label htmlFor="email" className="text-gray-300">
                       Email *
@@ -641,9 +725,7 @@ export default function Checkout() {
                       id="email"
                       type="email"
                       value={customerData.email}
-                      onChange={(e) =>
-                        updateCustomerData("email", e.target.value)
-                      }
+                      onChange={(e) => updateCustomerData("email", e.target.value)}
                       className={`bg-[#0a0a0a] text-white ${
                         fieldErrors.email
                           ? "border-red-500 focus:border-red-500"
@@ -685,6 +767,7 @@ export default function Checkout() {
                       </p>
                     )}
                   </div>
+
                   <div>
                     <Label htmlFor="nif" className="text-gray-300">
                       NIF (opcional)
@@ -692,9 +775,7 @@ export default function Checkout() {
                     <Input
                       id="nif"
                       value={customerData.nif}
-                      onChange={(e) =>
-                        updateCustomerData("nif", e.target.value)
-                      }
+                      onChange={(e) => updateCustomerData("nif", e.target.value)}
                       placeholder="123456789"
                       className={`bg-[#0a0a0a] text-white ${
                         fieldErrors.nif
@@ -712,20 +793,18 @@ export default function Checkout() {
 
                 <div>
                   <Label htmlFor="morada" className="text-gray-300">
-                    Morada *
+                    Morada {isPickup ? "(opcional)" : "*"}
                   </Label>
                   <Input
                     id="morada"
                     value={customerData.morada}
-                    onChange={(e) =>
-                      updateCustomerData("morada", e.target.value)
-                    }
+                    onChange={(e) => updateCustomerData("morada", e.target.value)}
                     className={`bg-[#0a0a0a] text-white ${
                       fieldErrors.morada
                         ? "border-red-500 focus:border-red-500"
                         : "border-[#333]"
                     }`}
-                    required
+                    required={!isPickup}
                   />
                   {fieldErrors.morada && (
                     <p className="text-red-500 text-sm mt-1">
@@ -737,7 +816,7 @@ export default function Checkout() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="codigoPostal" className="text-gray-300">
-                      Código Postal *
+                      Código Postal {isPickup ? "(opcional)" : "*"}
                     </Label>
                     <Input
                       id="codigoPostal"
@@ -751,7 +830,7 @@ export default function Checkout() {
                           ? "border-red-500 focus:border-red-500"
                           : "border-[#333]"
                       }`}
-                      required
+                      required={!isPickup}
                     />
                     {fieldErrors.codigoPostal && (
                       <p className="text-red-500 text-sm mt-1">
@@ -759,22 +838,21 @@ export default function Checkout() {
                       </p>
                     )}
                   </div>
+
                   <div>
                     <Label htmlFor="cidade" className="text-gray-300">
-                      Cidade *
+                      Cidade {isPickup ? "(opcional)" : "*"}
                     </Label>
                     <Input
                       id="cidade"
                       value={customerData.cidade}
-                      onChange={(e) =>
-                        updateCustomerData("cidade", e.target.value)
-                      }
+                      onChange={(e) => updateCustomerData("cidade", e.target.value)}
                       className={`bg-[#0a0a0a] text-white ${
                         fieldErrors.cidade
                           ? "border-red-500 focus:border-red-500"
                           : "border-[#333]"
                       }`}
-                      required
+                      required={!isPickup}
                     />
                     {fieldErrors.cidade && (
                       <p className="text-red-500 text-sm mt-1">
@@ -805,10 +883,7 @@ export default function Checkout() {
                       value="mbway"
                       checked={paymentData.metodoPagamento === "mbway"}
                       onChange={() => {
-                        setPaymentData({
-                          ...paymentData,
-                          metodoPagamento: "mbway",
-                        });
+                        setPaymentData({ ...paymentData, metodoPagamento: "mbway" });
                         if (fieldErrors.metodoPagamento) {
                           const newErrors = { ...fieldErrors };
                           delete newErrors.metodoPagamento;
@@ -849,10 +924,7 @@ export default function Checkout() {
                       value="paypal"
                       checked={paymentData.metodoPagamento === "paypal"}
                       onChange={() => {
-                        setPaymentData({
-                          ...paymentData,
-                          metodoPagamento: "paypal",
-                        });
+                        setPaymentData({ ...paymentData, metodoPagamento: "paypal" });
                         if (fieldErrors.metodoPagamento) {
                           const newErrors = { ...fieldErrors };
                           delete newErrors.metodoPagamento;
@@ -893,8 +965,7 @@ export default function Checkout() {
                   <div className="p-4 bg-[#0a0a0a] rounded border border-[#333]">
                     <p className="text-gray-300 text-sm">
                       Após confirmar o pedido, serão gerados os dados para
-                      pagamento por referência Multibanco / Pagamento de
-                      Serviços.
+                      pagamento por referência Multibanco / Pagamento de Serviços.
                     </p>
                   </div>
                 )}
@@ -919,7 +990,8 @@ export default function Checkout() {
                           console.error("Erro PayPal:", err);
                           toast({
                             title: "Erro no PayPal",
-                            description: "O pagamento foi cancelado ou falhou. Tente novamente.",
+                            description:
+                              "O pagamento foi cancelado ou falhou. Tente novamente.",
                             variant: "destructive",
                           });
                         }}
@@ -955,7 +1027,8 @@ export default function Checkout() {
                         <h4 className="text-sm font-medium text-white truncate">
                           {item.textureName || item.canvasName}
                         </h4>
-                        {item.type === "quadros-canvas" ? (
+
+                        {(item.type === "quadros-canvas" || item.tamanho) ? (
                           <p className="text-xs text-gray-400">
                             {item.tamanho} • Quadro em Canvas
                           </p>
@@ -963,20 +1036,17 @@ export default function Checkout() {
                           <>
                             <p className="text-xs text-gray-400">
                               {item.larguraCm}×{item.alturaCm}cm ={" "}
-                              {(
-                                (item.largura || 0) * (item.altura || 0)
-                              ).toFixed(2)}
+                              {((item.largura || 0) * (item.altura || 0)).toFixed(2)}
                               m²
                             </p>
                             <p className="text-xs text-gray-400">
                               {item.acabamento} •{" "}
-                              {item.tipoCola === "com-cola"
-                                ? "Com cola"
-                                : "Sem cola"}
+                              {item.tipoCola === "com-cola" ? "Com cola" : "Sem cola"}
                               {item.laminacao && " • Laminação"}
                             </p>
                           </>
                         )}
+
                         <p className="text-sm font-semibold text-[#FFD700]">
                           €
                           {(
@@ -994,26 +1064,34 @@ export default function Checkout() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-300">Subtotal:</span>
+                    <span className="text-white">€{totalCarrinho.toFixed(2)}</span>
+                  </div>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Método de entrega:</span>
                     <span className="text-white">
-                      €{totalCarrinho.toFixed(2)}
+                      {deliveryMethod === "pickup"
+                        ? "Levantar na loja"
+                        : "Envio por transportadora"}
                     </span>
                   </div>
+
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-300 flex items-center gap-1">
                       <Truck className="h-4 w-4" />
                       Envio:
                     </span>
                     <span className="text-white">
-                      {custoEnvio === 0
-                        ? "Grátis"
-                        : `€${custoEnvio.toFixed(2)}`}
+                      {custoEnvio === 0 ? "Grátis" : `€${custoEnvio.toFixed(2)}`}
                     </span>
                   </div>
-                  {custoEnvio === 0 && (
+
+                  {deliveryMethod === "delivery" && custoEnvio === 0 && (
                     <p className="text-xs text-green-400">
                       Envio grátis para compras acima de €100
                     </p>
                   )}
+
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-300">IVA (23%):</span>
                     <span className="text-white">€{valorIva.toFixed(2)}</span>
@@ -1023,9 +1101,7 @@ export default function Checkout() {
 
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-[#FFD700]">Total:</span>
-                    <span className="text-[#FFD700]">
-                      €{totalFinal.toFixed(2)}
-                    </span>
+                    <span className="text-[#FFD700]">€{totalFinal.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -1034,12 +1110,31 @@ export default function Checkout() {
                   <span>Pagamento seguro e protegido</span>
                 </div>
 
+                {/* ✅ Consentimento Marketing (opcional) */}
+                <div className="rounded-xl border border-[#333] bg-[#0a0a0a] p-4">
+                  <label className="flex items-start gap-3 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={marketingOptIn}
+                      onChange={(e) => setMarketingOptIn(e.target.checked)}
+                      className="mt-1 rounded border-[#333] bg-[#111111] text-[#FFD700] focus:ring-[#FFD700]"
+                    />
+                    <span className="leading-relaxed">
+                      Quero receber novidades e promoções da DOMREALCE por email.
+                      <span className="block text-xs text-gray-500 mt-1">
+                        Pode cancelar a qualquer momento.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+
                 <Button
                   onClick={handleFinalizarPedido}
                   disabled={
                     isProcessing ||
                     cartItems.length === 0 ||
-                    paymentData.metodoPagamento === "paypal"
+                    paymentData.metodoPagamento === "paypal" ||
+                    !deliveryMethod
                   }
                   className="w-full bg-[#FFD700] hover:bg-[#e6c200] text-black font-bold py-3 disabled:opacity-50"
                 >
@@ -1047,6 +1142,12 @@ export default function Checkout() {
                     ? "A processar..."
                     : `Finalizar Pedido - €${totalFinal.toFixed(2)}`}
                 </Button>
+
+                {fieldErrors.metodoEntrega && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {fieldErrors.metodoEntrega}
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>

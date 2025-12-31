@@ -194,6 +194,9 @@ export const orders = pgTable("orders", {
   clienteCidade: text("cliente_cidade").notNull(),
   clienteNIF: text("cliente_nif"),
 
+  // ✅ NOVO: Consentimento de marketing (RGPD)
+  marketingOptIn: boolean("marketing_opt_in").notNull().default(false),
+
   // Itens da encomenda
   itens: jsonb("itens").notNull(), // Array de CartItem
 
@@ -382,7 +385,10 @@ export const insertNewsSchema = createInsertSchema(news)
     summary: z.string().nullish(),
     published: z.boolean().optional().default(false),
     publishedAt: z.string().nullish(),
-    layoutGaleria: z.enum(["single", "slider", "grid", "beforeAfter"]).optional().default("grid"),
+    layoutGaleria: z
+      .enum(["single", "slider", "grid", "beforeAfter"])
+      .optional()
+      .default("grid"),
 
     // v4
     notaEditorial: z.string().nullish(),
@@ -510,6 +516,10 @@ export const insertOrderSchema = createInsertSchema(orders)
     clienteCodigoPostal: true,
     clienteCidade: true,
     clienteNIF: true,
+
+    // ✅ NOVO
+    marketingOptIn: true,
+
     itens: true,
     subtotal: true,
     envio: true,
@@ -531,6 +541,10 @@ export const insertOrderSchema = createInsertSchema(orders)
     clienteCidade: z.string().min(2, "Cidade deve ter pelo menos 2 caracteres"),
     clienteTelefone: z.string().optional(),
     clienteNIF: z.string().optional(),
+
+    // ✅ NOVO
+    marketingOptIn: z.boolean().optional().default(false),
+
     estado: z
       .enum([
         "pendente",
@@ -548,9 +562,7 @@ export const insertOrderSchema = createInsertSchema(orders)
       "creditcard",
       "paypal",
     ]),
-    estadoPagamento: z
-      .enum(["pendente", "pago", "falhado"])
-      .default("pendente"),
+    estadoPagamento: z.enum(["pendente", "pago", "falhado"]).default("pendente"),
     itens: z.array(z.any()).min(1, "Deve ter pelo menos um item"),
     subtotal: z.string().or(z.number()),
     envio: z.string().or(z.number()),

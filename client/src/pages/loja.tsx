@@ -196,7 +196,7 @@ export default function Loja() {
               </div>
               <h3 className="text-xl font-bold mb-2 text-[#20B2AA]">Envio Rápido</h3>
               <p className="text-gray-300">
-                Entregas em 3-5 dias úteis para todo o país.
+                Entregas em 5-10 dias úteis para todo o país.
               </p>
             </div>
 
@@ -206,7 +206,7 @@ export default function Loja() {
               </div>
               <h3 className="text-xl font-bold mb-2 text-[#FF6347]">Qualidade Garantida</h3>
               <p className="text-gray-300">
-                40 anos de experiência garantem a melhor qualidade.
+                Décadas de experiência garantem a melhor qualidade.
               </p>
             </div>
           </div>
