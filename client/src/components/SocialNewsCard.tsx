@@ -30,12 +30,9 @@ export default function SocialNewsCard({
   const [, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
 
-  const imagens =
-    noticia.imagens && noticia.imagens.length > 0
-      ? noticia.imagens
-      : noticia.imagem
-      ? [noticia.imagem]
-      : [];
+  // Usar cardImageUrl para cards (com fallback para imagem legacy)
+  const cardImage = noticia.cardImageUrl || (noticia.imagens && noticia.imagens.length > 0 ? noticia.imagens[0] : noticia.imagem) || "";
+  const imagens = cardImage ? [cardImage] : [];
 
   const canonicalUrl = useMemo(
     () => getCanonicalUrl(String(noticia.id)),

@@ -29,6 +29,8 @@ interface Noticia {
   summary?: string;
   categoria: string;
   imagem: string;
+  cardImageUrl?: string;
+  heroImageUrl?: string;
   media?: MediaItem[];
   layoutGaleria?: "single" | "slider" | "grid" | "beforeAfter";
   published?: boolean;
@@ -159,6 +161,8 @@ export default function NoticiasManager() {
     setFormData({
       ...noticia,
       media,
+      cardImageUrl: noticia.cardImageUrl || "",
+      heroImageUrl: noticia.heroImageUrl || "",
       // @ts-ignore
       layoutGaleria: noticia.layoutGaleria || reverseLayoutMap[noticia.tipoGaleria || "grid"] || "grid",
       published: noticia.published ?? false,
@@ -189,6 +193,8 @@ export default function NoticiasManager() {
       descricao: formData.descricao || formData.summary || "Projeto visual",
       imagem: imageMedia.length > 0 ? imageMedia[0].url : formData.imagem || "",
       imagens: imageMedia.map(m => m.url),
+      cardImageUrl: formData.cardImageUrl || "",
+      heroImageUrl: formData.heroImageUrl || "",
       tipoGaleria: layoutMap[formData.layoutGaleria || "grid"] || "grid",
       publishedAt: formData.published && !formData.publishedAt ? new Date().toISOString() : formData.publishedAt,
       categoria: formData.categoria || "Projetos"
@@ -409,6 +415,56 @@ export default function NoticiasManager() {
                     <SelectItem value="5">5/5 - Excelente</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* Imagens Principais - Card e Hero */}
+            <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
+              <Label className="text-white text-lg font-semibold">Imagens Principais</Label>
+              <p className="text-gray-400 text-sm">Defina imagens separadas para melhor qualidade e performance.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Imagem do Cartão (thumbnail) */}
+                <div className="space-y-3">
+                  <Label className="text-white flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4 text-brand-yellow" />
+                    Imagem do Cartão (thumbnail)
+                  </Label>
+                  <p className="text-gray-400 text-xs">Usada nos cards de listagem e homepage. Recomendado: 600x400px</p>
+                  <ImageUploader
+                    value={formData.cardImageUrl || ""}
+                    onChange={(url) => setFormData({ ...formData, cardImageUrl: url })}
+                    folder="noticias/cards"
+                  />
+                  {formData.cardImageUrl && (
+                    <img 
+                      src={formData.cardImageUrl} 
+                      alt="Preview card" 
+                      className="w-full max-w-xs h-32 object-cover rounded border border-gray-600"
+                    />
+                  )}
+                </div>
+
+                {/* Imagem Principal da Notícia (hero) */}
+                <div className="space-y-3">
+                  <Label className="text-white flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4 text-brand-yellow" />
+                    Imagem Principal (hero)
+                  </Label>
+                  <p className="text-gray-400 text-xs">Usada na página da notícia e SEO. Recomendado: 1200x800px</p>
+                  <ImageUploader
+                    value={formData.heroImageUrl || ""}
+                    onChange={(url) => setFormData({ ...formData, heroImageUrl: url })}
+                    folder="noticias/heroes"
+                  />
+                  {formData.heroImageUrl && (
+                    <img 
+                      src={formData.heroImageUrl} 
+                      alt="Preview hero" 
+                      className="w-full max-w-xs h-32 object-cover rounded border border-gray-600"
+                    />
+                  )}
+                </div>
               </div>
             </div>
 

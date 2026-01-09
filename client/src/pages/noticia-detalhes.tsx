@@ -104,11 +104,17 @@ export default function NoticiaDetalhes() {
     setIndiceImagem((prev) => (prev - 1 + imagens.length) % imagens.length);
   };
 
+  // Usar heroImageUrl para SEO/hero (com fallback para imagem legacy)
+  const heroImage = useMemo(() => {
+    if (!noticia) return "";
+    return noticia.heroImageUrl || imagens?.[0] || noticia.imagem || "";
+  }, [noticia, imagens]);
+
   // Meta tags (null-safe)
   useEffect(() => {
     if (!noticia) return;
 
-    const imagemNoticia = imagens?.[0] || noticia.imagem || "";
+    const imagemNoticia = heroImage;
     const descricao = (noticia.descricao || "").slice(0, 160);
 
     const updateMetaTag = (property: string, content: string) => {
