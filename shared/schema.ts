@@ -75,8 +75,12 @@ export const news = pgTable("news", {
   titulo: text("titulo").notNull(),
   descricao: text("descricao").notNull(),
   categoria: text("categoria").notNull(),
-  imagem: text("imagem").notNull(), // imagem principal (compatibilidade)
+  imagem: text("imagem").notNull(), // imagem principal (compatibilidade/fallback)
   imagens: text("imagens").array().default([]), // galeria
+  
+  // v5: Imagens separadas por função
+  cardImageUrl: text("card_image_url"), // thumbnail para cards/listagens
+  heroImageUrl: text("hero_image_url"), // imagem principal da página da notícia
   tipoGaleria: text("tipo_galeria").default("single"), // single, slide, grid, before-after
 
   // v2 (novo)
