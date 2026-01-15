@@ -643,7 +643,7 @@ export default function ServicoDecoracaoViaturas() {
               onClick={() => openVehicle(vehicle.key)}
               className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
             >
-              {isOpen ? "Fechar" : "Ver mais"}
+              {isOpen ? "Fechar" : "Explorar este serviço"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </CardContent>
@@ -667,6 +667,14 @@ export default function ServicoDecoracaoViaturas() {
             <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
               Comunicação visual aplicada a todo o tipo de veículos
             </h1>
+            
+            <p className="mt-4 text-gray-300 text-lg">
+              Escolha abaixo o tipo de viatura para conhecer o serviço e pedir orçamento.
+            </p>
+            
+            <p className="mt-2 text-gray-400 text-sm md:hidden flex items-center justify-center gap-2">
+              <span>⬇️</span> Desça para escolher o tipo de viatura
+            </p>
           </div>
 
           {/* ✅ MOBILE: detalhe sozinho */}

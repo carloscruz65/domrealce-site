@@ -47,6 +47,16 @@ export default function WhatsAppFAB() {
       ">
         Fale connosco!
       </div>
+      
+      {/* Texto tranquilizador */}
+      <div className="
+        absolute right-0 -top-8
+        text-gray-400 text-xs
+        whitespace-nowrap text-center
+        pointer-events-none
+      ">
+        Pode falar connosco<br />sem compromisso.
+      </div>
     </a>
   );
 }

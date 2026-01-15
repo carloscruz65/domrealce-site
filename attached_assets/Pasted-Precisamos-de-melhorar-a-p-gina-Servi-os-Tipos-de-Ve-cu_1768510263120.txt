@@ -1,0 +1,53 @@
+Precisamos de melhorar a página Serviços → Tipos de Veículos (landing de anúncios) sem mexer no conteúdo interno dos cartões (isso está fechado).
+
+Objetivo: tornar a página mais “ativa” para tráfego pago, guiando o utilizador para escolher um tipo de viatura, ver informação e avançar para pedido de orçamento/WhatsApp.
+
+1) Texto por baixo do título (sub-headline de orientação)
+
+Na página “Tipos de Veículos”, logo abaixo do título/intro (“Comunicação visual aplicada a todo o tipo de veículos”), adicionar uma linha curta e clara:
+
+“Escolha abaixo o tipo de viatura para conhecer o serviço e pedir orçamento.”
+
+Requisitos:
+
+visual discreto mas legível
+
+funciona bem em desktop e mobile
+
+não aumentar demasiado a altura do hero/topo
+
+(Opcional se fizer sentido no layout: incluir uma pequena indicação de scroll no mobile, tipo “⬇️ Desça para escolher o tipo de viatura”, mas só se ficar elegante e não poluir.)
+
+2) Alterar o texto do botão amarelo “Ver mais”
+
+Em todos os cartões desta página, substituir o texto do botão amarelo atualmente “Ver mais” por:
+
+“Explorar este serviço”
+
+Requisitos:
+
+manter exatamente o mesmo estilo (cor, tamanho, hover, spacing)
+
+aplicar a todos os cartões
+
+não alterar links nem comportamento atual (continua a abrir a página/área com dropdown e imagens como já está)
+
+3) Texto tranquilizador junto ao botão de WhatsApp
+
+Adicionar um pequeno texto de apoio/tranquilização junto ao botão flutuante de WhatsApp (visível em desktop e mobile), com o texto:
+
+“Pode falar connosco sem compromisso.”
+
+Requisitos:
+
+texto discreto e legível (não competir com o botão)
+
+não alterar o comportamento do botão WhatsApp
+
+manter coerência com tema escuro
+
+aplicar de forma consistente também nas páginas internas dos serviços (viaturas particulares, comerciais, máquinas, etc.), se o botão WhatsApp estiver presente nelas
+
+Nota: não mexer no conteúdo interno dos cartões/serviços (textos, dropdowns, imagens, CTA internos). Só estas melhorias de orientação e CTA na página de entrada + texto junto ao WhatsApp.
+
+No final, confirmar-me quais ficheiros foram alterados e onde foram colocadas as alterações.
