@@ -669,11 +669,14 @@ export default function ServicoDecoracaoViaturas() {
             </h1>
             
             <p className="mt-4 text-gray-300 text-lg">
-              Escolha abaixo o tipo de viatura para conhecer o serviço e pedir orçamento.
-            </p>
-            
-            <p className="mt-2 text-gray-400 text-sm md:hidden flex items-center justify-center gap-2">
-              <span>⬇️</span> Desça para escolher o tipo de viatura
+              Escolha abaixo o tipo de viatura para{" "}
+              <span className="text-brand-yellow font-medium">
+                conhecer o serviço
+              </span>{" "}
+              e{" "}
+              <span className="text-brand-yellow font-medium">
+                pedir orçamento
+              </span>.
             </p>
           </div>
 
