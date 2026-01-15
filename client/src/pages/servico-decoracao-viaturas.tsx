@@ -284,10 +284,11 @@ export default function ServicoDecoracaoViaturas() {
             const section = sectionRef.current;
             if (section) {
               const elementPosition = section.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              const offsetPosition =
+                elementPosition + window.pageYOffset - headerOffset;
               window.scrollTo({
                 top: offsetPosition,
-                behavior: "smooth"
+                behavior: "smooth",
               });
             }
           }, 50);
@@ -317,8 +318,8 @@ export default function ServicoDecoracaoViaturas() {
   const galleryImages = cmsHasImages
     ? galleryData!.images
     : isGalleryLoading
-      ? []
-      : activeConfig?.defaultGalleryImages || defaultImages;
+    ? []
+    : activeConfig?.defaultGalleryImages || defaultImages;
 
   const vehicleTypes: Array<{
     key: VehicleKey;
@@ -356,12 +357,7 @@ export default function ServicoDecoracaoViaturas() {
       icon: <Car className="w-8 h-8" />,
       title: "Viaturas de competição",
       description: "Decoração para desportos motorizados.",
-      features: [
-        "Patrocinadores",
-        "Numeração",
-        "Layouts rápidos",
-        "Materiais específicos",
-      ],
+      features: ["Patrocinadores", "Numeração", "Layouts rápidos", "Materiais específicos"],
     },
     {
       key: "camioes",
@@ -566,28 +562,149 @@ export default function ServicoDecoracaoViaturas() {
     },
   ];
 
-  const services = [
-    {
-      title: "Rotulação publicitária",
-      description: "Aplicação de logótipos e informação comercial.",
-      benefits: ["Publicidade móvel", "Imagem profissional", "Alcance geográfico", "Custo-benefício"],
-    },
-    {
-      title: "Wrapping parcial",
-      description: "Decoração de áreas específicas da viatura.",
-      benefits: ["Custo reduzido", "Impacto visual", "Flexibilidade", "Fácil manutenção"],
-    },
-    {
-      title: "Identificação de frota",
-      description: "Normalização visual para várias viaturas.",
-      benefits: ["Consistência", "Rapidez", "Repetição fácil", "Escalável"],
-    },
-    {
-      title: "Produção + aplicação",
-      description: "Impressão no nosso espaço e aplicação conforme o contexto.",
-      benefits: ["Controlo de qualidade", "Planeamento", "Acabamento", "Durabilidade"],
-    },
-  ];
+  // ✅ NOVO: Serviços disponíveis por tipo de veículo
+  const servicesByVehicle = {
+    particulares: [
+      {
+        title: "Personalização exterior",
+        description: "Pequenos detalhes estéticos e personalização visual.",
+        benefits: ["Detalhes e faixas", "Estética cuidada", "Materiais duráveis", "Aplicação precisa"],
+      },
+      {
+        title: "Faixas e detalhes decorativos",
+        description: "Aplicações discretas ou desportivas, conforme o estilo da viatura.",
+        benefits: ["Visual mais desportivo", "Opções por zonas", "Boa relação custo/impacto", "Acabamento limpo"],
+      },
+      {
+        title: "Autocolantes personalizados",
+        description: "Criação e aplicação à medida (nomes, símbolos, faixas, detalhes).",
+        benefits: ["Personalização total", "Recorte de precisão", "Aplicação cuidada", "Remoção controlada"],
+      },
+      {
+        title: "Proteção de pintura",
+        description: "Vinil ou PPF para proteção e acabamento em zonas de maior desgaste.",
+        benefits: ["Proteção contra riscos", "Acabamento premium", "Alta durabilidade", "Solução por zonas"],
+      },
+    ],
+
+    comerciais: [
+      {
+        title: "Rotulagem publicitária",
+        description: "Aplicação de logótipos, serviços e contactos com leitura clara.",
+        benefits: ["Publicidade móvel", "Imagem profissional", "Legibilidade", "Custo-benefício"],
+      },
+      {
+        title: "Wrapping parcial",
+        description: "Decoração de áreas específicas com impacto visual e coerência de marca.",
+        benefits: ["Impacto visual", "Custo controlado", "Flexibilidade", "Fácil atualização"],
+      },
+      {
+        title: "Identificação de frota",
+        description: "Normalização visual para várias viaturas, com consistência entre unidades.",
+        benefits: ["Consistência", "Repetição fácil", "Rapidez em produção", "Escalável"],
+      },
+      {
+        title: "Produção + aplicação",
+        description: "Produção no atelier e aplicação profissional, planeada ao detalhe.",
+        benefits: ["Controlo de qualidade", "Acabamento", "Durabilidade", "Planeamento"],
+      },
+    ],
+
+    competicao: [
+      {
+        title: "Livery de competição",
+        description: "Visual completo ou parcial preparado para pista (impacto e leitura).",
+        benefits: ["Presença em pista", "Coerência visual", "Aplicação precisa", "Acabamento de corrida"],
+      },
+      {
+        title: "Numeração regulamentar",
+        description: "Numeração com leitura rápida, alinhada com regras e necessidades da prova.",
+        benefits: ["Leitura à distância", "Tamanhos adequados", "Recorte limpo", "Aplicação rápida"],
+      },
+      {
+        title: "Patrocínios e logótipos",
+        description: "Destaque visual para sponsors, com equilíbrio e composição.",
+        benefits: ["Sponsors visíveis", "Hierarquia clara", "Boa leitura em foto/vídeo", "Consistência"],
+      },
+      {
+        title: "Acabamentos técnicos",
+        description: "Laminação e materiais resistentes para o contexto exigente da competição.",
+        benefits: ["Maior durabilidade", "Resistência", "Proteção extra", "Acabamento premium"],
+      },
+    ],
+
+    camioes: [
+      {
+        title: "Rotulagem de grande formato",
+        description: "Comunicação visual com leitura à distância, pensada para grande escala.",
+        benefits: ["Grande impacto", "Legibilidade", "Escala", "Presença na estrada"],
+      },
+      {
+        title: "Identificação da empresa",
+        description: "Marca e contactos visíveis para reforçar confiança e reconhecimento.",
+        benefits: ["Imagem profissional", "Reforço de marca", "Contactos claros", "Autoridade"],
+      },
+      {
+        title: "Laterais, traseiras e lonas",
+        description: "Aplicações parciais ou totais em painéis, traseiras, laterais e lonas.",
+        benefits: ["Cobertura total/parcial", "Adaptável", "Solução por zonas", "Boa durabilidade"],
+      },
+      {
+        title: "Renovação de imagem",
+        description: "Atualização de decorações existentes com limpeza visual e modernização.",
+        benefits: ["Atualização rápida", "Novo visual", "Melhoria de legibilidade", "Refrescamento de marca"],
+      },
+    ],
+
+    motos: [
+      {
+        title: "Kits para carenagens",
+        description: "Aplicação em peças e painéis com recorte e encaixe cuidado.",
+        benefits: ["Aplicação por peças", "Recorte de precisão", "Visual consistente", "Acabamento limpo"],
+      },
+      {
+        title: "Proteção de depósito",
+        description: "Vinil/PPF para zonas de contacto e desgaste (proteção e estética).",
+        benefits: ["Proteção", "Maior durabilidade", "Melhor estética", "Solução localizada"],
+      },
+      {
+        title: "Detalhes personalizados",
+        description: "Nomes, números, faixas e efeitos para um visual único.",
+        benefits: ["Personalização", "Design flexível", "Impacto visual", "Identidade própria"],
+      },
+      {
+        title: "Acabamentos duráveis",
+        description: "Laminação e materiais adequados ao uso real e ao exterior.",
+        benefits: ["Resistência", "Proteção extra", "Melhor manutenção", "Boa longevidade"],
+      },
+    ],
+
+    maquinas: [
+      {
+        title: "Identificação técnica e sinalização",
+        description: "Informação técnica e avisos essenciais para segurança e operação.",
+        benefits: ["Segurança", "Clareza", "Resistência", "Conformidade"],
+      },
+      {
+        title: "Reposição de logótipos de origem",
+        description: "Substituição/recuperação de marcas e elementos visuais do equipamento.",
+        benefits: ["Aspeto profissional", "Marca visível", "Recuperação estética", "Coerência"],
+      },
+      {
+        title: "Sinais de perigo e avisos",
+        description: "Sinalética e avisos para locais de trabalho e equipamentos pesados.",
+        benefits: ["Prevenção", "Leitura rápida", "Durabilidade", "Aplicação segura"],
+      },
+      {
+        title: "Numeração de frota",
+        description: "Identificação interna para controlo, gestão e operação.",
+        benefits: ["Organização", "Gestão", "Identificação rápida", "Padronização"],
+      },
+    ],
+  } as const;
+
+  const servicesForActiveVehicle =
+    (activeVehicle ? (servicesByVehicle as any)[activeVehicle] : null) ?? servicesByVehicle.comerciais;
 
   const process = [
     { step: "01", title: "Consulta e levantamento", description: "Objetivo, superfícies e restrições." },
@@ -625,9 +742,7 @@ export default function ServicoDecoracaoViaturas() {
           <CardContent className="p-6 h-full flex flex-col">
             <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
 
-            <h3 className="text-xl font-semibold mb-3 text-white">
-              {vehicle.title}
-            </h3>
+            <h3 className="text-xl font-semibold mb-3 text-white">{vehicle.title}</h3>
             <p className="text-gray-400 mb-4">{vehicle.description}</p>
 
             <div className="space-y-2 mb-6">
@@ -667,16 +782,12 @@ export default function ServicoDecoracaoViaturas() {
             <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
               Comunicação visual aplicada a todo o tipo de veículos
             </h1>
-            
+
             <p className="mt-4 text-gray-300 text-lg">
               Escolha abaixo o tipo de viatura para{" "}
-              <span className="text-brand-yellow font-medium">
-                conhecer o serviço
-              </span>{" "}
+              <span className="text-brand-yellow font-medium">conhecer o serviço</span>{" "}
               e{" "}
-              <span className="text-brand-yellow font-medium">
-                pedir orçamento
-              </span>.
+              <span className="text-brand-yellow font-medium">pedir orçamento</span>.
             </p>
           </div>
 
@@ -719,7 +830,8 @@ export default function ServicoDecoracaoViaturas() {
       {/* RESTO: só aparece depois de escolher */}
       {hasSelection && (
         <>
-          <ServicesAvailableSection services={services} />
+          {/* ✅ AQUI: agora muda conforme o veículo */}
+          <ServicesAvailableSection services={servicesForActiveVehicle} />
 
           {galleryImages.length > 0 ? (
             <ServiceGallery
@@ -733,12 +845,8 @@ export default function ServicoDecoracaoViaturas() {
           ) : (
             <section className="w-full py-10">
               <div className="mx-auto max-w-6xl px-4">
-                <h2 className="text-2xl font-semibold text-white">
-                  Galeria de trabalhos
-                </h2>
-                <p className="text-sm text-white/70">
-                  Ainda não há imagens para este serviço.
-                </p>
+                <h2 className="text-2xl font-semibold text-white">Galeria de trabalhos</h2>
+                <p className="text-sm text-white/70">Ainda não há imagens para este serviço.</p>
               </div>
             </section>
           )}
@@ -774,9 +882,7 @@ export default function ServicoDecoracaoViaturas() {
                         </span>
                       </div>
 
-                      <span className="text-sm text-gray-500 mb-2 block">
-                        Aplicações:
-                      </span>
+                      <span className="text-sm text-gray-500 mb-2 block">Aplicações:</span>
                       <div className="flex flex-wrap gap-2">
                         {material.applications.map((app, i) => (
                           <Badge
@@ -818,12 +924,8 @@ export default function ServicoDecoracaoViaturas() {
                         {step.step}
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold mb-1 text-white">
-                          {step.title}
-                        </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                          {step.description}
-                        </p>
+                        <h3 className="text-lg font-semibold mb-1 text-white">{step.title}</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
                       </div>
                     </div>
                   ))}
@@ -863,9 +965,7 @@ export default function ServicoDecoracaoViaturas() {
                     <h3 className="text-2xl font-semibold mb-2 text-white">
                       Experiência comprovada
                     </h3>
-                    <p className="text-gray-400">
-                      Décadas de prática em comunicação visual aplicada.
-                    </p>
+                    <p className="text-gray-400">Décadas de prática em comunicação visual aplicada.</p>
                   </div>
                 </div>
               </div>
