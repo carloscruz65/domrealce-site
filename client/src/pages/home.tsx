@@ -27,7 +27,7 @@ export default function Home() {
       <Navigation />
 
       {/* HERO – LCP: imagem com prioridade + versão mobile */}
-      <section className="mt-16">
+      <section className="pt-16">
         <StaticHero
           imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
           imageSrcMobile="/public-objects/inicio/slider/bem-vindo-domrealce-mobile.webp"
@@ -100,7 +100,7 @@ export default function Home() {
 
       {/* SECÇÕES ABAIXO DA DOBRA EM LAZY + SUSPENSE */}
       <Suspense fallback={null}>
-        <section className="bg-[#050505]">
+        <section id="servicos" className="bg-[#050505]">
           <LazyServicesSection />
         </section>
 
