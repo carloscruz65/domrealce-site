@@ -25,7 +25,7 @@ export default function StaticHero({
   return (
     <section className="relative w-full overflow-hidden bg-black">
       {/* HERO */}
-      <div className="relative w-full aspect-[16/9] max-h-[85vh]">
+      <div className="relative w-full aspect-[16/16] max-h-[85vh]">
         <picture>
           {imageSrcMobile && (
             <source media="(max-width: 768px)" srcSet={imageSrcMobile} />
