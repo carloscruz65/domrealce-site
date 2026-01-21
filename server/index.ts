@@ -29,9 +29,8 @@ app.use((req, res, next) => {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://www.clarity.ms",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
-      "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com",
-      "frame-src https://www.paypal.com https://www.sandbox.paypal.com",
+      "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://*.clarity.ms https://*.bing.com",
+      "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://clarity.ms https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
     ].join("; ")
   );
 
