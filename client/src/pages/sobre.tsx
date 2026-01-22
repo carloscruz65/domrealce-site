@@ -11,8 +11,6 @@ import {
   Target,
   PenTool,
   Clock3,
-  Layers,
-  MonitorSmartphone,
   MapPin,
   Sparkles,
 } from "lucide-react";

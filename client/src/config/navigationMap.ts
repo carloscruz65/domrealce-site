@@ -24,5 +24,4 @@ export const SITE: PageNode[] = [
   { id: "loja", label: "Loja", href: "/loja", group: "site" },
   { id: "noticias", label: "Notícias", href: "/noticias", group: "site" },
   { id: "contactos", label: "Contactos", href: "/contactos", group: "site" },
-  { id: "servicos-index", label: "Serviços", href: "/servicos", group: "site" },
 ];
