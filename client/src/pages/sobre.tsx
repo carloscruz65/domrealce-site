@@ -1,6 +1,5 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 import { SEOHead } from "@/components/seo-head";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -68,7 +67,6 @@ export default function Sobre() {
       />
 
       <Navigation />
-      <GlobalBreadcrumbs />
 
       {/* HERO */}
       <section className="pt-32 pb-12 px-4 bg-gradient-to-b from-black via-[#0a0a0a] to-[#0a0a0a]">
