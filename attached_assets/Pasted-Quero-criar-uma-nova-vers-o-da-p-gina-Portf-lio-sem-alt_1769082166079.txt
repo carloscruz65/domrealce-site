@@ -1,0 +1,100 @@
+Quero criar uma nova versão da página Portfólio sem alterar a atual.
+Criar uma nova rota: /portfolio-v2 baseada na página existente.
+
+Objetivo:
+Transformar o portfólio numa página institucional mais emocional, visual e organizada por categorias, mas mantendo o sistema de filtro já existente.
+
+1️⃣ Topo da página
+
+Reduzir o texto atual e reorganizar em layout de duas colunas:
+
+Coluna esquerda:
+Título:
+"O nosso portfólio"
+
+Subtexto curto:
+"Projetos reais, do conceito à aplicação no terreno. Cada imagem representa estudo, produção e execução completa."
+
+Coluna direita:
+Manter os dados de prova social (40+ anos, 200+ projetos, Grande Porto) mas mais compactos.
+
+2️⃣ Nova Secção de Categorias Visuais
+
+Criar uma grelha com:
+
+2 linhas de 5 cartões
+
+1 cartão especial vertical à esquerda com fundo amarelo (#F5C518)
+
+Texto nesse cartão:
+"Ver Todos os Projetos"
+Subtexto: "+200 projetos realizados"
+
+Este cartão deve:
+
+Limpar o filtro
+
+Mostrar todos os projetos
+
+Os outros 10 cartões devem:
+
+Usar imagem representativa da categoria
+
+Mostrar nome da categoria
+
+Ao clicar na imagem → aplicar o filtro já existente
+
+NÃO usar botões
+
+Apenas imagem clicável com overlay leve escuro + título
+
+Categorias a usar:
+Autocolantes
+Comerciais
+Competição
+Fachadas
+Interiores
+Lonas
+Montras
+Máquinas
+Reclames
+Camiões
+
+Deve reutilizar o sistema de filtro que já existe na página atual.
+
+3️⃣ Manter a Grelha de Projetos
+
+Depois dos cartões, manter a grelha atual filtrável como já funciona.
+
+Não alterar lógica existente.
+
+4️⃣ Bloco Final de Conversão
+
+Adicionar no final da página um bloco com:
+
+Título:
+"Quer um trabalho semelhante?"
+
+Subtexto:
+"Se se identifica com este tipo de projeto, fale connosco e peça orçamento sem compromisso."
+
+Botões:
+Botão 1 → "Ver informações do serviço"
+(link para página do serviço correspondente)
+
+Botão 2 → "Pedir orçamento"
+(link para página contactos)
+
+5️⃣ Regras Técnicas
+
+Não alterar a página atual
+
+Criar nova página independente
+
+Reutilizar componentes existentes sempre que possível
+
+Manter identidade visual DOMREALCE
+
+Manter fundo escuro e estilo premium
+
+Quando estiver concluído, mostrar-me o código completo da nova página.

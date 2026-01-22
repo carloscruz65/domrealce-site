@@ -32,6 +32,7 @@ const LojaCanvasDetalhes = lazy(() => import("@/pages/canvas-detalhes"));
 const LojaTexturaDetalhes = lazy(() => import("@/pages/textura-detalhes"));
 const Carrinho = lazy(() => import("@/pages/carrinho"));
 const Portfolio = lazy(() => import("@/pages/portfolio"));
+const PortfolioV2 = lazy(() => import("@/pages/portfolio-v2"));
 const ServicoDesignGrafico = lazy(() => import("@/pages/servico-design-grafico"));
 const ServicoImpressaoDigital = lazy(() => import("@/pages/servico-impressao-digital"));
 const ServicoPapelParede = lazy(() => import("@/pages/servico-papel-parede"));
@@ -136,6 +137,7 @@ function Router() {
           <Route path="/instrucoes-pagamento" component={InstrucoesPagamento} />
           <Route path="/teste-cores" component={TesteCores} />
           <Route path="/portfolio" component={Portfolio} />
+          <Route path="/portfolio-v2" component={PortfolioV2} />
           <Route path="/loja" component={Loja} />
           <Route path="/loja/papel-parede" component={LojaPapelParede} />
           <Route path="/loja/quadros-canvas" component={LojaQuadrosCanvas} />
