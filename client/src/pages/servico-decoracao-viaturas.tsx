@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 import ServiceGallery from "@/components/service-gallery";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import { Button } from "@/components/ui/button";
@@ -770,6 +771,7 @@ export default function ServicoDecoracaoViaturas() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
+      <GlobalBreadcrumbs />
 
       <section ref={sectionRef} className="pt-10 pb-16 bg-gray-900/40 scroll-mt-28">
         <div className="container mx-auto px-4 pt-8">
