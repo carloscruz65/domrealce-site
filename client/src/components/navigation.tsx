@@ -296,17 +296,39 @@ export default function Navigation() {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-white hover:bg-white/10"
+          <button
+            type="button"
+            className={[
+              "md:hidden",
+              "flex items-center gap-2",
+              "h-11 px-3",
+              "rounded-xl",
+              "bg-zinc-800 ring-1 ring-zinc-700",   // base mais sólida
+              "text-white",
+              "hover:bg-zinc-600 hover:ring-zinc-500",  // diferença clara
+              "active:bg-zinc-500",
+              "transition-colors duration-200",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/70",
+            ].join(" ")}
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isMenuOpen}
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
               if (!isMenuOpen) setIsServicesMobileOpen(false);
             }}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+            {isMenuOpen ? (
+              <>
+                <X className="h-7 w-7" />
+                <span className="text-sm font-semibold">Fechar</span>
+              </>
+            ) : (
+              <>
+                <Menu className="h-7 w-7" />
+                <span className="text-sm font-semibold">Menu</span>
+              </>
+            )}
+          </button>
         </div>
 
         {/* Mobile Menu */}

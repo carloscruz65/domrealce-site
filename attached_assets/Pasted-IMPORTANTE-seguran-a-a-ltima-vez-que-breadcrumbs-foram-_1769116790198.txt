@@ -1,0 +1,47 @@
+IMPORTANTE (segurança): a última vez que breadcrumbs foram adicionados, o site quebrou. Desta vez fazer implementação MINIMAL e SAFE.
+
+Objetivo: mostrar Breadcrumbs apenas com base em ROTAS ESTÁTICAS, sem tentar carregar dados, sem SSR hacks, sem mexer no router.
+
+Ficheiros existentes (já criados e a manter):
+- /config/navigationMap.ts
+- /Breadcrumbs.tsx
+- /page-NavBar.tsx (não usar nesta fase)
+
+REGRAS DE SEGURANÇA:
+1) NÃO alterar o router, providers, app shell, nem lógica de autenticação.
+2) NÃO tentar resolver título de páginas dinâmicas (ex: notícia/produto) nesta fase.
+3) Breadcrumbs devem usar somente pathname atual (string) e a configuração navigationMap (SITE + SERVICES).
+4) Se não encontrar label, usar fallback simples: "Página" ou o último segmento do path (sem formatações complexas).
+5) Breadcrumbs NUNCA devem lançar erro se pathname for undefined. Deve haver guard clauses.
+
+IMPLEMENTAÇÃO SAFE:
+A) Criar um componente wrapper: <GlobalBreadcrumbs /> que:
+   - Obtém pathname com o método já existente no projeto (React Router useLocation se existir; se não, receber pathname por prop do layout).
+   - Constrói crumbs apenas para:
+     - Rotas do SITE (match exato por href em SITE)
+     - Rotas de SERVICES (match exato por href em SERVICES)
+     - /servicos (página índice)
+     - /sobre, /contactos, /loja, /noticias, /portfolio
+   - Para rotas desconhecidas, retornar null (não renderizar breadcrumbs).
+
+B) Inserir <GlobalBreadcrumbs /> num local seguro:
+   - Preferência: dentro do container principal da página (abaixo do header), mas sem tocar no header/nav.
+   - Não colocar em cima de <Routes> ou fora de providers.
+   - Se existir PageLayout já usado pelas páginas, inserir aí. Se não existir, inserir manualmente APENAS em 2 páginas para testar (Serviços e Sobre), e depois expandir.
+
+ROLL-OUT EM 2 PASSOS (para evitar estragar o site):
+1) Passo 1: aplicar breadcrumbs só em:
+   - /servicos e /servicos/* (serviços)
+   - /sobre
+   Se estiver tudo ok, então:
+2) Passo 2: aplicar nas restantes rotas estáticas do SITE (contactos, loja, noticias, portfolio).
+   NÃO aplicar em páginas dinâmicas de detalhe (ex: /noticias/:slug, /loja/:slug) nesta fase.
+
+Validação:
+- Build sem erros
+- Navegação não quebra
+- Breadcrumbs não aparecem duplicados
+- Breadcrumbs não empurram layout (margens pequenas)
+
+Entrega:
+- Commit com implementação minimal + segura.
