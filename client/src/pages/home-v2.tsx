@@ -153,7 +153,7 @@ export default function HomeV2() {
             <div className="order-1 md:order-2">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
                 <img
-                  src="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
+                  src="/public-objects/public/servicos/horto/1766771076470-ford_ranger_hortouniao.WEBP"
                   alt="Projetos DOMREALCE"
                   className="w-full aspect-[4/3] object-cover"
                   loading="eager"

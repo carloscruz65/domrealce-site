@@ -68,7 +68,6 @@ export default function Sobre() {
       />
 
       <Navigation />
-      <GlobalBreadcrumbs />
 
       {/* HERO */}
       <section className="pt-32 pb-12 px-4 bg-gradient-to-b from-black via-[#0a0a0a] to-[#0a0a0a]">

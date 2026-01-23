@@ -3,6 +3,7 @@ import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
 import logoDomrealce from "@/assets/domrealce-logo.png";
+import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,8 +36,7 @@ export default function Navigation() {
 
     if (isMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isMenuOpen]);
 
@@ -95,252 +95,33 @@ export default function Navigation() {
   const activeLinkClasses = "text-brand-yellow bg-white/5";
 
   return (
-    <header
-      className={`fixed w-full top-0 z-50 transition-all duration-300 border-b border-white/10 ${
-        isScrolled
-          ? "bg-black/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
-          : "bg-black/70 backdrop-blur-xl"
-      }`}
-    >
-      <nav className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
-          {/* LOGO */}
-          <Link href="/" className="flex items-center space-x-3">
-            <img
-              src={logoDomrealce}
-              alt="DOMREALCE Logo"
-              className="h-14 w-auto"
-              width={180}
-              height={56}
-            />
-          </Link>
-
-          {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-black/40 border border-white/5 backdrop-blur">
-            <Link
-              href="/"
-              className={`${baseLinkClasses} ${
-                location === "/" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Início
+    <>
+      <header
+        className={`fixed w-full top-0 z-50 transition-all duration-300 border-b border-white/10 ${
+          isScrolled
+            ? "bg-black/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
+            : "bg-black/70 backdrop-blur-xl"
+        }`}
+      >
+        <nav className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* LOGO */}
+            <Link href="/" className="flex items-center space-x-3">
+              <img
+                src={logoDomrealce}
+                alt="DOMREALCE Logo"
+                className="h-14 w-auto"
+                width={180}
+                height={56}
+              />
             </Link>
 
-            <Link
-              href="/sobre"
-              className={`${baseLinkClasses} ${
-                location === "/sobre" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sobre
-            </Link>
-
-            {/* Serviços com DROPDOWN (desktop) */}
-            <div className="relative group">
-              <button
-                type="button"
-                className={`${baseLinkClasses} flex items-center gap-1 ${
-                  isServicesActive ? activeLinkClasses : ""
-                }`}
-              >
-                Serviços
-                <span className="text-xs">▾</span>
-                {isServicesActive && (
-                  <span className="absolute left-3 right-3 -bottom-1 h-[2px] rounded-full bg-brand-yellow/80" />
-                )}
-              </button>
-
-              <div
-                className="
-                  absolute left-0 top-full
-                  w-72
-                  bg-black border border-[#333] rounded-xl shadow-2xl
-                  opacity-0 pointer-events-none
-                  group-hover:opacity-100 group-hover:pointer-events-auto
-                  hover:opacity-100 hover:pointer-events-auto
-                  transition-opacity duration-200
-                  z-50
-                "
-              >
-                <ul className="py-2">
-                  <li>
-                    <Link
-                      href="/servico-design-grafico"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Design Gráfico
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-impressao-digital"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Impressão Digital
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-papel-parede"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Papel de Parede
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-telas-artisticas"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Telas Artísticas
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-autocolantes"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Autocolantes e Etiquetas
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-decoracao-viaturas"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Decoração de Viaturas
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-espacos-comerciais"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Espaços Comerciais
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/servico-peliculas-protecao-solar"
-                      className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                    >
-                      Películas de Proteção Solar
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <Link
-              href="/portfolio"
-              className={`${baseLinkClasses} ${
-                location === "/portfolio" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Portfólio
-            </Link>
-
-            <Link
-              href="/loja"
-              className={`${baseLinkClasses} ${
-                location === "/loja" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Loja
-            </Link>
-
-            <Link
-              href="/noticias"
-              className={`${baseLinkClasses} ${
-                location === "/noticias" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Notícias
-            </Link>
-
-            <Link
-              href="/contactos"
-              className={`${baseLinkClasses} ${
-                location === "/contactos" ? activeLinkClasses : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contactos
-            </Link>
-
-            {/* Cart Button – com badge */}
-            <Link
-              href="/carrinho"
-              className={`ml-1 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
-                location === "/carrinho"
-                  ? "bg-brand-yellow text-brand-dark shadow-lg shadow-brand-yellow/30"
-                  : "bg-brand-yellow text-black hover:bg-brand-yellow/90 hover:shadow-lg hover:shadow-brand-yellow/30"
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <div className="relative">
-                <ShoppingCart className="h-4 w-4" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 min-w-[18px] px-1 h-[18px] rounded-full bg-black text-brand-yellow text-[10px] font-bold flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-              <span>Carrinho</span>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            className={[
-              "md:hidden",
-              "flex items-center gap-2",
-              "h-11 px-3",
-              "rounded-xl",
-              "bg-zinc-800 ring-1 ring-zinc-700",   // base mais sólida
-              "text-white",
-              "hover:bg-zinc-600 hover:ring-zinc-500",  // diferença clara
-              "active:bg-zinc-500",
-              "transition-colors duration-200",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/70",
-            ].join(" ")}
-            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-            aria-expanded={isMenuOpen}
-            onClick={() => {
-              setIsMenuOpen(!isMenuOpen);
-              if (!isMenuOpen) setIsServicesMobileOpen(false);
-            }}
-          >
-            {isMenuOpen ? (
-              <>
-                <X className="h-7 w-7" />
-                <span className="text-sm font-semibold">Fechar</span>
-              </>
-            ) : (
-              <>
-                <Menu className="h-7 w-7" />
-                <span className="text-sm font-semibold">Menu</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/10 pt-3">
-            <div className="flex flex-col space-y-2">
+            {/* DESKTOP MENU */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-black/40 border border-white/5 backdrop-blur">
               <Link
                 href="/"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/"
-                    ? "bg-white/5 text-brand-yellow"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -349,129 +130,114 @@ export default function Navigation() {
 
               <Link
                 href="/sobre"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/sobre"
-                    ? "bg-white/5 text-brand-turquoise"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/sobre" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Sobre
               </Link>
 
-              {/* Serviços com SUBMENU (mobile) */}
-              <div className="rounded-lg bg-black/60 border border-gray-800">
+              {/* Serviços com DROPDOWN (desktop) */}
+              <div className="relative group">
                 <button
                   type="button"
-                  className={`w-full text-left transition-all duration-300 font-medium py-3 px-4 rounded-lg flex items-center justify-between ${
-                    location.startsWith("/servico-")
-                      ? "bg:white/5 text-brand-yellow"
-                      : "text-white/80"
+                  className={`${baseLinkClasses} flex items-center gap-1 ${
+                    isServicesActive ? activeLinkClasses : ""
                   }`}
-                  onClick={() =>
-                    setIsServicesMobileOpen((prev) => !prev)
-                  }
                 >
-                  <span>Serviços</span>
-                  <span className="text-xs">
-                    {isServicesMobileOpen ? "▴" : "▾"}
-                  </span>
+                  Serviços
+                  <span className="text-xs">▾</span>
+                  {isServicesActive && (
+                    <span className="absolute left-3 right-3 -bottom-1 h-[2px] rounded-full bg-brand-yellow/80" />
+                  )}
                 </button>
 
-                {isServicesMobileOpen && (
-                  <div className="border-t border-gray-800">
-                    <div className="flex flex-col py-1">
+                <div
+                  className="
+                    absolute left-0 top-full
+                    w-72
+                    bg-black border border-[#333] rounded-xl shadow-2xl
+                    opacity-0 pointer-events-none
+                    group-hover:opacity-100 group-hover:pointer-events-auto
+                    hover:opacity-100 hover:pointer-events-auto
+                    transition-opacity duration-200
+                    z-50
+                  "
+                >
+                  <ul className="py-2">
+                    <li>
                       <Link
                         href="/servico-design-grafico"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Design Gráfico
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-impressao-digital"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Impressão Digital
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-papel-parede"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Papel de Parede
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-telas-artisticas"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Telas Artísticas
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-autocolantes"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Autocolantes e Etiquetas
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-decoracao-viaturas"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Decoração de Viaturas
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-espacos-comerciais"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Espaços Comerciais
                       </Link>
+                    </li>
+                    <li>
                       <Link
                         href="/servico-peliculas-protecao-solar"
-                        className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsServicesMobileOpen(false);
-                        }}
+                        className="block px-4 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
                       >
                         Películas de Proteção Solar
                       </Link>
-                    </div>
-                  </div>
-                )}
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <Link
                 href="/portfolio"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/portfolio"
-                    ? "bg-white/5 text-brand-yellow"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/portfolio" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -480,10 +246,8 @@ export default function Navigation() {
 
               <Link
                 href="/loja"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/loja"
-                    ? "bg-white/5 text-brand-turquoise"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/loja" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -492,10 +256,8 @@ export default function Navigation() {
 
               <Link
                 href="/noticias"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/noticias"
-                    ? "bg-white/5 text-brand-green"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/noticias" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -504,23 +266,21 @@ export default function Navigation() {
 
               <Link
                 href="/contactos"
-                className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
-                  location === "/contactos"
-                    ? "bg-white/5 text-brand-coral"
-                    : "text-white/80 hover:bg-white/5 hover:text-white"
+                className={`${baseLinkClasses} ${
+                  location === "/contactos" ? activeLinkClasses : ""
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contactos
               </Link>
 
-              {/* Cart Button Mobile – com badge */}
+              {/* Cart Button – com badge */}
               <Link
                 href="/carrinho"
-                className={`transition-all duration-300 font-semibold py-3 px-4 rounded-lg text-left flex items-center gap-2 ${
+                className={`ml-1 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                   location === "/carrinho"
-                    ? "bg-brand-yellow text-black shadow-lg shadow-brand-yellow/30"
-                    : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
+                    ? "bg-brand-yellow text-brand-dark shadow-lg shadow-brand-yellow/30"
+                    : "bg-brand-yellow text-black hover:bg-brand-yellow/90 hover:shadow-lg hover:shadow-brand-yellow/30"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -535,9 +295,254 @@ export default function Navigation() {
                 <span>Carrinho</span>
               </Link>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              type="button"
+              className={[
+                "md:hidden",
+                "flex items-center gap-2",
+                "h-11 px-3",
+                "rounded-xl",
+                "bg-zinc-800 ring-1 ring-zinc-700",
+                "text-white",
+                "hover:bg-zinc-600 hover:ring-zinc-500",
+                "active:bg-zinc-500",
+                "transition-colors duration-200",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/70",
+              ].join(" ")}
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isMenuOpen}
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+                if (!isMenuOpen) setIsServicesMobileOpen(false);
+              }}
+            >
+              {isMenuOpen ? (
+                <>
+                  <X className="h-7 w-7" />
+                  <span className="text-sm font-semibold">Fechar</span>
+                </>
+              ) : (
+                <>
+                  <Menu className="h-7 w-7" />
+                  <span className="text-sm font-semibold">Menu</span>
+                </>
+              )}
+            </button>
           </div>
-        )}
-      </nav>
-    </header>
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-white/10 pt-3">
+              <div className="flex flex-col space-y-2">
+                <Link
+                  href="/"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/"
+                      ? "bg-white/5 text-brand-yellow"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Início
+                </Link>
+
+                <Link
+                  href="/sobre"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/sobre"
+                      ? "bg-white/5 text-brand-turquoise"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sobre
+                </Link>
+
+                {/* Serviços com SUBMENU (mobile) */}
+                <div className="rounded-lg bg-black/60 border border-gray-800">
+                  <button
+                    type="button"
+                    className={`w-full text-left transition-all duration-300 font-medium py-3 px-4 rounded-lg flex items-center justify-between ${
+                      location.startsWith("/servico-")
+                        ? "bg:white/5 text-brand-yellow"
+                        : "text-white/80"
+                    }`}
+                    onClick={() => setIsServicesMobileOpen((prev) => !prev)}
+                  >
+                    <span>Serviços</span>
+                    <span className="text-xs">
+                      {isServicesMobileOpen ? "▴" : "▾"}
+                    </span>
+                  </button>
+
+                  {isServicesMobileOpen && (
+                    <div className="border-t border-gray-800">
+                      <div className="flex flex-col py-1">
+                        <Link
+                          href="/servico-design-grafico"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Design Gráfico
+                        </Link>
+                        <Link
+                          href="/servico-impressao-digital"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Impressão Digital
+                        </Link>
+                        <Link
+                          href="/servico-papel-parede"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Papel de Parede
+                        </Link>
+                        <Link
+                          href="/servico-telas-artisticas"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Telas Artísticas
+                        </Link>
+                        <Link
+                          href="/servico-autocolantes"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Autocolantes e Etiquetas
+                        </Link>
+                        <Link
+                          href="/servico-decoracao-viaturas"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Decoração de Viaturas
+                        </Link>
+                        <Link
+                          href="/servico-espacos-comerciais"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Espaços Comerciais
+                        </Link>
+                        <Link
+                          href="/servico-peliculas-protecao-solar"
+                          className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          Películas de Proteção Solar
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  href="/portfolio"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/portfolio"
+                      ? "bg-white/5 text-brand-yellow"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Portfólio
+                </Link>
+
+                <Link
+                  href="/loja"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/loja"
+                      ? "bg-white/5 text-brand-turquoise"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Loja
+                </Link>
+
+                <Link
+                  href="/noticias"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/noticias"
+                      ? "bg-white/5 text-brand-green"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Notícias
+                </Link>
+
+                <Link
+                  href="/contactos"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/contactos"
+                      ? "bg-white/5 text-brand-coral"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contactos
+                </Link>
+
+                {/* Cart Button Mobile – com badge */}
+                <Link
+                  href="/carrinho"
+                  className={`transition-all duration-300 font-semibold py-3 px-4 rounded-lg text-left flex items-center gap-2 ${
+                    location === "/carrinho"
+                      ? "bg-brand-yellow text-black shadow-lg shadow-brand-yellow/30"
+                      : "bg-brand-yellow text-black hover:bg-brand-yellow/90"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <div className="relative">
+                    <ShoppingCart className="h-4 w-4" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 min-w-[18px] px-1 h-[18px] rounded-full bg-black text-brand-yellow text-[10px] font-bold flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                  <span>Carrinho</span>
+                </Link>
+              </div>
+            </div>
+          )}
+        </nav>
+      </header>
+
+      {/* Breadcrumbs global (aparece em todas as páginas; na Home devolve null) */}
+      <div className="pt-[72px]">
+        <GlobalBreadcrumbs />
+      </div>
+    </>
   );
 }
