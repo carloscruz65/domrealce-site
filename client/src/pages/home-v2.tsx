@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
@@ -49,7 +48,7 @@ const quickServices = [
 ];
 
 const featuredProjects = [
-  // Linha 1: Viaturas (com âncoras)
+  // Linha 1: Viaturas
   {
     title: "Carrinhas comerciais",
     image: "/public-objects/servicos/1768587381333-IMG_20161228_164220.webp",
@@ -70,7 +69,7 @@ const featuredProjects = [
     badge: "Viaturas",
   },
 
-  // Linha 2: Outros (sem âncoras)
+  // Linha 2: Outros
   {
     title: "Impressão digital",
     image: "/public-objects/servicos/1766769024380-textura_tijolo_burro.webp",
@@ -91,6 +90,110 @@ const featuredProjects = [
   },
 ];
 
+type WallpaperHighlight = {
+  title: string;
+  subtitle: string;
+  href: string;
+  image: string;
+};
+
+const wallpaperHighlights: WallpaperHighlight[] = [
+  {
+    title: "Papel de Parede Pedras",
+    subtitle: "Aspeto natural e intemporal, com presença.",
+    href: "/loja/papel-parede/textura/pedras",
+    image: "/public-objects/inicio/Produtos-de-destaque/PEDRAS-003.webp",
+  },
+  {
+    title: "Papel de Parede Tijolo",
+    subtitle: "Um clássico com impacto para paredes de destaque.",
+    href: "/loja/papel-parede/textura/tijolo",
+    image: "/public-objects/inicio/Produtos-de-destaque/TIJOLO-031.webp",
+  },
+  {
+    title: "Papel de Parede Ripado",
+    subtitle: "Efeito madeira moderno para interiores atuais.",
+    href: "/loja/papel-parede/textura/ripado",
+    image: "/public-objects/inicio/Produtos-de-destaque/RIPADO-002.webp",
+  },
+  {
+    title: "Papel de Parede Mármore",
+    subtitle: "Elegância premium para salas, halls e escritórios.",
+    href: "/loja/papel-parede/textura/marmore",
+    image: "/public-objects/inicio/Produtos-de-destaque/Marmore-055.webp",
+  },
+  {
+    title: "Papel de Parede Bebés",
+    subtitle: "Quarto infantil com personalidade e doçura.",
+    href: "/loja/papel-parede/textura/baby-paineis",
+    image: "/public-objects/inicio/Produtos-de-destaque/BABY-PAINNEIS-059.webp",
+  },
+  {
+    title: "Papel de Parede Folhas",
+    subtitle: "Natural e leve, ideal para dar vida ao espaço.",
+    href: "/loja/papel-parede/textura/folhas",
+    image: "/public-objects/inicio/Produtos-de-destaque/FOLHAS-055.webp",
+  },
+];
+
+function WallpaperHighlightsSection() {
+  return (
+    <section className="py-12 bg-[#050505] border-t border-white/5">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <h2 className="text-xl md:text-2xl font-bold text-white">
+            Conheça alguns dos nossos produtos{" "}
+            <span className="text-brand-yellow">excepcionais</span>
+          </h2>
+
+          <Link href="/servico-papel-parede">
+            <Button
+              variant="ghost"
+              className="text-brand-yellow hover:text-brand-yellow/80"
+            >
+              Ver todos <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {wallpaperHighlights.map((item) => (
+            <Link key={item.title} href={item.href}>
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-brand-yellow/40 transition-all group cursor-pointer h-[210px] sm:h-[220px]">
+                {/* imagem como background (igual à sensação da home antiga) */}
+                <div
+                  className="absolute inset-0 bg-center bg-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  style={{ backgroundImage: `url(${item.image})` }}
+                />
+
+                {/* overlay escuro */}
+                <div className="absolute inset-0 bg-black/40" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+
+                {/* texto */}
+                <div className="relative z-10 h-full p-6 flex flex-col justify-center">
+                  <h3 className="text-lg md:text-xl font-bold text-brand-yellow leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-200 mt-2 max-w-[40ch]">
+                    {item.subtitle}
+                  </p>
+
+                  <div className="mt-5 flex justify-end">
+                    <span className="text-sm font-semibold text-brand-yellow">
+                      Ver Mais
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function HomeV2() {
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
@@ -109,13 +212,11 @@ export default function HomeV2() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             {/* TEXTO */}
             <div className="order-2 md:order-1 text-center md:text-left">
-              {/* Badge */}
               <div className="inline-flex items-center gap-2 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 px-3 py-1 text-xs text-brand-yellow mb-4 mx-auto md:mx-0">
                 <CheckCircle className="w-3 h-3" />
                 <span>Durabilidade a sério. Orçamento grátis.</span>
               </div>
 
-              {/* Headline */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
                 Se resiste ao{" "}
                 <span className="text-brand-yellow">todo-o-terreno</span>,
@@ -124,13 +225,11 @@ export default function HomeV2() {
                 empresa.
               </h1>
 
-              {/* Teaser curto ANTES dos botões (mobile) */}
               <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
                 Vinil e aplicação profissional para viaturas e frotas, com
                 acabamento premium e resistência comprovada.
               </p>
 
-              {/* Botões */}
               <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center md:justify-start">
                 <Link href="/contactos#formulario">
                   <Button
@@ -158,7 +257,6 @@ export default function HomeV2() {
                 </a>
               </div>
 
-              {/* IMAGEM (mobile fica aqui, entre botões e descrição) */}
               <div className="order-3 md:hidden mb-6">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
                   <img
@@ -181,13 +279,11 @@ export default function HomeV2() {
                 </div>
               </div>
 
-              {/* Descrição completa (mobile vem DEPOIS da imagem, desktop fica como antes) */}
               <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 max-w-xl mx-auto md:mx-0">
                 Do design à aplicação final no Grande Porto. Ideal para carrinhas
                 comerciais, camiões, máquinas e frotas que precisam de durar.
               </p>
 
-              {/* Highlights */}
               <div className="flex flex-wrap gap-4 text-sm text-gray-400 justify-center md:justify-start">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4 text-brand-yellow" />
@@ -204,7 +300,7 @@ export default function HomeV2() {
               </div>
             </div>
 
-            {/* Hero image (desktop) */}
+            {/* IMAGEM DESKTOP */}
             <div className="hidden md:block order-1 md:order-2">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
                 <img
@@ -226,7 +322,7 @@ export default function HomeV2() {
                 </div>
               </div>
             </div>
-            {/* /Hero image */}
+            {/* /IMAGEM DESKTOP */}
           </div>
         </div>
       </section>
@@ -248,7 +344,9 @@ export default function HomeV2() {
                     <h3 className="font-semibold text-white mb-1">
                       {service.title}
                     </h3>
-                    <p className="text-xs text-gray-400">{service.description}</p>
+                    <p className="text-xs text-gray-400">
+                      {service.description}
+                    </p>
                   </CardContent>
                 </Card>
               </Link>
@@ -257,7 +355,7 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {/* Projetos reais (fixo, 3+3, com links para serviços) */}
+      {/* Projetos reais */}
       <section className="py-10 bg-[#050505]">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
@@ -273,30 +371,36 @@ export default function HomeV2() {
                 variant="ghost"
                 className="text-brand-yellow hover:text-brand-yellow/80"
               >
-                Ver todos
-                <ArrowRight className="w-4 h-4 ml-1" />
+                Ver todos <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {featuredProjects.map((item, index) => (
-              <Link key={`${item.href}-${index}`} href={item.href}>
+              <Link key={item.image} href={item.href}>
                 <div className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-pointer border border-white/10 hover:border-brand-yellow/40 transition-colors">
                   <img
                     src={item.image}
                     alt={item.title}
+                    decoding="async"
+                    loading={index < 3 ? "eager" : "lazy"}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      const fallback =
+                        "/public-objects/inicio/Produtos-de-destaque/RIPADO-002.webp";
+                      if (!img.src.endsWith(fallback)) img.src = fallback;
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/45 transition-colors" />
 
-                  {/* etiqueta + título */}
                   <div className="absolute left-3 top-3">
                     <div className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-full bg-black/60 border border-white/15 text-gray-200">
                       {item.badge}
                     </div>
                   </div>
+
                   <div className="absolute left-3 right-3 bottom-3">
                     <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
                       <p className="text-sm font-semibold text-white leading-tight">
@@ -315,13 +419,15 @@ export default function HomeV2() {
           <div className="mt-6 text-center">
             <Link href="/portfolio">
               <Button className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90">
-                Ver portfólio completo
-                <ArrowRight className="w-4 h-4 ml-2" />
+                Ver portfólio completo <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
+
+      {/* ✅ AQUI: secção igual à Home antiga (por baixo dos Projetos reais) */}
+      <WallpaperHighlightsSection />
 
       {/* CTA final */}
       <section className="py-10 bg-gradient-to-r from-brand-yellow/10 via-[#0a0a0a] to-brand-turquoise/10 border-t border-white/5">

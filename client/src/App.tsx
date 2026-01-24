@@ -33,7 +33,7 @@ const LojaTexturaDetalhes = lazy(() => import("@/pages/textura-detalhes"));
 const Carrinho = lazy(() => import("@/pages/carrinho"));
 const Portfolio = lazy(() => import("@/pages/portfolio"));
 const PortfolioV2 = lazy(() => import("@/pages/portfolio-v2"));
-const HomeV2 = lazy(() => import("@/pages/home-v2"));
+const HomeV2 = lazy(() => import("./pages/home-v2"));
 const ServicoDesignGrafico = lazy(() => import("@/pages/servico-design-grafico"));
 const ServicoImpressaoDigital = lazy(() => import("@/pages/servico-impressao-digital"));
 const ServicoPapelParede = lazy(() => import("@/pages/servico-papel-parede"));
@@ -122,8 +122,8 @@ function Router() {
       <StructuredData />
       <Suspense fallback={<PageLoader />}>
         <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/home-v2" component={HomeV2} />
+          <Route path="/" component={HomeV2} />
+          <Route path="/home-antiga" component={Home} />
           <Route path="/sobre" component={Sobre} />
           <Route path="/servico-design-grafico" component={ServicoDesignGrafico} />
           <Route path="/servico-impressao-digital" component={ServicoImpressaoDigital} />
