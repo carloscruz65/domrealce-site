@@ -1,3 +1,4 @@
+import React from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHero from "@/components/service-hero";
@@ -19,6 +20,12 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+
+/* ======================================================
+   Galeria (fallback)
+====================================================== */
+// ✅ IMPORTANT: Igual ao serviceId do hero para não ir buscar imagens erradas do CMS
+const SERVICE_GALLERY_KEY = "pelicula-solar";
 
 const defaultImages = [
   {
@@ -44,11 +51,14 @@ const defaultImages = [
 ];
 
 export default function ServicoPeliculaSolar() {
+  // ✅ CMS primeiro; se vier vazio, usamos fallback
   const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
-    queryKey: ["/api/service-galleries", "pelicula-solar"],
+    queryKey: ["/api/service-galleries", SERVICE_GALLERY_KEY],
   });
 
-  const galleryImages = galleryData?.images || defaultImages;
+  const cmsImages = galleryData?.images;
+  const galleryImages =
+    cmsImages && cmsImages.length > 0 ? cmsImages : defaultImages;
 
   const benefits = [
     {
@@ -60,8 +70,7 @@ export default function ServicoPeliculaSolar() {
     {
       icon: Thermometer,
       title: "Conforto e poupança",
-      description:
-        "Ambientes mais confortáveis e menor necessidade de ar condicionado.",
+      description: "Ambientes mais confortáveis e menor necessidade de ar condicionado.",
     },
     {
       icon: Eye,
@@ -100,12 +109,7 @@ export default function ServicoPeliculaSolar() {
       title: "Lojas e montras",
       description:
         "Protege produtos do desbotamento e torna o espaço mais agradável para clientes.",
-      examples: [
-        "Montras",
-        "Portas de entrada",
-        "Showrooms",
-        "Espaços de exposição",
-      ],
+      examples: ["Montras", "Portas de entrada", "Showrooms", "Espaços de exposição"],
     },
     {
       title: "Escritórios",
@@ -116,12 +120,7 @@ export default function ServicoPeliculaSolar() {
     {
       title: "Armazéns e indústria",
       description: "Ajuda a reduzir o calor em zonas com muita exposição solar.",
-      examples: [
-        "Fachadas envidraçadas",
-        "Átrios",
-        "Zonas de carga",
-        "Escritórios internos",
-      ],
+      examples: ["Fachadas envidraçadas", "Átrios", "Zonas de carga", "Escritórios internos"],
     },
   ];
 
@@ -199,7 +198,7 @@ export default function ServicoPeliculaSolar() {
       />
 
       <main>
-        {/* ✅ Benefícios (normalizado para accordion) */}
+        {/* ✅ Benefícios (accordion) */}
         <ServiceCardsSection
           titleTop="Benefícios"
           titleBottom="da película solar"
@@ -208,43 +207,34 @@ export default function ServicoPeliculaSolar() {
           defaultOpenKey={null}
         />
 
-        {/* Galeria */}
-        <ServiceGallery
-          title="Exemplos de aplicações"
-          description="Alguns exemplos de habitações e espaços comerciais com película de proteção solar."
-          images={galleryImages}
-          columns={3}
-        />
-
-        {/* Aplicações ideais */}
-        <section className="pt-8 pb-16 bg-black border-t border-gray-900">
+        {/* Aplicações + Galeria (no mesmo bloco, como no Design Gráfico) */}
+        <section className="pt-10 pb-16 bg-gray-900/40">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Aplicações</span>{" "}
-                <span className="text-brand-yellow">ideais</span>
+                <span className="text-brand-yellow">Exemplos</span>{" "}
+                <span className="text-white">de aplicações</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Adaptamos a solução ao tipo de espaço e à exposição solar de cada
-                projeto.
+                Adaptamos a solução ao tipo de espaço e à exposição solar de cada projeto.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
               {applications.map((application, index) => (
                 <Card
                   key={index}
-                  className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+                  className="h-full bg-black border transition-all duration-300 border-gray-800 hover:border-brand-yellow"
                 >
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold mb-3 text-brand-yellow">
-                      {application.title}
+                  <CardContent className="p-6 h-full flex flex-col">
+                    <h3 className="text-lg font-semibold mb-3 text-white">
+                      <span className="text-brand-yellow">{application.title}</span>
                     </h3>
+
                     <p className="text-gray-400 mb-4">{application.description}</p>
-                    <div>
-                      <span className="text-sm text-gray-500 mb-2 block">
-                        Exemplos:
-                      </span>
+
+                    <div className="pt-4 border-t border-white/5">
+                      <span className="text-sm text-gray-500 mb-2 block">Exemplos:</span>
                       <div className="space-y-1">
                         {application.examples.map((example, idx) => (
                           <div key={idx} className="flex items-center gap-2">
@@ -254,46 +244,57 @@ export default function ServicoPeliculaSolar() {
                         ))}
                       </div>
                     </div>
+
+                    <div className="mt-auto" />
                   </CardContent>
                 </Card>
               ))}
             </div>
+
+            {/* ✅ Galeria dentro da secção */}
+            <div className="mt-12">
+              <ServiceGallery
+                title="Galeria"
+                description="Alguns exemplos de habitações e espaços comerciais com película de proteção solar."
+                images={galleryImages}
+                columns={3}
+              />
+            </div>
           </div>
         </section>
 
-        {/* Serviços */}
-        <section className="pt-8 pb-16 bg-gray-900/40">
+        {/* Serviços disponíveis */}
+        <section className="pt-10 pb-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Serviços</span>{" "}
-                <span className="text-brand-yellow">disponíveis</span>
+                <span className="text-brand-yellow">Serviços</span>{" "}
+                <span className="text-white">disponíveis</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Diferentes tipos de película para responder a necessidades
-                específicas.
+                Diferentes tipos de película para responder a necessidades específicas.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
               {services.map((service, index) => {
                 const Icon = service.icon;
                 return (
                   <Card
                     key={index}
-                    className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
+                    className="h-full bg-black border transition-all duration-300 border-gray-800 hover:border-brand-yellow"
                   >
-                    <CardContent className="p-6">
+                    <CardContent className="p-6 h-full flex flex-col">
                       <div className="flex items-center gap-3 mb-4">
                         <Icon className="w-6 h-6 text-brand-yellow" />
-                        <h3 className="text-xl font-semibold text-white">
-                          {service.title}
-                        </h3>
+                        <h3 className="text-xl font-semibold text-white">{service.title}</h3>
                       </div>
+
                       <p className="text-gray-400 mb-6 leading-relaxed">
                         {service.description}
                       </p>
-                      <ul className="space-y-2">
+
+                      <ul className="space-y-2 pt-4 border-t border-white/5">
                         {service.features.map((feature, idx) => (
                           <li
                             key={idx}
@@ -304,6 +305,8 @@ export default function ServicoPeliculaSolar() {
                           </li>
                         ))}
                       </ul>
+
+                      <div className="mt-auto" />
                     </CardContent>
                   </Card>
                 );
@@ -313,116 +316,113 @@ export default function ServicoPeliculaSolar() {
         </section>
 
         {/* Processo */}
-        <section className="py-16 bg-black border-t border-gray-900">
+        <section className="pt-10 pb-16 bg-gray-900/40 border-t border-gray-900">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Processo</span>{" "}
-                <span className="text-brand-yellow">profissional</span>
+                <span className="text-brand-yellow">Processo</span>{" "}
+                <span className="text-white">profissional</span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Um processo simples e organizado, desde o contacto até à
-                instalação final.
+                Um processo simples e organizado, desde o contacto até à instalação final.
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
-              {process.map((step, index) => (
-                <div key={index} className="flex gap-6 mb-8 last:mb-0">
-                  <div className="flex-shrink-0">
-                    <div className="w-16 h-16 bg-brand-yellow rounded-full flex items-center justify-center text-black font-bold text-xl">
+            <div className="max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-6">
+                {process.map((step, index) => (
+                  <div
+                    key={index}
+                    className="bg-black border border-gray-800 rounded-xl p-5 flex gap-4 hover:border-brand-yellow transition-all duration-300"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
                       {step.step}
                     </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-white">
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 pb-8">
-                    <h3 className="text-xl font-semibold mb-2 text-white">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-400">{step.description}</p>
-                    {index < process.length - 1 && (
-                      <div className="w-px h-8 bg-gray-700 ml-8 mt-4" />
-                    )}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Especificações / Qualidade */}
-        <section className="py-16 bg-gray-900/40">
+        {/* Qualidade / Informação */}
+        <section className="py-16 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-start">
-                <Card className="bg-black border border-gray-800">
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold mb-6 text-brand-yellow">
-                      Especificações técnicas
-                    </h3>
-                    <div className="space-y-4 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Proteção UV</span>
-                        <span className="text-white font-semibold">Até 99%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Redução de calor</span>
-                        <span className="text-white font-semibold">Até 60%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Garantia</span>
-                        <span className="text-white font-semibold">Até 5 anos</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Aplicação</span>
-                        <span className="text-white font-semibold">
-                          Pelo interior do vidro
-                        </span>
-                      </div>
+            <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start">
+              <Card className="bg-black border border-gray-800">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-6 text-brand-yellow">
+                    Especificações técnicas
+                  </h3>
+                  <div className="space-y-4 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Proteção UV</span>
+                      <span className="text-white font-semibold">Até 99%</span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Redução de calor</span>
+                      <span className="text-white font-semibold">Até 60%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Garantia</span>
+                      <span className="text-white font-semibold">Até 5 anos</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Aplicação</span>
+                      <span className="text-white font-semibold">
+                        Pelo interior do vidro
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                <Card className="bg-black border border-gray-800">
-                  <CardContent className="p-8">
-                    <div className="text-center mb-6">
-                      <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                      <h3 className="text-2xl font-semibold mb-2 text-white">
-                        Tonalidades disponíveis
-                      </h3>
-                      <p className="text-gray-400">
-                        Escolha o equilíbrio certo entre privacidade, luz natural e
-                        estética.
-                      </p>
+              <Card className="bg-black border border-gray-800">
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                    <h3 className="text-2xl font-semibold mb-2 text-white">
+                      Tonalidades disponíveis
+                    </h3>
+                    <p className="text-gray-400">
+                      Escolha o equilíbrio certo entre privacidade, luz natural e estética.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">5% (escura)</span>
+                      <span className="text-white font-semibold">Máxima privacidade</span>
                     </div>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">5% (escura)</span>
-                        <span className="text-white font-semibold">
-                          Máxima privacidade
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">20% (média)</span>
-                        <span className="text-white font-semibold">
-                          Equilíbrio conforto/visibilidade
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">35% (clara)</span>
-                        <span className="text-white font-semibold">
-                          Mais luz com redução de calor
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">70% (quase incolor)</span>
-                        <span className="text-white font-semibold">
-                          Proteção UV quase invisível
-                        </span>
-                      </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">20% (média)</span>
+                      <span className="text-white font-semibold">
+                        Equilíbrio conforto/visibilidade
+                      </span>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">35% (clara)</span>
+                      <span className="text-white font-semibold">
+                        Mais luz com redução de calor
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">70% (quase incolor)</span>
+                      <span className="text-white font-semibold">
+                        Proteção UV quase invisível
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
@@ -435,8 +435,8 @@ export default function ServicoPeliculaSolar() {
               <span className="text-brand-yellow">vidros?</span>
             </h2>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Fale connosco e ajudamos a escolher a película mais adequada para a
-              sua casa, loja, escritório ou armazém.
+              Fale connosco e ajudamos a escolher a película mais adequada para a sua casa,
+              loja, escritório ou armazém.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -449,6 +449,7 @@ export default function ServicoPeliculaSolar() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
+
               <Button
                 asChild
                 variant="outline"

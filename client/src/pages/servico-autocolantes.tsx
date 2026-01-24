@@ -1,5 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import ServiceCardsSection from "@/components/services/ServiceCardsSection";
@@ -195,10 +196,16 @@ export default function ServicoAutocolantes() {
     },
   ];
 
+  const SERVICE_GALLERY_KEY = "autocolantes";
+
   const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
-    queryKey: ["/api/service-galleries", "autocolantes"],
+    queryKey: ["/api/service-galleries", SERVICE_GALLERY_KEY],
   });
-  const galleryImages = galleryData?.images || defaultImages;
+
+  // ✅ fallback correto (se vier vazio do CMS)
+  const cmsImages = galleryData?.images;
+  const galleryImages =
+    cmsImages && cmsImages.length > 0 ? cmsImages : defaultImages;
 
   return (
     <div className="min-h-screen bg-black text-white">

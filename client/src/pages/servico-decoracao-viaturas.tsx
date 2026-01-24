@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 import ServiceGallery from "@/components/service-gallery";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import { Button } from "@/components/ui/button";
@@ -27,24 +26,6 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-/**
- * Tipagem da resposta da API do HERO (igual ao que o ServiceHeroTwoColumn usa)
- * GET /api/service-heroes/:serviceId  (via react-query queryKey)
- */
-interface HeroApiResponse {
-  hero: {
-    badge?: string;
-    title?: string;
-    subtitle?: string;
-    description?: string;
-    backgroundImage?: string;
-    primaryCtaText?: string;
-    primaryCtaHref?: string;
-    secondaryCtaText?: string;
-    secondaryCtaHref?: string;
-  } | null;
-}
 
 // Configuração de imagens por sub-serviço (desacoplado)
 const subServiceConfig: Record<
@@ -140,7 +121,7 @@ const subServiceConfig: Record<
       {
         src: "/public-objects/servicos/decoracao-viaturas/motos-3.webp",
         alt: "Detalhes especiais",
-        title: "Efeitos Especiais",
+        title: "Detalhes Especiais",
       },
     ],
   },
@@ -242,29 +223,10 @@ function GallerySkeleton() {
   );
 }
 
-// md=2 colunas, lg=3 colunas
-function useDesktopCols() {
-  const [cols, setCols] = useState(3);
-
-  useEffect(() => {
-    const calc = () => {
-      if (typeof window === "undefined") return 3;
-      const w = window.innerWidth;
-      if (w >= 1024) return 3;
-      if (w >= 768) return 2;
-      return 1;
-    };
-    const update = () => setCols(calc());
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  return cols;
-}
-
 export default function ServicoDecoracaoViaturas() {
   const [activeVehicle, setActiveVehicle] = useState<VehicleKey | null>(null);
+
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -283,42 +245,9 @@ export default function ServicoDecoracaoViaturas() {
     }
   }, []);
 
-  const revealRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const gridRef = useRef<HTMLDivElement | null>(null);
-
   const hasSelection = Boolean(activeVehicle);
-  const desktopCols = useDesktopCols();
-
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  function openVehicle(key: VehicleKey) {
-    setActiveVehicle((prev) => {
-      const next = prev === key ? null : key;
-
-      if (next) {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            const headerOffset = 90; // ligeiramente menor para subir mais o conteúdo
-            const section = sectionRef.current;
-            if (section) {
-              const elementPosition = section.getBoundingClientRect().top;
-              const offsetPosition =
-                elementPosition + window.pageYOffset - headerOffset;
-              window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth",
-              });
-            }
-          }, 50);
-        });
-      }
-
-      return next;
-    });
-  }
-
   const activeConfig = getSubServiceConfig(activeVehicle);
-  const activeApiId = activeConfig?.apiId || "decoracao-viaturas-particulares";
+  const activeApiId = activeConfig?.apiId || "decoracao-viaturas-comerciais";
 
   const {
     data: galleryData,
@@ -399,7 +328,12 @@ export default function ServicoDecoracaoViaturas() {
       icon: <Bike className="w-8 h-8" />,
       title: "Motociclos",
       description: "Personalização para motociclos.",
-      features: ["Designs únicos", "Proteção do depósito", "Detalhes especiais", "Efeitos"],
+      features: [
+        "Designs únicos",
+        "Proteção do depósito",
+        "Detalhes especiais",
+        "Efeitos",
+      ],
     },
     {
       key: "maquinas",
@@ -420,6 +354,13 @@ export default function ServicoDecoracaoViaturas() {
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex >= 0 && currentIndex < vehicleKeys.length - 1;
 
+  const openVehicle = (key: VehicleKey) => {
+    setActiveVehicle(key);
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  };
+
   const goToPrev = () => {
     if (hasPrev) openVehicle(vehicleKeys[currentIndex - 1]);
   };
@@ -434,9 +375,8 @@ export default function ServicoDecoracaoViaturas() {
     });
   };
 
-  // ✅ barra mais baixa/compacta
   const VehicleSubNav = () => (
-    <div className="flex flex-wrap items-center justify-between gap-2 mb-2 md:mb-3 p-2 bg-gray-800/70 rounded-xl border border-gray-700/80">
+    <div className="flex flex-wrap items-center justify-between gap-2 mb-3 p-2 bg-gray-800/70 rounded-xl border border-gray-700/80">
       <Button
         variant="ghost"
         size="sm"
@@ -478,16 +418,15 @@ export default function ServicoDecoracaoViaturas() {
       return (
         <ServiceHeroTwoColumn
           compact
-          hideTitle
           serviceId={subServiceConfig.particulares.apiId}
-          badge="Particulares"
+          badge="Particular"
           badgeIcon={<Car className="w-4 h-4" />}
-          title="Viaturas particulares"
-          subtitle="Personalização e detalhes"
+          title="Personalização exclusiva"
+          subtitle="Trabalhos avaliados individualmente"
           description="Trabalhos personalizados em viaturas particulares, avaliados caso a caso, com atenção à segurança, estética e durabilidade dos materiais aplicados."
           imageSrc={subServiceConfig.particulares.heroImage}
           imageAlt={subServiceConfig.particulares.heroAlt}
-          primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+          primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
           secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
           imagePosition="right"
         />
@@ -497,15 +436,18 @@ export default function ServicoDecoracaoViaturas() {
     if (key === "comerciais") {
       return (
         <ServiceHeroTwoColumn
+          compact
           serviceId={subServiceConfig.comerciais.apiId}
-          badge="Veículos comerciais"
+          badge="Comercial"
           badgeIcon={<Truck className="w-4 h-4" />}
           title="Rotulagem comercial que trabalha por si"
           subtitle="Publicidade móvel, clara e profissional"
           description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
           imageSrc={subServiceConfig.comerciais.heroImage}
-          imageAlt={subServiceConfig.comercais?.heroAlt ?? subServiceConfig.comerciais.heroAlt}
-          primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+          imageAlt={subServiceConfig.comerciais.heroAlt}
+          primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
+          secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+          imagePosition="right"
         />
       );
     }
@@ -513,6 +455,7 @@ export default function ServicoDecoracaoViaturas() {
     if (key === "competicao") {
       return (
         <ServiceHeroTwoColumn
+          compact
           serviceId={subServiceConfig.competicao.apiId}
           badge="Competição"
           badgeIcon={<Car className="w-4 h-4" />}
@@ -521,7 +464,9 @@ export default function ServicoDecoracaoViaturas() {
           description="Autocolantes de patrocinadores, numeração e layouts para pista."
           imageSrc={subServiceConfig.competicao.heroImage}
           imageAlt={subServiceConfig.competicao.heroAlt}
-          primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+          primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
+          secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+          imagePosition="right"
         />
       );
     }
@@ -529,6 +474,7 @@ export default function ServicoDecoracaoViaturas() {
     if (key === "motos") {
       return (
         <ServiceHeroTwoColumn
+          compact
           serviceId={subServiceConfig.motos.apiId}
           badge="Motociclos"
           badgeIcon={<Bike className="w-4 h-4" />}
@@ -537,7 +483,9 @@ export default function ServicoDecoracaoViaturas() {
           description="Personalização em vinil para depósitos, carenagens e detalhes."
           imageSrc={subServiceConfig.motos.heroImage}
           imageAlt={subServiceConfig.motos.heroAlt}
-          primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+          primaryCta={{ text: "Falar connosco", href: "/contactos#formulario" }}
+          secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+          imagePosition="right"
         />
       );
     }
@@ -591,99 +539,141 @@ export default function ServicoDecoracaoViaturas() {
       {
         title: "Personalização exterior",
         description: "Pequenos detalhes estéticos e personalização visual.",
-        benefits: ["Detalhes e faixas", "Estética cuidada", "Materiais duráveis", "Aplicação precisa"],
+        benefits: [
+          "Detalhes e faixas",
+          "Estética cuidada",
+          "Materiais duráveis",
+          "Aplicação precisa",
+        ],
       },
       {
         title: "Faixas e detalhes decorativos",
-        description: "Aplicações discretas ou desportivas, conforme o estilo da viatura.",
-        benefits: ["Visual mais desportivo", "Opções por zonas", "Boa relação custo/impacto", "Acabamento limpo"],
+        description:
+          "Aplicações discretas ou desportivas, conforme o estilo da viatura.",
+        benefits: [
+          "Visual mais desportivo",
+          "Opções por zonas",
+          "Boa relação custo/impacto",
+          "Acabamento limpo",
+        ],
       },
       {
         title: "Autocolantes personalizados",
-        description: "Criação e aplicação à medida (nomes, símbolos, faixas, detalhes).",
-        benefits: ["Personalização total", "Recorte de precisão", "Aplicação cuidada", "Remoção controlada"],
+        description:
+          "Criação e aplicação à medida (nomes, símbolos, faixas, detalhes).",
+        benefits: [
+          "Personalização total",
+          "Recorte de precisão",
+          "Aplicação cuidada",
+          "Remoção controlada",
+        ],
       },
       {
         title: "Proteção de pintura",
-        description: "Vinil ou PPF para proteção e acabamento em zonas de maior desgaste.",
-        benefits: ["Proteção contra riscos", "Acabamento premium", "Alta durabilidade", "Solução por zonas"],
+        description:
+          "Vinil ou PPF para proteção e acabamento em zonas de maior desgaste.",
+        benefits: [
+          "Proteção contra riscos",
+          "Acabamento premium",
+          "Alta durabilidade",
+          "Solução por zonas",
+        ],
       },
     ],
     comerciais: [
       {
         title: "Rotulagem publicitária",
-        description: "Aplicação de logótipos, serviços e contactos com leitura clara.",
-        benefits: ["Publicidade móvel", "Imagem profissional", "Legibilidade", "Custo-benefício"],
+        description:
+          "Aplicação de logótipos, serviços e contactos com leitura clara.",
+        benefits: [
+          "Publicidade móvel",
+          "Imagem profissional",
+          "Legibilidade",
+          "Custo-benefício",
+        ],
       },
       {
         title: "Wrapping parcial",
-        description: "Decoração de áreas específicas com impacto visual e coerência de marca.",
+        description:
+          "Decoração de áreas específicas com impacto visual e coerência de marca.",
         benefits: ["Impacto visual", "Custo controlado", "Flexibilidade", "Fácil atualização"],
       },
       {
         title: "Identificação de frota",
-        description: "Normalização visual para várias viaturas, com consistência entre unidades.",
+        description:
+          "Normalização visual para várias viaturas, com consistência entre unidades.",
         benefits: ["Consistência", "Repetição fácil", "Rapidez em produção", "Escalável"],
       },
       {
         title: "Produção + aplicação",
-        description: "Produção no atelier e aplicação profissional, planeada ao detalhe.",
+        description:
+          "Produção no atelier e aplicação profissional, planeada ao detalhe.",
         benefits: ["Controlo de qualidade", "Acabamento", "Durabilidade", "Planeamento"],
       },
     ],
     competicao: [
       {
         title: "Livery de competição",
-        description: "Visual completo ou parcial preparado para pista (impacto e leitura).",
+        description:
+          "Visual completo ou parcial preparado para pista (impacto e leitura).",
         benefits: ["Presença em pista", "Coerência visual", "Aplicação precisa", "Acabamento de corrida"],
       },
       {
         title: "Numeração regulamentar",
-        description: "Numeração com leitura rápida, alinhada com regras e necessidades da prova.",
+        description:
+          "Numeração com leitura rápida, alinhada com regras e necessidades da prova.",
         benefits: ["Leitura à distância", "Tamanhos adequados", "Recorte limpo", "Aplicação rápida"],
       },
       {
         title: "Patrocínios e logótipos",
-        description: "Destaque visual para sponsors, com equilíbrio e composição.",
+        description:
+          "Destaque visual para sponsors, com equilíbrio e composição.",
         benefits: ["Sponsors visíveis", "Hierarquia clara", "Boa leitura em foto/vídeo", "Consistência"],
       },
       {
         title: "Acabamentos técnicos",
-        description: "Laminação e materiais resistentes para o contexto exigente da competição.",
+        description:
+          "Laminação e materiais resistentes para o contexto exigente da competição.",
         benefits: ["Maior durabilidade", "Resistência", "Proteção extra", "Acabamento premium"],
       },
     ],
     camioes: [
       {
         title: "Rotulagem de grande formato",
-        description: "Comunicação visual com leitura à distância, pensada para grande escala.",
+        description:
+          "Comunicação visual com leitura à distância, pensada para grande escala.",
         benefits: ["Grande impacto", "Legibilidade", "Escala", "Presença na estrada"],
       },
       {
         title: "Identificação da empresa",
-        description: "Marca e contactos visíveis para reforçar confiança e reconhecimento.",
+        description:
+          "Marca e contactos visíveis para reforçar confiança e reconhecimento.",
         benefits: ["Imagem profissional", "Reforço de marca", "Contactos claros", "Autoridade"],
       },
       {
         title: "Laterais, traseiras e lonas",
-        description: "Aplicações parciais ou totais em painéis, traseiras, laterais e lonas.",
+        description:
+          "Aplicações parciais ou totais em painéis, traseiras, laterais e lonas.",
         benefits: ["Cobertura total/parcial", "Adaptável", "Solução por zonas", "Boa durabilidade"],
       },
       {
         title: "Renovação de imagem",
-        description: "Atualização de decorações existentes com limpeza visual e modernização.",
+        description:
+          "Atualização de decorações existentes com limpeza visual e modernização.",
         benefits: ["Atualização rápida", "Novo visual", "Melhoria de legibilidade", "Refrescamento de marca"],
       },
     ],
     motos: [
       {
         title: "Kits para carenagens",
-        description: "Aplicação em peças e painéis com recorte e encaixe cuidado.",
+        description:
+          "Aplicação em peças e painéis com recorte e encaixe cuidado.",
         benefits: ["Aplicação por peças", "Recorte de precisão", "Visual consistente", "Acabamento limpo"],
       },
       {
         title: "Proteção de depósito",
-        description: "Vinil/PPF para zonas de contacto e desgaste (proteção e estética).",
+        description:
+          "Vinil/PPF para zonas de contacto e desgaste (proteção e estética).",
         benefits: ["Proteção", "Maior durabilidade", "Melhor estética", "Solução localizada"],
       },
       {
@@ -693,24 +683,28 @@ export default function ServicoDecoracaoViaturas() {
       },
       {
         title: "Acabamentos duráveis",
-        description: "Laminação e materiais adequados ao uso real e ao exterior.",
+        description:
+          "Laminação e materiais adequados ao uso real e ao exterior.",
         benefits: ["Resistência", "Proteção extra", "Melhor manutenção", "Boa longevidade"],
       },
     ],
     maquinas: [
       {
         title: "Identificação técnica e sinalização",
-        description: "Informação técnica e avisos essenciais para segurança e operação.",
+        description:
+          "Informação técnica e avisos essenciais para segurança e operação.",
         benefits: ["Segurança", "Clareza", "Resistência", "Conformidade"],
       },
       {
         title: "Reposição de logótipos de origem",
-        description: "Substituição/recuperação de marcas e elementos visuais do equipamento.",
+        description:
+          "Substituição/recuperação de marcas e elementos visuais do equipamento.",
         benefits: ["Aspeto profissional", "Marca visível", "Recuperação estética", "Coerência"],
       },
       {
         title: "Sinais de perigo e avisos",
-        description: "Sinalética e avisos para locais de trabalho e equipamentos pesados.",
+        description:
+          "Sinalética e avisos para locais de trabalho e equipamentos pesados.",
         benefits: ["Prevenção", "Leitura rápida", "Durabilidade", "Aplicação segura"],
       },
       {
@@ -722,7 +716,8 @@ export default function ServicoDecoracaoViaturas() {
   } as const;
 
   const servicesForActiveVehicle =
-    (activeVehicle ? (servicesByVehicle as any)[activeVehicle] : null) ?? servicesByVehicle.comerciais;
+    (activeVehicle ? (servicesByVehicle as any)[activeVehicle] : null) ??
+    servicesByVehicle.comerciais;
 
   const process = [
     { step: "01", title: "Consulta e levantamento", description: "Objetivo, superfícies e restrições." },
@@ -732,35 +727,16 @@ export default function ServicoDecoracaoViaturas() {
     { step: "05", title: "Entrega e manutenção", description: "Verificação final e recomendações." },
   ];
 
-  // ✅ Desktop: calcular onde inserir o detalhe (fim da row do cartão aberto)
-  const detailRowEndIdx = useMemo(() => {
-    if (!activeVehicle) return -1;
-    const idx = vehicleTypes.findIndex((v) => v.key === activeVehicle);
-    if (idx < 0) return -1;
-    const cols = Math.max(1, desktopCols);
-    return Math.min(vehicleTypes.length - 1, Math.ceil((idx + 1) / cols) * cols - 1);
-  }, [activeVehicle, vehicleTypes, desktopCols]);
-
-  const desktopBefore = useMemo(() => {
-    if (!activeVehicle || detailRowEndIdx < 0) return vehicleTypes;
-    return vehicleTypes.slice(0, detailRowEndIdx + 1);
-  }, [activeVehicle, detailRowEndIdx, vehicleTypes]);
-
-  const desktopAfter = useMemo(() => {
-    if (!activeVehicle || detailRowEndIdx < 0) return [];
-    return vehicleTypes.slice(detailRowEndIdx + 1);
-  }, [activeVehicle, detailRowEndIdx, vehicleTypes]);
-
   const renderVehicleCard = (vehicle: (typeof vehicleTypes)[number]) => {
-    const isOpen = activeVehicle === vehicle.key;
-
     return (
       <div key={vehicle.key} className="scroll-mt-28">
         <Card className="h-full bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300">
           <CardContent className="p-6 h-full flex flex-col">
             <div className="text-brand-yellow mb-4">{vehicle.icon}</div>
 
-            <h3 className="text-xl font-semibold mb-3 text-white">{vehicle.title}</h3>
+            <h3 className="text-xl font-semibold mb-3 text-white">
+              {vehicle.title}
+            </h3>
             <p className="text-gray-400 mb-4">{vehicle.description}</p>
 
             <div className="space-y-2 mb-6">
@@ -776,7 +752,7 @@ export default function ServicoDecoracaoViaturas() {
               onClick={() => openVehicle(vehicle.key)}
               className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
             >
-              {isOpen ? "Fechar" : "Explorar este serviço"}
+              Explorar este serviço
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </CardContent>
@@ -785,10 +761,8 @@ export default function ServicoDecoracaoViaturas() {
     );
   };
 
-  // ✅ Hero inicial (sem seleção): imagem logo visível + sem texto gigante
   const DefaultHero = () => (
     <ServiceHeroTwoColumn
-      compact
       serviceId={subServiceConfig.comerciais.apiId}
       badge="Decoração de Viaturas"
       badgeIcon={<Truck className="w-4 h-4" />}
@@ -807,255 +781,247 @@ export default function ServicoDecoracaoViaturas() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* ✅ Topo mais “colado” e com hero real */}
-      <section
-        ref={sectionRef}
-        className="pt-6 pb-16 bg-gray-900/40 scroll-mt-28"
-      >
-        <div className="container mx-auto px-4">
-          {!activeVehicle && (
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-brand-yellow">Tipos de</span>{" "}
-                <span className="text-white">veículos</span>
-              </h2>
-
-              <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
-                Comunicação visual aplicada a todo o tipo de veículos
-              </h1>
-
-              <p className="mt-4 text-gray-300 text-lg">
-                Escolha abaixo o tipo de viatura para{" "}
-                <span className="text-brand-yellow font-medium">
-                  conhecer o serviço
-                </span>{" "}
-                e{" "}
-                <span className="text-brand-yellow font-medium">
-                  pedir orçamento
-                </span>.
-              </p>
-            </div>
-          )}
-
-          {/* ✅ MOBILE: detalhe sozinho */}
-          {activeVehicle && (
-            <div
-              className="md:hidden scroll-mt-28 mt-2"
-              ref={(node) => {
-                revealRefs.current[activeVehicle] = node;
-              }}
-            >
-              <VehicleSubNav />
-              {renderVehicleDetails(activeVehicle)}
-            </div>
-          )}
-
-          <div ref={gridRef} className="scroll-mt-28">
-            {/* Grid de cartões: escondida quando há seleção */}
-            <div className={`${activeVehicle ? "hidden" : "grid"} md:grid-cols-2 lg:grid-cols-3 gap-8`}>
-              {vehicleTypes.map(renderVehicleCard)}
-            </div>
-
-            {/* Desktop: detalhe (só visível quando há seleção) */}
-            {activeVehicle && (
-              <div
-                className="hidden md:block mt-6 scroll-mt-28"
-                ref={(node) => {
-                  if (activeVehicle) revealRefs.current[activeVehicle] = node;
-                }}
-              >
-                <VehicleSubNav />
-                {renderVehicleDetails(activeVehicle)}
-              </div>
-            )}
-          </div>
+      {/* HERO (sempre no topo, como Design Gráfico) */}
+      {!activeVehicle ? (
+        <DefaultHero />
+      ) : (
+        <div className="container mx-auto px-4 pt-6">
+          <VehicleSubNav />
+          {renderVehicleDetails(activeVehicle)}
         </div>
-      </section>
+      )}
 
-      {/* RESTO: só aparece depois de escolher */}
-      {hasSelection && (
-        <>
-          <ServicesAvailableSection services={servicesForActiveVehicle} />
-
-          {galleryImages.length > 0 ? (
-            <ServiceGallery
-              title="Galeria de trabalhos"
-              description="Alguns exemplos de projetos realizados pela nossa equipa."
-              images={galleryImages}
-              columns={3}
-            />
-          ) : isGalleryLoading ? (
-            <GallerySkeleton />
-          ) : (
-            <section className="w-full py-10">
-              <div className="mx-auto max-w-6xl px-4">
-                <h2 className="text-2xl font-semibold text-white">Galeria de trabalhos</h2>
-                <p className="text-sm text-white/70">Ainda não há imagens para este serviço.</p>
-              </div>
-            </section>
-          )}
-
-          <section className="pt-8 pb-16 bg-gray-900/40">
+      <main>
+        {/* SECÇÃO "Tipos de veículos" (igual ao ritmo do Design Gráfico) */}
+        {!activeVehicle && (
+          <section className="pt-10 pb-16 bg-gray-900/40" ref={gridRef}>
             <div className="container mx-auto px-4">
-              <div className="text-center mb-12">
+              <div className="text-center mb-10">
                 <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                  <span className="text-white">Materiais</span>{" "}
-                  <span className="text-brand-yellow">premium</span>
+                  <span className="text-brand-yellow">Tipos de</span>{" "}
+                  <span className="text-white">veículos</span>
                 </h2>
-                <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                  Utilizamos materiais de marcas reconhecidas e adequados ao uso real.
+                <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                  Escolha abaixo o tipo de viatura para{" "}
+                  <span className="text-brand-yellow font-medium">
+                    conhecer o serviço
+                  </span>{" "}
+                  e{" "}
+                  <span className="text-brand-yellow font-medium">
+                    pedir orçamento
+                  </span>.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                {materials.map((material, index) => (
-                  <Card
-                    key={index}
-                    className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-                  >
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
-                        {material.name}
-                      </h3>
-                      <p className="text-gray-400 mb-4">{material.description}</p>
-
-                      <div className="mb-4">
-                        <span className="text-sm text-gray-500">Durabilidade:</span>
-                        <span className="text-brand-yellow font-semibold ml-2">
-                          {material.durability}
-                        </span>
-                      </div>
-
-                      <span className="text-sm text-gray-500 mb-2 block">Aplicações:</span>
-                      <div className="flex flex-wrap gap-2">
-                        {material.applications.map((app, i) => (
-                          <Badge
-                            key={i}
-                            variant="outline"
-                            className="border-brand-yellow text-brand-yellow"
-                          >
-                            {app}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                {vehicleTypes.map(renderVehicleCard)}
               </div>
             </div>
           </section>
+        )}
 
-          <section className="py-16 bg-black border-t border-gray-900">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                  <span className="text-white">Processo</span>{" "}
-                  <span className="text-brand-yellow">profissional</span>
-                </h2>
-                <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                  Metodologia que garante consistência, qualidade e durabilidade.
-                </p>
-              </div>
+        {/* RESTO: só aparece depois de escolher */}
+        {hasSelection && (
+          <>
+            <ServicesAvailableSection services={servicesForActiveVehicle} />
 
-              <div className="max-w-5xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {process.map((step, index) => (
-                    <div
+            {galleryImages.length > 0 ? (
+              <ServiceGallery
+                title="Galeria de trabalhos"
+                description="Alguns exemplos de projetos realizados pela nossa equipa."
+                images={galleryImages}
+                columns={3}
+              />
+            ) : isGalleryLoading ? (
+              <GallerySkeleton />
+            ) : (
+              <section className="w-full py-10">
+                <div className="mx-auto max-w-6xl px-4">
+                  <h2 className="text-2xl font-semibold text-white">
+                    Galeria de trabalhos
+                  </h2>
+                  <p className="text-sm text-white/70">
+                    Ainda não há imagens para este serviço.
+                  </p>
+                </div>
+              </section>
+            )}
+
+            <section className="pt-10 pb-16 bg-gray-900/40">
+              <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                    <span className="text-white">Materiais</span>{" "}
+                    <span className="text-brand-yellow">premium</span>
+                  </h2>
+                  <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Utilizamos materiais de marcas reconhecidas e adequados ao
+                    uso real.
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  {materials.map((material, index) => (
+                    <Card
                       key={index}
-                      className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                      className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
                     >
-                      <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
-                        {step.step}
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-1 text-white">{step.title}</h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
-                      </div>
-                    </div>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
+                          {material.name}
+                        </h3>
+                        <p className="text-gray-400 mb-4">
+                          {material.description}
+                        </p>
+
+                        <div className="mb-4">
+                          <span className="text-sm text-gray-500">
+                            Durabilidade:
+                          </span>
+                          <span className="text-brand-yellow font-semibold ml-2">
+                            {material.durability}
+                          </span>
+                        </div>
+
+                        <span className="text-sm text-gray-500 mb-2 block">
+                          Aplicações:
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {material.applications.map((app, i) => (
+                            <Badge
+                              key={i}
+                              variant="outline"
+                              className="border-brand-yellow text-brand-yellow"
+                            >
+                              {app}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <section className="py-16 bg-gray-900/40">
-            <div className="container mx-auto px-4">
-              <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                    <span className="text-brand-yellow">Garantia de</span>{" "}
-                    <span className="text-white">qualidade</span>
+            <section className="py-16 bg-black border-t border-gray-900">
+              <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                    <span className="text-white">Processo</span>{" "}
+                    <span className="text-brand-yellow">profissional</span>
                   </h2>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Garantia de aplicação: 2 anos</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Materiais certificados</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Suporte pós-venda</span>
-                    </div>
-                  </div>
+                  <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Metodologia que garante consistência, qualidade e durabilidade.
+                  </p>
                 </div>
 
-                <div className="bg-black rounded-2xl p-8 border border-gray-800">
-                  <div className="text-center mb-2">
-                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                    <h3 className="text-2xl font-semibold mb-2 text-white">
-                      Experiência comprovada
-                    </h3>
-                    <p className="text-gray-400">Décadas de prática em comunicação visual aplicada.</p>
+                <div className="max-w-5xl mx-auto">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {process.map((step, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
+                          {step.step}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold mb-1 text-white">
+                            {step.title}
+                          </h3>
+                          <p className="text-gray-400 text-sm leading-relaxed">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <section className="py-16 bg-black border-t border-gray-900">
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                <span className="text-white">Pronto para avançar com a</span>{" "}
-                <span className="text-brand-yellow">sua decoração?</span>
-              </h2>
+            <section className="py-16 bg-gray-900/40">
+              <div className="container mx-auto px-4">
+                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+                      <span className="text-brand-yellow">Garantia de</span>{" "}
+                      <span className="text-white">qualidade</span>
+                    </h2>
 
-              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-                Diz-nos o tipo de veículo e o objetivo. Nós tratamos do resto.
-              </p>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                        <span className="text-white">Garantia de aplicação: 2 anos</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                        <span className="text-white">Materiais certificados</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Shield className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                        <span className="text-white">Suporte pós-venda</span>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  asChild
-                  className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
-                >
-                  <Link href="/contactos#formulario">
-                    Solicitar orçamento
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </Button>
+                  <div className="bg-black rounded-2xl p-8 border border-gray-800">
+                    <div className="text-center mb-2">
+                      <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                      <h3 className="text-2xl font-semibold mb-2 text-white">
+                        Experiência comprovada
+                      </h3>
+                      <p className="text-gray-400">
+                        Décadas de prática em comunicação visual aplicada.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-                <Button
-                  asChild
-                  variant="outline"
-                  className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
-                >
-                  <a
-                    href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20decoração%20de%20viaturas."
-                    target="_blank"
-                    rel="noopener noreferrer"
+            <section className="py-16 bg-black border-t border-gray-900">
+              <div className="container mx-auto px-4 text-center">
+                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+                  <span className="text-white">Pronto para avançar com a</span>{" "}
+                  <span className="text-brand-yellow">sua decoração?</span>
+                </h2>
+
+                <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                  Diz-nos o tipo de veículo e o objetivo. Nós tratamos do resto.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    asChild
+                    className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
                   >
-                    WhatsApp direto
-                  </a>
-                </Button>
+                    <Link href="/contactos#formulario">
+                      Solicitar orçamento
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
+                  >
+                    <a
+                      href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20decoração%20de%20viaturas."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      WhatsApp direto
+                    </a>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </section>
-        </>
-      )}
+            </section>
+          </>
+        )}
+      </main>
 
       <Footer />
     </div>

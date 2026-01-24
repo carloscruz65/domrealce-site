@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
@@ -13,6 +13,45 @@ export default function Navigation() {
 
   // 🔢 Número de produtos no carrinho (lido do localStorage "cart")
   const [cartCount, setCartCount] = useState(0);
+
+  // ✅ Ordem (manual) dos serviços para Anterior/Seguinte
+  const servicesOrder = useMemo(
+    () => [
+      { href: "/servico-design-grafico", label: "Design Gráfico" },
+      { href: "/servico-impressao-digital", label: "Impressão Digital" },
+      { href: "/servico-papel-parede", label: "Papel de Parede" },
+      { href: "/servico-telas-artisticas", label: "Telas Artísticas" },
+      { href: "/servico-autocolantes", label: "Autocolantes e Etiquetas" },
+      { href: "/servico-decoracao-viaturas", label: "Decoração de Viaturas" },
+      { href: "/servico-espacos-comerciais", label: "Espaços Comerciais" },
+      { href: "/servico-peliculas-protecao-solar", label: "Películas Proteção Solar" },
+    ],
+    []
+  );
+
+  // Mostrar barra apenas em páginas de serviço
+  const isServicePage = location.startsWith("/servico-");
+
+  const prevNext = useMemo(() => {
+    if (!isServicePage) return { prev: null as null | (typeof servicesOrder)[number], next: null as null | (typeof servicesOrder)[number] };
+
+    const idx = servicesOrder.findIndex((s) => s.href === location);
+    if (idx === -1) return { prev: null, next: null };
+
+    const prev = idx > 0 ? servicesOrder[idx - 1] : null;
+    const next = idx < servicesOrder.length - 1 ? servicesOrder[idx + 1] : null;
+
+    return { prev, next };
+  }, [isServicePage, location, servicesOrder]);
+
+  // Header height = logo h-14 + padding py-3 (~72px). Mantém como estava.
+  const HEADER_HEIGHT_PX = 72;
+  const PREV_NEXT_HEIGHT_PX = 40; // barra fina (h-10)
+
+  // Migalhas têm de descer: somar header + barra (quando existir)
+  const breadcrumbsTopPadding = isServicePage
+    ? HEADER_HEIGHT_PX + PREV_NEXT_HEIGHT_PX
+    : HEADER_HEIGHT_PX;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -539,8 +578,52 @@ export default function Navigation() {
         </nav>
       </header>
 
+      {/* ✅ Barra fina Anterior / Seguinte (só nas páginas de serviço) */}
+      {isServicePage && (prevNext.prev || prevNext.next) ? (
+        <div
+          className="sticky z-40 border-b border-white/10 bg-black/70 backdrop-blur"
+          style={{ top: `${HEADER_HEIGHT_PX}px` }}
+        >
+          <div className="container mx-auto px-4">
+            <div className="h-10 flex items-center justify-between text-sm">
+              {/* Anterior */}
+              <div className="min-w-[120px]">
+                {prevNext.prev ? (
+                  <Link
+                    href={prevNext.prev.href}
+                    className="text-white/80 hover:text-white transition-colors"
+                  >
+                    ← <span className="text-white/80">{prevNext.prev.label}</span>
+                  </Link>
+                ) : (
+                  <span className="text-white/30"> </span>
+                )}
+              </div>
+
+              <div className="text-[11px] text-white/40 hidden sm:block">
+                Serviços
+              </div>
+
+              {/* Seguinte */}
+              <div className="min-w-[120px] text-right">
+                {prevNext.next ? (
+                  <Link
+                    href={prevNext.next.href}
+                    className="text-white/80 hover:text-white transition-colors"
+                  >
+                    <span className="text-white/80">{prevNext.next.label}</span> →
+                  </Link>
+                ) : (
+                  <span className="text-white/30"> </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* Breadcrumbs global (aparece em todas as páginas; na Home devolve null) */}
-      <div className="pt-[72px]">
+      <div style={{ paddingTop: `${breadcrumbsTopPadding}px` }}>
         <GlobalBreadcrumbs />
       </div>
     </>

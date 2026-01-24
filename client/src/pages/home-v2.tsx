@@ -63,7 +63,7 @@ const featuredProjects = [
     badge: "Viaturas",
   },
   {
-    title: "Máquinas e equipamentos",
+    title: "Máquinas | equipamentos",
     image: "/public-objects/servicos/JLG450AJ.webp",
     href: "/servico-decoracao-viaturas#maquinas",
     badge: "Viaturas",
