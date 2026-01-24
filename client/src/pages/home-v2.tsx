@@ -406,8 +406,8 @@ export default function HomeV2() {
 
                   {/* ✅ Texto menor no mobile */}
                   <div className="absolute left-3 right-3 bottom-3">
-                    <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
-                      <p className="font-semibold text-white leading-tight text-[12px] md:text-sm">
+                    <div className="bg-black/10 backdrop-blur-sm rounded-lg px-2 py-1 md:bg-black/10">
+                      <p className="font-semibold text-white leading-tight text-[10px] md:text-sm">
                         {item.title}
                       </p>
                       <p className="text-[10px] md:text-xs text-gray-300 mt-0.5">
