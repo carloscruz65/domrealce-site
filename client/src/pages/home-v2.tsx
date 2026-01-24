@@ -4,7 +4,6 @@ import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
 import {
   MessageCircle,
   ArrowRight,
@@ -17,26 +16,6 @@ import {
   MapPin,
 } from "lucide-react";
 import { Link } from "wouter";
-
-interface GalleryImage {
-  filename: string;
-  url: string;
-  category?: string;
-}
-
-function categorizeImage(filename: string): string {
-  const pathParts = filename.split("/");
-  if (
-    pathParts.length >= 3 &&
-    pathParts[0].toLowerCase().includes("domrealce")
-  ) {
-    return pathParts[2].toLowerCase();
-  }
-  if (pathParts.length >= 2 && pathParts[0].toLowerCase().includes("portf")) {
-    return pathParts[1].toLowerCase();
-  }
-  return "outros";
-}
 
 const quickServices = [
   {
@@ -69,20 +48,50 @@ const quickServices = [
   },
 ];
 
+const featuredProjects = [
+  // Linha 1: Viaturas (com âncoras)
+  {
+    title: "Carrinhas comerciais",
+    image: "/public-objects/servicos/1768587381333-IMG_20161228_164220.webp",
+    href: "/servico-decoracao-viaturas#comerciais",
+    badge: "Viaturas",
+  },
+  {
+    title: "Camiões e atrelados",
+    image:
+      "/public-objects/servicos/1766825756937-Decoracao_volvo_globetrotter_reboconorte.webp",
+    href: "/servico-decoracao-viaturas#camioes",
+    badge: "Viaturas",
+  },
+  {
+    title: "Máquinas e equipamentos",
+    image: "/public-objects/servicos/JLG450AJ.webp",
+    href: "/servico-decoracao-viaturas#maquinas",
+    badge: "Viaturas",
+  },
+
+  // Linha 2: Outros (sem âncoras)
+  {
+    title: "Impressão digital",
+    image: "/public-objects/servicos/1766769024380-textura_tijolo_burro.webp",
+    href: "/servico-impressao-digital",
+    badge: "Outros",
+  },
+  {
+    title: "Telas artísticas",
+    image: "/public-objects/servicos/telas-artisticas.webp",
+    href: "/servico-telas-artisticas",
+    badge: "Outros",
+  },
+  {
+    title: "Espaços comerciais",
+    image: "/public-objects/servicos/espacos-comerciais.webp",
+    href: "/servico-espacos-comerciais",
+    badge: "Outros",
+  },
+];
+
 export default function HomeV2() {
-  const { data: imagesData } = useQuery({
-    queryKey: ["/api/gallery/images"],
-    retry: false,
-  });
-
-  const allImages: GalleryImage[] = ((imagesData as any)?.images || [])
-    .slice(0, 6)
-    .map((filename: string) => ({
-      filename,
-      url: `/public-objects/${filename}`,
-      category: categorizeImage(filename),
-    }));
-
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       <SEOHead
@@ -95,12 +104,13 @@ export default function HomeV2() {
       <Navigation />
 
       {/* HERO */}
-      <section className="relative pt-20 pb-8 md:pt-24 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
+      <section className="relative pt-16 sm:pt-18 pb-10 md:pt-28 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="order-2 md:order-1">
+            {/* TEXTO */}
+            <div className="order-2 md:order-1 text-center md:text-left">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 px-3 py-1 text-xs text-brand-yellow mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 px-3 py-1 text-xs text-brand-yellow mb-4 mx-auto md:mx-0">
                 <CheckCircle className="w-3 h-3" />
                 <span>Durabilidade a sério. Orçamento grátis.</span>
               </div>
@@ -114,14 +124,14 @@ export default function HomeV2() {
                 empresa.
               </h1>
 
-              {/* Subheadline */}
-              <p className="text-lg text-gray-300 mb-6">
+              {/* Teaser curto ANTES dos botões (mobile) */}
+              <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
                 Vinil e aplicação profissional para viaturas e frotas, com
-                acabamento premium e resistência comprovada. Do design à
-                aplicação final no Grande Porto.
+                acabamento premium e resistência comprovada.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              {/* Botões */}
+              <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center md:justify-start">
                 <Link href="/contactos#formulario">
                   <Button
                     size="lg"
@@ -136,6 +146,7 @@ export default function HomeV2() {
                   href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20DOMREALCE"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="w-full sm:w-auto"
                 >
                   <Button
                     size="lg"
@@ -147,8 +158,37 @@ export default function HomeV2() {
                 </a>
               </div>
 
+              {/* IMAGEM (mobile fica aqui, entre botões e descrição) */}
+              <div className="order-3 md:hidden mb-6">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
+                  <img
+                    src="/public-objects/inicio/slider/1766771076470-ford_ranger_hortouniao.webp"
+                    alt="Decoração de viatura DOMREALCE"
+                    className="w-full aspect-[4/3] object-cover"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-black/70 backdrop-blur rounded-lg px-4 py-3 text-center">
+                      <p className="text-brand-yellow font-semibold">
+                        Projetos exigentes. Acabamento premium.
+                      </p>
+                      <p className="text-xs text-gray-300">
+                        Atelier próprio em Paredes · 40+ anos de experiência
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Descrição completa (mobile vem DEPOIS da imagem, desktop fica como antes) */}
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 max-w-xl mx-auto md:mx-0">
+                Do design à aplicação final no Grande Porto. Ideal para carrinhas
+                comerciais, camiões, máquinas e frotas que precisam de durar.
+              </p>
+
               {/* Highlights */}
-              <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-400 justify-center md:justify-start">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4 text-brand-yellow" />
                   <span>Resposta em 24h</span>
@@ -164,8 +204,8 @@ export default function HomeV2() {
               </div>
             </div>
 
-            {/* Hero image */}
-            <div className="order-1 md:order-2">
+            {/* Hero image (desktop) */}
+            <div className="hidden md:block order-1 md:order-2">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
                 <img
                   src="/public-objects/inicio/slider/1766771076470-ford_ranger_hortouniao.webp"
@@ -217,7 +257,7 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {/* Projetos reais */}
+      {/* Projetos reais (fixo, 3+3, com links para serviços) */}
       <section className="py-10 bg-[#050505]">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
@@ -225,8 +265,9 @@ export default function HomeV2() {
               <h2 className="text-2xl md:text-3xl font-bold">
                 Projetos <span className="text-brand-yellow">reais</span>
               </h2>
-              <p className="text-gray-400 text-sm">Veja o que já fizemos</p>
+              <p className="text-gray-400 text-sm">Exemplos por categoria</p>
             </div>
+
             <Link href="/portfolio">
               <Button
                 variant="ghost"
@@ -238,32 +279,38 @@ export default function HomeV2() {
             </Link>
           </div>
 
-          {allImages.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {allImages.map((image, index) => (
-                <Link key={image.filename} href="/portfolio">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-pointer">
-                    <img
-                      src={image.url}
-                      alt={`Projeto DOMREALCE ${index + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {featuredProjects.map((item, index) => (
+              <Link key={`${item.href}-${index}`} href={item.href}>
+                <div className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-pointer border border-white/10 hover:border-brand-yellow/40 transition-colors">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/45 transition-colors" />
+
+                  {/* etiqueta + título */}
+                  <div className="absolute left-3 top-3">
+                    <div className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-full bg-black/60 border border-white/15 text-gray-200">
+                      {item.badge}
+                    </div>
                   </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="aspect-[4/3] rounded-xl bg-gray-800 animate-pulse"
-                />
-              ))}
-            </div>
-          )}
+                  <div className="absolute left-3 right-3 bottom-3">
+                    <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
+                      <p className="text-sm font-semibold text-white leading-tight">
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-gray-300 mt-0.5">
+                        Ver serviço →
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
 
           <div className="mt-6 text-center">
             <Link href="/portfolio">
@@ -281,7 +328,8 @@ export default function HomeV2() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">
-              Quer um projeto <span className="text-brand-yellow">semelhante</span>?
+              Quer um projeto{" "}
+              <span className="text-brand-yellow">semelhante</span>?
             </h2>
             <p className="text-gray-300 mb-6">
               Fale connosco e receba um orçamento personalizado sem compromisso.
@@ -302,6 +350,7 @@ export default function HomeV2() {
                 href="https://wa.me/351930682725?text=Olá!%20Vi%20o%20vosso%20site%20e%20quero%20saber%20mais."
                 target="_blank"
                 rel="noopener noreferrer"
+                className="w-full sm:w-auto"
               >
                 <Button
                   size="lg"

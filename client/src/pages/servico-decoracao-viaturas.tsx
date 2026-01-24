@@ -266,6 +266,23 @@ function useDesktopCols() {
 export default function ServicoDecoracaoViaturas() {
   const [activeVehicle, setActiveVehicle] = useState<VehicleKey | null>(null);
 
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+
+    const allowed: VehicleKey[] = [
+      "particulares",
+      "comerciais",
+      "competicao",
+      "camioes",
+      "motos",
+      "maquinas",
+    ];
+
+    if (allowed.includes(hash as VehicleKey)) {
+      setActiveVehicle(hash as VehicleKey);
+    }
+  }, []);
+
   const revealRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const gridRef = useRef<HTMLDivElement | null>(null);
 
@@ -281,7 +298,7 @@ export default function ServicoDecoracaoViaturas() {
       if (next) {
         requestAnimationFrame(() => {
           setTimeout(() => {
-            const headerOffset = 100;
+            const headerOffset = 90; // ligeiramente menor para subir mais o conteúdo
             const section = sectionRef.current;
             if (section) {
               const elementPosition = section.getBoundingClientRect().top;
@@ -358,7 +375,12 @@ export default function ServicoDecoracaoViaturas() {
       icon: <Car className="w-8 h-8" />,
       title: "Viaturas de competição",
       description: "Decoração para desportos motorizados.",
-      features: ["Patrocinadores", "Numeração", "Layouts rápidos", "Materiais específicos"],
+      features: [
+        "Patrocinadores",
+        "Numeração",
+        "Layouts rápidos",
+        "Materiais específicos",
+      ],
     },
     {
       key: "camioes",
@@ -412,25 +434,26 @@ export default function ServicoDecoracaoViaturas() {
     });
   };
 
+  // ✅ barra mais baixa/compacta
   const VehicleSubNav = () => (
-    <div className="flex flex-wrap items-center justify-between gap-2 mb-2 md:mb-4 p-2 md:p-3 bg-gray-800/80 rounded-lg border border-gray-700">
+    <div className="flex flex-wrap items-center justify-between gap-2 mb-2 md:mb-3 p-2 bg-gray-800/70 rounded-xl border border-gray-700/80">
       <Button
         variant="ghost"
         size="sm"
         onClick={closeAndScrollToGrid}
-        className="text-brand-yellow hover:text-yellow-400 text-xs sm:text-sm"
+        className="text-brand-yellow hover:text-yellow-400 text-xs sm:text-sm px-2 py-1"
       >
         <ArrowLeft className="w-4 h-4 mr-1" />
         Voltar aos serviços
       </Button>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <Button
           variant="ghost"
           size="sm"
           onClick={goToPrev}
           disabled={!hasPrev}
-          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm"
+          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm px-2 py-1"
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="hidden sm:inline">Anterior</span>
@@ -441,7 +464,7 @@ export default function ServicoDecoracaoViaturas() {
           size="sm"
           onClick={goToNext}
           disabled={!hasNext}
-          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm"
+          className="text-gray-300 hover:text-white disabled:opacity-40 text-xs sm:text-sm px-2 py-1"
         >
           <span className="hidden sm:inline">Seguinte</span>
           <ChevronRight className="w-4 h-4" />
@@ -481,7 +504,7 @@ export default function ServicoDecoracaoViaturas() {
           subtitle="Publicidade móvel, clara e profissional"
           description="Decoração para carrinhas e frotas com foco em legibilidade, impacto e consistência de marca."
           imageSrc={subServiceConfig.comerciais.heroImage}
-          imageAlt={subServiceConfig.comerciais.heroAlt}
+          imageAlt={subServiceConfig.comercais?.heroAlt ?? subServiceConfig.comerciais.heroAlt}
           primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
         />
       );
@@ -563,7 +586,6 @@ export default function ServicoDecoracaoViaturas() {
     },
   ];
 
-  // ✅ NOVO: Serviços disponíveis por tipo de veículo
   const servicesByVehicle = {
     particulares: [
       {
@@ -587,7 +609,6 @@ export default function ServicoDecoracaoViaturas() {
         benefits: ["Proteção contra riscos", "Acabamento premium", "Alta durabilidade", "Solução por zonas"],
       },
     ],
-
     comerciais: [
       {
         title: "Rotulagem publicitária",
@@ -610,7 +631,6 @@ export default function ServicoDecoracaoViaturas() {
         benefits: ["Controlo de qualidade", "Acabamento", "Durabilidade", "Planeamento"],
       },
     ],
-
     competicao: [
       {
         title: "Livery de competição",
@@ -633,7 +653,6 @@ export default function ServicoDecoracaoViaturas() {
         benefits: ["Maior durabilidade", "Resistência", "Proteção extra", "Acabamento premium"],
       },
     ],
-
     camioes: [
       {
         title: "Rotulagem de grande formato",
@@ -656,7 +675,6 @@ export default function ServicoDecoracaoViaturas() {
         benefits: ["Atualização rápida", "Novo visual", "Melhoria de legibilidade", "Refrescamento de marca"],
       },
     ],
-
     motos: [
       {
         title: "Kits para carenagens",
@@ -679,7 +697,6 @@ export default function ServicoDecoracaoViaturas() {
         benefits: ["Resistência", "Proteção extra", "Melhor manutenção", "Boa longevidade"],
       },
     ],
-
     maquinas: [
       {
         title: "Identificação técnica e sinalização",
@@ -768,30 +785,57 @@ export default function ServicoDecoracaoViaturas() {
     );
   };
 
+  // ✅ Hero inicial (sem seleção): imagem logo visível + sem texto gigante
+  const DefaultHero = () => (
+    <ServiceHeroTwoColumn
+      compact
+      serviceId={subServiceConfig.comerciais.apiId}
+      badge="Decoração de Viaturas"
+      badgeIcon={<Truck className="w-4 h-4" />}
+      title="Decoração de viaturas"
+      subtitle="Escolha o tipo de veículo para ver detalhes e pedir orçamento"
+      description="Rotulagem, vinil de corte e impressão com acabamento premium, pensado para leitura, durabilidade e impacto."
+      imageSrc={subServiceConfig.comerciais.heroImage}
+      imageAlt={subServiceConfig.comerciais.heroAlt}
+      primaryCta={{ text: "Pedir orçamento", href: "/contactos#formulario" }}
+      secondaryCta={{ text: "Ver Portfólio", href: "/portfolio" }}
+      imagePosition="right"
+    />
+  );
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
-      <GlobalBreadcrumbs />
 
-      <section ref={sectionRef} className="pt-10 pb-16 bg-gray-900/40 scroll-mt-28">
-        <div className="container mx-auto px-4 pt-8">
-          <div className={`${activeVehicle ? "hidden md:block" : ""} text-center mb-12 pt-16`}>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-              <span className="text-brand-yellow">Tipos de</span>{" "}
-              <span className="text-white">veículos</span>
-            </h2>
+      {/* ✅ Topo mais “colado” e com hero real */}
+      <section
+        ref={sectionRef}
+        className="pt-6 pb-16 bg-gray-900/40 scroll-mt-28"
+      >
+        <div className="container mx-auto px-4">
+          {!activeVehicle && (
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-brand-yellow">Tipos de</span>{" "}
+                <span className="text-white">veículos</span>
+              </h2>
 
-            <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
-              Comunicação visual aplicada a todo o tipo de veículos
-            </h1>
+              <h1 className="mt-3 text-3xl md:text-4xl font-heading font-bold text-white">
+                Comunicação visual aplicada a todo o tipo de veículos
+              </h1>
 
-            <p className="mt-4 text-gray-300 text-lg">
-              Escolha abaixo o tipo de viatura para{" "}
-              <span className="text-brand-yellow font-medium">conhecer o serviço</span>{" "}
-              e{" "}
-              <span className="text-brand-yellow font-medium">pedir orçamento</span>.
-            </p>
-          </div>
+              <p className="mt-4 text-gray-300 text-lg">
+                Escolha abaixo o tipo de viatura para{" "}
+                <span className="text-brand-yellow font-medium">
+                  conhecer o serviço
+                </span>{" "}
+                e{" "}
+                <span className="text-brand-yellow font-medium">
+                  pedir orçamento
+                </span>.
+              </p>
+            </div>
+          )}
 
           {/* ✅ MOBILE: detalhe sozinho */}
           {activeVehicle && (
@@ -806,7 +850,6 @@ export default function ServicoDecoracaoViaturas() {
             </div>
           )}
 
-          {/* ✅ DESKTOP: grid escondida quando há seleção */}
           <div ref={gridRef} className="scroll-mt-28">
             {/* Grid de cartões: escondida quando há seleção */}
             <div className={`${activeVehicle ? "hidden" : "grid"} md:grid-cols-2 lg:grid-cols-3 gap-8`}>
@@ -816,7 +859,7 @@ export default function ServicoDecoracaoViaturas() {
             {/* Desktop: detalhe (só visível quando há seleção) */}
             {activeVehicle && (
               <div
-                className="hidden md:block mt-8 scroll-mt-28"
+                className="hidden md:block mt-6 scroll-mt-28"
                 ref={(node) => {
                   if (activeVehicle) revealRefs.current[activeVehicle] = node;
                 }}
@@ -832,7 +875,6 @@ export default function ServicoDecoracaoViaturas() {
       {/* RESTO: só aparece depois de escolher */}
       {hasSelection && (
         <>
-          {/* ✅ AQUI: agora muda conforme o veículo */}
           <ServicesAvailableSection services={servicesForActiveVehicle} />
 
           {galleryImages.length > 0 ? (
