@@ -160,17 +160,14 @@ function WallpaperHighlightsSection() {
           {wallpaperHighlights.map((item) => (
             <Link key={item.title} href={item.href}>
               <div className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-brand-yellow/40 transition-all group cursor-pointer h-[210px] sm:h-[220px]">
-                {/* imagem como background (igual à sensação da home antiga) */}
                 <div
                   className="absolute inset-0 bg-center bg-cover group-hover:scale-[1.02] transition-transform duration-300"
                   style={{ backgroundImage: `url(${item.image})` }}
                 />
 
-                {/* overlay escuro */}
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
 
-                {/* texto */}
                 <div className="relative z-10 h-full p-6 flex flex-col justify-center">
                   <h3 className="text-lg md:text-xl font-bold text-brand-yellow leading-tight">
                     {item.title}
@@ -196,7 +193,7 @@ function WallpaperHighlightsSection() {
 
 export default function HomeV2() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden w-full">
       <SEOHead
         title="Decoração de Viaturas e Comunicação Visual | DOMREALCE"
         description="Decoração de viaturas, montras, impressão digital e papel de parede personalizado. Materiais premium e aplicação própria. Peça orçamento sem compromisso."
@@ -207,7 +204,7 @@ export default function HomeV2() {
       <Navigation />
 
       {/* HERO */}
-      <section className="relative pt-16 sm:pt-18 pb-10 md:pt-28 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
+      <section className="relative pt-24 pb-10 md:pt-28 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             {/* TEXTO */}
@@ -257,6 +254,7 @@ export default function HomeV2() {
                 </a>
               </div>
 
+              {/* IMAGEM MOBILE (com overlay menor) */}
               <div className="order-3 md:hidden mb-6">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10">
                   <img
@@ -264,14 +262,16 @@ export default function HomeV2() {
                     alt="Decoração de viatura DOMREALCE"
                     className="w-full aspect-[4/3] object-cover"
                     loading="eager"
+                    decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="bg-black/70 backdrop-blur rounded-lg px-4 py-3 text-center">
-                      <p className="text-brand-yellow font-semibold">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="bg-black/65 backdrop-blur-sm rounded-lg px-3 py-2 text-center">
+                      <p className="text-brand-yellow font-semibold text-sm leading-snug">
                         Projetos exigentes. Acabamento premium.
                       </p>
-                      <p className="text-xs text-gray-300">
+                      <p className="text-[10px] text-gray-300 leading-snug mt-1">
                         Atelier próprio em Paredes · 40+ anos de experiência
                       </p>
                     </div>
@@ -308,8 +308,10 @@ export default function HomeV2() {
                   alt="Decoração de viatura DOMREALCE"
                   className="w-full aspect-[4/3] object-cover"
                   loading="eager"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-black/70 backdrop-blur rounded-lg px-4 py-3 text-center">
                     <p className="text-brand-yellow font-semibold">
@@ -344,9 +346,7 @@ export default function HomeV2() {
                     <h3 className="font-semibold text-white mb-1">
                       {service.title}
                     </h3>
-                    <p className="text-xs text-gray-400">
-                      {service.description}
-                    </p>
+                    <p className="text-xs text-gray-400">{service.description}</p>
                   </CardContent>
                 </Card>
               </Link>
@@ -376,6 +376,7 @@ export default function HomeV2() {
             </Link>
           </div>
 
+          {/* Mantém 2 colunas no mobile, mas reduz texto e remove badge no mobile */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {featuredProjects.map((item, index) => (
               <Link key={item.image} href={item.href}>
@@ -393,20 +394,23 @@ export default function HomeV2() {
                       if (!img.src.endsWith(fallback)) img.src = fallback;
                     }}
                   />
+
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/45 transition-colors" />
 
-                  <div className="absolute left-3 top-3">
+                  {/* ✅ Badge removido no mobile, mantém só no md+ */}
+                  <div className="hidden md:block absolute left-3 top-3">
                     <div className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-full bg-black/60 border border-white/15 text-gray-200">
                       {item.badge}
                     </div>
                   </div>
 
+                  {/* ✅ Texto menor no mobile */}
                   <div className="absolute left-3 right-3 bottom-3">
                     <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
-                      <p className="text-sm font-semibold text-white leading-tight">
+                      <p className="font-semibold text-white leading-tight text-[12px] md:text-sm">
                         {item.title}
                       </p>
-                      <p className="text-xs text-gray-300 mt-0.5">
+                      <p className="text-[10px] md:text-xs text-gray-300 mt-0.5">
                         Ver serviço →
                       </p>
                     </div>
@@ -426,7 +430,6 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {/* ✅ AQUI: secção igual à Home antiga (por baixo dos Projetos reais) */}
       <WallpaperHighlightsSection />
 
       {/* CTA final */}
@@ -434,8 +437,7 @@ export default function HomeV2() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">
-              Quer um projeto{" "}
-              <span className="text-brand-yellow">semelhante</span>?
+              Quer um projeto <span className="text-brand-yellow">semelhante</span>?
             </h2>
             <p className="text-gray-300 mb-6">
               Fale connosco e receba um orçamento personalizado sem compromisso.
