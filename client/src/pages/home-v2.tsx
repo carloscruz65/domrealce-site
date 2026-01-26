@@ -204,7 +204,7 @@ export default function HomeV2() {
       <Navigation />
 
       {/* HERO */}
-      <section className="relative pt-24 pb-10 md:pt-28 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
+      <section className="relative pt-10 pb-10 md:pt-16 md:pb-12 bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             {/* TEXTO */}

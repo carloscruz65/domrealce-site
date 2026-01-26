@@ -781,15 +781,7 @@ export default function ServicoDecoracaoViaturas() {
     <div className="min-h-screen bg-black text-white">
       <Navigation />
 
-      {/* HERO (sempre no topo, como Design Gráfico) */}
-      {!activeVehicle ? (
-        <DefaultHero />
-      ) : (
-        <div className="container mx-auto px-4 pt-6">
-          <VehicleSubNav />
-          {renderVehicleDetails(activeVehicle)}
-        </div>
-      )}
+      
 
       <main>
         {/* SECÇÃO "Tipos de veículos" (igual ao ritmo do Design Gráfico) */}

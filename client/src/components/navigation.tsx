@@ -49,9 +49,7 @@ export default function Navigation() {
   const PREV_NEXT_HEIGHT_PX = 40; // barra fina (h-10)
 
   // Migalhas têm de descer: somar header + barra (quando existir)
-  const breadcrumbsTopPadding = isServicePage
-    ? HEADER_HEIGHT_PX + PREV_NEXT_HEIGHT_PX
-    : HEADER_HEIGHT_PX;
+  const breadcrumbsTopPadding = HEADER_HEIGHT_PX;
 
   useEffect(() => {
     const handleScroll = () => {

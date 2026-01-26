@@ -222,7 +222,9 @@ export default function ServiceHeroTwoColumn({
   );
 
   // ✅ compact: corta o espaço no topo e no fundo quando está aberto dentro do card
-  const sectionPadding = compact ? "pt-2 md:pt-10 pb-8" : "pt-28 md:pt-32 pb-12";
+  const sectionPadding = compact
+  ? "pt-2 md:pt-10 pb-8"
+  : "pt-16 md:pt-20 pb-12";
 
   return (
     <section className={`w-full ${sectionPadding}`}>

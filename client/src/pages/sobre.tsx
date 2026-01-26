@@ -70,7 +70,7 @@ export default function Sobre() {
       <Navigation />
 
       {/* HERO */}
-      <section className="pt-32 pb-12 px-4 bg-gradient-to-b from-black via-[#0a0a0a] to-[#0a0a0a]">
+      <section className="pt-12 pb-12 px-4 bg-gradient-to-b from-black via-[#0a0a0a] to-[#0a0a0a]">
         <div className="max-w-5xl mx-auto text-center">
           <EditableConfigText
             value={pageTitle}
