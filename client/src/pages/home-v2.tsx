@@ -211,20 +211,17 @@ export default function HomeV2() {
             <div className="order-2 md:order-1 text-center md:text-left">
               <div className="inline-flex items-center gap-2 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 px-3 py-1 text-xs text-brand-yellow mb-4 mx-auto md:mx-0">
                 <CheckCircle className="w-3 h-3" />
-                <span>Durabilidade a sério. Orçamento grátis.</span>
+                <span>Publicidade móvel para empresas</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Se resiste ao{" "}
-                <span className="text-brand-yellow">todo-o-terreno</span>,
-                <br className="hidden sm:block" /> resiste ao{" "}
-                <span className="text-brand-turquoise">dia-a-dia</span> da sua
-                empresa.
+                Decoração de viaturas{" "}
+                <span className="text-brand-yellow">que promove o seu negócio</span>,
+                <br className="hidden sm:block" /> todos os dias{" "}
               </h1>
 
               <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
-                Vinil e aplicação profissional para viaturas e frotas, com
-                acabamento premium e resistência comprovada.
+                Aplicação profissional de vinil para carrinhas, camiões e frotas comerciais no Grande Porto.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center md:justify-start">
@@ -279,11 +276,6 @@ export default function HomeV2() {
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 max-w-xl mx-auto md:mx-0">
-                Do design à aplicação final no Grande Porto. Ideal para carrinhas
-                comerciais, camiões, máquinas e frotas que precisam de durar.
-              </p>
-
               <div className="flex flex-wrap gap-4 text-sm text-gray-400 justify-center md:justify-start">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4 text-brand-yellow" />
@@ -291,11 +283,11 @@ export default function HomeV2() {
                 </div>
                 <div className="flex items-center gap-1">
                   <MapPin className="w-4 h-4 text-brand-turquoise" />
-                  <span>Aplicação própria (Grande Porto)</span>
+                  <span>Aplicação própria</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span>Materiais premium +200 projetos</span>
+                  <span>Materiais premium +1500 projetos</span>
                 </div>
               </div>
             </div>
