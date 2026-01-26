@@ -14,7 +14,7 @@ import {
   type Contact,
   type Order
 } from "@shared/schema";
-import { sendContactEmail, sendAutoReplyEmail } from "./email";
+import { sendContactEmail, sendAutoReplyEmail, testEmailConnection } from "./email";
 import { ObjectStorageService } from "./objectStorage";
 import { createIfthenPayService, type PaymentMethod } from "./ifthenpay";
 import rateLimit from "express-rate-limit";
@@ -649,13 +649,31 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
 
       const contact = await storage.createContact(validatedData);
 
-      Promise.all([sendContactEmail(contact), sendAutoReplyEmail(contact)]).catch(error => {
-        console.error("Error sending emails:", error);
-      });
+      console.log(`📧 [${requestId}] Sending emails for contact ${contact.id}...`);
+
+      const [contactResult, autoReplyResult] = await Promise.all([
+        sendContactEmail(contact),
+        sendAutoReplyEmail(contact)
+      ]);
+
+      console.log(`📧 [${requestId}] Contact email result:`, contactResult);
+      console.log(`📧 [${requestId}] Auto-reply result:`, autoReplyResult);
+
+      if (!contactResult.success) {
+        console.error(`❌ [${requestId}] Contact email failed:`, contactResult.error);
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao enviar email. Por favor, tente novamente ou contacte-nos por telefone.",
+          emailError: contactResult.error,
+          requestId
+        });
+      }
 
       res.json({
         success: true,
         message: "Mensagem enviada com sucesso. Entraremos em contacto brevemente.",
+        emailSent: true,
+        messageId: contactResult.messageId,
         files: uploadedFileEntries.map(f => {
           const [name, url] = f.split("|");
           return { name, url };
@@ -664,7 +682,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       });
     } catch (error) {
       logRouteError(requestId, "POST /api/contact failed", error);
-      res.status(400).json({
+      res.status(500).json({
         success: false,
         message: "Erro ao enviar mensagem. Por favor, tente novamente.",
         requestId
@@ -680,6 +698,45 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       logRouteError(requestId, "GET /api/contacts failed", error);
       res.status(500).json({ message: "Erro interno do servidor", requestId });
+    }
+  });
+
+  app.get("/api/debug/test-email", async (req, res) => {
+    const requestId = makeRequestId();
+    
+    if (process.env.NODE_ENV === "production" && process.env.DEBUG !== "true") {
+      return res.status(403).json({ error: "Debug endpoint disabled in production", requestId });
+    }
+
+    console.log(`🔧 [${requestId}] Testing email configuration...`);
+
+    try {
+      const result = await testEmailConnection();
+
+      if (result.success) {
+        res.json({
+          ok: true,
+          message: "Email de teste enviado com sucesso!",
+          messageId: result.messageId,
+          accepted: result.accepted,
+          rejected: result.rejected,
+          requestId
+        });
+      } else {
+        res.status(500).json({
+          ok: false,
+          error: result.error,
+          errorCode: result.errorCode,
+          requestId
+        });
+      }
+    } catch (error: any) {
+      console.error(`❌ [${requestId}] Test email error:`, error);
+      res.status(500).json({
+        ok: false,
+        error: error.message,
+        requestId
+      });
     }
   });
 

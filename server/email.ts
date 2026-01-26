@@ -5,45 +5,80 @@ const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
+const CONTACT_TO = process.env.CONTACT_TO || "carloscruz@domrealce.com";
 
-const EMAIL_FROM = process.env.EMAIL_FROM || '"DOMREALCE" <encomendas@domrealce.com>';
-const EMAIL_TO = process.env.EMAIL_TO || "carloscruz@domrealce.com";
-
-// Se faltar configuração, não tentamos “fingir” que enviamos.
-// Assim ficas logo a saber que falta um Secret.
-function assertEmailConfig() {
+function getSmtpConfig() {
   const missing: string[] = [];
   if (!SMTP_HOST) missing.push("SMTP_HOST");
   if (!process.env.SMTP_PORT) missing.push("SMTP_PORT");
   if (!SMTP_USER) missing.push("SMTP_USER");
   if (!SMTP_PASS) missing.push("SMTP_PASS");
+
   if (missing.length) {
-    throw new Error(`Email não configurado. Falta(m) Secret(s): ${missing.join(", ")}`);
+    console.error(`❌ Email config missing: ${missing.join(", ")}`);
+    return null;
   }
+
+  return {
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    user: SMTP_USER,
+    pass: SMTP_PASS,
+  };
 }
 
 function createTransporter() {
-  assertEmailConfig();
+  const config = getSmtpConfig();
+  if (!config) {
+    throw new Error(`SMTP não configurado. Verifique os Secrets.`);
+  }
+
+  const isSecure = config.port === 465;
+
+  console.log(`📧 SMTP Config: host=${config.host}, port=${config.port}, secure=${isSecure}, user=${config.user?.substring(0, 5)}...`);
 
   return nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: SMTP_PORT,
-    secure: SMTP_PORT === 465, // 465 = SSL
+    host: config.host,
+    port: config.port,
+    secure: isSecure,
+    requireTLS: !isSecure && config.port === 587,
     auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS,
+      user: config.user,
+      pass: config.pass,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 }
 
-export async function sendContactEmail(contact: Contact): Promise<boolean> {
+export interface EmailResult {
+  success: boolean;
+  messageId?: string;
+  accepted?: string[];
+  rejected?: string[];
+  error?: string;
+  errorCode?: string;
+}
+
+export async function sendContactEmail(contact: Contact): Promise<EmailResult> {
+  const config = getSmtpConfig();
+  if (!config) {
+    return { success: false, error: "SMTP não configurado" };
+  }
+
+  const fromEmail = config.user;
+  const toEmail = CONTACT_TO;
+
+  console.log(`📧 Sending contact email: from=${fromEmail}, to=${toEmail}, replyTo=${contact.email}`);
+
   try {
     const transporter = createTransporter();
 
     const mailOptions = {
-      from: EMAIL_FROM,
-      to: EMAIL_TO,
-      replyTo: contact.email, // responder vai para o cliente
+      from: `"DOMREALCE" <${fromEmail}>`,
+      to: toEmail,
+      replyTo: contact.email,
       subject: `Nova mensagem de contacto - ${contact.nome}`,
       html: `
         <h2>Nova mensagem de contacto recebida</h2>
@@ -121,22 +156,49 @@ Esta mensagem foi enviada através do formulário de contacto do website da DOMR
       `.trim(),
     };
 
-    await transporter.sendMail(mailOptions);
-    return true;
-  } catch (error) {
-    console.error("Erro ao enviar email de contacto:", error);
-    return false;
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log(`✅ Contact email sent: messageId=${info.messageId}, accepted=${JSON.stringify(info.accepted)}, rejected=${JSON.stringify(info.rejected)}`);
+
+    return {
+      success: true,
+      messageId: info.messageId,
+      accepted: info.accepted as string[],
+      rejected: info.rejected as string[],
+    };
+  } catch (error: any) {
+    console.error(`❌ Contact email FAILED:`, {
+      code: error.code,
+      response: error.response,
+      message: error.message,
+      command: error.command,
+    });
+
+    return {
+      success: false,
+      error: error.message,
+      errorCode: error.code,
+    };
   }
 }
 
-export async function sendAutoReplyEmail(contact: Contact): Promise<boolean> {
+export async function sendAutoReplyEmail(contact: Contact): Promise<EmailResult> {
+  const config = getSmtpConfig();
+  if (!config) {
+    return { success: false, error: "SMTP não configurado" };
+  }
+
+  const fromEmail = config.user;
+
+  console.log(`📧 Sending auto-reply: from=${fromEmail}, to=${contact.email}`);
+
   try {
     const transporter = createTransporter();
 
     const mailOptions = {
-      from: EMAIL_FROM,
+      from: `"DOMREALCE" <${fromEmail}>`,
       to: contact.email,
-      replyTo: EMAIL_TO, // se o cliente responder, vem para ti
+      replyTo: CONTACT_TO,
       subject: "Obrigado pelo seu contacto - DOMREALCE",
       html: `
         <h2>Obrigado pelo seu contacto, ${contact.nome}!</h2>
@@ -187,10 +249,74 @@ DOMREALCE
       `.trim(),
     };
 
-    await transporter.sendMail(mailOptions);
-    return true;
-  } catch (error) {
-    console.error("Erro ao enviar auto-reply:", error);
-    return false;
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log(`✅ Auto-reply sent: messageId=${info.messageId}, accepted=${JSON.stringify(info.accepted)}, rejected=${JSON.stringify(info.rejected)}`);
+
+    return {
+      success: true,
+      messageId: info.messageId,
+      accepted: info.accepted as string[],
+      rejected: info.rejected as string[],
+    };
+  } catch (error: any) {
+    console.error(`❌ Auto-reply FAILED:`, {
+      code: error.code,
+      response: error.response,
+      message: error.message,
+      command: error.command,
+    });
+
+    return {
+      success: false,
+      error: error.message,
+      errorCode: error.code,
+    };
+  }
+}
+
+export async function testEmailConnection(): Promise<EmailResult> {
+  const config = getSmtpConfig();
+  if (!config) {
+    return { success: false, error: "SMTP não configurado" };
+  }
+
+  console.log(`🔧 Testing SMTP connection...`);
+
+  try {
+    const transporter = createTransporter();
+
+    await transporter.verify();
+
+    console.log(`✅ SMTP connection verified successfully`);
+
+    const testResult = await transporter.sendMail({
+      from: `"DOMREALCE Test" <${config.user}>`,
+      to: CONTACT_TO,
+      subject: `[TESTE] Email de teste - ${new Date().toLocaleString("pt-PT")}`,
+      text: "Este é um email de teste do sistema DOMREALCE. Se recebeu este email, o SMTP está a funcionar corretamente.",
+      html: `<h2>Teste de Email</h2><p>Este é um email de teste do sistema DOMREALCE.</p><p>Se recebeu este email, o SMTP está a funcionar corretamente.</p><p>Data: ${new Date().toLocaleString("pt-PT")}</p>`,
+    });
+
+    console.log(`✅ Test email sent: messageId=${testResult.messageId}, accepted=${JSON.stringify(testResult.accepted)}`);
+
+    return {
+      success: true,
+      messageId: testResult.messageId,
+      accepted: testResult.accepted as string[],
+      rejected: testResult.rejected as string[],
+    };
+  } catch (error: any) {
+    console.error(`❌ SMTP test FAILED:`, {
+      code: error.code,
+      response: error.response,
+      message: error.message,
+    });
+
+    return {
+      success: false,
+      error: error.message,
+      errorCode: error.code,
+    };
   }
 }

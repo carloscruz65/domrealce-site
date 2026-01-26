@@ -1,0 +1,64 @@
+Prompt para o Replit Agent (copia e cola)
+
+Quero que resolvas o problema do formulário de contactos: o pedido /contact retorna 200 no Network, mas não recebo emails (nem no Outlook via IMAP nem no Webmail da Hostinger). O projeto é React + Node/Express e usa envio de email no backend (Nodemailer ou equivalente).
+Objetivo: garantir que o email é enviado e chega, e que erros de SMTP não ficam escondidos.
+
+Tarefas obrigatórias (passo a passo):
+
+Localizar o endpoint do formulário (ex: POST /api/contact ou POST /contact) e identificar a função responsável por enviar email (ex: sendContactEmail, sendAutoReplyEmail, server/email.ts).
+
+Adicionar logging robusto no backend:
+
+Antes de enviar: logar to, from, subject (sem dados sensíveis).
+
+Usar try/catch no sendMail e, em caso de erro, logar error.code, error.response, error.message.
+
+Se falhar, o endpoint NÃO pode responder 200. Deve devolver 500 com uma mensagem segura tipo { ok:false, error:"Email send failed" }.
+
+Verificar o transport SMTP (Hostinger):
+
+Confirmar host, port, secure, auth.user.
+
+Regras: porta 465 => secure:true. Porta 587 => secure:false + requireTLS:true.
+
+Confirmar que o from está no mesmo domínio/conta usada no SMTP (evitar bloqueios).
+
+Se necessário, colocar:
+
+from: "DOMREALCE <MESMO_EMAIL_DO_SMTP>"
+
+replyTo: emailDoCliente
+
+to: emailInternoDOMREALCE
+
+Não usar from com email diferente do autenticado.
+
+Criar um endpoint de teste protegido (ou script) para enviar email manualmente:
+
+Ex: GET /api/debug/test-email que envia para o email interno, e devolve {ok:true} só se sendMail concluir sem erro.
+
+Deve ser removível/desativável depois (ou protegido por env DEBUG=true).
+
+Validar variáveis de ambiente:
+
+Confirmar que existem e estão carregadas em runtime: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_TO.
+
+Se estiverem ausentes, logar claramente e falhar com 500.
+
+Testar no ambiente real (Replit always-on):
+
+Fazer 1 envio real.
+
+Mostrar no output/logs: sucesso do Nodemailer (messageId / accepted / rejected).
+
+Se falhar, indicar claramente o erro e aplicar correção até enviar.
+
+Entregar-me no fim:
+
+Quais ficheiros alteraste.
+
+Qual é a config SMTP final.
+
+Prints/trecho de logs comprovando envio (accepted/messageId) ou explicação do bloqueio (ex: EAUTH/timeout).
+
+Contexto: eu já vi contact 200 na Network, mas email não aparece nem na Hostinger. Portanto suspeito que erros estão a ser engolidos ou o SMTP está mal configurado (secure/porta/from).
