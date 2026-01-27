@@ -19,6 +19,7 @@ import NotFound from "@/pages/not-found";
 import Obrigado from "@/pages/Obrigado";
 import PagamentoErro from "@/pages/PagamentoErro";
 import ContactosMaquinas from "@/pages/contactos-maquinas";
+import LandingViaturasEmpresas from "@/pages/landing-viaturas-empresas";
 
 
 
@@ -162,6 +163,7 @@ function Router() {
           <Route path="/obrigado" component={Obrigado} />
           <Route path="/pagamento-erro" component={PagamentoErro} />
           <Route path="/contactos-maquinas" component={ContactosMaquinas} />
+          <Route path="/decoracao-viaturas-empresas" component={LandingViaturasEmpresas} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>
