@@ -23,15 +23,6 @@ export default function Footer() {
             width={200}
             height={64}
           />
-          <p className="max-w-xl text-sm md:text-base text-white/70">
-            Comunicação visual, impressão e decoração de espaços para marcas
-            que querem marcar a diferença.
-          </p>
-          <Link href="/contactos">
-            <Button className="mt-2 bg-brand-yellow text-black hover:bg-brand-yellow/90 rounded-full px-6">
-              Fale connosco
-            </Button>
-          </Link>
         </div>
 
         {/* Middle – Informação principal (4 colunas) */}

@@ -17,38 +17,70 @@ import {
   Truck,
 } from "lucide-react";
 
-const gallery = [
-  {
-    src: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1600&q=80",
-    alt: "Carrinha comercial com decoração (placeholder)",
-    title: "Carrinhas comerciais",
+/**
+ * ✅ ONDE TROCAR (1 sítio só)
+ * Se as imagens não carregarem, troca o BASE para o prefixo correto do teu projeto.
+ * Exemplos comuns:
+ * - "/public-objects/public/inicio/Landing-page-viaturas"
+ * - "/objects/public/inicio/Landing-page-viaturas"
+ * - "https://<teu-dominio-ou-cdn>/public/inicio/Landing-page-viaturas"
+ */
+const BASE = "/public-objects/inicio/Landing-page-viaturas";
+
+/**
+ * ✅ Cache-buster simples (evita “versões fantasmas”/cache agressiva durante testes)
+ * Quando atualizares imagens, muda a string (ex.: "lp-v2").
+ */
+const ASSET_VERSION = "lp-v1";
+
+/**
+ * ✅ Assets num só sítio (hero + galeria).
+ * A galeria agora tem subtitle por imagem (para os textos condizerem com cada foto).
+ */
+const ASSETS = {
+  hero: {
+    src: `${BASE}/IMG20231030164706.webp`,
+    alt: "Decoração de carrinha comercial - trabalho real DOMREALCE",
   },
-  {
-    src: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80",
-    alt: "Viatura com branding (placeholder)",
-    title: "Rotulagem de marca",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1493238792000-8113da705763?w=1600&q=80",
-    alt: "Detalhe de vinil aplicado (placeholder)",
-    title: "Acabamento premium",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=1600&q=80",
-    alt: "Camião/veículo grande (placeholder)",
-    title: "Grande formato",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1600&q=80",
-    alt: "Frota/empresa (placeholder)",
-    title: "Frotas",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1517142089942-ba376ce32a0b?w=1600&q=80",
-    alt: "Aplicação de vinil (placeholder)",
-    title: "Aplicação profissional",
-  },
-];
+  gallery: [
+    {
+      src: `${BASE}/IMG20231117095713.webp`,
+      alt: "Decoração de carrinha comercial - exemplo real DOMREALCE",
+      title: "Carrinhas comerciais",
+      subtitle: "Acabamento limpo · aplicação profissional",
+    },
+    {
+      src: `${BASE}/IMG20240403181400.webp`,
+      alt: "Rotulagem e branding em viatura - exemplo real DOMREALCE",
+      title: "Rotulagem de marca",
+      subtitle: "Branding visível · aplicação profissional",
+    },
+    {
+      src: `${BASE}/IMG_20220603_185824.webp`,
+      alt: "Decoração em camião/caixa com impressão e vinil - DOMREALCE",
+      title: "Camiões e caixas",
+      subtitle: "Legibilidade à distância · acabamento limpo",
+    },
+    {
+      src: `${BASE}/IMG20250625133703.webp`,
+      alt: "Decoração em grande formato (camião) - DOMREALCE",
+      title: "Grande formato",
+      subtitle: "Impacto visual · acabamento limpo",
+    },
+    {
+      src: `${BASE}/IMG_20220815_170210.webp`,
+      alt: "Frota: decoração em cisterna e viaturas - DOMREALCE",
+      title: "Frotas e cisternas",
+      subtitle: "Uniformização de frota · acabamento limpo",
+    },
+    {
+      src: `${BASE}/IMG20250114091322.webp`,
+      alt: "Decoração e vinil em máquinas e equipamentos - DOMREALCE",
+      title: "Máquinas e equipamentos",
+      subtitle: "Sinalética e branding · aplicação profissional",
+    },
+  ],
+};
 
 const proof = [
   { icon: CheckCircle, title: "Trabalho completo", desc: "Design, produção e aplicação no nosso atelier." },
@@ -57,24 +89,28 @@ const proof = [
 ];
 
 const steps = [
-  { step: "01", title: "Contacto rápido", desc: "Diz-nos o tipo de viatura e objetivo." },
-  { step: "02", title: "Proposta & maquete", desc: "Apresentamos solução e orçamento." },
-  { step: "03", title: "Produção", desc: "Impressão e preparação com controlo de qualidade." },
-  { step: "04", title: "Aplicação", desc: "Aplicação profissional (planeada para durar)." },
+  { step: "01", title: "Contacto rápido", desc: "Envie fotos e diga o objetivo." },
+  { step: "02", title: "Proposta & maquete", desc: "Proposta e maquete para aprovação." },
+  { step: "03", title: "Produção", desc: "Produção com controlo de qualidade." },
+  { step: "04", title: "Aplicação", desc: "Aplicação profissional, pensada para durar." },
 ];
 
 const faqs = [
   {
     q: "Fazem só carrinhas comerciais?",
-    a: "Fazemos carrinhas, camiões, atrelados, máquinas e também viaturas particulares. Esta página é focada em empresas.",
+    a: "Trabalhamos carrinhas, camiões, atrelados, máquinas e também viaturas particulares. Esta página é focada em empresas e frotas comerciais.",
   },
   {
     q: "Quanto tempo demora?",
-    a: "Depende do tipo de trabalho e disponibilidade. Normalmente conseguimos responder com estimativa e plano após ver as fotos/medidas.",
+    a: "Depende do tipo de trabalho e da disponibilidade. Após analisar as fotos e medidas, enviamos estimativa e plano de execução.",
   },
   {
     q: "Preciso de ter o design pronto?",
-    a: "Não. Podemos criar o design e preparar tudo para produção e aplicação.",
+    a: "Não. Criamos o design, preparamos os ficheiros e tratamos de todo o processo até à aplicação.",
+  },
+  {
+    q: "Qual é o preço?",
+    a: "O valor depende do tipo de viatura e da solução pretendida. Envie fotos e medidas para receber um orçamento personalizado.",
   },
 ];
 
@@ -84,6 +120,11 @@ function Pill({ children }: { children: React.ReactNode }) {
       {children}
     </span>
   );
+}
+
+function withVersion(src: string) {
+  // Evita “sumir/voltar” por cache agressiva durante desenvolvimento/restores
+  return `${src}?v=${encodeURIComponent(ASSET_VERSION)}`;
 }
 
 export default function LandingViaturasEmpresas() {
@@ -109,11 +150,12 @@ export default function LandingViaturasEmpresas() {
                 <span>Decoração de viaturas para empresas</span>
               </div>
 
+              {/* ✅ headline corrigida */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Decoração de viaturas{" "}
-                <span className="text-brand-yellow">com acabamento premium</span>
+                Transforme a sua{" "}
+                <span className="text-brand-yellow">viatura numa publicidade</span>
                 <br className="hidden sm:block" />
-                para promover o seu negócio
+                em movimento
               </h1>
 
               <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
@@ -165,24 +207,29 @@ export default function LandingViaturasEmpresas() {
 
             {/* IMAGEM */}
             <div className="order-1 md:order-2">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10 border border-white/10">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-brand-yellow/10 border border-white/10 h-[380px]">
                 <img
-                  src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1600&q=80"
-                  alt="Decoração de viatura comercial (placeholder)"
-                  className="w-full aspect-[4/3] object-cover"
+                  src={withVersion(ASSETS.hero.src)}
+                  alt={ASSETS.hero.alt}
+                  className="w-full h-full object-cover"
                   loading="eager"
+                  fetchPriority="high"
                   decoding="async"
+                  onError={(e) => {
+                    console.warn("Falhou hero:", ASSETS.hero.src);
+                    (e.currentTarget as HTMLImageElement).style.opacity = "0";
+                  }}
                 />
+
+                {/* Gradient suave */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="bg-black/70 backdrop-blur rounded-lg px-4 py-3 text-center">
-                    <p className="text-brand-yellow font-semibold">
-                      Projetos exigentes. Resultado limpo.
-                    </p>
-                    <p className="text-xs text-gray-300">
-                      Produção e aplicação própria
-                    </p>
-                  </div>
+
+                {/* TEXTO SEM BARRA */}
+                <div className="absolute bottom-6 left-6">
+                  <p className="text-brand-yellow font-semibold text-sm md:text-base">
+                    Projetos exigentes. Resultado limpo.
+                  </p>
+                  <p className="text-xs text-gray-300">Produção e aplicação própria</p>
                 </div>
               </div>
 
@@ -197,7 +244,7 @@ export default function LandingViaturasEmpresas() {
                 </div>
                 <div className="inline-flex items-center gap-2">
                   <Car className="w-4 h-4 text-brand-yellow" />
-                  Competição
+                  Frotas
                 </div>
               </div>
             </div>
@@ -212,9 +259,7 @@ export default function LandingViaturasEmpresas() {
             <h2 className="text-2xl md:text-3xl font-bold">
               Porque escolher a <span className="text-brand-yellow">DOMREALCE</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
-              Foco em legibilidade, durabilidade e acabamento.
-            </p>
+            <p className="text-gray-400 text-sm mt-2">Foco em legibilidade, durabilidade e acabamento.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">
@@ -233,6 +278,32 @@ export default function LandingViaturasEmpresas() {
               );
             })}
           </div>
+
+          {/* MINI CTA */}
+          <div className="mt-6 text-center">
+            <p className="text-base text-gray-200 mb-4">Pronto para avançar com a sua viatura comercial?</p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/contactos#formulario">
+                <Button className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
+                  Pedir orçamento personalizado
+                </Button>
+              </Link>
+
+              <a
+                href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  variant="outline"
+                  className="border-green-500/80 text-green-300 hover:bg-green-500 hover:text-white"
+                >
+                  Falar no WhatsApp
+                </Button>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -244,7 +315,7 @@ export default function LandingViaturasEmpresas() {
               <h2 className="text-2xl md:text-3xl font-bold">
                 Exemplos <span className="text-brand-yellow">visuais</span>
               </h2>
-              <p className="text-gray-400 text-sm">Placeholders. Depois trocamos por trabalhos reais.</p>
+              <p className="text-gray-400 text-sm">Trabalhos reais (DOMREALCE).</p>
             </div>
             <Link href="/servico-decoracao-viaturas">
               <Button variant="ghost" className="text-brand-yellow hover:text-brand-yellow/80">
@@ -254,23 +325,31 @@ export default function LandingViaturasEmpresas() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {gallery.map((img, idx) => (
+            {ASSETS.gallery.map((img, idx) => (
               <div
                 key={img.title + idx}
-                className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10 hover:border-brand-yellow/40 transition-colors"
+                className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10 hover:border-brand-yellow/40 transition-colors bg-black/40"
               >
                 <img
-                  src={img.src}
+                  src={withVersion(img.src)}
                   alt={img.alt}
                   className="w-full h-full object-cover"
-                  loading={idx < 2 ? "eager" : "lazy"}
+                  loading="eager"
+                  fetchPriority={idx < 2 ? "high" : "auto"}
                   decoding="async"
+                  onError={(e) => {
+                    console.warn("Falhou imagem galeria:", img.src);
+                    (e.currentTarget as HTMLImageElement).src = withVersion(ASSETS.hero.src);
+                  }}
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute left-3 right-3 bottom-3">
                   <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
                     <p className="text-sm font-semibold text-white leading-tight">{img.title}</p>
-                    <p className="text-[11px] text-gray-200">Resultado final com acabamento limpo</p>
+                    <p className="text-[11px] text-gray-200">
+                      {img.subtitle ?? "Acabamento limpo · aplicação profissional"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -288,7 +367,7 @@ export default function LandingViaturasEmpresas() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button variant="outline" className="border-green-500 text-green-400 hover:bg-green-500 hover:text-white">
+              <Button variant="outline" className="border-green-500 text-green-300 hover:bg-green-500 hover:text-white">
                 WhatsApp direto
               </Button>
             </a>
@@ -303,9 +382,7 @@ export default function LandingViaturasEmpresas() {
             <h2 className="text-2xl md:text-3xl font-bold">
               Processo <span className="text-brand-yellow">simples</span>
             </h2>
-            <p className="text-gray-400 text-sm mt-2">
-              Para não perderes tempo e teres resultado previsível.
-            </p>
+            <p className="text-gray-400 text-sm mt-2">Para não perder tempo e ter um resultado previsível.</p>
           </div>
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-4">
@@ -352,7 +429,7 @@ export default function LandingViaturasEmpresas() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">
-              Quer avançar com a sua <span className="text-brand-yellow">viatura comercial</span>?
+              Pronto para avançar com a sua <span className="text-brand-yellow">viatura comercial?</span>?
             </h2>
             <p className="text-gray-300 mb-6">
               Envie 2 a 4 fotos da viatura, localidade e objetivo. Respondemos com orientação e orçamento.
@@ -360,10 +437,7 @@ export default function LandingViaturasEmpresas() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contactos#formulario">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
-                >
+                <Button size="lg" className="w-full sm:w-auto bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90">
                   <MessageCircle className="w-5 h-5 mr-2" />
                   Pedir orçamento
                 </Button>
@@ -378,18 +452,16 @@ export default function LandingViaturasEmpresas() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto border-green-500 text-green-400 hover:bg-green-500 hover:text-white"
+                  className="w-full sm:w-auto border-green-500 text-green-300 hover:bg-green-500 hover:text-white"
                 >
                   Falar no WhatsApp
                 </Button>
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-gray-500">
-              Sem compromisso · Resposta rápida · Produção e aplicação própria
-            </p>
+            <p className="mt-4 text-xs text-gray-500">Sem compromisso · Resposta rápida · Produção e aplicação própria em atelier</p>
             <p className="mt-10 text-xs text-brand-yellow max-w-xl mx-auto md:mx-0">
-              Além de viaturas, a DOMREALCE também faz montras, impressão e decoração.
+              Além de viaturas, a DOMREALCE também trabalha montras, impressão digital e decoração.
               Loja online disponível no menu.
             </p>
           </div>
