@@ -1,6 +1,6 @@
 import React from "react";
 import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
+import FooterMinimal from "@/components/footer-minimal";
 import { SEOHead } from "@/components/seo-head";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -343,7 +343,7 @@ export default function LandingViaturasEmpresas() {
                   }}
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute left-3 right-3 bottom-3">
                   <div className="px-2 py-1">
                     <p className="text-xs sm:text-sm font-semibold text-white leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
@@ -431,7 +431,7 @@ export default function LandingViaturasEmpresas() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">
-              Pronto para avançar com a sua <span className="text-brand-yellow">viatura comercial?</span>?
+              Pronto para avançar com a sua <span className="text-brand-yellow">viatura comercial?</span>
             </h2>
             <p className="text-gray-300 mb-6">
               Envie 2 a 4 fotos da viatura, localidade e objetivo. Respondemos com orientação e orçamento.
@@ -461,7 +461,9 @@ export default function LandingViaturasEmpresas() {
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-gray-500">Sem compromisso · Resposta rápida · Produção e aplicação própria em atelier</p>
+            <p className="mt-4 text-xs text-gray-500">
+              Sem compromisso · Resposta rápida · Aplicação profissional própria
+            </p>
             <p className="mt-10 text-xs text-brand-yellow max-w-xl mx-auto md:mx-0">
               Além de viaturas, a DOMREALCE também trabalha montras, impressão digital e decoração.
               Loja online disponível no menu.
@@ -470,7 +472,7 @@ export default function LandingViaturasEmpresas() {
         </div>
       </section>
 
-      <Footer />
+      <FooterMinimal />
     </div>
   );
 }
