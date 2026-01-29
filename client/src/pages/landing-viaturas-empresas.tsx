@@ -211,7 +211,7 @@ export default function LandingViaturasEmpresas() {
                 <img
                   src={withVersion(ASSETS.hero.src)}
                   alt={ASSETS.hero.alt}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-[70%_65%] md:object-center"
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
@@ -343,11 +343,13 @@ export default function LandingViaturasEmpresas() {
                   }}
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
                 <div className="absolute left-3 right-3 bottom-3">
-                  <div className="bg-black/55 backdrop-blur-sm rounded-lg px-3 py-2">
-                    <p className="text-sm font-semibold text-white leading-tight">{img.title}</p>
-                    <p className="text-[11px] text-gray-200">
+                  <div className="px-2 py-1">
+                    <p className="text-xs sm:text-sm font-semibold text-white leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                      {img.title}
+                    </p>
+                    <p className="text-[10px] sm:text-[11px] text-white/90 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
                       {img.subtitle ?? "Acabamento limpo · aplicação profissional"}
                     </p>
                   </div>
