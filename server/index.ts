@@ -26,11 +26,36 @@ app.use((req, res, next) => {
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms",
+
+      // Scripts
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+        "https://www.googletagmanager.com https://www.google-analytics.com " +
+        "https://maps.googleapis.com " +
+        "https://www.paypal.com https://www.sandbox.paypal.com " +
+        "https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms " +
+        "https://connect.facebook.net",
+
+      // Styles
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+
+      // Fonts
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https: http: https://maps.gstatic.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://*.clarity.ms https://*.bing.com",
-      "connect-src 'self' https://www.google-analytics.com https://maps.googleapis.com https://www.paypal.com https://www.sandbox.paypal.com https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
+
+      // Images
+      "img-src 'self' data: blob: https: http: " +
+        "https://maps.gstatic.com https://maps.googleapis.com " +
+        "https://www.paypal.com https://www.sandbox.paypal.com " +
+        "https://*.clarity.ms https://*.bing.com " +
+        "https://www.facebook.com https://*.fbcdn.net",
+
+      // XHR / fetch / beacons
+      "connect-src 'self' " +
+        "https://www.google-analytics.com https://region1.google-analytics.com " +
+        "https://maps.googleapis.com " +
+        "https://www.paypal.com https://www.sandbox.paypal.com " +
+        "https://www.clarity.ms https://*.clarity.ms " +
+        "https://*.bing.com https://bat.bing.com " +
+        "https://connect.facebook.net https://www.facebook.com",
     ].join("; ")
   );
 
