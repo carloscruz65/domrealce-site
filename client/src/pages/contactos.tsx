@@ -1,7 +1,7 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GoogleMap from "@/components/GoogleMap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { insertContactSchema } from "@shared/schema";
@@ -48,6 +48,9 @@ export default function Contactos() {
     mensagem: "",
     anexos: [],
   });
+
+  // Evita disparar Lead 2x por re-render / duplo clique
+  const leadTrackedRef = useRef(false);
 
   const submitMutation = useMutation({
     mutationFn: async () => {
@@ -98,6 +101,19 @@ export default function Contactos() {
         description: "Entraremos em contacto brevemente.",
       });
 
+      // 🔥 Meta Pixel: Lead (só quando o envio foi bem sucedido)
+      try {
+        if (!leadTrackedRef.current) {
+          const w = window as any;
+          if (typeof w?.fbq === "function") {
+            w.fbq("track", "Lead");
+            leadTrackedRef.current = true;
+          }
+        }
+      } catch {
+        // não faz nada (nunca devemos estragar UX por tracking)
+      }
+
       // Limpar formulário
       setFormData({
         nome: "",
@@ -107,6 +123,12 @@ export default function Contactos() {
         mensagem: "",
         anexos: [],
       });
+
+      // Permite novo lead depois de um envio bem sucedido e reset do form
+      // (assim, se o utilizador enviar outra mensagem mais tarde, volta a contar)
+      setTimeout(() => {
+        leadTrackedRef.current = false;
+      }, 1500);
     },
 
     onError: (error: any) => {
@@ -453,7 +475,6 @@ export default function Contactos() {
                           ...prev,
                           anexos: [...prev.anexos, ...fileData].slice(0, 3),
                         }));
-                        // limpa o input para permitir selecionar o mesmo ficheiro novamente se quiserem
                         e.currentTarget.value = "";
                       }}
                       className="w-full p-3 bg-gray-900/60 border border-white/10 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-black file:bg-brand-yellow hover:file:bg-brand-yellow/90 file:cursor-pointer"
