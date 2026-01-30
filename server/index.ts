@@ -17,7 +17,7 @@ app.use("/api", (req, _res, next) => {
 // Security headers
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("X-XSS-Protection", "1; mode=block");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
@@ -41,21 +41,24 @@ app.use((req, res, next) => {
       // Fonts
       "font-src 'self' https://fonts.gstatic.com",
 
-      // Images
+      // Imagens (inclui pixel img/track)
       "img-src 'self' data: blob: https: http: " +
+        "https://www.facebook.com https://connect.facebook.net " +
         "https://maps.gstatic.com https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
-        "https://*.clarity.ms https://*.bing.com " +
-        "https://www.facebook.com https://*.fbcdn.net",
+        "https://*.clarity.ms https://*.bing.com",
 
-      // XHR / fetch / beacons
+      // Ligações (calls do pixel/analytics)
       "connect-src 'self' " +
+      "https://www.facebook.com https://connect.facebook.net " +
+      "https://graph.facebook.com " +
         "https://www.google-analytics.com https://region1.google-analytics.com " +
         "https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
-        "https://www.clarity.ms https://*.clarity.ms " +
-        "https://*.bing.com https://bat.bing.com " +
-        "https://connect.facebook.net https://www.facebook.com",
+        "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
+
+      // Iframes (remove o erro “Framing facebook.com violates CSP”)
+      "frame-src 'self' https://www.facebook.com https://connect.facebook.net",
     ].join("; ")
   );
 
