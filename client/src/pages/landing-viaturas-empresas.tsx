@@ -152,14 +152,14 @@ export default function LandingViaturasEmpresas() {
 
               {/* ✅ headline corrigida */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Transforme a sua{" "}
-                <span className="text-brand-yellow">viatura numa publicidade</span>
+                Se a sua viatura circula{" "}
+                <span className="text-brand-yellow">todos os dias</span>
                 <br className="hidden sm:block" />
-                em movimento
+                devia estar a representar a sua marca.
               </h1>
 
               <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
-                Do design à aplicação final. Ideal para carrinhas, camiões e frotas comerciais no Grande Porto.
+                Aplicação própria em atelier. Planeamento antes da produção.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center md:justify-start">
@@ -281,7 +281,8 @@ export default function LandingViaturasEmpresas() {
 
           {/* MINI CTA */}
           <div className="mt-6 text-center">
-            <p className="text-base text-gray-200 mb-4">Pronto para avançar com a sua viatura comercial?</p>
+            <p className="text-base text-gray-200 mb-4">Vamos planear a decoração da sua viatura?</p>
+            <p className="text-gray-400 text-sm mt-2">Envie fotos e receba uma proposta clara, sem compromisso.</p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/contactos#formulario">
