@@ -6,7 +6,7 @@ import ServiceCardsSection from "@/components/services/ServiceCardsSection";
 import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   Image,
@@ -41,6 +41,7 @@ type TelasAnexoItem = {
 
 export default function ServicoTelasArtisticas() {
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
   const [formData, setFormData] = useState({
     largura: "",
@@ -178,6 +179,8 @@ export default function ServicoTelasArtisticas() {
         telefone: "",
         anexos: [],
       });
+
+      navigate("/obrigado-orcamento");
     },
 
     onError: (error: any) => {

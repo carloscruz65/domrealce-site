@@ -6,7 +6,7 @@ import ServiceCardsSection from "@/components/services/ServiceCardsSection";
 import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Wallpaper,
@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ObjectUploader } from "@/components/ObjectUploader";
 
 export default function ServicoPapelParede() {
+  const [, navigate] = useLocation();
   const [formData, setFormData] = useState({
     largura: "",
     altura: "",
@@ -153,7 +154,7 @@ ${formData.anexos
         throw new Error(data?.message || "Erro ao enviar pedido.");
       }
 
-      alert("Pedido enviado com sucesso! Vamos responder com a maior brevidade.");
+      navigate("/obrigado-orcamento");
 
       // Limpar formulário
       setFormData({

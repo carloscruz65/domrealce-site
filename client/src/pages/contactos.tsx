@@ -1,3 +1,4 @@
+import { useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GoogleMap from "@/components/GoogleMap";
@@ -27,6 +28,7 @@ type AnexoItem = {
 
 export default function Contactos() {
   const { toast } = useToast();
+  const [, navigate] = useLocation();
 
   // Fetch Google Maps API key
   const { data: mapsConfig } = useQuery<{ apiKey: string }>({
@@ -129,6 +131,8 @@ export default function Contactos() {
       setTimeout(() => {
         leadTrackedRef.current = false;
       }, 1500);
+
+      navigate("/obrigado-orcamento");
     },
 
     onError: (error: any) => {
