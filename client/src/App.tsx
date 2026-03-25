@@ -162,9 +162,7 @@ function Router() {
           <Route path="/demo-interativo" component={DemoInterativo} />
           <Route path="/visual-editor-demo" component={VisualEditorDemo} />
           <Route path="/obrigado" component={Obrigado} />
-          <Route path="/obrigado-orcamento">
-            <ObrigadoOrcamento />
-          </Route>
+          <Route path="/obrigado-orcamento" component={ObrigadoOrcamento} />
           <Route path="/pagamento-erro" component={PagamentoErro} />
           <Route path="/contactos-maquinas" component={ContactosMaquinas} />
           <Route path="/decoracao-viaturas-empresas" component={LandingViaturasEmpresas} />
