@@ -198,6 +198,7 @@ function App() {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-S51RFB39HK', {'send_page_view': true});
+        gtag('config', 'AW-11438840519'); // 👈 ADICIONAR ESTA LINHA
       `;
       document.head.appendChild(script2);
       

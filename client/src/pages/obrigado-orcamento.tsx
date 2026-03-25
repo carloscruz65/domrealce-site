@@ -1,8 +1,18 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo-head";
+import { useEffect } from "react";
 
 export default function ObrigadoOrcamento() {
+
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-11438840519/lTnXCKfU34scEMe1u84q'
+      });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center px-4">
       <SEOHead
