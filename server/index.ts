@@ -52,10 +52,13 @@ app.use((req, res, next) => {
       "connect-src 'self' " +
       "https://www.facebook.com https://connect.facebook.net " +
       "https://graph.facebook.com " +
-        "https://www.google-analytics.com https://region1.google-analytics.com " +
-        "https://maps.googleapis.com " +
-        "https://www.paypal.com https://www.sandbox.paypal.com " +
-        "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
+      "https://www.google-analytics.com https://region1.google-analytics.com " +
+      "https://www.googleadservices.com " +
+      "https://googleads.g.doubleclick.net " +
+      "https://stats.g.doubleclick.net " +
+      "https://maps.googleapis.com " +
+      "https://www.paypal.com https://www.sandbox.paypal.com " +
+      "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
 
       // Iframes (remove o erro “Framing facebook.com violates CSP”)
       "frame-src 'self' https://www.facebook.com https://connect.facebook.net",
