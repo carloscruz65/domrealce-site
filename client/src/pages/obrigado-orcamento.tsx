@@ -6,11 +6,25 @@ import { useEffect } from "react";
 export default function ObrigadoOrcamento() {
 
   useEffect(() => {
-    if (window.gtag) {
-      window.gtag('event', 'conversion', {
-        send_to: 'AW-11438840519/lTnXCKfU34scEMe1u84q'
-      });
-    }
+    let cancelled = false;
+
+    const fireConversion = (retries: number) => {
+      if (cancelled) return;
+
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: "AW-11438840519/lTnXCKfU34scEMe1u84q",
+        });
+      } else if (retries > 0) {
+        setTimeout(() => fireConversion(retries - 1), 300);
+      }
+    };
+
+    fireConversion(15);
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
