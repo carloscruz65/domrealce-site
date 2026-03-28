@@ -27,8 +27,17 @@ app.use((req, res, next) => {
     [
       "default-src 'self'",
 
-      // Scripts
+      // script-src: controla eval/inline e scripts genéricos
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+        "https://www.googletagmanager.com https://www.google-analytics.com " +
+        "https://www.googleadservices.com https://googleads.g.doubleclick.net " +
+        "https://maps.googleapis.com " +
+        "https://www.paypal.com https://www.sandbox.paypal.com " +
+        "https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms " +
+        "https://connect.facebook.net",
+
+      // script-src-elem: controla <script src="..."> — browsers modernos verificam esta separadamente
+      "script-src-elem 'self' 'unsafe-inline' " +
         "https://www.googletagmanager.com https://www.google-analytics.com " +
         "https://www.googleadservices.com https://googleads.g.doubleclick.net " +
         "https://maps.googleapis.com " +
@@ -53,18 +62,21 @@ app.use((req, res, next) => {
 
       // Ligações (calls do pixel/analytics)
       "connect-src 'self' " +
-      "https://www.facebook.com https://connect.facebook.net " +
-      "https://graph.facebook.com " +
-      "https://www.google-analytics.com https://region1.google-analytics.com " +
-      "https://www.googleadservices.com " +
-      "https://googleads.g.doubleclick.net " +
-      "https://stats.g.doubleclick.net " +
-      "https://maps.googleapis.com " +
-      "https://www.paypal.com https://www.sandbox.paypal.com " +
-      "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
+        "https://www.googletagmanager.com " +
+        "https://www.google-analytics.com https://region1.google-analytics.com " +
+        "https://www.googleadservices.com " +
+        "https://googleads.g.doubleclick.net " +
+        "https://stats.g.doubleclick.net " +
+        "https://www.facebook.com https://connect.facebook.net " +
+        "https://graph.facebook.com " +
+        "https://maps.googleapis.com " +
+        "https://www.paypal.com https://www.sandbox.paypal.com " +
+        "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
 
-      // Iframes (remove o erro “Framing facebook.com violates CSP”)
-      "frame-src 'self' https://www.facebook.com https://connect.facebook.net",
+      // Iframes
+      "frame-src 'self' " +
+        "https://www.googletagmanager.com " +
+        "https://www.facebook.com https://connect.facebook.net",
     ].join("; ")
   );
 
