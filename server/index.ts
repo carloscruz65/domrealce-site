@@ -30,6 +30,7 @@ app.use((req, res, next) => {
       // Scripts
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
         "https://www.googletagmanager.com https://www.google-analytics.com " +
+        "https://www.googleadservices.com https://googleads.g.doubleclick.net " +
         "https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
         "https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms " +
@@ -43,6 +44,8 @@ app.use((req, res, next) => {
 
       // Imagens (inclui pixel img/track)
       "img-src 'self' data: blob: https: http: " +
+        "https://www.google.com https://www.google-analytics.com " +
+        "https://www.googleadservices.com https://googleads.g.doubleclick.net " +
         "https://www.facebook.com https://connect.facebook.net " +
         "https://maps.gstatic.com https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
