@@ -336,8 +336,60 @@ ${formData.anexos
         description="Descubra uma coleção completa de papéis de parede, com visualização em tamanho real, várias categorias e aplicação profissional."
         imageSrc="/public-objects/servicos/papel-parede.webp"
         imageAlt="Papel de Parede DOMREALCE"
-        primaryCta={{ text: "Explorar catálogo", href: "/loja/papel-parede" }}
+        primaryCta={{ text: "Pedir orçamento gratuito", href: "#orcamento" }}
+        secondaryCta={{ text: "Falar por WhatsApp", href: "https://wa.me/351930682725?text=Olá!%20Quero%20orçamento%20para%20papel%20de%20parede." }}
       />
+
+      {/* Trust signals */}
+      <section className="py-3 bg-gray-900/70 border-y border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-10">
+            <div className="flex items-center gap-2 text-sm text-gray-300">
+              <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
+              Aplicação profissional incluída
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-300">
+              <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
+              Orçamento em 24h
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-300">
+              <CheckCircle className="w-4 h-4 text-brand-yellow flex-shrink-0" />
+              Atendimento personalizado
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Opções principais */}
+      <section className="py-10 bg-black border-b border-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            <Card className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow/60 transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <ShoppingCart className="w-10 h-10 text-brand-yellow mx-auto mb-3" />
+                <h3 className="text-lg font-semibold mb-2 text-white">Quer comprar diretamente?</h3>
+                <p className="text-gray-400 text-sm mb-4">Explore a nossa loja online com dezenas de texturas disponíveis.</p>
+                <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
+                  <Link href="/loja/papel-parede">
+                    Ver loja online <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-900/60 border border-brand-yellow/40 hover:border-brand-yellow transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <Palette className="w-10 h-10 text-brand-yellow mx-auto mb-3" />
+                <h3 className="text-lg font-semibold mb-2 text-white">Quer algo personalizado?</h3>
+                <p className="text-gray-400 text-sm mb-4">Envie uma imagem, escolha de um banco de imagens ou peça ajuda.</p>
+                <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
+                  <a href="#orcamento">Pedir orçamento</a>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       <main>
         <ServiceCardsSection
@@ -354,112 +406,6 @@ ${formData.anexos
           description="Algumas inspirações de aplicação de papel de parede em diferentes estilos e espaços."
           columns={3}
         />
-
-        {/* Como funciona */}
-        <section className="py-16 bg-black border-t border-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Como</span>{" "}
-                <span className="text-brand-yellow">funciona</span>
-              </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Pode escolher uma textura da nossa loja ou enviar um link/referência.
-                Se não tiver imagem definida, nós ajudamos a escolher a solução visual
-                mais adequada ao seu espaço.
-              </p>
-            </div>
-
-            <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6">
-                {process.map((step, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
-                      {step.step}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-white">
-                        {step.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Vantagens */}
-        <section className="pt-8 pb-16 bg-gray-900/40">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                    <span className="text-brand-yellow">Vantagens</span>{" "}
-                    <span className="text-white">exclusivas</span>
-                  </h2>
-                  <p className="text-gray-400 mb-8 text-lg">
-                    Mais do que vender papel de parede, oferecemos uma solução
-                    completa com aconselhamento, medição e aplicação profissional.
-                  </p>
-                  <div className="space-y-4">
-                    {benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                        <span className="text-white">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-black rounded-2xl p-8 border border-gray-800">
-                  <div className="text-center mb-6">
-                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                    <h3 className="text-2xl font-semibold mb-2 text-white">
-                      Serviço completo
-                    </h3>
-                    <p className="text-gray-400">
-                      Da escolha da imagem à aplicação final, a nossa equipa
-                      acompanha todo o processo com atenção ao detalhe.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Texturas disponíveis</span>
-                      <span className="text-brand-yellow font-semibold">
-                        Grande variedade
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Categorias</span>
-                      <span className="text-brand-yellow font-semibold">
-                        Diversas
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Aplicação incluída</span>
-                      <span className="text-brand-yellow font-semibold">Sim</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Garantia</span>
-                      <span className="text-brand-yellow font-semibold">
-                        2 anos
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Orçamento personalizado */}
         <section
@@ -843,8 +789,8 @@ ${formData.anexos
                 </CardContent>
               </Card>
 
-              {/* Opções rápidas */}
-              <div className="grid md:grid-cols-2 gap-6">
+              {/* Opções rápidas - removidas (cobertas pela secção acima) */}
+              <div className="grid md:grid-cols-2 gap-6 hidden">
                 <Card className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300">
                   <CardContent className="p-6 text-center">
                     <ShoppingCart className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
@@ -891,6 +837,103 @@ ${formData.anexos
                     </Button>
                   </CardContent>
                 </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Como funciona */}
+        <section className="py-16 bg-black border-t border-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-white">Como</span>{" "}
+                <span className="text-brand-yellow">funciona</span>
+              </h2>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                Pode escolher uma textura da nossa loja ou enviar um link/referência.
+                Se não tiver imagem definida, nós ajudamos a escolher a solução visual
+                mais adequada ao seu espaço.
+              </p>
+            </div>
+            <div className="max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-6">
+                {process.map((step, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
+                      {step.step}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-white">
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Vantagens */}
+        <section className="pt-8 pb-16 bg-gray-900/40">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
+                    <span className="text-brand-yellow">Vantagens</span>{" "}
+                    <span className="text-white">exclusivas</span>
+                  </h2>
+                  <p className="text-gray-400 mb-8 text-lg">
+                    Mais do que vender papel de parede, oferecemos uma solução
+                    completa com aconselhamento, medição e aplicação profissional.
+                  </p>
+                  <div className="space-y-4">
+                    {benefits.map((benefit, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
+                        <span className="text-white">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-black rounded-2xl p-8 border border-gray-800">
+                  <div className="text-center mb-6">
+                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
+                    <h3 className="text-2xl font-semibold mb-2 text-white">
+                      Serviço completo
+                    </h3>
+                    <p className="text-gray-400">
+                      Da escolha da imagem à aplicação final, a nossa equipa
+                      acompanha todo o processo com atenção ao detalhe.
+                    </p>
+                  </div>
+                  <div className="space-y-4 text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Texturas disponíveis</span>
+                      <span className="text-brand-yellow font-semibold">Grande variedade</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Categorias</span>
+                      <span className="text-brand-yellow font-semibold">Diversas</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Aplicação incluída</span>
+                      <span className="text-brand-yellow font-semibold">Sim</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Garantia</span>
+                      <span className="text-brand-yellow font-semibold">2 anos</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
