@@ -27,8 +27,8 @@ interface ServiceHeroTwoColumnProps {
   description?: string;
   imageSrc?: string;
   imageAlt?: string;
-  primaryCta?: { text: string; href: string };
-  secondaryCta?: { text: string; href: string };
+  primaryCta?: { text: string; href?: string; onClick?: () => void };
+  secondaryCta?: { text: string; href?: string; onClick?: () => void };
   imagePosition?: "left" | "right";
   children?: React.ReactNode;
 
@@ -197,24 +197,65 @@ export default function ServiceHeroTwoColumn({
       ) : null}
 
       <div className="flex flex-wrap gap-3 pt-2">
-        {resolved.primaryCta?.href && resolved.primaryCta?.text ? (
-          <Link href={resolved.primaryCta.href}>
-            <Button className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
-              {resolved.primaryCta.text} <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        ) : null}
+        {resolved.primaryCta?.text ? (() => {
+          const pCta = resolved.primaryCta!;
+          const pClick = pCta.onClick
+            ?? (pCta.href?.startsWith("http")
+              ? () => window.open(pCta.href!, "_blank", "noopener,noreferrer")
+              : pCta.href?.startsWith("#")
+              ? () => {
+                  const id = pCta.href!.slice(1);
+                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                }
+              : undefined);
+          if (pClick) {
+            return (
+              <Button onClick={pClick} className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
+                {pCta.text} <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            );
+          }
+          if (pCta.href) {
+            return (
+              <Link href={pCta.href}>
+                <Button className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
+                  {pCta.text} <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            );
+          }
+          return null;
+        })() : null}
 
-        {resolved.secondaryCta?.href && resolved.secondaryCta?.text ? (
-          <Link href={resolved.secondaryCta.href}>
-            <Button
-              variant="outline"
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              {resolved.secondaryCta.text}
-            </Button>
-          </Link>
-        ) : null}
+        {resolved.secondaryCta?.text ? (() => {
+          const sCta = resolved.secondaryCta!;
+          const sClick = sCta.onClick
+            ?? (sCta.href?.startsWith("http")
+              ? () => window.open(sCta.href!, "_blank", "noopener,noreferrer")
+              : sCta.href?.startsWith("#")
+              ? () => {
+                  const id = sCta.href!.slice(1);
+                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                }
+              : undefined);
+          if (sClick) {
+            return (
+              <Button onClick={sClick} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                {sCta.text}
+              </Button>
+            );
+          }
+          if (sCta.href) {
+            return (
+              <Link href={sCta.href}>
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                  {sCta.text}
+                </Button>
+              </Link>
+            );
+          }
+          return null;
+        })() : null}
       </div>
 
       {children}
