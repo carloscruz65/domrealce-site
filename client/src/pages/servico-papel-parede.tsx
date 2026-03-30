@@ -326,7 +326,6 @@ ${formData.anexos
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
-
       <ServiceHeroTwoColumn
         serviceId="papel-parede"
         badge="Papel de Parede Premium"
@@ -336,10 +335,17 @@ ${formData.anexos
         description="Descubra uma coleção completa de papéis de parede, com visualização em tamanho real, várias categorias e aplicação profissional."
         imageSrc="/public-objects/servicos/papel-parede.webp"
         imageAlt="Papel de Parede DOMREALCE"
-        primaryCta={{ text: "Pedir orçamento gratuito", href: "#orcamento" }}
-        secondaryCta={{ text: "Falar por WhatsApp", href: "https://wa.me/351930682725?text=Olá!%20Quero%20orçamento%20para%20papel%20de%20parede." }}
+        primaryCta={{
+          text: "Pedir orçamento gratuito",
+          onClick: () => {
+            document.getElementById("orcamento")?.scrollIntoView({ behavior: "smooth" });
+          }
+        }}
+        secondaryCta={{
+          text: "Falar por WhatsApp",
+          href: "https://wa.me/351930682725?text=Olá!%20Quero%20orçamento%20para%20papel%20de%20parede."
+        }}
       />
-
       {/* Trust signals */}
       <section className="py-3 bg-gray-900/70 border-y border-gray-800">
         <div className="container mx-auto px-4">
