@@ -119,19 +119,18 @@ ${imagemInfo}
 ${formData.mensagem || "(sem mensagem adicional)"}
 `;
 
-      // anexos (referências geradas pelo ObjectUploader)
+      // anexos: lista os nomes na mensagem (os URLs reais vêm do backend após upload)
       if (formData.anexos && formData.anexos.length > 0) {
         mensagemFinal += `
 
-📎 Ficheiros enviados (referência):
+📎 Ficheiros enviados (${formData.anexos.length}):
 ${formData.anexos
   .map(
     (file: any, index: number) =>
-      `${index + 1}. ${file.originalName}${
-        file.uploadURL ? " - " + file.uploadURL : ""
-      }`
+      `${index + 1}. ${file.originalName} (${(file.size / 1024).toFixed(1)} KB)`
   )
   .join("\n")}
+(Os links de download serão incluídos automaticamente no email.)
 `;
       }
 
@@ -142,6 +141,21 @@ ${formData.anexos
       fd.append("telefone", formData.telefone?.trim() || "");
       fd.append("empresa", "");
       fd.append("mensagem", mensagemFinal);
+
+      // ✅ CORREÇÃO: enviar ficheiros reais para multer → Object Storage → coluna ficheiros[]
+      if (formData.anexos && formData.anexos.length > 0) {
+        console.log(`📎 [papel-parede] A enviar ${formData.anexos.length} ficheiro(s) para o backend...`);
+        formData.anexos.forEach((anexo: any, i: number) => {
+          if (anexo?.file instanceof File) {
+            fd.append("files", anexo.file, anexo.originalName);
+            console.log(`  → [${i + 1}] ${anexo.originalName} (${(anexo.size / 1024).toFixed(1)} KB, ${anexo.type})`);
+          } else {
+            console.warn(`  ⚠️ [${i + 1}] sem objeto File válido:`, Object.keys(anexo || {}));
+          }
+        });
+      } else {
+        console.log("📎 [papel-parede] Sem ficheiros para enviar.");
+      }
 
       const res = await fetch("/api/contact", {
         method: "POST",

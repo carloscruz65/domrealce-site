@@ -616,6 +616,15 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       const submissionId = randomUUID();
       const files = (req.files as Express.Multer.File[]) || [];
 
+      // 📊 Log de diagnóstico: quantos ficheiros chegaram ao backend
+      console.log(`📎 [${requestId}] Ficheiros recebidos via multer: ${files.length}`);
+      files.forEach((f, i) => {
+        console.log(`  → [${i + 1}] ${f.originalname} | ${f.mimetype} | ${(f.size / 1024).toFixed(1)} KB`);
+      });
+      if (files.length === 0) {
+        console.log(`  ℹ️  Nenhum ficheiro recebido. Content-Type: ${req.headers["content-type"]}`);
+      }
+
       const uploadedFileEntries: string[] = [];
 
       for (const file of files) {
@@ -625,11 +634,18 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
 
         const targetPath = `contactos/${submissionId}/${Date.now()}-${originalName}`;
 
-        await objectStorageService.uploadPublicFile(targetPath, file.buffer, file.mimetype);
-
-        const publicUrl = `/public-objects/${targetPath}`;
-        uploadedFileEntries.push(`${originalName}|${publicUrl}`);
+        try {
+          await objectStorageService.uploadPublicFile(targetPath, file.buffer, file.mimetype);
+          const publicUrl = `/public-objects/${targetPath}`;
+          uploadedFileEntries.push(`${originalName}|${publicUrl}`);
+          console.log(`  ✅ Upload OK: ${originalName} → ${publicUrl}`);
+        } catch (uploadErr) {
+          console.error(`  ❌ Upload FALHOU para ${originalName}:`, uploadErr);
+          // continua sem o ficheiro (não bloqueia o envio do formulário)
+        }
       }
+
+      console.log(`📎 [${requestId}] uploadedFileEntries (${uploadedFileEntries.length}):`, uploadedFileEntries);
 
       const validatedData = insertContactSchema.parse({
         ...req.body,
