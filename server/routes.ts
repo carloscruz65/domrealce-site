@@ -11,6 +11,7 @@ import {
   insertOrderSchema,
   insertServiceGallerySchema,
   insertServiceHeroSchema,
+  insertTestimonialSchema,
   type Contact,
   type Order
 } from "@shared/schema";
@@ -1663,6 +1664,84 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       logRouteError(requestId, "PUT /api/admin/service-heroes/:serviceId failed", error);
       res.status(500).json({ error: "Failed to update service hero", requestId });
+    }
+  });
+
+  // =========================================
+  // TESTIMONIALS API routes
+  // =========================================
+
+  // Público: enviar testemunho (fica 'pendente')
+  app.post("/api/testimonials", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const data = insertTestimonialSchema.parse(req.body);
+      const t = await storage.createTestimonial(data);
+      res.json({ success: true, id: t.id, requestId });
+    } catch (error) {
+      logRouteError(requestId, "POST /api/testimonials failed", error);
+      res.status(400).json({ error: "Dados inválidos", requestId });
+    }
+  });
+
+  // Público: listar aprovados de uma notícia
+  app.get("/api/testimonials/:noticiaId", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { noticiaId } = req.params;
+      const list = await storage.getApprovedTestimonials(noticiaId);
+      res.json({ testimonials: list, requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/testimonials/:noticiaId failed", error);
+      res.status(500).json({ error: "Falha ao carregar testemunhos", requestId });
+    }
+  });
+
+  // Admin: listar todos (protegido)
+  app.get("/api/admin/testimonials", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const list = await storage.getAllTestimonials();
+      res.json({ testimonials: list, requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/admin/testimonials failed", error);
+      res.status(500).json({ error: "Falha ao carregar testemunhos", requestId });
+    }
+  });
+
+  // Admin: aprovar
+  app.put("/api/admin/testimonials/:id/approve", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const t = await storage.approveTestimonial(req.params.id);
+      res.json({ success: true, testimonial: t, requestId });
+    } catch (error) {
+      logRouteError(requestId, "PUT /api/admin/testimonials/:id/approve failed", error);
+      res.status(500).json({ error: "Falha ao aprovar", requestId });
+    }
+  });
+
+  // Admin: rejeitar
+  app.put("/api/admin/testimonials/:id/reject", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const t = await storage.rejectTestimonial(req.params.id);
+      res.json({ success: true, testimonial: t, requestId });
+    } catch (error) {
+      logRouteError(requestId, "PUT /api/admin/testimonials/:id/reject failed", error);
+      res.status(500).json({ error: "Falha ao rejeitar", requestId });
+    }
+  });
+
+  // Admin: eliminar
+  app.delete("/api/admin/testimonials/:id", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const ok = await storage.deleteTestimonial(req.params.id);
+      res.json({ success: ok, requestId });
+    } catch (error) {
+      logRouteError(requestId, "DELETE /api/admin/testimonials/:id failed", error);
+      res.status(500).json({ error: "Falha ao eliminar", requestId });
     }
   });
 

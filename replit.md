@@ -52,6 +52,7 @@ Preferred communication style: Simple, everyday language.
     - **Slider Management**: Drag-and-drop reordering, active/inactive toggles, image previews.
     - **Portfolio Management**: Search, filter by category, image preview modal.
     - **News/Críticas do Cliente**: Admin form to manage news articles and client testimonials including review text, author, and star rating.
+    - **Testemunhos Dinâmicos**: Public submission form on each news/project page (name, company, 1-5 star rating, message). Submissions are stored as 'pendente' and only shown publicly when 'aprovado'. Admin can approve, reject, or delete each submission via the "Testemunhos" tab.
 - **Image Handling**: All hero images are stored in Object Storage.
 
 # External Dependencies

@@ -5,6 +5,7 @@ import MediaManager from "@/components/MediaManager";
 import SliderManager from "@/components/SliderManager";
 import ProdutosManager from "@/components/ProdutosManager";
 import NoticiasManager from "@/components/NoticiasManager";
+import TestimonialsManager from "@/components/TestimonialsManager";
 import PortfolioManager from "@/components/PortfolioManager";
 import EncomendasManager from "@/components/EncomendasManager";
 import PageEditor from "@/components/PageEditor";
@@ -25,7 +26,8 @@ import {
   Users,
   Store,
   ShoppingCart,
-  Briefcase
+  Briefcase,
+  MessageSquare
 } from "lucide-react";
 
 const serviceNames: Record<string, string> = {
@@ -128,6 +130,10 @@ export default function AdminPage() {
               <TabsTrigger value="media" className="flex items-center gap-2">
                 <FolderOpen className="h-4 w-4" />
                 Media
+              </TabsTrigger>
+              <TabsTrigger value="testemunhos" className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4" />
+                Testemunhos
               </TabsTrigger>
             </TabsList>
 
@@ -257,6 +263,17 @@ export default function AdminPage() {
             {/* Media Tab */}
             <TabsContent value="media">
               <MediaManager />
+            </TabsContent>
+
+            {/* Testemunhos Tab */}
+            <TabsContent value="testemunhos">
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-white">Gestão de Testemunhos</h2>
+                <p className="text-gray-400 text-sm mt-1">
+                  Aprove ou elimine os testemunhos submetidos pelos visitantes nas notícias/projetos.
+                </p>
+              </div>
+              <TestimonialsManager />
             </TabsContent>
           </Tabs>
         </div>

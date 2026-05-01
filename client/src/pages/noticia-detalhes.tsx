@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRoute, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import {
   Calendar,
   Clock,
@@ -17,8 +22,9 @@ import {
   Link as LinkIcon,
   Star,
   Quote,
+  Send,
 } from "lucide-react";
-import type { News, MediaItem } from "@shared/schema";
+import type { News, MediaItem, Testimonial } from "@shared/schema";
 
 function formatarData(data: string | Date) {
   return new Date(data).toLocaleDateString("pt-PT", {
@@ -54,12 +60,38 @@ export default function NoticiaDetalhes() {
   const [, params] = useRoute("/noticia/:id");
   const [, setLocation] = useLocation();
   const noticiaId = params?.id;
+  const { toast } = useToast();
 
   const [indiceImagem, setIndiceImagem] = useState(0);
   const [copied, setCopied] = useState(false);
 
+  // Form state for testimonial submission
+  const [reviewForm, setReviewForm] = useState({ nome: "", empresa: "", mensagem: "", rating: 0 });
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
   const { data: noticias = [], isLoading } = useQuery<News[]>({
     queryKey: ["/api/news/all"],
+  });
+
+  const { data: testimonialsData } = useQuery<{ testimonials: Testimonial[] }>({
+    queryKey: ["/api/testimonials", noticiaId],
+    queryFn: () => fetch(`/api/testimonials/${noticiaId}`).then(r => r.json()),
+    enabled: !!noticiaId,
+  });
+
+  const approvedTestimonials = testimonialsData?.testimonials || [];
+
+  const submitTestimonialMutation = useMutation({
+    mutationFn: (data: { noticiaId: string; nome: string; empresa?: string; rating: number; mensagem: string }) =>
+      apiRequest("POST", "/api/testimonials", data),
+    onSuccess: () => {
+      setReviewSubmitted(true);
+      setReviewForm({ nome: "", empresa: "", mensagem: "", rating: 0 });
+      toast({ title: "Obrigado pelo seu testemunho!", description: "A sua avaliação será publicada após revisão." });
+    },
+    onError: () => {
+      toast({ title: "Erro ao enviar", description: "Verifique os campos e tente novamente.", variant: "destructive" });
+    },
   });
 
   const noticia = useMemo(() => {
@@ -539,6 +571,163 @@ export default function NoticiaDetalhes() {
             >
               Falar connosco
             </Button>
+          </div>
+
+          {/* ===== TESTEMUNHOS ===== */}
+
+          {/* Testemunhos aprovados */}
+          {approvedTestimonials.length > 0 && (
+            <div className="mb-10">
+              <h2 className="text-2xl font-heading font-bold text-white mb-6 flex items-center gap-3">
+                <Quote className="h-6 w-6 text-brand-yellow" />
+                O que dizem os clientes
+              </h2>
+              <div className="space-y-4">
+                {approvedTestimonials.map((t) => (
+                  <div
+                    key={t.id}
+                    className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-xl p-6"
+                  >
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <div className="flex gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${i < t.rating ? "text-brand-yellow fill-brand-yellow" : "text-gray-600"}`}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-semibold text-white ml-1">{t.nome}</span>
+                      {t.empresa && <span className="text-gray-400 text-sm">— {t.empresa}</span>}
+                    </div>
+                    <blockquote className="text-gray-300 leading-relaxed italic">
+                      "{t.mensagem}"
+                    </blockquote>
+                    {t.createdAt && (
+                      <p className="text-xs text-gray-600 mt-3">
+                        {new Date(t.createdAt).toLocaleDateString("pt-PT", { day: "2-digit", month: "long", year: "numeric" })}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Formulário de submissão */}
+          <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 mb-8">
+            <h2 className="text-xl font-heading font-bold text-white mb-1 flex items-center gap-2">
+              <MessageCircle className="h-5 w-5 text-brand-yellow" />
+              Deixe o seu testemunho
+            </h2>
+            <p className="text-gray-400 text-sm mb-5">
+              Trabalhou connosco neste projeto? A sua opinião é muito valiosa.
+            </p>
+
+            {reviewSubmitted ? (
+              <div className="bg-green-900/30 border border-green-700/40 rounded-lg p-5 text-center">
+                <p className="text-green-300 font-semibold text-lg mb-1">Obrigado pelo seu testemunho!</p>
+                <p className="text-gray-400 text-sm">A sua avaliação será publicada após revisão pela nossa equipa.</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-3 text-brand-yellow hover:text-brand-yellow/80"
+                  onClick={() => setReviewSubmitted(false)}
+                >
+                  Enviar outro testemunho
+                </Button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!reviewForm.nome.trim() || !reviewForm.mensagem.trim() || reviewForm.rating === 0) {
+                    toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
+                    return;
+                  }
+                  if (!noticiaId) return;
+                  submitTestimonialMutation.mutate({
+                    noticiaId,
+                    nome: reviewForm.nome,
+                    empresa: reviewForm.empresa || undefined,
+                    rating: reviewForm.rating,
+                    mensagem: reviewForm.mensagem,
+                  });
+                }}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-gray-300 text-sm">Nome Completo *</Label>
+                    <Input
+                      required
+                      value={reviewForm.nome}
+                      onChange={(e) => setReviewForm({ ...reviewForm, nome: e.target.value })}
+                      placeholder="O seu nome"
+                      className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-gray-300 text-sm">Empresa / Cargo</Label>
+                    <Input
+                      value={reviewForm.empresa}
+                      onChange={(e) => setReviewForm({ ...reviewForm, empresa: e.target.value })}
+                      placeholder="Ex: Transportes A Ideal da Granja"
+                      className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Selector de estrelas */}
+                <div className="space-y-1.5">
+                  <Label className="text-gray-300 text-sm">Avaliação *</Label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                        className="focus:outline-none transition-transform hover:scale-110"
+                        aria-label={`${star} estrelas`}
+                      >
+                        <Star
+                          className={`h-8 w-8 transition-colors ${
+                            star <= reviewForm.rating
+                              ? "text-brand-yellow fill-brand-yellow"
+                              : "text-gray-600 hover:text-brand-yellow/60"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    {reviewForm.rating > 0 && (
+                      <span className="text-sm text-gray-400 self-center ml-2">
+                        {["", "Fraco", "Razoável", "Bom", "Muito Bom", "Excelente"][reviewForm.rating]}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-gray-300 text-sm">Mensagem *</Label>
+                  <Textarea
+                    required
+                    value={reviewForm.mensagem}
+                    onChange={(e) => setReviewForm({ ...reviewForm, mensagem: e.target.value })}
+                    placeholder="Partilhe a sua experiência com este projeto..."
+                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 min-h-[100px]"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={submitTestimonialMutation.isPending}
+                  className="bg-brand-yellow hover:bg-brand-yellow/90 text-black font-semibold"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  {submitTestimonialMutation.isPending ? "A enviar..." : "Enviar Testemunho"}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </article>

@@ -613,3 +613,38 @@ export type InsertServiceHero = z.infer<typeof insertServiceHeroSchema>;
 export type ServiceHero = typeof serviceHeros.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
+
+// -----------------------
+// Testimonials (Testemunhos públicos)
+// -----------------------
+export const testimonials = pgTable("testimonials", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  noticiaId: varchar("noticia_id").notNull(), // referência à notícia
+  nome: text("nome").notNull(),
+  empresa: text("empresa"),
+  rating: integer("rating").notNull(), // 1-5
+  mensagem: text("mensagem").notNull(),
+  status: text("status").notNull().default("pendente"), // 'pendente' | 'aprovado' | 'rejeitado'
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertTestimonialSchema = createInsertSchema(testimonials)
+  .pick({
+    noticiaId: true,
+    nome: true,
+    empresa: true,
+    rating: true,
+    mensagem: true,
+  })
+  .extend({
+    nome: z.string().min(2, "Nome obrigatório"),
+    empresa: z.string().optional(),
+    rating: z.number().int().min(1).max(5),
+    mensagem: z.string().min(5, "Mensagem muito curta"),
+    noticiaId: z.string().min(1),
+  });
+
+export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
+export type Testimonial = typeof testimonials.$inferSelect;
