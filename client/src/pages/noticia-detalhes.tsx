@@ -325,29 +325,27 @@ export default function NoticiaDetalhes() {
     <div className="bg-background text-foreground min-h-screen">
       <Navigation />
 
-      <div className="container mx-auto px-4 pt-24 pb-4">
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/noticias")}
-          className="text-brand-yellow hover:text-brand-yellow/80"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar para Notícias
-        </Button>
-      </div>
-
-      <article className="container mx-auto px-4 pb-16">
+      <article className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <Badge className="bg-brand-yellow text-black font-semibold px-4 py-1 mb-4">
+          <div className="mb-3">
+            <Button
+              variant="ghost"
+              onClick={() => setLocation("/noticias")}
+              className="text-brand-yellow hover:text-brand-yellow/80 -ml-3 mb-2"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar para Notícias
+            </Button>
+
+            <Badge className="bg-brand-yellow text-black font-semibold px-4 py-1 mb-2 block w-fit">
               {noticia.categoria || "Notícia"}
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white leading-tight">
+            <h1 className="text-3xl md:text-4xl font-heading font-bold mb-2 text-white leading-tight">
               {noticia.titulo}
             </h1>
 
-            <div className="flex items-center gap-4 text-sm text-gray-400 mb-6">
+            <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-brand-turquoise" />
                 <span className="font-medium text-white">Equipa DOMREALCE</span>
@@ -368,16 +366,17 @@ export default function NoticiaDetalhes() {
               {/* GRID: quando tipoGaleria === 'grid' e há mais de 1 item */}
               {/* @ts-ignore */}
               {noticia.tipoGaleria === "grid" && mediaItems.length > 1 ? (
-                <div className="mb-4">
+                <div className="mb-3">
                   {/* Imagem principal grande */}
                   {(() => {
                     const heroUrl = (noticia as any).heroImageUrl || mediaItems[0]?.url;
                     return heroUrl ? (
-                      <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3 aspect-[16/9]">
+                      <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3" style={{ maxHeight: "55vh" }}>
                         <img
                           src={heroUrl}
                           alt={noticia.titulo}
-                          className="w-full h-full object-cover"
+                          className="w-full object-cover object-center"
+                          style={{ maxHeight: "55vh" }}
                         />
                       </div>
                     ) : null;
@@ -413,8 +412,8 @@ export default function NoticiaDetalhes() {
                 </div>
               ) : (
                 /* SLIDESHOW: modo padrão (single, slide ou quando há 1 item) */
-                <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-4 group">
-                  <figure className="aspect-[16/9] relative">
+                <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3 group">
+                  <figure className="relative" style={{ maxHeight: "55vh", overflow: "hidden" }}>
                     {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
                       <div className="w-full h-full flex items-center justify-center bg-black">
                         <iframe
@@ -431,7 +430,8 @@ export default function NoticiaDetalhes() {
                           mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption ||
                           `${noticia.titulo} - Imagem ${indiceImagem + 1}`
                         }
-                        className="w-full h-full object-cover"
+                        className="w-full object-cover object-center"
+                        style={{ maxHeight: "55vh" }}
                       />
                     )}
 
@@ -476,11 +476,11 @@ export default function NoticiaDetalhes() {
           )}
 
           {/* Partilha (após hero) */}
-          <ShareBar className="mb-8" />
+          <ShareBar className="mb-4" />
 
           {/* Intro curta */}
           {intro && (
-            <div className="prose prose-invert prose-lg max-w-none mb-6">
+            <div className="prose prose-invert prose-lg max-w-none mb-3">
               <p className="text-lg leading-relaxed text-gray-200 whitespace-pre-wrap">
                 {intro}
               </p>
@@ -489,7 +489,7 @@ export default function NoticiaDetalhes() {
 
           {/* Corpo */}
           {body && (
-            <div className="prose prose-invert prose-lg max-w-none mb-10">
+            <div className="prose prose-invert prose-lg max-w-none mb-5">
               <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
                 {body}
               </p>
@@ -498,7 +498,7 @@ export default function NoticiaDetalhes() {
 
           {/* Nota do Atelier */}
           {(noticia.notaEditorial || noticia.pontuacao) && (
-            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 mb-8">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-5 mb-4">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-1 h-6 bg-brand-yellow rounded-full"></div>
                 <h3 className="text-lg font-semibold text-brand-yellow">Nota do Atelier</h3>
@@ -519,7 +519,7 @@ export default function NoticiaDetalhes() {
           {/* Testemunho do Cliente */}
           {/* @ts-ignore */}
           {noticia.clienteReviewText && (
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-brand-yellow/30 rounded-xl p-6 mb-8">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-brand-yellow/30 rounded-xl p-5 mb-4">
               <div className="flex items-start gap-3 mb-4">
                 <Quote className="h-8 w-8 text-brand-yellow flex-shrink-0 mt-1" />
                 <div>
@@ -558,7 +558,7 @@ export default function NoticiaDetalhes() {
           )}
 
           {/* CTA discreto */}
-          <div className="bg-gray-900 rounded-lg p-6 mb-6">
+          <div className="bg-gray-900 rounded-lg p-5 mb-4">
             <h3 className="text-lg font-semibold mb-2">
               Quer discutir um projeto semelhante?
             </h3>
@@ -577,8 +577,8 @@ export default function NoticiaDetalhes() {
 
           {/* Testemunhos aprovados */}
           {approvedTestimonials.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-2xl font-heading font-bold text-white mb-6 flex items-center gap-3">
+            <div className="mb-5">
+              <h2 className="text-xl font-heading font-bold text-white mb-4 flex items-center gap-3">
                 <Quote className="h-6 w-6 text-brand-yellow" />
                 O que dizem os clientes
               </h2>
@@ -615,7 +615,7 @@ export default function NoticiaDetalhes() {
           )}
 
           {/* Formulário de submissão */}
-          <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 mb-8">
+          <div className="bg-gray-900 border border-gray-700 rounded-xl p-5 mb-6">
             <h2 className="text-xl font-heading font-bold text-white mb-1 flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-brand-yellow" />
               Deixe o seu testemunho
