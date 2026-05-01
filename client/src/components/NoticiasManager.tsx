@@ -31,6 +31,7 @@ interface Noticia {
   imagem: string;
   cardImageUrl?: string;
   heroImageUrl?: string;
+  tipoGaleria?: string;
   media?: MediaItem[];
   layoutGaleria?: "single" | "slider" | "grid" | "beforeAfter";
   published?: boolean;
@@ -39,6 +40,9 @@ interface Noticia {
   createdAt?: string;
   notaEditorial?: string | null;
   pontuacao?: string | null;
+  clienteReviewText?: string | null;
+  clienteReviewAuthor?: string | null;
+  clienteReviewRating?: number | null;
 }
 
 const CATEGORIAS = [
@@ -72,7 +76,10 @@ export default function NoticiasManager() {
     layoutGaleria: "grid",
     published: false,
     notaEditorial: "",
-    pontuacao: ""
+    pontuacao: "",
+    clienteReviewText: "",
+    clienteReviewAuthor: "",
+    clienteReviewRating: undefined,
   });
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
@@ -133,41 +140,75 @@ export default function NoticiasManager() {
       layoutGaleria: "grid",
       published: false,
       notaEditorial: "",
-      pontuacao: ""
+      pontuacao: "",
+      clienteReviewText: "",
+      clienteReviewAuthor: "",
+      clienteReviewRating: undefined,
     });
   };
 
   const handleEdit = (noticia: Noticia) => {
     setEditing(noticia.id);
-    
-    // Map backend tipoGaleria to frontend layoutGaleria
+
+    // 1. Garantir que o array 'media' é processado corretamente (caso o backend devolva como string JSON)
+    let mediaArray: any[] = [];
+    if (typeof noticia.media === 'string') {
+      try { mediaArray = JSON.parse(noticia.media); } catch (e) { mediaArray = []; }
+    } else if (Array.isArray(noticia.media)) {
+      mediaArray = noticia.media;
+    }
+
+    // 2. Fazer o mesmo parse defensivo para o campo legacy 'imagens'
+    let imagensArray: any[] = [];
+    // @ts-ignore
+    if (typeof noticia.imagens === 'string') {
+      // @ts-ignore
+      try { imagensArray = JSON.parse(noticia.imagens); } catch (e) { imagensArray = []; }
+    // @ts-ignore
+    } else if (Array.isArray(noticia.imagens)) {
+      // @ts-ignore
+      imagensArray = noticia.imagens;
+    }
+
+    // 3. Reconstruir a galeria baseada nos dados disponíveis
+    let media = [...mediaArray];
+
+    if (media.length === 0 && imagensArray.length > 0) {
+      media = imagensArray.map((url: string) => ({ type: "image" as const, url, caption: "" }));
+    } else if (media.length === 0 && noticia.imagem) {
+      media = [{ type: "image" as const, url: noticia.imagem, caption: "" }];
+    }
+
+    // 4. Limpar e normalizar os dados para evitar que o uploader quebre
+    media = media
+      .filter(m => m && (m.url || m.src)) // Remove items corrompidos ou sem link
+      .map(m => ({
+        type: m.type || "image", // Força o tipo "image" se faltar nos dados antigos
+        url: m.url || m.src || "",
+        caption: m.caption || ""
+      }));
+
+    // Map backend tipoGaleria to frontend layoutGaleria[cite: 1]
     const reverseLayoutMap: Record<string, "single" | "slider" | "grid" | "beforeAfter"> = {
       "single": "single",
       "slide": "slider",
       "grid": "grid",
       "before-after": "beforeAfter"
     };
-    
-    // Build media from legacy fields if media is empty
-    let media = noticia.media || [];
-    // @ts-ignore
-    if (media.length === 0 && noticia.imagens?.length > 0) {
-      // @ts-ignore
-      media = noticia.imagens.map((url: string) => ({ type: "image" as const, url, caption: "" }));
-    } else if (media.length === 0 && noticia.imagem) {
-      media = [{ type: "image" as const, url: noticia.imagem, caption: "" }];
-    }
-    
+
     setFormData({
       ...noticia,
-      media,
+      media, // Agora injetamos a array 'media' 100% normalizada e pronta para o React 
       cardImageUrl: noticia.cardImageUrl || "",
       heroImageUrl: noticia.heroImageUrl || "",
       // @ts-ignore
       layoutGaleria: noticia.layoutGaleria || reverseLayoutMap[noticia.tipoGaleria || "grid"] || "grid",
       published: noticia.published ?? false,
       notaEditorial: noticia.notaEditorial || "",
-      pontuacao: noticia.pontuacao || ""
+      pontuacao: noticia.pontuacao || "",
+      clienteReviewText: noticia.clienteReviewText || "",
+      clienteReviewAuthor: noticia.clienteReviewAuthor || "",
+      clienteReviewRating: noticia.clienteReviewRating ?? undefined,
     });
   };
 
@@ -190,6 +231,7 @@ export default function NoticiasManager() {
     
     const dataToSave = {
       ...formData,
+      media: formData.media || [],   // 👈 ADICIONA ISTO
       descricao: formData.descricao || formData.summary || "Projeto visual",
       imagem: imageMedia.length > 0 ? imageMedia[0].url : formData.imagem || "",
       imagens: imageMedia.map(m => m.url),
@@ -197,7 +239,10 @@ export default function NoticiasManager() {
       heroImageUrl: formData.heroImageUrl || "",
       tipoGaleria: layoutMap[formData.layoutGaleria || "grid"] || "grid",
       publishedAt: formData.published && !formData.publishedAt ? new Date().toISOString() : formData.publishedAt,
-      categoria: formData.categoria || "Projetos"
+      categoria: formData.categoria || "Projetos",
+      clienteReviewText: formData.clienteReviewText || null,
+      clienteReviewAuthor: formData.clienteReviewAuthor || null,
+      clienteReviewRating: formData.clienteReviewRating ?? null,
     };
 
     if (editing && editing !== "new") {
@@ -413,6 +458,54 @@ export default function NoticiasManager() {
                     <SelectItem value="3">3/5 - Bom</SelectItem>
                     <SelectItem value="4">4/5 - Muito Bom</SelectItem>
                     <SelectItem value="5">5/5 - Excelente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Crítica do Cliente */}
+            <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-yellow-700/40">
+              <Label className="text-white text-lg font-semibold">Crítica do Cliente</Label>
+              <p className="text-gray-400 text-sm">Testemunho real do cliente sobre este projeto (aparece no final da notícia).</p>
+
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Nome do Cliente</Label>
+                <Input
+                  value={formData.clienteReviewAuthor || ""}
+                  onChange={(e) => setFormData({ ...formData, clienteReviewAuthor: e.target.value })}
+                  placeholder="Ex: João Silva, Empresa X"
+                  className="bg-gray-700 border-gray-600 text-white"
+                  data-testid="input-cliente-author"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Texto da Crítica</Label>
+                <Textarea
+                  value={formData.clienteReviewText || ""}
+                  onChange={(e) => setFormData({ ...formData, clienteReviewText: e.target.value })}
+                  placeholder="O que disse o cliente sobre o projeto?"
+                  className="bg-gray-700 border-gray-600 text-white min-h-[80px]"
+                  data-testid="input-cliente-review"
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Label className="text-gray-300 text-sm">Classificação:</Label>
+                <Select
+                  value={formData.clienteReviewRating ? String(formData.clienteReviewRating) : "none"}
+                  onValueChange={(v) => setFormData({ ...formData, clienteReviewRating: v === "none" ? undefined : Number(v) })}
+                >
+                  <SelectTrigger className="w-48 bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Sem classificação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Sem classificação</SelectItem>
+                    <SelectItem value="1">⭐ 1 — Fraco</SelectItem>
+                    <SelectItem value="2">⭐⭐ 2 — Razoável</SelectItem>
+                    <SelectItem value="3">⭐⭐⭐ 3 — Bom</SelectItem>
+                    <SelectItem value="4">⭐⭐⭐⭐ 4 — Muito Bom</SelectItem>
+                    <SelectItem value="5">⭐⭐⭐⭐⭐ 5 — Excelente</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

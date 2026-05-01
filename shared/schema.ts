@@ -6,6 +6,7 @@ import {
   timestamp,
   decimal,
   boolean,
+  integer,
   index,
   jsonb,
 } from "drizzle-orm/pg-core";
@@ -106,6 +107,11 @@ export const news = pgTable("news", {
   // v4: Nota editorial
   notaEditorial: text("nota_editorial"), // Nota do atelier / crítica (opcional)
   pontuacao: text("pontuacao"), // Pontuação 0-5 (opcional, "0" = sem pontuação)
+
+  // v5: Crítica do Cliente (campos separados)
+  clienteReviewText: text("cliente_review_text"),
+  clienteReviewAuthor: text("cliente_review_author"),
+  clienteReviewRating: integer("cliente_review_rating"),
 
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -363,6 +369,11 @@ export const insertNewsSchema = createInsertSchema(news)
     // v4
     notaEditorial: true,
     pontuacao: true,
+
+    // v5: Crítica do Cliente
+    clienteReviewText: true,
+    clienteReviewAuthor: true,
+    clienteReviewRating: true,
   })
   .extend({
     data: z.string().optional(),
@@ -397,6 +408,11 @@ export const insertNewsSchema = createInsertSchema(news)
     // v4
     notaEditorial: z.string().nullish(),
     pontuacao: z.string().nullish(),
+
+    // v5: Crítica do Cliente
+    clienteReviewText: z.string().nullish(),
+    clienteReviewAuthor: z.string().nullish(),
+    clienteReviewRating: z.number().int().min(1).max(5).nullish(),
   });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({

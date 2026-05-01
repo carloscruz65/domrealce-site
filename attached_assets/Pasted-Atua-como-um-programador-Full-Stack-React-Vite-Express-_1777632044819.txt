@@ -1,0 +1,31 @@
+Atua como um programador Full-Stack (React, Vite, Express, Drizzle ORM, Postgres). 
+Preciso de corrigir problemas de persistência de dados no meu gestor de notícias/projetos e adicionar uma nova funcionalidade de "Críticas do Cliente".
+
+Por favor, executa os seguintes passos na minha base de código:
+
+1. ATUALIZAR O SCHEMA DA BASE DE DADOS (Drizzle):
+Encontra o ficheiro de schema (provavelmente em `db/schema.ts`, `server/db.ts` ou similar) que contém a tabela de `noticias`.
+Garante que as seguintes colunas existem. Se não existirem, adiciona-as:
+- `cardImageUrl`: text("card_image_url")
+- `heroImageUrl`: text("hero_image_url")
+- `tipoGaleria`: text("tipo_galeria").default("grid")
+- `clienteReviewText`: text("cliente_review_text")
+- `clienteReviewAuthor`: text("cliente_review_author")
+- `clienteReviewRating`: integer("cliente_review_rating")
+
+2. ATUALIZAR A API DO EXPRESS & ZOD:
+Encontra as rotas de API das notícias (provavelmente em `server/routes.ts` ou `server/api/noticias.ts`).
+Atualiza o schema de validação (Zod ou outro) para permitir receber os campos `cardImageUrl`, `heroImageUrl`, `tipoGaleria`, `clienteReviewText`, `clienteReviewAuthor` e `clienteReviewRating` no POST e PUT. Garante que estes valores são guardados e atualizados corretamente na base de dados.
+
+3. CORRIGIR O FRONTEND ADMIN (`NoticiasManager.tsx`):
+- O array `media` e `imagens` vindos da base de dados por vezes chegam como string JSON. Adiciona blocos `try/catch` com `JSON.parse` na função `handleEdit` para garantir que o array `media` é lido corretamente e nunca quebra o formulário.
+- Garante que ao guardar (handleSave), o `tipoGaleria`, `heroImageUrl` e `cardImageUrl` são mapeados corretamente para o envio.
+- Adiciona uma nova secção no formulário para "Críticas do Cliente" com inputs para: Nome do Cliente (Input), Texto da Crítica (Textarea) e Classificação (Select de 1 a 5 estrelas).
+
+4. ATUALIZAR A PÁGINA PÚBLICA (`NoticiaPage.tsx` ou equivalente que mostre a notícia):
+- Altera a lógica de renderização da galeria: Se `tipoGaleria` for 'slide', mostra o carrossel. Se for 'grid', renderiza uma grelha flexível com as imagens (`media`).
+- Usa a imagem `heroImageUrl` como capa principal da página (se não existir, faz fallback para a imagem antiga).
+- Se existirem dados de `clienteReviewText`, renderiza um bloco bonito de "Testemunho do Cliente" mostrando o texto, o nome do autor e as estrelas.
+
+5. BASE DE DADOS:
+Após fazeres as alterações no código, executa o comando `npm run db:push` no terminal para sincronizar o schema do Drizzle com o Neon Database.

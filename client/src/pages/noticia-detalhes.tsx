@@ -15,6 +15,8 @@ import {
   ArrowLeft,
   MessageCircle,
   Link as LinkIcon,
+  Star,
+  Quote,
 } from "lucide-react";
 import type { News, MediaItem } from "@shared/schema";
 
@@ -330,64 +332,115 @@ export default function NoticiaDetalhes() {
 
           {/* Hero / Galeria com legendas */}
           {mediaItems.length > 0 && (
-            <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-4 group">
-              <figure className="aspect-[16/9] relative">
-                {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
-                  <div className="w-full h-full flex items-center justify-center bg-black">
-                    <iframe
-                      src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+            <>
+              {/* GRID: quando tipoGaleria === 'grid' e há mais de 1 item */}
+              {/* @ts-ignore */}
+              {noticia.tipoGaleria === "grid" && mediaItems.length > 1 ? (
+                <div className="mb-4">
+                  {/* Imagem principal grande */}
+                  {(() => {
+                    const heroUrl = (noticia as any).heroImageUrl || mediaItems[0]?.url;
+                    return heroUrl ? (
+                      <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3 aspect-[16/9]">
+                        <img
+                          src={heroUrl}
+                          alt={noticia.titulo}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : null;
+                  })()}
+                  {/* Grelha das restantes */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {mediaItems.map((item, idx) =>
+                      item.type === "image" ? (
+                        <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-gray-900 group cursor-pointer">
+                          <img
+                            src={item.url}
+                            alt={item.caption || `${noticia.titulo} — imagem ${idx + 1}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {item.caption && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1">
+                              <p className="text-white text-xs truncate">{item.caption}</p>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-black">
+                          <iframe
+                            src={item.url}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </div>
+                      )
+                    )}
                   </div>
-                ) : (
-                  <img
-                    src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
-                    alt={
-                      mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption ||
-                      `${noticia.titulo} - Imagem ${indiceImagem + 1}`
-                    }
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                </div>
+              ) : (
+                /* SLIDESHOW: modo padrão (single, slide ou quando há 1 item) */
+                <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-4 group">
+                  <figure className="aspect-[16/9] relative">
+                    {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
+                      <div className="w-full h-full flex items-center justify-center bg-black">
+                        <iframe
+                          src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    ) : (
+                      <img
+                        src={mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.url}
+                        alt={
+                          mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption ||
+                          `${noticia.titulo} - Imagem ${indiceImagem + 1}`
+                        }
+                        className="w-full h-full object-cover"
+                      />
+                    )}
 
-                {mediaItems.length > 1 && (
-                  <>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={imagemAnterior}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <ChevronLeft className="h-8 w-8" />
-                    </Button>
+                    {mediaItems.length > 1 && (
+                      <>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={imagemAnterior}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <ChevronLeft className="h-8 w-8" />
+                        </Button>
 
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={proximaImagem}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <ChevronRight className="h-8 w-8" />
-                    </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={proximaImagem}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black text-white h-12 w-12 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <ChevronRight className="h-8 w-8" />
+                        </Button>
 
-                    <div className="absolute top-4 right-4 bg-black/80 text-white px-4 py-2 rounded-full font-semibold">
-                      {indiceImagem + 1} / {mediaItems.length}
-                    </div>
-                  </>
-                )}
+                        <div className="absolute top-4 right-4 bg-black/80 text-white px-4 py-2 rounded-full font-semibold">
+                          {indiceImagem + 1} / {mediaItems.length}
+                        </div>
+                      </>
+                    )}
 
-                {/* Legenda (figcaption) */}
-                {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption && (
-                  <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8">
-                    <p className="text-white text-sm md:text-base">
-                      {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption}
-                    </p>
-                  </figcaption>
-                )}
-              </figure>
-            </div>
+                    {/* Legenda (figcaption) */}
+                    {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption && (
+                      <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8">
+                        <p className="text-white text-sm md:text-base">
+                          {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption}
+                        </p>
+                      </figcaption>
+                    )}
+                  </figure>
+                </div>
+              )}
+            </>
           )}
 
           {/* Partilha (após hero) */}
@@ -426,6 +479,47 @@ export default function NoticiaDetalhes() {
               {noticia.notaEditorial && (
                 <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
                   {noticia.notaEditorial}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Testemunho do Cliente */}
+          {/* @ts-ignore */}
+          {noticia.clienteReviewText && (
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-brand-yellow/30 rounded-xl p-6 mb-8">
+              <div className="flex items-start gap-3 mb-4">
+                <Quote className="h-8 w-8 text-brand-yellow flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-brand-yellow font-semibold text-lg mb-1">Testemunho do Cliente</h3>
+                  {/* @ts-ignore */}
+                  {noticia.clienteReviewRating && noticia.clienteReviewRating > 0 && (
+                    <div className="flex gap-0.5">
+                      {/* @ts-ignore */}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            // @ts-ignore
+                            i < noticia.clienteReviewRating
+                              ? "text-brand-yellow fill-brand-yellow"
+                              : "text-gray-600"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* @ts-ignore */}
+              <blockquote className="text-gray-200 text-lg leading-relaxed italic mb-4 whitespace-pre-wrap">
+                "{noticia.clienteReviewText}"
+              </blockquote>
+              {/* @ts-ignore */}
+              {noticia.clienteReviewAuthor && (
+                <p className="text-brand-yellow font-medium text-sm">
+                  {/* @ts-ignore */}
+                  — {noticia.clienteReviewAuthor}
                 </p>
               )}
             </div>
