@@ -23,6 +23,9 @@ import {
   Star,
   Quote,
   Send,
+  Instagram,
+  Linkedin,
+  Phone,
 } from "lucide-react";
 import type { News, MediaItem, Testimonial } from "@shared/schema";
 
@@ -173,12 +176,24 @@ export default function NoticiaDetalhes() {
       meta.setAttribute("content", content);
     };
 
+    const absoluteImage = imagemNoticia?.startsWith("http")
+      ? imagemNoticia
+      : imagemNoticia
+      ? `${window.location.origin}${imagemNoticia}`
+      : "";
+
     updateMetaTag("og:title", noticia.titulo || "DOMREALCE");
     updateMetaTag("og:description", descricao);
-    if (imagemNoticia) updateMetaTag("og:image", imagemNoticia);
+    if (absoluteImage) {
+      updateMetaTag("og:image", absoluteImage);
+      updateMetaTag("og:image:secure_url", absoluteImage);
+      updateMetaTag("og:image:width", "1200");
+      updateMetaTag("og:image:height", "630");
+    }
     updateMetaTag("og:url", canonicalUrl || window.location.href);
     updateMetaTag("og:type", "article");
-    updateMetaTag("og:site_name", "DOMREALCE");
+    updateMetaTag("og:site_name", "DOMREALCE — Comunicação Visual");
+    updateMetaTag("og:locale", "pt_PT");
 
     updateMetaName("twitter:card", "summary_large_image");
     updateMetaName("twitter:title", noticia.titulo || "DOMREALCE");
@@ -371,12 +386,12 @@ export default function NoticiaDetalhes() {
                   {(() => {
                     const heroUrl = (noticia as any).heroImageUrl || mediaItems[0]?.url;
                     return heroUrl ? (
-                      <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3" style={{ maxHeight: "55vh" }}>
+                      <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3" style={{ maxHeight: "70vh" }}>
                         <img
                           src={heroUrl}
                           alt={noticia.titulo}
                           className="w-full object-cover object-center"
-                          style={{ maxHeight: "55vh" }}
+                          style={{ maxHeight: "70vh" }}
                         />
                       </div>
                     ) : null;
@@ -413,7 +428,7 @@ export default function NoticiaDetalhes() {
               ) : (
                 /* SLIDESHOW: modo padrão (single, slide ou quando há 1 item) */
                 <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3 group">
-                  <figure className="relative" style={{ maxHeight: "55vh", overflow: "hidden" }}>
+                  <figure className="relative" style={{ maxHeight: "70vh", overflow: "hidden" }}>
                     {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
                       <div className="w-full h-full flex items-center justify-center bg-black">
                         <iframe
@@ -431,7 +446,7 @@ export default function NoticiaDetalhes() {
                           `${noticia.titulo} - Imagem ${indiceImagem + 1}`
                         }
                         className="w-full object-cover object-center"
-                        style={{ maxHeight: "55vh" }}
+                        style={{ maxHeight: "70vh" }}
                       />
                     )}
 
@@ -480,7 +495,7 @@ export default function NoticiaDetalhes() {
 
           {/* Intro curta */}
           {intro && (
-            <div className="prose prose-invert prose-lg max-w-none mb-3">
+            <div className="prose prose-invert prose-lg max-w-none mb-3 px-1 sm:px-0">
               <p className="text-lg leading-relaxed text-gray-200 whitespace-pre-wrap">
                 {intro}
               </p>
@@ -489,7 +504,7 @@ export default function NoticiaDetalhes() {
 
           {/* Corpo */}
           {body && (
-            <div className="prose prose-invert prose-lg max-w-none mb-5">
+            <div className="prose prose-invert prose-lg max-w-none mb-5 px-1 sm:px-0">
               <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
                 {body}
               </p>
@@ -571,6 +586,40 @@ export default function NoticiaDetalhes() {
             >
               Falar connosco
             </Button>
+          </div>
+
+          {/* Contactos e Redes Sociais */}
+          <div className="border border-gray-800 rounded-lg p-5 mb-4">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              Contacte-nos diretamente
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://www.instagram.com/domrealce/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
+              >
+                <Instagram className="h-4 w-4 text-pink-400 group-hover:text-pink-300" />
+                Instagram
+              </a>
+              <a
+                href="https://www.linkedin.com/company/domrealce"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
+              >
+                <Linkedin className="h-4 w-4 text-blue-400 group-hover:text-blue-300" />
+                LinkedIn
+              </a>
+              <a
+                href="tel:+351930682725"
+                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
+              >
+                <Phone className="h-4 w-4 text-brand-yellow group-hover:text-brand-yellow/80" />
+                930 682 725
+              </a>
+            </div>
           </div>
 
           {/* ===== TESTEMUNHOS ===== */}

@@ -1,50 +1,38 @@
 import { Request, Response, NextFunction } from "express";
 import { storage } from "./storage";
-import fs from "fs";
-import path from "path";
+
+const SOCIAL_BOT_UA =
+  /facebookexternalhit|facebot|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|applebot|rogerbot|embedly|quora|outbrain|pinterest|vkshare|w3c_validator|redditbot/i;
+
+function isSocialBot(ua: string): boolean {
+  return SOCIAL_BOT_UA.test(ua);
+}
+
+function escapeHtml(str: string): string {
+  return (str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 export async function ogMetaMiddleware(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  /**
-   * 🛑 REGRA DE OURO
-   * Nunca, em circunstância nenhuma, interceptar rotas /api/*
-   */
-  if (req.path.startsWith("/api")) {
-    return next();
-  }
+  if (req.path.startsWith("/api")) return next();
+  if (req.path.startsWith("/public-objects") || req.path.includes(".")) return next();
+  if (req.method !== "GET") return next();
 
-  /**
-   * 🛑 Nunca mexer em assets / ficheiros
-   */
-  if (
-    req.path.startsWith("/public-objects") ||
-    req.path.includes(".")
-  ) {
-    return next();
-  }
-
-  /**
-   * 🛑 Só responder a GET
-   */
-  if (req.method !== "GET") {
-    return next();
-  }
-
-  /**
-   * ✅ Apenas interceptar rotas de notícia individuais
-   * Ex: /noticia/123
-   */
   const noticiaMatch = req.path.match(/^\/noticia\/(.+)$/);
+  if (!noticiaMatch) return next();
 
-  if (!noticiaMatch) {
-    return next();
-  }
+  const ua = req.headers["user-agent"] || "";
+  if (!isSocialBot(ua)) return next();
 
   const noticiaId = noticiaMatch[1];
-  console.log("🔎 OG Middleware: notícia", noticiaId);
 
   try {
     const noticias = await storage.getAllNews();
@@ -52,47 +40,59 @@ export async function ogMetaMiddleware(
       (n: any) => String(n.id) === String(noticiaId)
     );
 
-    if (!noticia) {
-      return next();
-    }
+    if (!noticia) return next();
 
-    const imagemNoticia =
+    const origin = `${req.protocol}://${req.get("host")}`;
+    const pageUrl = `${origin}/noticia/${noticiaId}`;
+
+    const heroImage =
+      (noticia as any).heroImageUrl ||
       noticia.imagens?.[0] ||
-      noticia.image ||
+      (noticia as any).imagem ||
       "";
 
-    const isDev = process.env.NODE_ENV === "development";
+    const imageUrl = heroImage || `${origin}/og-default.jpg`;
 
-    const indexPath = isDev
-      ? path.join(process.cwd(), "client", "index.html")
-      : path.join(process.cwd(), "dist", "public", "index.html");
+    const title = escapeHtml(noticia.titulo || "DOMREALCE");
+    const description = escapeHtml(
+      (noticia.descricao || noticia.resumo || "Comunicação Visual e Impressão Digital — Portugal").slice(0, 200)
+    );
 
-    if (!fs.existsSync(indexPath)) {
-      console.error("❌ OG Middleware: index.html não encontrado");
-      return next();
-    }
+    const html = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>${title} | DOMREALCE</title>
+  <meta name="description" content="${description}" />
 
-    let html = fs.readFileSync(indexPath, "utf-8");
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="DOMREALCE — Comunicação Visual" />
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${description}" />
+  <meta property="og:url" content="${escapeHtml(pageUrl)}" />
+  <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="pt_PT" />
 
-    html = html
-      .replace(/__OG_TITLE__/g, noticia.titulo || "DOMREALCE")
-      .replace(
-        /__OG_DESCRIPTION__/g,
-        noticia.resumo || "Notícia DOMREALCE"
-      )
-      .replace(
-        /__OG_IMAGE__/g,
-        imagemNoticia
-          ? `https://www.domrealce.com${imagemNoticia}`
-          : "https://www.domrealce.com/og-default.jpg"
-      )
-      .replace(
-        /__OG_URL__/g,
-        `https://www.domrealce.com/noticia/${noticiaId}`
-      );
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${description}" />
+  <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />
+
+  <link rel="canonical" href="${escapeHtml(pageUrl)}" />
+</head>
+<body>
+  <h1>${title}</h1>
+  <p>${description}</p>
+  <a href="${escapeHtml(pageUrl)}">Ver no site DOMREALCE</a>
+</body>
+</html>`;
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
-    return res.send(html);
+    res.setHeader("Cache-Control", "public, max-age=300");
+    return res.status(200).send(html);
   } catch (error) {
     console.error("❌ OG Middleware erro:", error);
     return next();
