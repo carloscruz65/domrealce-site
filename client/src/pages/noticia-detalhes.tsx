@@ -218,6 +218,23 @@ export default function NoticiaDetalhes() {
     window.open(wa, "_blank");
   };
 
+  const partilharLinkedIn = () => {
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalUrl || window.location.href)}`;
+    window.open(url, "_blank", "width=600,height=500");
+  };
+
+  const partilharInstagram = async () => {
+    const url = canonicalUrl || window.location.href;
+    if ((navigator as any).share) {
+      try {
+        await (navigator as any).share({ title: noticia?.titulo, url });
+        return;
+      } catch {}
+    }
+    await copiarLink();
+    toast({ title: "Link copiado!", description: "Cole o link na sua publicação do Instagram." });
+  };
+
   const copiarLink = async () => {
     const url = canonicalUrl || window.location.href;
     try {
@@ -291,8 +308,28 @@ export default function NoticiaDetalhes() {
         <Button
           variant="outline"
           size="sm"
+          onClick={partilharInstagram}
+          className="text-pink-400 border-pink-400/30 hover:bg-pink-500/10"
+        >
+          <Instagram className="h-4 w-4 mr-2" />
+          Instagram
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={partilharLinkedIn}
+          className="text-blue-300 border-blue-300/30 hover:bg-blue-400/10"
+        >
+          <Linkedin className="h-4 w-4 mr-2" />
+          LinkedIn
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
           onClick={copiarLink}
-          className="text-pink-300 border-pink-300/30 hover:bg-pink-500/10"
+          className="text-gray-400 border-gray-600/50 hover:bg-gray-700/30"
         >
           <LinkIcon className="h-4 w-4 mr-2" />
           {copied ? "Copiado" : "Copiar link"}
@@ -588,38 +625,18 @@ export default function NoticiaDetalhes() {
             </Button>
           </div>
 
-          {/* Contactos e Redes Sociais */}
-          <div className="border border-gray-800 rounded-lg p-5 mb-4">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          {/* Contacto direto */}
+          <div className="border border-gray-800 rounded-lg p-5 mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="text-sm text-gray-400 font-medium uppercase tracking-wider">
               Contacte-nos diretamente
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="https://www.instagram.com/domrealce/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
-              >
-                <Instagram className="h-4 w-4 text-pink-400 group-hover:text-pink-300" />
-                Instagram
-              </a>
-              <a
-                href="https://www.linkedin.com/company/domrealce"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
-              >
-                <Linkedin className="h-4 w-4 text-blue-400 group-hover:text-blue-300" />
-                LinkedIn
-              </a>
-              <a
-                href="tel:+351930682725"
-                className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 group"
-              >
-                <Phone className="h-4 w-4 text-brand-yellow group-hover:text-brand-yellow/80" />
-                930 682 725
-              </a>
-            </div>
+            </p>
+            <a
+              href="tel:+351930682725"
+              className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-brand-yellow/50 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 group w-fit"
+            >
+              <Phone className="h-4 w-4 text-brand-yellow group-hover:text-brand-yellow/80" />
+              930 682 725
+            </a>
           </div>
 
           {/* ===== TESTEMUNHOS ===== */}
