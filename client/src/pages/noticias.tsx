@@ -98,14 +98,14 @@ export default function Noticias() {
       <Navigation />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-20 mt-16">
+      <section className="bg-gradient-to-br from-brand-yellow/10 via-brand-turquoise/5 to-brand-coral/10 py-7 mt-6">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-heading font-bold mb-4">
               <span className="text-brand-yellow">Notícias</span> &{" "}
               <span className="text-brand-turquoise">Projetos</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground max-w-none mx-auto md:whitespace-nowrap">
               Trabalhos reais com contexto técnico: maquete, produção, aplicação e resultado.
             </p>
           </div>

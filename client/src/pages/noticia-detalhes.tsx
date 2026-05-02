@@ -377,7 +377,7 @@ export default function NoticiaDetalhes() {
     <div className="bg-background text-foreground min-h-screen">
       <Navigation />
 
-      <article className="container mx-auto px-4 pt-24 pb-12">
+      <article className="container mx-auto px-4 pt-8 pb-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-3">
             <Button
@@ -465,7 +465,7 @@ export default function NoticiaDetalhes() {
               ) : (
                 /* SLIDESHOW: modo padrão (single, slide ou quando há 1 item) */
                 <div className="relative bg-gray-900 rounded-lg overflow-hidden mb-3 group">
-                  <figure className="relative" style={{ maxHeight: "70vh", overflow: "hidden" }}>
+                  <figure className="relative h-[260px] md:h-[360px] lg:h-[420px] bg-black overflow-hidden">
                     {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.type === "video" ? (
                       <div className="w-full h-full flex items-center justify-center bg-black">
                         <iframe
@@ -482,8 +482,7 @@ export default function NoticiaDetalhes() {
                           mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption ||
                           `${noticia.titulo} - Imagem ${indiceImagem + 1}`
                         }
-                        className="w-full object-cover object-center"
-                        style={{ maxHeight: "70vh" }}
+                        className="w-full h-full object-contain object-center"
                       />
                     )}
 
