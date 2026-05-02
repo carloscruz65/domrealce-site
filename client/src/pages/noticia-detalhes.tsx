@@ -176,17 +176,22 @@ export default function NoticiaDetalhes() {
       meta.setAttribute("content", content);
     };
 
-    const absoluteImage = imagemNoticia?.startsWith("http")
-      ? imagemNoticia
-      : imagemNoticia
-      ? `${window.location.origin}${imagemNoticia}`
+    // Usar shareImage > heroImage > primeira imagem da galeria
+    const shareImageRaw = (noticia as any).shareImage || imagemNoticia || "";
+    const shareImageAbs = shareImageRaw.startsWith("http")
+      ? shareImageRaw
+      : shareImageRaw
+      ? `${window.location.origin}${shareImageRaw}`
       : "";
 
-    updateMetaTag("og:title", noticia.titulo || "DOMREALCE");
-    updateMetaTag("og:description", descricao);
-    if (absoluteImage) {
-      updateMetaTag("og:image", absoluteImage);
-      updateMetaTag("og:image:secure_url", absoluteImage);
+    const ogTitle = (noticia as any).shareTitle || noticia.titulo || "DOMREALCE";
+    const ogDesc = (noticia as any).shareDescription || descricao;
+
+    updateMetaTag("og:title", ogTitle);
+    updateMetaTag("og:description", ogDesc);
+    if (shareImageAbs) {
+      updateMetaTag("og:image", shareImageAbs);
+      updateMetaTag("og:image:secure_url", shareImageAbs);
       updateMetaTag("og:image:width", "1200");
       updateMetaTag("og:image:height", "630");
     }
@@ -196,9 +201,9 @@ export default function NoticiaDetalhes() {
     updateMetaTag("og:locale", "pt_PT");
 
     updateMetaName("twitter:card", "summary_large_image");
-    updateMetaName("twitter:title", noticia.titulo || "DOMREALCE");
-    updateMetaName("twitter:description", descricao);
-    if (imagemNoticia) updateMetaName("twitter:image", imagemNoticia);
+    updateMetaName("twitter:title", ogTitle);
+    updateMetaName("twitter:description", ogDesc);
+    if (shareImageAbs) updateMetaName("twitter:image", shareImageAbs);
 
     document.title = `${noticia.titulo || "Notícia"} | DOMREALCE`;
   }, [noticia, imagens, canonicalUrl]);

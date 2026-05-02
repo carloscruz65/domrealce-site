@@ -113,6 +113,11 @@ export const news = pgTable("news", {
   clienteReviewAuthor: text("cliente_review_author"),
   clienteReviewRating: integer("cliente_review_rating"),
 
+  // v6: Campos de partilha nas redes sociais (Open Graph)
+  shareTitle: text("share_title"),
+  shareDescription: text("share_description"),
+  shareImage: text("share_image"),
+
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -374,6 +379,11 @@ export const insertNewsSchema = createInsertSchema(news)
     clienteReviewText: true,
     clienteReviewAuthor: true,
     clienteReviewRating: true,
+
+    // v6: Partilha OG
+    shareTitle: true,
+    shareDescription: true,
+    shareImage: true,
   })
   .extend({
     data: z.string().optional(),
@@ -413,6 +423,11 @@ export const insertNewsSchema = createInsertSchema(news)
     clienteReviewText: z.string().nullish(),
     clienteReviewAuthor: z.string().nullish(),
     clienteReviewRating: z.number().int().min(1).max(5).nullish(),
+
+    // v6: Partilha OG
+    shareTitle: z.string().nullish(),
+    shareDescription: z.string().nullish(),
+    shareImage: z.string().nullish(),
   });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({

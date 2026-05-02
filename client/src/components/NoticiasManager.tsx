@@ -43,6 +43,9 @@ interface Noticia {
   clienteReviewText?: string | null;
   clienteReviewAuthor?: string | null;
   clienteReviewRating?: number | null;
+  shareTitle?: string | null;
+  shareDescription?: string | null;
+  shareImage?: string | null;
 }
 
 const CATEGORIAS = [
@@ -80,6 +83,9 @@ export default function NoticiasManager() {
     clienteReviewText: "",
     clienteReviewAuthor: "",
     clienteReviewRating: undefined,
+    shareTitle: "",
+    shareDescription: "",
+    shareImage: "",
   });
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
@@ -144,6 +150,9 @@ export default function NoticiasManager() {
       clienteReviewText: "",
       clienteReviewAuthor: "",
       clienteReviewRating: undefined,
+      shareTitle: "",
+      shareDescription: "",
+      shareImage: "",
     });
   };
 
@@ -209,6 +218,9 @@ export default function NoticiasManager() {
       clienteReviewText: noticia.clienteReviewText || "",
       clienteReviewAuthor: noticia.clienteReviewAuthor || "",
       clienteReviewRating: noticia.clienteReviewRating ?? undefined,
+      shareTitle: noticia.shareTitle || "",
+      shareDescription: noticia.shareDescription || "",
+      shareImage: noticia.shareImage || "",
     });
   };
 
@@ -243,6 +255,9 @@ export default function NoticiasManager() {
       clienteReviewText: formData.clienteReviewText || null,
       clienteReviewAuthor: formData.clienteReviewAuthor || null,
       clienteReviewRating: formData.clienteReviewRating ?? null,
+      shareTitle: formData.shareTitle || null,
+      shareDescription: formData.shareDescription || null,
+      shareImage: formData.shareImage || null,
     };
 
     if (editing && editing !== "new") {
@@ -558,6 +573,68 @@ export default function NoticiasManager() {
                     />
                   )}
                 </div>
+              </div>
+            </div>
+
+            {/* Partilha nas Redes Sociais (Open Graph) */}
+            <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-blue-700/40">
+              <div>
+                <Label className="text-white text-lg font-semibold">Partilha nas Redes Sociais</Label>
+                <p className="text-gray-400 text-sm mt-1">
+                  Controla o que aparece quando esta notícia é partilhada no Facebook, WhatsApp, LinkedIn, etc.
+                  Se deixar vazio, usa automaticamente o título e a imagem principal.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Título para partilha</Label>
+                <Input
+                  value={formData.shareTitle || ""}
+                  onChange={(e) => setFormData({ ...formData, shareTitle: e.target.value })}
+                  placeholder={formData.titulo || "Título da notícia (fallback automático)"}
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+                <p className="text-gray-500 text-xs">Recomendado: até 60 caracteres</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Descrição para partilha</Label>
+                <Textarea
+                  value={formData.shareDescription || ""}
+                  onChange={(e) => setFormData({ ...formData, shareDescription: e.target.value })}
+                  placeholder="Breve descrição que aparece na pré-visualização da partilha..."
+                  className="bg-gray-700 border-gray-600 text-white min-h-[70px]"
+                />
+                <p className="text-gray-500 text-xs">Recomendado: até 160 caracteres</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-white flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 text-blue-400" />
+                  Imagem de partilha
+                </Label>
+                <p className="text-gray-400 text-xs">
+                  Imagem independente da galeria. Tamanho ideal: <strong className="text-white">1200×630 px</strong> (rácio 1.91:1).
+                  Se vazio, usa a imagem principal da notícia.
+                </p>
+                <ImageUploader
+                  value={formData.shareImage || ""}
+                  onChange={(url) => setFormData({ ...formData, shareImage: url })}
+                  folder="noticias/share"
+                />
+                {formData.shareImage && (
+                  <div className="relative">
+                    <img
+                      src={formData.shareImage}
+                      alt="Preview partilha"
+                      className="w-full max-w-sm rounded border border-gray-600 object-cover"
+                      style={{ aspectRatio: "1200/630" }}
+                    />
+                    <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded">
+                      1200×630 px
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -46,16 +46,28 @@ export async function ogMetaMiddleware(
     const pageUrl = `${origin}/noticia/${noticiaId}`;
 
     const heroImage =
+      (noticia as any).shareImage ||
       (noticia as any).heroImageUrl ||
       noticia.imagens?.[0] ||
       (noticia as any).imagem ||
       "";
 
-    const imageUrl = heroImage || `${origin}/og-default.jpg`;
+    const rawImageUrl = heroImage || `${origin}/og-default.jpg`;
+    // Garantir URL absoluta
+    const imageUrl = rawImageUrl.startsWith("http")
+      ? rawImageUrl
+      : `${origin}${rawImageUrl}`;
 
-    const title = escapeHtml(noticia.titulo || "DOMREALCE");
+    const title = escapeHtml(
+      (noticia as any).shareTitle || noticia.titulo || "DOMREALCE"
+    );
     const description = escapeHtml(
-      (noticia.descricao || noticia.resumo || "Comunicação Visual e Impressão Digital — Portugal").slice(0, 200)
+      (
+        (noticia as any).shareDescription ||
+        noticia.descricao ||
+        (noticia as any).resumo ||
+        "Comunicação Visual e Impressão Digital — Portugal"
+      ).slice(0, 200)
     );
 
     const html = `<!DOCTYPE html>
