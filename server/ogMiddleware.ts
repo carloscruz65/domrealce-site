@@ -45,14 +45,27 @@ export async function ogMetaMiddleware(
     const origin = `${req.protocol}://${req.get("host")}`;
     const pageUrl = `${origin}/noticia/${noticiaId}`;
 
-    const heroImage =
+    // Seleccionar a melhor imagem disponível:
+    // 1. shareImage (definido manualmente no CMS — melhor opção)
+    // 2. heroImageUrl (campo dedicado ao hero)
+    // 3. Primeira imagem com "heroes" ou "hero" no caminho (dentro do array imagens)
+    // 4. Primeira imagem do array que NÃO seja card/thumbnail
+    // 5. Qualquer imagem disponível
+    const imagensArr: string[] = Array.isArray(noticia.imagens) ? noticia.imagens : [];
+    const heroFromArray =
+      imagensArr.find((u) => /heroes?/i.test(u)) ||
+      imagensArr.find((u) => !/cards?|thumb/i.test(u)) ||
+      imagensArr[0] ||
+      "";
+
+    const rawHeroImage =
       (noticia as any).shareImage ||
       (noticia as any).heroImageUrl ||
-      noticia.imagens?.[0] ||
+      heroFromArray ||
       (noticia as any).imagem ||
       "";
 
-    const rawImageUrl = heroImage || `${origin}/og-default.jpg`;
+    const rawImageUrl = rawHeroImage || `${origin}/og-default.jpg`;
     // Garantir URL absoluta
     const imageUrl = rawImageUrl.startsWith("http")
       ? rawImageUrl
