@@ -1,6 +1,4 @@
 // Plasmic temporariamente desabilitado para evitar erros de importação
-// import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-react";
-// import { PLASMIC } from "./Plasmic-ini";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -13,7 +11,7 @@ import { useLazyImages } from "@/hooks/use-lazy-images";
 
 import React, { useEffect, lazy, Suspense } from "react";
 
-// Páginas críticas (carregamento imediato)
+// Páginas críticas
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import Obrigado from "@/pages/Obrigado";
@@ -21,7 +19,7 @@ import PagamentoErro from "@/pages/PagamentoErro";
 import ContactosMaquinas from "@/pages/contactos-maquinas";
 import LandingViaturasEmpresas from "@/pages/landing-viaturas-empresas";
 
-// Lazy loading (mantido igual)
+// Lazy loading
 const Contactos = lazy(() => import("@/pages/contactos"));
 const Sobre = lazy(() => import("@/pages/sobre"));
 const Loja = lazy(() => import("@/pages/loja"));
@@ -62,7 +60,6 @@ const ObrigadoOrcamento = lazy(() => import("@/pages/obrigado-orcamento"));
 const WhatsAppFAB = lazy(() => import("@/components/whatsapp-fab"));
 const PerformanceOptimizer = lazy(() => import("@/components/performance-optimizer"));
 const PerformancePreloader = lazy(() => import("@/components/performance-preloader"));
-const VisualEditorToolbar = lazy(() => import("@/components/visual-editor").then(m => ({ default: m.VisualEditorToolbar })));
 const ScrollToTopButton = lazy(() => import("@/components/ScrollToTopButton"));
 
 import { VisualEditorProvider } from "@/contexts/VisualEditorContext";
@@ -77,15 +74,15 @@ declare global {
 function App() {
   useLazyImages();
 
-  // Google Analytics
+  // Google Analytics + Ads
   useEffect(() => {
     const loadGA = () => {
-      const script1 = document.createElement('script');
+      const script1 = document.createElement("script");
       script1.async = true;
-      script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-S51RFB39HK';
+      script1.src = "https://www.googletagmanager.com/gtag/js?id=G-S51RFB39HK";
       document.head.appendChild(script1);
 
-      const script2 = document.createElement('script');
+      const script2 = document.createElement("script");
       script2.textContent = `
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -96,41 +93,12 @@ function App() {
       document.head.appendChild(script2);
 
       window.dataLayer = window.dataLayer || [];
-      window.gtag = function() { window.dataLayer.push(arguments); };
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
     };
 
     setTimeout(loadGA, 500);
-  }, []);
-
-  // 🔥 RADAR AUTOMÁTICO WHATSAPP (GLOBAL)
-  useEffect(() => {
-    const handleClick = (e: any) => {
-      const target = e.target.closest("a");
-      if (!target) return;
-
-      const href = target.getAttribute("href");
-
-      if (href && href.includes("wa.me")) {
-        e.preventDefault();
-
-        if (window.gtag) {
-          window.gtag("event", "conversion", {
-            send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
-            event_callback: () => {
-              window.open(href, "_blank");
-            },
-          });
-        } else {
-          window.open(href, "_blank");
-        }
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
   }, []);
 
   return (
@@ -141,8 +109,21 @@ function App() {
             <PerformanceOptimizer />
             <PerformancePreloader />
           </Suspense>
+
           <Toaster />
+
           <Suspense fallback={null}>
+            <Switch>
+              <Route path="/" component={HomeV2} />
+              <Route path="/contactos" component={Contactos} />
+              <Route path="/sobre" component={Sobre} />
+              <Route path="/loja" component={Loja} />
+              <Route path="/servico-papel-parede" component={ServicoPapelParede} />
+              <Route path="/servico-decoracao-viaturas" component={ServicoDecoracaoViaturas} />
+              <Route path="/contact" component={Contactos} />
+              <Route component={NotFound} />
+            </Switch>
+
             <WhatsAppFAB />
             <ScrollToTopButton />
           </Suspense>
