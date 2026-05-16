@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
@@ -15,6 +16,10 @@ import {
   MapPin,
 } from "lucide-react";
 import { Link } from "wouter";
+
+// 🔥 ADICIONADO
+const LazyNewsSection = lazy(() => import("@/components/news-section"));
+const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 const quickServices = [
   {
@@ -48,7 +53,6 @@ const quickServices = [
 ];
 
 const featuredProjects = [
-  // Linha 1: Viaturas
   {
     title: "Carrinhas comerciais",
     image: "/public-objects/servicos/1768587381333-IMG_20161228_164220.webp",
@@ -69,7 +73,6 @@ const featuredProjects = [
     badge: "Viaturas",
   },
 
-  // Linha 2: Outros
   {
     title: "Impressão digital",
     image: "/public-objects/servicos/1766769024380-textura_tijolo_burro.webp",
@@ -423,6 +426,16 @@ export default function HomeV2() {
       </section>
 
       <WallpaperHighlightsSection />
+
+      <Suspense fallback={null}>
+        <section className="bg-[#050505]">
+          <LazyNewsSection />
+        </section>
+
+        <section className="bg-[#050505]">
+          <LazyClientLogos />
+        </section>
+      </Suspense>
 
       {/* CTA final */}
       <section className="py-10 bg-gradient-to-r from-brand-yellow/10 via-[#0a0a0a] to-brand-turquoise/10 border-t border-white/5">
