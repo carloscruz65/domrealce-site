@@ -114,13 +114,70 @@ function App() {
 
           <Suspense fallback={null}>
             <Switch>
+              {/* Home */}
               <Route path="/" component={HomeV2} />
-              <Route path="/contactos" component={Contactos} />
-              <Route path="/sobre" component={Sobre} />
-              <Route path="/loja" component={Loja} />
+
+              {/* Notícias */}
+              <Route path="/noticias" component={Noticias} />
+              <Route path="/noticia/:id" component={NoticiaDetalhes} />
+
+              {/* Portfolio */}
+              <Route path="/portfolio" component={PortfolioV2} />
+              <Route path="/portfolio-v2" component={PortfolioV2} />
+
+              {/* Serviços */}
+              <Route path="/servico-design-grafico" component={ServicoDesignGrafico} />
+              <Route path="/servico-impressao-digital" component={ServicoImpressaoDigital} />
               <Route path="/servico-papel-parede" component={ServicoPapelParede} />
+              <Route path="/servico-telas-artisticas" component={ServicoTelasArtisticas} />
+              <Route path="/servico-autocolantes" component={ServicoAutocolantes} />
               <Route path="/servico-decoracao-viaturas" component={ServicoDecoracaoViaturas} />
+              <Route path="/servico-espacos-comerciais" component={ServicoEspacosComerciais} />
+              <Route path="/servico-peliculas-protecao-solar" component={ServicoPeliculasProtecaoSolar} />
+              <Route path="/servico-pelicula-solar" component={ServicoPeliculaSolar} />
+
+              {/* Loja */}
+              <Route path="/loja" component={Loja} />
+              <Route path="/loja/papel-de-parede" component={LojaPapelParede} />
+              <Route path="/loja/quadros-em-canvas" component={LojaQuadrosCanvas} />
+              <Route path="/loja/quadros-em-canvas/:id" component={LojaCanvasDetalhes} />
+              <Route path="/loja/papel-de-parede/:id" component={LojaTexturaDetalhes} />
+              <Route path="/carrinho" component={Carrinho} />
+              <Route path="/checkout" component={Checkout} />
+              <Route path="/pagamento" component={InstrucoesPagamento} />
+              <Route path="/pedido-confirmado" component={PedidoConfirmado} />
+
+              {/* Contactos / Sobre */}
+              <Route path="/contactos" component={Contactos} />
               <Route path="/contact" component={Contactos} />
+              <Route path="/sobre" component={Sobre} />
+              <Route path="/contactos-maquinas" component={ContactosMaquinas} />
+              <Route path="/viaturas-empresas" component={LandingViaturasEmpresas} />
+
+              {/* Como aplicar */}
+              <Route path="/como-aplicar-papel-de-parede" component={ComoAplicarPapelParede} />
+
+              {/* Páginas legais */}
+              <Route path="/politica-privacidade" component={PoliticaPrivacidade} />
+              <Route path="/termos-condicoes" component={TermosCondicoes} />
+              <Route path="/politica-cookies" component={PoliticaCookies} />
+              <Route path="/aviso-legal" component={AvisoLegal} />
+
+              {/* Confirmações de pagamento */}
+              <Route path="/obrigado" component={Obrigado} />
+              <Route path="/obrigado-orcamento" component={ObrigadoOrcamento} />
+              <Route path="/pagamento-erro" component={PagamentoErro} />
+
+              {/* Admin */}
+              <Route path="/admin" component={Admin} />
+              <Route path="/exportar-site" component={ExportarSite} />
+
+              {/* Dev / Demo */}
+              <Route path="/editor" component={VisualEditorDemo} />
+              <Route path="/demo-interativo" component={DemoInterativo} />
+              <Route path="/teste-cores" component={TesteCores} />
+
+              {/* 404 */}
               <Route component={NotFound} />
             </Switch>
 
