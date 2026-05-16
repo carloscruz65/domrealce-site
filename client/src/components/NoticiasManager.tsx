@@ -208,7 +208,7 @@ export default function NoticiasManager() {
     setFormData({
       ...noticia,
       media, // Agora injetamos a array 'media' 100% normalizada e pronta para o React 
-      cardImageUrl: noticia.cardImageUrl || "",
+      cardImageUrl: noticia.cardImageUrl || noticia.imagem || media.find(m => m.type === "image")?.url || "",
       heroImageUrl: noticia.heroImageUrl || "",
       // @ts-ignore
       layoutGaleria: noticia.layoutGaleria || reverseLayoutMap[noticia.tipoGaleria || "grid"] || "grid",
@@ -241,13 +241,19 @@ export default function NoticiasManager() {
       "beforeAfter": "before-after"
     };
     
+    const cardImage = formData.cardImageUrl || "";
+    const firstGalleryImage = imageMedia[0]?.url || "";
+    const mainListImage = cardImage || firstGalleryImage || formData.imagem || "";
+
     const dataToSave = {
       ...formData,
-      media: formData.media || [],   // 👈 ADICIONA ISTO
+      media: formData.media || [],
       descricao: formData.descricao || formData.summary || "Projeto visual",
-      imagem: imageMedia.length > 0 ? imageMedia[0].url : formData.imagem || "",
+      // Campo legacy usado por alguns cards antigos do site.
+      // Primeiro usa a Imagem do Cartão; se não existir, usa a primeira imagem da galeria.
+      imagem: mainListImage,
       imagens: imageMedia.map(m => m.url),
-      cardImageUrl: formData.cardImageUrl || "",
+      cardImageUrl: cardImage,
       heroImageUrl: formData.heroImageUrl || "",
       tipoGaleria: layoutMap[formData.layoutGaleria || "grid"] || "grid",
       publishedAt: formData.published && !formData.publishedAt ? new Date().toISOString() : formData.publishedAt,
@@ -526,53 +532,31 @@ export default function NoticiasManager() {
               </div>
             </div>
 
-            {/* Imagens Principais - Card e Hero */}
+            {/* Imagem do Cartão */}
             <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
-              <Label className="text-white text-lg font-semibold">Imagens Principais</Label>
-              <p className="text-gray-400 text-sm">Defina imagens separadas para melhor qualidade e performance.</p>
+              <Label className="text-white text-lg font-semibold">Imagem do Cartão</Label>
+              <p className="text-gray-400 text-sm">
+                Usada nos cards da homepage e da listagem de notícias. A galeria/slideshow continua a ser definida mais abaixo.
+              </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Imagem do Cartão (thumbnail) */}
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2">
-                    <ImageIcon className="h-4 w-4 text-brand-yellow" />
-                    Imagem do Cartão (thumbnail)
-                  </Label>
-                  <p className="text-gray-400 text-xs">Usada nos cards de listagem e homepage. Recomendado: 600x400px</p>
-                  <ImageUploader
-                    value={formData.cardImageUrl || ""}
-                    onChange={(url) => setFormData({ ...formData, cardImageUrl: url })}
-                    folder="noticias/cards"
+              <div className="space-y-3 max-w-md">
+                <Label className="text-white flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 text-brand-yellow" />
+                  Imagem do Cartão (thumbnail)
+                </Label>
+                <p className="text-gray-400 text-xs">Recomendado: 600x400px</p>
+                <ImageUploader
+                  value={formData.cardImageUrl || ""}
+                  onChange={(url) => setFormData({ ...formData, cardImageUrl: url })}
+                  folder="noticias/cards"
+                />
+                {formData.cardImageUrl && (
+                  <img 
+                    src={formData.cardImageUrl} 
+                    alt="Preview card" 
+                    className="w-full max-w-xs h-32 object-cover rounded border border-gray-600"
                   />
-                  {formData.cardImageUrl && (
-                    <img 
-                      src={formData.cardImageUrl} 
-                      alt="Preview card" 
-                      className="w-full max-w-xs h-32 object-cover rounded border border-gray-600"
-                    />
-                  )}
-                </div>
-
-                {/* Imagem Principal da Notícia (hero) */}
-                <div className="space-y-3">
-                  <Label className="text-white flex items-center gap-2">
-                    <ImageIcon className="h-4 w-4 text-brand-yellow" />
-                    Imagem Principal (hero)
-                  </Label>
-                  <p className="text-gray-400 text-xs">Usada na página da notícia e SEO. Recomendado: 1200x800px</p>
-                  <ImageUploader
-                    value={formData.heroImageUrl || ""}
-                    onChange={(url) => setFormData({ ...formData, heroImageUrl: url })}
-                    folder="noticias/heroes"
-                  />
-                  {formData.heroImageUrl && (
-                    <img 
-                      src={formData.heroImageUrl} 
-                      alt="Preview hero" 
-                      className="w-full max-w-xs h-32 object-cover rounded border border-gray-600"
-                    />
-                  )}
-                </div>
+                )}
               </div>
             </div>
 
@@ -582,7 +566,7 @@ export default function NoticiasManager() {
                 <Label className="text-white text-lg font-semibold">Partilha nas Redes Sociais</Label>
                 <p className="text-gray-400 text-sm mt-1">
                   Controla o que aparece quando esta notícia é partilhada no Facebook, WhatsApp, LinkedIn, etc.
-                  Se deixar vazio, usa automaticamente o título e a imagem principal.
+                  Se deixar vazio, usa automaticamente o título e a imagem do cartão/galeria.
                 </p>
               </div>
 
@@ -615,7 +599,7 @@ export default function NoticiasManager() {
                 </Label>
                 <p className="text-gray-400 text-xs">
                   Imagem independente da galeria. Tamanho ideal: <strong className="text-white">1200×630 px</strong> (rácio 1.91:1).
-                  Se vazio, usa a imagem principal da notícia.
+                  Se vazio, usa a imagem do cartão ou a primeira imagem da galeria.
                 </p>
                 <ImageUploader
                   value={formData.shareImage || ""}
@@ -808,9 +792,9 @@ export default function NoticiasManager() {
                 <div className="flex gap-4 items-start">
                   {/* Thumbnail */}
                   <div className="w-20 h-20 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-                    {noticia.imagem || (noticia.media && noticia.media.length > 0) ? (
+                    {noticia.cardImageUrl || noticia.imagem || (noticia.media && noticia.media.length > 0) ? (
                       <img 
-                        src={noticia.media?.[0]?.url || noticia.imagem} 
+                        src={noticia.cardImageUrl || noticia.imagem || noticia.media?.[0]?.url} 
                         alt="" 
                         className="w-full h-full object-cover"
                       />

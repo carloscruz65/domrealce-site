@@ -5,16 +5,33 @@ export default function WhatsAppFAB() {
   const whatsappUrl =
     "https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20DOMREALCE";
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault(); // ⛔ trava abertura imediata
+
+    if (window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
+        event_callback: () => {
+          window.open(whatsappUrl, "_blank"); // 👉 abre depois de enviar
+        },
+      });
+    } else {
+      // fallback caso gtag não esteja carregado
+      window.open(whatsappUrl, "_blank");
+    }
+  };
+
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className="fixed right-4 bottom-4 z-50 md:right-6 md:bottom-6 group"
       aria-label="Fale connosco no WhatsApp"
       data-testid="whatsapp-fab"
     >
-      {/* Texto tranquilizador (mais acima e alinhado à direita) */}
+      {/* Texto tranquilizador */}
       <div
         className="
           absolute right-0 -top-14
@@ -27,7 +44,9 @@ export default function WhatsAppFAB() {
       >
         Pode falar connosco
         <br />
-        <span className="text-brand-yellow font-semibold">sem compromisso</span>
+        <span className="text-brand-yellow font-semibold">
+          sem compromisso
+        </span>
       </div>
 
       <Button
@@ -42,12 +61,11 @@ export default function WhatsAppFAB() {
           focus:outline-none focus:ring-4 focus:ring-[#25D366]/30
         "
       >
-        {/* Ícone maior */}
         <MessageCircle size={30} />
         <span className="sr-only">WhatsApp</span>
       </Button>
 
-      {/* Tooltip (opcional, só em desktop hover) */}
+      {/* Tooltip */}
       <div
         className="
           hidden md:block
