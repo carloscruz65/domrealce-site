@@ -141,7 +141,8 @@ function App() {
               <Route path="/loja/papel-de-parede" component={LojaPapelParede} />
               <Route path="/loja/quadros-em-canvas" component={LojaQuadrosCanvas} />
               <Route path="/loja/quadros-em-canvas/:id" component={LojaCanvasDetalhes} />
-              <Route path="/loja/papel-de-parede/:id" component={LojaTexturaDetalhes} />
+              <Route path="/loja/papel-de-parede/:textura" component={LojaTexturaDetalhes} />
+              <Route path="/loja/papel-parede/textura/:textura" component={LojaTexturaDetalhes} />
               <Route path="/carrinho" component={Carrinho} />
               <Route path="/checkout" component={Checkout} />
               <Route path="/pagamento" component={InstrucoesPagamento} />
