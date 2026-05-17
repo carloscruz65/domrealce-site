@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
@@ -15,6 +16,10 @@ import {
   MapPin,
 } from "lucide-react";
 import { Link } from "wouter";
+
+// 🔥 ADICIONADO
+const LazyNewsSection = lazy(() => import("@/components/news-section"));
+const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 const quickServices = [
   {
@@ -48,7 +53,6 @@ const quickServices = [
 ];
 
 const featuredProjects = [
-  // Linha 1: Viaturas
   {
     title: "Carrinhas comerciais",
     image: "/public-objects/servicos/1768587381333-IMG_20161228_164220.webp",
@@ -69,7 +73,6 @@ const featuredProjects = [
     badge: "Viaturas",
   },
 
-  // Linha 2: Outros
   {
     title: "Impressão digital",
     image: "/public-objects/servicos/1766769024380-textura_tijolo_burro.webp",
@@ -101,37 +104,37 @@ const wallpaperHighlights: WallpaperHighlight[] = [
   {
     title: "Papel de Parede Pedras",
     subtitle: "Aspeto natural e intemporal, com presença.",
-    href: "/loja/papel-parede/textura/pedras",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/PEDRAS-003.webp",
   },
   {
     title: "Papel de Parede Tijolo",
     subtitle: "Um clássico com impacto para paredes de destaque.",
-    href: "/loja/papel-parede/textura/tijolo",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/TIJOLO-031.webp",
   },
   {
     title: "Papel de Parede Ripado",
     subtitle: "Efeito madeira moderno para interiores atuais.",
-    href: "/loja/papel-parede/textura/ripado",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/RIPADO-002.webp",
   },
   {
     title: "Papel de Parede Mármore",
     subtitle: "Elegância premium para salas, halls e escritórios.",
-    href: "/loja/papel-parede/textura/marmore",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/Marmore-055.webp",
   },
   {
     title: "Papel de Parede Bebés",
     subtitle: "Quarto infantil com personalidade e doçura.",
-    href: "/loja/papel-parede/textura/baby-paineis",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/BABY-PAINNEIS-059.webp",
   },
   {
     title: "Papel de Parede Folhas",
     subtitle: "Natural e leve, ideal para dar vida ao espaço.",
-    href: "/loja/papel-parede/textura/folhas",
+    href: "/loja/papel-de-parede",
     image: "/public-objects/inicio/Produtos-de-destaque/FOLHAS-055.webp",
   },
 ];
@@ -423,6 +426,16 @@ export default function HomeV2() {
       </section>
 
       <WallpaperHighlightsSection />
+
+      <Suspense fallback={null}>
+        <section className="bg-[#050505]">
+          <LazyNewsSection />
+        </section>
+
+        <section className="bg-[#050505]">
+          <LazyClientLogos />
+        </section>
+      </Suspense>
 
       {/* CTA final */}
       <section className="py-10 bg-gradient-to-r from-brand-yellow/10 via-[#0a0a0a] to-brand-turquoise/10 border-t border-white/5">
