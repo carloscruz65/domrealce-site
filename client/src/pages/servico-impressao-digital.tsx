@@ -1,3 +1,4 @@
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -616,6 +617,7 @@ export default function ServicoImpressaoDigital() {
                   href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20impressão%20digital."
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20impressão%20digital."); }}
                 >
                   Falar por WhatsApp
                 </a>

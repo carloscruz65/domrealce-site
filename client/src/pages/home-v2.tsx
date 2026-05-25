@@ -1,3 +1,4 @@
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
@@ -240,6 +241,7 @@ export default function HomeV2() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20DOMREALCE"); }}
                 >
                   <Button
                     size="lg"
@@ -451,6 +453,7 @@ export default function HomeV2() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto"
+                onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Vi%20o%20vosso%20site%20e%20quero%20saber%20mais."); }}
               >
                 <Button
                   size="lg"

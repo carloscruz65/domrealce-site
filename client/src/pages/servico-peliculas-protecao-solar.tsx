@@ -1,3 +1,4 @@
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -420,6 +421,7 @@ export default function ServicoPeliculasProtecaoSolar() {
                 href="https://wa.me/351930682725?text=Olá!%20Gostava%20de%20informações%20sobre%20películas%20de%20proteção%20solar%20para%20vidros."
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Gostava%20de%20informações%20sobre%20películas%20de%20proteção%20solar%20para%20vidros."); }}
               >
                 WhatsApp direto
               </a>

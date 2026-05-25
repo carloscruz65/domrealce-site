@@ -1,4 +1,5 @@
 import React from "react";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import FooterMinimal from "@/components/footer-minimal";
 import { SEOHead } from "@/components/seo-head";
@@ -178,6 +179,7 @@ export default function LandingViaturasEmpresas() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."); }}
                 >
                   <Button
                     size="lg"
@@ -295,6 +297,7 @@ export default function LandingViaturasEmpresas() {
                 href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."); }}
               >
                 <Button
                   variant="outline"
@@ -369,6 +372,7 @@ export default function LandingViaturasEmpresas() {
               href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial."); }}
             >
               <Button variant="outline" className="border-green-500 text-green-300 hover:bg-green-500 hover:text-white">
                 WhatsApp direto
@@ -451,6 +455,7 @@ export default function LandingViaturasEmpresas() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto"
+                onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20decoração%20de%20viatura%20comercial.%20Tenho%20fotos%20e%20medidas."); }}
               >
                 <Button
                   size="lg"

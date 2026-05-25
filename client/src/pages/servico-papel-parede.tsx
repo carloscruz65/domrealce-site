@@ -1,3 +1,4 @@
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -359,7 +360,7 @@ ${formData.anexos
         secondaryCta={{
           text: "Falar por WhatsApp",
           onClick: () => {
-            window.open("https://wa.me/351930682725?text=Olá!%20Quero%20orçamento%20para%20papel%20de%20parede.", "_blank");
+            trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20orçamento%20para%20papel%20de%20parede.");
           },
         }}
       />
@@ -855,6 +856,7 @@ ${formData.anexos
                         href="https://wa.me/351930682725?text=Olá!%20Quero%20enviar%20uma%20imagem%20para%20papel%20de%20parede"
                         target="_blank"
                         rel="noreferrer"
+                        onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20enviar%20uma%20imagem%20para%20papel%20de%20parede"); }}
                       >
                         WhatsApp
                       </a>
@@ -994,6 +996,7 @@ ${formData.anexos
                   href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20papel%20de%20parede."
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20papel%20de%20parede."); }}
                 >
                   WhatsApp direto
                 </a>

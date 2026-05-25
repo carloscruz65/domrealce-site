@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import StaticHero from "@/components/StaticHero";
 import ServicesSection from "@/components/services-section"; // opcional se quiseres tirar o lazy
@@ -169,6 +170,7 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer"
                   className="text-brand-yellow hover:text-brand-turquoise underline"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20falar%20sobre%20um%20projeto%20de%20comunicação%20visual."); }}
                 >
                   +351 930 682 725
                 </a>

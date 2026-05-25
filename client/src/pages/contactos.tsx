@@ -1,4 +1,5 @@
 import { useLocation } from "wouter";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GoogleMap from "@/components/GoogleMap";
@@ -221,6 +222,7 @@ export default function Contactos() {
                     href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."); }}
                   >
                     <MessageCircle className="w-4 h-4" />
                     WhatsApp direto

@@ -1,4 +1,5 @@
 import React from "react";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -432,6 +433,7 @@ export default function ServicoEspacosComerciais() {
                   href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20decoração%20de%20espaços%20comerciais."
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20decoração%20de%20espaços%20comerciais."); }}
                 >
                   WhatsApp direto
                 </a>

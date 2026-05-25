@@ -1,11 +1,7 @@
+import React from "react";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 export default function WhatsAppFAB() {
   const whatsappUrl =
@@ -13,14 +9,7 @@ export default function WhatsAppFAB() {
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-
-    // Envia a conversão para o Google Ads sem bloquear a abertura do WhatsApp.
-    window.gtag?.("event", "conversion", {
-      send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
-    });
-
-    // Abre sempre o WhatsApp imediatamente, mesmo que o tracking falhe.
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    trackWhatsAppConversion(whatsappUrl);
   };
 
   return (
