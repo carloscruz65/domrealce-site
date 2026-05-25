@@ -1,26 +1,24 @@
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
 export default function WhatsAppFAB() {
   const whatsappUrl =
     "https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20DOMREALCE";
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+    e.preventDefault(); // ⛔ trava abertura imediata
 
-    // Envia a conversão para o Google Ads sem bloquear a abertura do WhatsApp.
-    window.gtag?.("event", "conversion", {
-      send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
-    });
-
-    // Abre sempre o WhatsApp imediatamente, mesmo que o tracking falhe.
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    if (window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
+        event_callback: () => {
+          window.open(whatsappUrl, "_blank"); // 👉 abre depois de enviar
+        },
+      });
+    } else {
+      // fallback caso gtag não esteja carregado
+      window.open(whatsappUrl, "_blank");
+    }
   };
 
   return (
