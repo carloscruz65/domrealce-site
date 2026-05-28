@@ -7,6 +7,7 @@ import type { Express, RequestHandler } from "express";
 import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
+import { isAdminUser } from "./middleware";
 
 if (!process.env.REPLIT_DOMAINS) {
   throw new Error("Environment variable REPLIT_DOMAINS not provided");
@@ -78,9 +79,17 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
+    const claims = tokens.claims();
+    const replitUserId = claims["sub"] as string | undefined;
+
+    // Reject any Replit account that is not in the admin allowlist
+    if (!replitUserId || !isAdminUser(replitUserId)) {
+      return verified(null, false);
+    }
+
     const user = {};
     updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
+    await upsertUser(claims);
     verified(null, user);
   };
 

@@ -1,9 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 
 /**
- * Middleware to protect admin routes
- * In development (localhost): allows access without token
- * In production: checks x-admin-token header or Replit authentication
+ * Returns the set of allowed admin Replit user IDs from env.
+ * Reads ADMIN_REPLIT_IDS (comma-separated list of Replit `sub` values).
+ */
+function getAdminAllowlist(): Set<string> {
+  const raw = process.env.ADMIN_REPLIT_IDS ?? "";
+  return new Set(
+    raw.split(",").map((id) => id.trim()).filter(Boolean)
+  );
+}
+
+/**
+ * Returns true if the given Replit user ID is in the admin allowlist.
+ */
+export function isAdminUser(replitUserId: string): boolean {
+  const allowlist = getAdminAllowlist();
+  if (allowlist.size === 0) {
+    return false;
+  }
+  return allowlist.has(replitUserId);
+}
+
+/**
+ * Middleware to protect admin routes.
+ * In development (localhost): allows access without token.
+ * In production: requires Replit authentication AND the user must be in
+ * the ADMIN_REPLIT_IDS allowlist, OR a valid x-admin-token header.
  */
 export function protegerAdmin(req: Request, res: Response, next: NextFunction) {
   // Development mode: Allow access on localhost
@@ -12,17 +35,21 @@ export function protegerAdmin(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  // Production: Check for authentication
-  // 1. Check Replit authentication
+  // Production: Check for Replit authentication + admin allowlist
   if (req.isAuthenticated && req.isAuthenticated()) {
-    return next();
+    const user = req.user as any;
+    const replitUserId = user?.claims?.sub as string | undefined;
+    if (replitUserId && isAdminUser(replitUserId)) {
+      return next();
+    }
+    return res.status(403).json({ error: "Acesso negado" });
   }
 
-  // 2. Check admin token header
+  // Check admin token header (fallback for automated/internal use)
   const token = req.get("x-admin-token");
   const expectedToken = process.env.ADMIN_TOKEN;
-  
-  if (token && token === expectedToken) {
+
+  if (token && expectedToken && token === expectedToken) {
     return next();
   }
 

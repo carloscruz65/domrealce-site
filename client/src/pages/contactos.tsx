@@ -2,10 +2,9 @@ import { useLocation } from "wouter";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import GoogleMap from "@/components/GoogleMap";
 import { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { insertContactSchema } from "@shared/schema";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -30,11 +29,6 @@ type AnexoItem = {
 export default function Contactos() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
-
-  // Fetch Google Maps API key
-  const { data: mapsConfig } = useQuery<{ apiKey: string }>({
-    queryKey: ["/api/config/google-maps-key"],
-  });
 
   const [formData, setFormData] = useState<{
     nome: string;
@@ -606,27 +600,18 @@ export default function Contactos() {
               </Button>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/60">
-              {mapsConfig?.apiKey ? (
-                <GoogleMap
-                  apiKey={mapsConfig.apiKey}
-                  center={{
-                    lat: 41.2294,
-                    lng: -8.3237,
-                  }}
-                  zoom={17}
-                  className="w-full h-[420px]"
-                  address="Rua de Rebolido, 42, 4580-402 Gondalães, Paredes, Portugal"
-                  companyName="DOMREALCE"
-                />
-              ) : (
-                <div className="w-full h-[320px] bg-gray-900 flex items-center justify-center">
-                  <div className="text-center text-brand-yellow">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow mx-auto mb-4"></div>
-                    <p>A carregar mapa...</p>
-                  </div>
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0d0d0d]">
+              <div className="w-full flex flex-col items-center justify-center py-12 px-6 gap-4 text-center">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 mb-2">
+                  <MapPin className="w-8 h-8 text-brand-yellow" />
                 </div>
-              )}
+                <p className="text-lg font-bold text-white tracking-wide">DOMREALCE Atelier</p>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Rua de Rebolido, 42<br />
+                  4580-402 Gondalães, Paredes<br />
+                  Portugal
+                </p>
+              </div>
             </div>
           </div>
         </div>
