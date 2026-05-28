@@ -707,7 +707,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/contacts", async (req, res) => {
+  app.get("/api/contacts", protegerAdmin, async (req, res) => {
     const requestId = makeRequestId();
     try {
       const contacts = await storage.getContacts();
@@ -757,7 +757,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/contacts/attachment/:contactId/:fileName", async (req, res) => {
+  app.get("/api/contacts/attachment/:contactId/:fileName", protegerAdmin, async (req, res) => {
     const requestId = makeRequestId();
     try {
       const { contactId, fileName } = req.params;
@@ -918,7 +918,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/orders/:id", async (req, res) => {
+  app.get("/api/orders/:id", protegerAdmin, async (req, res) => {
     const requestId = makeRequestId();
     try {
       const { id } = req.params;
@@ -931,7 +931,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
-  app.get("/api/orders/number/:numeroEncomenda", async (req, res) => {
+  app.get("/api/orders/number/:numeroEncomenda", protegerAdmin, async (req, res) => {
     const requestId = makeRequestId();
     try {
       const { numeroEncomenda } = req.params;
