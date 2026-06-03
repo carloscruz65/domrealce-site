@@ -40,6 +40,7 @@ export function getSession() {
     cookie: {
       httpOnly: true,
       secure: true,
+      sameSite: "lax",
       maxAge: sessionTtl,
     },
   });
@@ -84,6 +85,10 @@ export async function setupAuth(app: Express) {
 
     // Reject any Replit account that is not in the admin allowlist
     if (!replitUserId || !isAdminUser(replitUserId)) {
+      console.warn(
+        `[Auth] Login rejeitado — Replit user ID: "${replitUserId}" não está na allowlist. ` +
+        `Para permitir acesso, define ADMIN_REPLIT_IDS="${replitUserId}" nos Secrets.`
+      );
       return verified(null, false);
     }
 
@@ -207,12 +212,16 @@ export async function setupAuth(app: Express) {
             </div>
             <div class="links">
               <a href="/admin" class="btn">Ir para Admin</a>
-              <a href="/api/admin/download-all-images" class="btn btn-secondary">Download Imagens</a>
             </div>
             <p style="margin-top: 2rem; font-size: 0.9rem;">
               <a href="/api/logout" style="color: #ff6b6b;">Terminar Sessão</a>
             </p>
           ` : `
+            ${(req.query.error === 'acesso_negado') ? `
+              <div style="background: rgba(255,100,100,0.2); border: 1px solid #ff6b6b; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: #ffaaaa;">
+                ⚠️ Conta Replit não autorizada. Verifique os Secrets do projeto (ADMIN_REPLIT_IDS).
+              </div>
+            ` : ''}
             <p>Faça login com a sua conta Replit para aceder ao painel de administração.</p>
             <a href="/api/login?auth=start" class="btn">Entrar com Replit</a>
           `}
@@ -224,8 +233,8 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/callback", (req, res, next) => {
     passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login",
+      successReturnToOrRedirect: "/admin",
+      failureRedirect: "/api/login?error=acesso_negado",
     })(req, res, next);
   });
 

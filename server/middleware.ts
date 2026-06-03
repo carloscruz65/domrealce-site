@@ -3,12 +3,21 @@ import { Request, Response, NextFunction } from "express";
 /**
  * Returns the set of allowed admin Replit user IDs from env.
  * Reads ADMIN_REPLIT_IDS (comma-separated list of Replit `sub` values).
+ * Falls back to REPLIT_USERID (the repl owner) when ADMIN_REPLIT_IDS is not set.
  */
 function getAdminAllowlist(): Set<string> {
   const raw = process.env.ADMIN_REPLIT_IDS ?? "";
-  return new Set(
-    raw.split(",").map((id) => id.trim()).filter(Boolean)
-  );
+  const explicit = raw.split(",").map((id) => id.trim()).filter(Boolean);
+  if (explicit.length > 0) {
+    return new Set(explicit);
+  }
+  // Fallback: allow the repl owner automatically.
+  // REPLIT_USERID is set by the Replit platform and equals the owner's OAuth `sub`.
+  const ownerId = process.env.REPLIT_USERID;
+  if (ownerId) {
+    return new Set([ownerId]);
+  }
+  return new Set();
 }
 
 /**
