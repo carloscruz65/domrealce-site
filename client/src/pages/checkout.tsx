@@ -68,6 +68,11 @@ export default function Checkout() {
 
   const [paypalReady, setPaypalReady] = useState(false);
 
+  // Tracks the internal order that was pre-created during the PayPal createOrder
+  // callback so that handlePayPalSuccess can reference it for verification.
+  const [paypalInternalOrderId, setPaypalInternalOrderId] = useState<string | null>(null);
+  const [paypalNumeroEncomenda, setPaypalNumeroEncomenda] = useState<string | null>(null);
+
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -303,98 +308,101 @@ export default function Checkout() {
     }
   };
 
-  // Função para processar pagamento PayPal com sucesso
-  const handlePayPalSuccess = async (paypalDetails: any) => {
-    // Validar todos os campos primeiro
+  // Called from the PayPal SDK's createOrder callback.
+  // Creates both the internal order and the PayPal order server-side so that
+  // custom_id = internalOrderId binds them.  Returns the PayPal order ID.
+  const handleCreatePaypalOrder = async (): Promise<string> => {
     if (!validateAllFields()) {
-      toast({
-        title: "Dados incompletos",
-        description: "Por favor, preencha os dados obrigatórios antes de pagar.",
-        variant: "destructive",
-      });
-      return;
+      throw new Error("Por favor, preencha os dados obrigatórios antes de pagar.");
     }
 
+    const payload = {
+      // placeholder; server will generate the real number
+      numeroEncomenda: `EN-PAYPAL-${Date.now()}`,
+      clienteNome: customerData.nome,
+      clienteEmail: customerData.email,
+      clienteTelefone: customerData.telefone,
+      clienteMorada: customerData.morada,
+      clienteCodigoPostal: customerData.codigoPostal,
+      clienteCidade: customerData.cidade,
+      clienteNIF: customerData.nif || undefined,
+      metodoEntrega: deliveryMethod,
+      marketingOptIn: Boolean(marketingOptIn),
+      itens: cartItems,
+      // Monetary fields below are overridden server-side; included only to
+      // satisfy Zod schema validation on the server (min-length guards etc.).
+      subtotal: totalCarrinho.toString(),
+      envio: custoEnvio.toString(),
+      iva: valorIva.toString(),
+      total: totalFinal.toString(),
+      metodoPagamento: "paypal",
+    };
+
+    const response = await fetch("/api/payments/paypal/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.message || "Erro ao preparar pagamento PayPal");
+    }
+
+    // Store the server-assigned identifiers so handlePayPalSuccess can use them.
+    setPaypalInternalOrderId(result.internalOrderId);
+    setPaypalNumeroEncomenda(result.numeroEncomenda);
+
+    return result.paypalOrderId;
+  };
+
+  // Called after PayPal captures the payment client-side.
+  // The internal order was already created in handleCreatePaypalOrder, so we
+  // only need to call the server-side verification endpoint here.
+  const handlePayPalSuccess = async (paypalDetails: any) => {
     setIsProcessing(true);
 
     try {
-      const timestamp = Date.now();
-      const randomSuffix = Math.random().toString(36).substr(2, 4).toUpperCase();
-      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp
-        .toString()
-        .slice(-6)}-${randomSuffix}`;
-
-      // Criar encomenda na base de dados
-      const orderData = {
-        numeroEncomenda,
-        clienteNome: customerData.nome,
-        clienteEmail: customerData.email,
-        clienteTelefone: customerData.telefone,
-
-        // ✅ Se for pickup, estes campos podem ir vazios (mantemos para faturação se o cliente preencher)
-        clienteMorada: customerData.morada,
-        clienteCodigoPostal: customerData.codigoPostal,
-        clienteCidade: customerData.cidade,
-
-        clienteNIF: customerData.nif || undefined,
-
-        metodoEntrega: deliveryMethod, // ✅ já tinhas
-        marketingOptIn: Boolean(marketingOptIn), // ✅ NOVO
-
-        itens: cartItems,
-        subtotal: totalCarrinho.toString(),
-        envio: custoEnvio.toString(),
-        iva: valorIva.toString(),
-        total: totalFinal.toString(),
-        metodoPagamento: "paypal",
-        estado: "paga",
-        estadoPagamento: "pago",
-        referenciaIfthenpay:
-          paypalDetails?.id ||
-          paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id ||
-          "PAYPAL-" + timestamp,
-        dadosPagamento: {
-          paypalOrderId: paypalDetails?.id,
-          paypalPayerId: paypalDetails?.payer?.payer_id,
-          paypalPayerEmail: paypalDetails?.payer?.email_address,
-          paypalPayerName:
-            paypalDetails?.payer?.name?.given_name +
-            " " +
-            paypalDetails?.payer?.name?.surname,
-          captureId: paypalDetails?.purchase_units?.[0]?.payments?.captures?.[0]?.id,
-          status: paypalDetails?.status,
-        },
-      };
-
-      const orderResponse = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-
-      const orderResult = await orderResponse.json();
-
-      if (!orderResult.success) {
-        throw new Error(orderResult.error || "Erro ao guardar encomenda");
+      if (!paypalInternalOrderId || !paypalNumeroEncomenda) {
+        throw new Error("Estado de pagamento inválido. Por favor, tente novamente.");
       }
 
-      // Limpar carrinho
-      localStorage.removeItem("cart");
-
-      toast({
-        title: "Pagamento confirmado!",
-        description: `Encomenda ${numeroEncomenda} criada com sucesso.`,
+      const verifyResponse = await fetch("/api/payments/paypal/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paypalOrderId: paypalDetails?.id,
+          orderId: paypalInternalOrderId,
+        }),
       });
 
-      // Redirecionar para página de confirmação
-      setLocation(`/pedido-confirmado?numeroEncomenda=${numeroEncomenda}`);
+      const verifyResult = await verifyResponse.json();
+
+      if (!verifyResult.success) {
+        console.warn("PayPal verification failed:", verifyResult.message);
+        toast({
+          title: "Verificação pendente",
+          description:
+            "O pagamento foi recebido mas a verificação automática falhou. A nossa equipa irá confirmar manualmente. Encomenda: " +
+            paypalNumeroEncomenda,
+          duration: 10000,
+        });
+      } else {
+        toast({
+          title: "Pagamento confirmado!",
+          description: `Encomenda ${paypalNumeroEncomenda} criada com sucesso.`,
+        });
+      }
+
+      localStorage.removeItem("cart");
+      setLocation(`/pedido-confirmado?numeroEncomenda=${paypalNumeroEncomenda}`);
     } catch (error: any) {
-      console.error("Erro ao processar encomenda PayPal:", error);
+      console.error("Erro ao verificar encomenda PayPal:", error);
       toast({
         title: "Erro ao processar encomenda",
         description:
           error.message ||
-          "O pagamento foi feito mas houve um erro ao guardar. Contacte-nos.",
+          "O pagamento foi feito mas houve um erro. Contacte-nos.",
         variant: "destructive",
       });
     } finally {
@@ -981,9 +989,9 @@ export default function Checkout() {
                       <p className="text-sm text-gray-300">A carregar PayPal…</p>
                     ) : (
                       <PaypalButton
-                        amount={totalFinal}
+                        onCreateOrder={handleCreatePaypalOrder}
                         onSuccess={(details: any) => {
-                          console.log("Pagamento PayPal OK:", details);
+                          console.log("Pagamento PayPal capturado:", details);
                           handlePayPalSuccess(details);
                         }}
                         onError={(err: any) => {

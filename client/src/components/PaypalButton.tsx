@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type PaypalButtonProps = {
-  amount: number;
+  onCreateOrder: () => Promise<string>;
   onSuccess?: (details: any) => void;
   onError?: (err: any) => void;
 };
@@ -13,20 +13,21 @@ declare global {
 }
 
 export function PaypalButton({
-  amount,
+  onCreateOrder,
   onSuccess,
   onError,
 }: PaypalButtonProps) {
   const paypalRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ guardar callbacks sem causar rerender do effect
+  const onCreateOrderRef = useRef(onCreateOrder);
   const onSuccessRef = useRef(onSuccess);
   const onErrorRef = useRef(onError);
 
   useEffect(() => {
+    onCreateOrderRef.current = onCreateOrder;
     onSuccessRef.current = onSuccess;
     onErrorRef.current = onError;
-  }, [onSuccess, onError]);
+  }, [onCreateOrder, onSuccess, onError]);
 
   useEffect(() => {
     if (!window.paypal || !paypalRef.current) {
@@ -44,23 +45,21 @@ export function PaypalButton({
         label: "paypal",
       },
 
-      createOrder: (_data: any, actions: any) => {
-        return actions.order.create({
-          purchase_units: [
-            {
-              amount: {
-                currency_code: "EUR",
-                value: amount.toFixed(2),
-              },
-            },
-          ],
-        });
+      // Server creates the PayPal order so that custom_id = internalOrderId,
+      // binding the PayPal transaction to our specific internal order.
+      createOrder: async () => {
+        try {
+          return await onCreateOrderRef.current();
+        } catch (err) {
+          onErrorRef.current?.(err);
+          throw err;
+        }
       },
 
       onApprove: async (_data: any, actions: any) => {
         try {
           const details = await actions.order.capture();
-          console.log("Pagamento PayPal OK:", details);
+          console.log("Pagamento PayPal capturado:", details);
           onSuccessRef.current?.(details);
         } catch (err) {
           console.error("Erro ao capturar pagamento PayPal:", err);
@@ -81,7 +80,7 @@ export function PaypalButton({
         button.close();
       } catch {}
     };
-  }, [amount]); // ✅ só depende do amount
+  }, []); // only mount once; callbacks use refs
 
   return <div ref={paypalRef} />;
 }

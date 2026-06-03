@@ -895,11 +895,115 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // =========================================
   // ORDERS
   // =========================================
+
+  // Server-authoritative pricing constants.
+  // These MUST stay in sync with client-side values in:
+  //   client/src/pages/textura-detalhes.tsx  (papel-parede)
+  //   client/src/pages/canvas-detalhes.tsx   (quadros-canvas)
+  const WALLPAPER_PRICE_PER_M2 = 20;        // €/m²  (textura-detalhes line 97)
+  const WALLPAPER_LAMINATION_PER_M2 = 8;    // €/m²  (carrinho.tsx line 207)
+  const CANVAS_IVA_RATE = 0.23;             // IVA included at item level for canvas
+  const CANVAS_SIZE_PRICES: Record<string, number> = {
+    "20x30": 15.00,
+    "30x40": 25.00,
+    "40x50": 35.00,
+    "50x70": 50.00,
+    "60x80": 70.00,
+    "70x100": 90.00,
+    "80x120": 120.00,
+    "100x150": 150.00,
+  };
+
+  /**
+   * Compute an item's net price (before global IVA) from its structural
+   * attributes only.  All client-supplied monetary fields (preco, precoTotal,
+   * precoBase, subtotal, …) are ignored.
+   *
+   * Returns 0 if the item cannot be priced (unknown type, missing/invalid
+   * dimensions, etc.).
+   */
+  function computeItemPrecoTotal(item: Record<string, unknown>): number {
+    const type = String(item.type ?? "");
+
+    if (type === "papel-parede") {
+      const larguraCm = Number(item.larguraCm) || 0;
+      const alturaCm = Number(item.alturaCm) || 0;
+      if (larguraCm <= 0 || alturaCm <= 0) return 0;
+
+      const material = String(item.material ?? "");
+      if (!material) return 0;
+
+      const area = (larguraCm / 100) * (alturaCm / 100);
+      const base = WALLPAPER_PRICE_PER_M2 * area;
+      const laminacao = item.laminacao === true && material === "vinil"
+        ? WALLPAPER_LAMINATION_PER_M2 * area
+        : 0;
+      return base + laminacao;
+    }
+
+    if (type === "quadros-canvas") {
+      const tamanho = String(item.tamanho ?? "");
+      const basePrice = CANVAS_SIZE_PRICES[tamanho];
+      if (!basePrice) return 0;
+      // Canvas items store precoTotal WITH IVA already included
+      // (matches canvas-detalhes.tsx: precoTotal = precoBase * 1.23)
+      return basePrice * (1 + CANVAS_IVA_RATE);
+    }
+
+    return 0; // unknown type
+  }
+
   app.post("/api/orders", async (req, res) => {
     const requestId = makeRequestId();
     try {
       const orderData = insertOrderSchema.parse(req.body);
-      const order = await storage.createOrder(orderData);
+
+      // Recompute all financial values server-side using authoritative pricing.
+      // Client-supplied monetary fields (precoTotal, preco, subtotal, envio,
+      // iva, total) are completely ignored — only structural fields like
+      // dimensions, material, tamanho and quantity influence the price.
+      const itens = (orderData.itens as Array<Record<string, unknown>>) ?? [];
+
+      let subtotal = 0;
+      for (const item of itens) {
+        const itemPrice = computeItemPrecoTotal(item);
+        if (itemPrice <= 0) {
+          return res.status(400).json({
+            error: `Item inválido ou sem preço definido: tipo="${item.type}", tamanho="${item.tamanho}", largura=${item.larguraCm}, altura=${item.alturaCm}`,
+            requestId,
+          });
+        }
+        const qty = Math.max(1, Math.round(Number(item.quantidade ?? item.quantity ?? 1)));
+        subtotal += itemPrice * qty;
+      }
+
+      // Shipping: pickup = free; delivery free ≥ €100 else €10.
+      // metodoEntrega is sent in the raw body but is not part of
+      // insertOrderSchema, so we read it from req.body directly.
+      const metodoEntrega = req.body.metodoEntrega === "pickup" ? "pickup" : "delivery";
+      const envio = metodoEntrega === "pickup" ? 0 : subtotal >= 100 ? 0 : 10;
+
+      const IVA_RATE = 0.23;
+      const iva = (subtotal + envio) * IVA_RATE;
+      const total = subtotal + envio + iva;
+
+      // Build the order with server-authoritative values.
+      // estado and estadoPagamento are ALWAYS forced to "pendente" on creation
+      // regardless of what the client sends — they are only updated server-side
+      // after a verified payment event.
+      const safeOrderData = {
+        ...orderData,
+        subtotal: subtotal.toFixed(2),
+        envio: envio.toFixed(2),
+        iva: iva.toFixed(2),
+        total: total.toFixed(2),
+        estado: "pendente" as const,
+        estadoPagamento: "pendente" as const,
+        referenciaIfthenpay: undefined,
+        dadosPagamento: undefined,
+      };
+
+      const order = await storage.createOrder(safeOrderData);
       res.json({ success: true, order, requestId });
     } catch (error) {
       logRouteError(requestId, "POST /api/orders failed", error);
@@ -989,12 +1093,31 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   app.post("/api/payments/create", async (req, res) => {
     const requestId = makeRequestId();
     try {
-      const { method, orderId, amount, customerData, returnUrls } = req.body;
+      const { method, orderId, customerData, returnUrls } = req.body;
 
-      if (!method || !orderId || !amount) {
+      if (!method || !orderId) {
         return res.status(400).json({
           success: false,
-          message: "Método de pagamento, ID do pedido e valor são obrigatórios",
+          message: "Método de pagamento e ID do pedido são obrigatórios",
+          requestId
+        });
+      }
+
+      // Look up the stored order to get the authoritative total.
+      // This prevents a client from sending a tampered amount to IfthenPay.
+      const storedOrder = await storage.getOrder(orderId);
+      if (!storedOrder) {
+        return res.status(404).json({
+          success: false,
+          message: "Encomenda não encontrada",
+          requestId
+        });
+      }
+      const authorizedAmount = parseFloat(storedOrder.total);
+      if (isNaN(authorizedAmount) || authorizedAmount <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Total da encomenda inválido",
           requestId
         });
       }
@@ -1005,7 +1128,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         case "multibanco":
           paymentData = await ifthenPayService.createMultibancoPayment({
             orderId,
-            amount: parseFloat(amount),
+            amount: authorizedAmount,
             description: `Papel de parede - Pedido ${orderId}`,
             customerEmail: customerData?.email
           });
@@ -1021,7 +1144,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
           }
           paymentData = await ifthenPayService.createMBWayPayment({
             orderId,
-            amount: parseFloat(amount),
+            amount: authorizedAmount,
             phone: customerData.phone,
             description: `Papel de parede - Pedido ${orderId}`,
             customerEmail: customerData?.email
@@ -1038,7 +1161,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
           }
           paymentData = await ifthenPayService.createCreditCardPayment({
             orderId,
-            amount: parseFloat(amount),
+            amount: authorizedAmount,
             description: `Papel de parede - Pedido ${orderId}`,
             successUrl: returnUrls.success,
             errorUrl: returnUrls.error,
@@ -1050,7 +1173,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
         case "paybylink":
           paymentData = await ifthenPayService.createPayByLink({
             orderId,
-            amount: parseFloat(amount),
+            amount: authorizedAmount,
             description: `Papel de parede - Pedido ${orderId}`,
             expiryDays: 3,
             methods: ["multibanco", "mbway", "creditcard"]
@@ -1078,6 +1201,332 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       res.status(500).json({
         success: false,
         message: error instanceof Error ? error.message : "Erro ao criar pagamento. Tente novamente.",
+        requestId
+      });
+    }
+  });
+
+  // Helper: authenticate with PayPal and return an access token.
+  async function getPaypalAccessToken(baseUrl: string, clientId: string, clientSecret: string): Promise<string> {
+    const authResponse = await fetch(`${baseUrl}/v1/oauth2/token`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString("base64")}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "grant_type=client_credentials",
+    });
+    if (!authResponse.ok) {
+      throw new Error(`PayPal auth failed: ${authResponse.status}`);
+    }
+    const { access_token } = await authResponse.json() as { access_token: string };
+    return access_token;
+  }
+
+  // Helper: return the shared PayPal base URL and validate credentials exist.
+  function getPaypalConfig(): { baseUrl: string; clientId: string; clientSecret: string } {
+    const clientId = process.env.PAYPAL_CLIENT_ID || process.env.VITE_PAYPAL_CLIENT_ID;
+    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+    if (!clientId || !clientSecret) {
+      throw new Error("PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET env vars not configured");
+    }
+    const baseUrl = process.env.PAYPAL_MODE === "sandbox"
+      ? "https://api-m.sandbox.paypal.com"
+      : "https://api-m.paypal.com";
+    return { baseUrl, clientId, clientSecret };
+  }
+
+  // PayPal: server-side order creation.
+  // The browser calls this from the PayPal SDK's createOrder callback so that
+  // the PayPal order is created by our server with custom_id = internalOrderId,
+  // binding the two orders together cryptographically.
+  app.post("/api/payments/paypal/create-order", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      let paypalConfig: ReturnType<typeof getPaypalConfig>;
+      try {
+        paypalConfig = getPaypalConfig();
+      } catch {
+        return res.status(503).json({
+          success: false,
+          message: "Pagamento PayPal não configurado no servidor",
+          requestId
+        });
+      }
+
+      // Parse and validate checkout data using the same schema as POST /api/orders.
+      const orderData = insertOrderSchema.parse(req.body);
+
+      // Recompute all financial values server-side (same logic as POST /api/orders).
+      const itens = (orderData.itens as Array<Record<string, unknown>>) ?? [];
+      let subtotal = 0;
+      for (const item of itens) {
+        const itemPrice = computeItemPrecoTotal(item);
+        if (itemPrice <= 0) {
+          return res.status(400).json({
+            success: false,
+            message: `Item inválido ou sem preço: tipo="${item.type}", tamanho="${item.tamanho}"`,
+            requestId,
+          });
+        }
+        const qty = Math.max(1, Math.round(Number(item.quantidade ?? item.quantity ?? 1)));
+        subtotal += itemPrice * qty;
+      }
+
+      const metodoEntrega = req.body.metodoEntrega === "pickup" ? "pickup" : "delivery";
+      const envio = metodoEntrega === "pickup" ? 0 : subtotal >= 100 ? 0 : 10;
+      const IVA_RATE = 0.23;
+      const iva = (subtotal + envio) * IVA_RATE;
+      const total = subtotal + envio + iva;
+
+      // Generate a server-side order number.
+      const timestamp = Date.now();
+      const randomSuffix = randomUUID().slice(0, 4).toUpperCase();
+      const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp.toString().slice(-6)}-${randomSuffix}`;
+
+      // Create the internal order first (pending).
+      const safeOrderData = {
+        ...orderData,
+        numeroEncomenda,
+        subtotal: subtotal.toFixed(2),
+        envio: envio.toFixed(2),
+        iva: iva.toFixed(2),
+        total: total.toFixed(2),
+        estado: "pendente" as const,
+        estadoPagamento: "pendente" as const,
+        metodoPagamento: "paypal" as const,
+        referenciaIfthenpay: undefined,
+        dadosPagamento: undefined,
+      };
+
+      const internalOrder = await storage.createOrder(safeOrderData);
+
+      // Create the PayPal order server-side with custom_id bound to internal orderId.
+      let access_token: string;
+      try {
+        access_token = await getPaypalAccessToken(paypalConfig.baseUrl, paypalConfig.clientId, paypalConfig.clientSecret);
+      } catch (authErr) {
+        await storage.deleteOrder(internalOrder.id);
+        return res.status(502).json({
+          success: false,
+          message: "Falha na autenticação com PayPal",
+          requestId
+        });
+      }
+
+      const createPaypalRes = await fetch(`${paypalConfig.baseUrl}/v2/checkout/orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          intent: "CAPTURE",
+          purchase_units: [{
+            custom_id: internalOrder.id,       // server-side binding
+            invoice_id: internalOrder.id,      // uniqueness enforced by PayPal
+            description: `DOMREALCE - ${numeroEncomenda}`,
+            amount: {
+              currency_code: "EUR",
+              value: total.toFixed(2),
+            },
+          }],
+        }),
+      });
+
+      if (!createPaypalRes.ok) {
+        const errBody = await createPaypalRes.text();
+        console.error("PayPal create order failed:", createPaypalRes.status, errBody);
+        await storage.deleteOrder(internalOrder.id);
+        return res.status(502).json({
+          success: false,
+          message: "Falha ao criar order no PayPal",
+          requestId
+        });
+      }
+
+      const paypalOrder = await createPaypalRes.json() as { id: string };
+
+      res.json({
+        success: true,
+        internalOrderId: internalOrder.id,
+        numeroEncomenda,
+        paypalOrderId: paypalOrder.id,
+        requestId,
+      });
+    } catch (error) {
+      console.error("PayPal create-order error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Erro ao preparar pagamento PayPal",
+        requestId
+      });
+    }
+  });
+
+  // PayPal server-side verification endpoint.
+  // The browser calls this after capturing a PayPal payment.  We verify the
+  // capture with the PayPal REST API using server-side credentials and only
+  // then mark the order as paid in our database.
+  app.post("/api/payments/paypal/verify", async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { paypalOrderId, orderId } = req.body;
+
+      if (!paypalOrderId || !orderId) {
+        return res.status(400).json({
+          success: false,
+          message: "paypalOrderId e orderId são obrigatórios",
+          requestId
+        });
+      }
+
+      let paypalConfig: ReturnType<typeof getPaypalConfig>;
+      try {
+        paypalConfig = getPaypalConfig();
+      } catch {
+        console.error("PayPal server credentials not configured");
+        return res.status(503).json({
+          success: false,
+          message: "Verificação PayPal não configurada no servidor",
+          requestId
+        });
+      }
+
+      // 1. Obtain an access token using client credentials
+      let access_token: string;
+      try {
+        access_token = await getPaypalAccessToken(paypalConfig.baseUrl, paypalConfig.clientId, paypalConfig.clientSecret);
+      } catch (authErr) {
+        console.error("PayPal auth failed:", authErr);
+        return res.status(502).json({
+          success: false,
+          message: "Falha na autenticação com PayPal",
+          requestId
+        });
+      }
+
+      // 2. Fetch the order details from PayPal to confirm it is COMPLETED
+      const paypalOrderResponse = await fetch(`${paypalConfig.baseUrl}/v2/checkout/orders/${paypalOrderId}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!paypalOrderResponse.ok) {
+        console.error("PayPal order fetch failed:", paypalOrderResponse.status);
+        return res.status(502).json({
+          success: false,
+          message: "Falha ao verificar pagamento PayPal",
+          requestId
+        });
+      }
+
+      const paypalOrder = await paypalOrderResponse.json() as {
+        status: string;
+        purchase_units?: Array<{
+          custom_id?: string;
+          amount?: { currency_code?: string; value?: string };
+          payments?: { captures?: Array<{ id?: string; amount?: { value?: string; currency_code?: string } }> };
+        }>;
+        payer?: { payer_id?: string; email_address?: string };
+      };
+
+      if (paypalOrder.status !== "COMPLETED") {
+        console.warn(`PayPal order ${paypalOrderId} status is ${paypalOrder.status}, not COMPLETED`);
+        return res.status(402).json({
+          success: false,
+          message: "Pagamento PayPal ainda não confirmado",
+          requestId
+        });
+      }
+
+      // 3. Binding check — verify this PayPal order was created for this specific
+      // internal order (custom_id is set by our server in /api/payments/paypal/create-order).
+      const paypalCustomId = paypalOrder.purchase_units?.[0]?.custom_id;
+      if (paypalCustomId !== orderId) {
+        console.error(`PayPal order binding mismatch: custom_id="${paypalCustomId}", expected="${orderId}"`);
+        return res.status(403).json({
+          success: false,
+          message: "Pagamento PayPal não corresponde a esta encomenda",
+          requestId
+        });
+      }
+
+      // 4. Look up the internal order and verify amounts.
+      const storedOrder = await storage.getOrder(orderId);
+      if (!storedOrder) {
+        return res.status(404).json({
+          success: false,
+          message: "Encomenda não encontrada",
+          requestId
+        });
+      }
+
+      // Use the capture amount (most authoritative) or fallback to order amount.
+      const captureId = paypalOrder.purchase_units?.[0]?.payments?.captures?.[0]?.id;
+      const captureAmountStr = paypalOrder.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value
+        ?? paypalOrder.purchase_units?.[0]?.amount?.value
+        ?? "0";
+      const captureCurrency = paypalOrder.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.currency_code
+        ?? paypalOrder.purchase_units?.[0]?.amount?.currency_code
+        ?? "";
+
+      if (captureCurrency.toUpperCase() !== "EUR") {
+        console.error(`PayPal currency mismatch: got ${captureCurrency}, expected EUR`);
+        return res.status(402).json({
+          success: false,
+          message: "Moeda do pagamento PayPal inválida",
+          requestId
+        });
+      }
+
+      const paypalAmount = parseFloat(captureAmountStr);
+      const storedAmount = parseFloat(storedOrder.total);
+
+      if (Math.abs(paypalAmount - storedAmount) > 0.02) {
+        console.error(`PayPal amount mismatch for order ${orderId}: PayPal=${paypalAmount}, stored=${storedAmount}`);
+        return res.status(402).json({
+          success: false,
+          message: "Valor do pagamento não corresponde ao total da encomenda",
+          requestId
+        });
+      }
+
+      // 5. Replay protection — ensure the capture ID has not already been used
+      // to mark a different (or the same) order as paid.
+      if (captureId) {
+        const existingOrder = await storage.getOrderByReferencia(captureId);
+        if (existingOrder) {
+          console.error(`PayPal captureId ${captureId} already used in order ${existingOrder.id}`);
+          return res.status(409).json({
+            success: false,
+            message: "Este pagamento PayPal já foi registado",
+            requestId
+          });
+        }
+      }
+
+      // 6. All checks passed — mark the order as paid.
+      await storage.updateOrderStatus(orderId, "paga", "pago");
+      await storage.updateOrder(orderId, {
+        referenciaIfthenpay: captureId || paypalOrderId,
+        dadosPagamento: {
+          paypalOrderId,
+          paypalPayerId: paypalOrder.payer?.payer_id,
+          paypalPayerEmail: paypalOrder.payer?.email_address,
+          captureId,
+          status: paypalOrder.status,
+        },
+      });
+
+      res.json({ success: true, requestId });
+    } catch (error) {
+      console.error("PayPal verification error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Erro ao verificar pagamento PayPal",
         requestId
       });
     }
