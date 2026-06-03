@@ -270,7 +270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // OBJECT STORAGE endpoints for Visual Editor
   // =========================================
 
-  app.post("/api/objects/upload-file", upload.single("file"), async (req, res) => {
+  app.post("/api/objects/upload-file", protegerAdmin, upload.single("file"), async (req, res) => {
     const requestId = makeRequestId();
     try {
       if (!req.file) {
@@ -300,7 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/objects/upload", async (req, res) => {
+  app.post("/api/objects/upload", protegerAdmin, async (req, res) => {
     const requestId = makeRequestId();
     try {
       const { fileName } = req.body;
@@ -2197,15 +2197,15 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // =========================================
   // VISUAL EDITOR API routes
   // =========================================
-  app.get("/api/editor/page/:route", getPageContent);
-  app.post("/api/editor/page", savePageContentEndpoint);
+  app.get("/api/editor/page/:route", protegerAdmin, getPageContent);
+  app.post("/api/editor/page", protegerAdmin, savePageContentEndpoint);
 
   // Media Manager API routes (visual-editor)
-  app.get("/api/media/index", getMediaIndex);
-  app.get("/api/media/folders", getMediaFolders);
-  app.post("/api/media/sync", syncGlobalImages);
+  app.get("/api/media/index", protegerAdmin, getMediaIndex);
+  app.get("/api/media/folders", protegerAdmin, getMediaFolders);
+  app.post("/api/media/sync", protegerAdmin, syncGlobalImages);
   // ✅ upload já foi definido acima (sem duplicar)
-  app.delete("/api/media/files", deleteMediaFiles);
+  app.delete("/api/media/files", protegerAdmin, deleteMediaFiles);
 
   const httpServer = createServer(app);
   return httpServer;

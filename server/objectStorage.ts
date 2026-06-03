@@ -161,13 +161,37 @@ export class ObjectStorageService {
     try {
       // Get file metadata
       const [metadata] = await file.getMetadata();
-      
-      // Set appropriate headers
-      res.set({
-        "Content-Type": metadata.contentType || "application/octet-stream",
+
+      // Active content types that browsers can render and execute on the same origin.
+      // Force these to download rather than render so that attacker-uploaded HTML/SVG/JS
+      // cannot run as same-origin scripts or steal admin sessions.
+      const ACTIVE_CONTENT_TYPES = new Set([
+        "text/html",
+        "application/xhtml+xml",
+        "image/svg+xml",
+        "application/javascript",
+        "text/javascript",
+        "application/x-javascript",
+        "text/xml",
+        "application/xml",
+      ]);
+
+      const storedType: string = metadata.contentType || "application/octet-stream";
+      const baseType = storedType.split(";")[0].trim().toLowerCase();
+      const isActive = ACTIVE_CONTENT_TYPES.has(baseType);
+
+      const headers: Record<string, string> = {
+        "Content-Type": isActive ? "application/octet-stream" : storedType,
         "Content-Length": metadata.size,
         "Cache-Control": `public, max-age=${cacheTtlSec}`,
-      });
+        "X-Content-Type-Options": "nosniff",
+      };
+      if (isActive) {
+        headers["Content-Disposition"] = "attachment";
+      }
+
+      // Set appropriate headers
+      res.set(headers);
 
       // Stream the file to the response
       const stream = file.createReadStream();
