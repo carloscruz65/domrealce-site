@@ -356,6 +356,40 @@ export default function LandingComunicacaoVisualEmpresas() {
         </div>
       </section>
 
+      {/* ── SERVIÇO COMPLETO ── */}
+      <section className="py-16 bg-zinc-950 border-y border-zinc-800">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-10 items-center">
+            <div className="flex-1">
+              <h2 className="text-2xl md:text-3xl font-black text-white mb-4">
+                Serviço <span className="text-brand-yellow">Completo</span>
+              </h2>
+              <p className="text-gray-400 leading-relaxed">
+                Da conceção gráfica à produção e aplicação final, a DOMREALCE
+                acompanha todo o processo para garantir consistência visual e
+                resultados duradouros.
+              </p>
+            </div>
+            <div className="flex-1 grid grid-cols-2 gap-3">
+              {[
+                "Design Gráfico",
+                "Produção Própria",
+                "Aplicação Profissional",
+                "Apoio Técnico",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3"
+                >
+                  <CheckCircle className="h-5 w-5 text-brand-yellow flex-shrink-0" />
+                  <span className="text-white font-medium text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CHAMADA À AÇÃO FINAL ── */}
       <section className="py-24 bg-black">
         <div className="container mx-auto px-4 text-center max-w-2xl">
