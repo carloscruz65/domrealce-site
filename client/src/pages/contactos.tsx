@@ -600,15 +600,41 @@ export default function Contactos() {
               </Button>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0d0d0d]">
-              <div className="w-full flex flex-col items-center justify-center py-12 px-6 gap-4 text-center">
-                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-brand-yellow/10 border border-brand-yellow/30 mb-2">
-                  <MapPin className="w-8 h-8 text-brand-yellow" />
+            <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0d0d0d] min-h-[340px]">
+              {/* Fundo decorativo com mapa mundo estilizado */}
+              <div
+                className="absolute inset-0 bg-center bg-no-repeat bg-contain pointer-events-none"
+                style={{
+                  backgroundImage: "url('/images/world-map-dark.svg')",
+                  backgroundSize: "125%",
+                  opacity: 0.40,
+                }}
+              />
+
+              {/* Camada escura para manter leitura */}
+              <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+
+              {/* Brilho subtil por trás da fachada */}
+              <div className="absolute top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-brand-yellow/10 blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 w-full flex flex-col items-center justify-center py-12 px-6 gap-4 text-center">
+                <div className="w-64 h-40 md:w-80 md:h-48 rounded-2xl overflow-hidden border border-brand-yellow/50 shadow-xl bg-black/40">
+                  <img
+                    src="/images/fachada-domrealce.webp"
+                    alt="Fachada do atelier DOMREALCE"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-lg font-bold text-white tracking-wide">DOMREALCE Atelier</p>
-                <p className="text-sm text-gray-400 leading-relaxed">
-                  Rua de Rebolido, 42<br />
-                  4580-402 Gondalães, Paredes<br />
+
+                <p className="text-lg md:text-xl font-bold text-white tracking-wide">
+                  DOMREALCE Atelier
+                </p>
+
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Rua de Rebolido, 42
+                  <br />
+                  4580-402 Gondalães, Paredes
+                  <br />
                   Portugal
                 </p>
               </div>
