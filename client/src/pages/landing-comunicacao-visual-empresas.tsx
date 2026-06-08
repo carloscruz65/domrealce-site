@@ -96,9 +96,9 @@ const gallery = [
     caption: "Viaturas comerciais",
   },
   {
-    src: `${GALLERY_BASE}/IMG20231117095713.webp`,
-    alt: "Rotulagem de carrinha - DOMREALCE",
-    caption: "Rotulagem de marca",
+    src: `/public-objects/servicos/espacos-comerciais.webp`,
+    alt: "Espaços comerciais e montras - DOMREALCE",
+    caption: "Espaços comerciais",
   },
   {
     src: `${GALLERY_BASE}/IMG20240403181400.webp`,
@@ -106,14 +106,14 @@ const gallery = [
     caption: "Frotas e branding",
   },
   {
-    src: `${GALLERY_BASE}/IMG_20220603_185824.webp`,
-    alt: "Impressão em grande formato - DOMREALCE",
-    caption: "Grande formato",
+    src: `/public-objects/servicos/impressao-digital.webp`,
+    alt: "Impressão digital - DOMREALCE",
+    caption: "Impressão digital",
   },
   {
-    src: `${GALLERY_BASE}/IMG_20220815_170210.webp`,
-    alt: "Decoração de cisterna - DOMREALCE",
-    caption: "Camiões e cisternas",
+    src: `${GALLERY_BASE}/IMG_20220603_185824.webp`,
+    alt: "Grande formato - DOMREALCE",
+    caption: "Grande formato",
   },
   {
     src: `${GALLERY_BASE}/IMG20250114091322.webp`,
