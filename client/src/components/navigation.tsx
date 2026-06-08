@@ -9,7 +9,7 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isServicesMobileOpen, setIsServicesMobileOpen] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
 
   // 🔢 Número de produtos no carrinho (lido do localStorage "cart")
   const [cartCount, setCartCount] = useState(0);
@@ -182,6 +182,7 @@ export default function Navigation() {
                   className={`${baseLinkClasses} flex items-center gap-1 ${
                     isServicesActive ? activeLinkClasses : ""
                   }`}
+                  onClick={() => setLocation("/servicos")}
                 >
                   Serviços
                   <span className="text-xs">▾</span>
@@ -203,6 +204,14 @@ export default function Navigation() {
                   "
                 >
                   <ul className="py-2">
+                    <li>
+                      <Link
+                        href="/servicos"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-brand-yellow hover:bg-[#181818] border-b border-[#222] mb-1"
+                      >
+                        ✦ Ver todos os serviços
+                      </Link>
+                    </li>
                     <li>
                       <Link
                         href="/servico-design-grafico"
@@ -417,6 +426,16 @@ export default function Navigation() {
                   {isServicesMobileOpen && (
                     <div className="border-t border-gray-800">
                       <div className="flex flex-col py-1">
+                        <Link
+                          href="/servicos"
+                          className="px-6 py-3 text-sm font-semibold text-brand-yellow hover:bg-[#181818] border-b border-gray-800 mb-1"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsServicesMobileOpen(false);
+                          }}
+                        >
+                          ✦ Ver todos os serviços
+                        </Link>
                         <Link
                           href="/servico-design-grafico"
                           className="px-6 py-2 text-sm text-gray-200 hover:bg-[#181818] hover:text-brand-yellow"

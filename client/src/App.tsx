@@ -20,6 +20,7 @@ import Obrigado from "@/pages/Obrigado";
 import PagamentoErro from "@/pages/PagamentoErro";
 import ContactosMaquinas from "@/pages/contactos-maquinas";
 import LandingViaturasEmpresas from "@/pages/landing-viaturas-empresas";
+const LandingComunicacaoVisual = lazy(() => import("@/pages/landing-comunicacao-visual-empresas"));
 
 
 
@@ -166,6 +167,7 @@ function Router() {
           <Route path="/pagamento-erro" component={PagamentoErro} />
           <Route path="/contactos-maquinas" component={ContactosMaquinas} />
           <Route path="/decoracao-viaturas-empresas" component={LandingViaturasEmpresas} />
+          <Route path="/servicos" component={LandingComunicacaoVisual} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

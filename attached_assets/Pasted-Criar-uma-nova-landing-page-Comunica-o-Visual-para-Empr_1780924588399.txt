@@ -1,0 +1,104 @@
+Criar uma nova landing page "Comunicação Visual para Empresas" para servir como página principal de serviços e destino de futuras campanhas Google Ads.
+
+IMPORTANTE:
+
+* Manter exatamente a identidade visual atual da DOMREALCE.
+* Reutilizar componentes existentes sempre que possível.
+* Não criar novos sistemas, CMS ou funcionalidades complexas.
+* Não alterar páginas existentes.
+* Apenas criar a nova landing e adicionar acesso no menu.
+
+OBJETIVO DA PÁGINA
+
+Apresentar a DOMREALCE como empresa de comunicação visual e impressão para empresas, reunindo numa única página os principais serviços já existentes.
+
+ESTRUTURA
+
+1. HERO
+
+Título:
+"Comunicação Visual para Empresas"
+
+Subtítulo:
+"Design, impressão e aplicação para destacar a sua marca em viaturas, montras, espaços comerciais e suportes publicitários."
+
+Botões:
+
+* Pedir Orçamento
+* WhatsApp Direto
+
+Imagem:
+Utilizar uma imagem forte existente relacionada com viaturas, montras, impressão ou comunicação visual.
+
+2. SERVIÇOS PRINCIPAIS
+
+Criar cards consistentes com o restante site.
+
+Serviços:
+
+* Design Gráfico
+* Impressão Digital
+* Autocolantes e Etiquetas
+* Decoração de Viaturas
+* Espaços Comerciais
+* Papel de Parede Personalizado
+
+Cada card deve ligar diretamente para a respetiva página de serviço já existente.
+
+3. PORQUE ESCOLHER A DOMREALCE
+
+Criar secção simples com 4 vantagens:
+
+* Produção própria
+* Aplicação profissional
+* Materiais duráveis
+* Experiência real em projetos empresariais
+
+4. TRABALHOS REALIZADOS
+
+Mostrar algumas imagens reais já existentes no site.
+
+Objetivo:
+Demonstrar variedade de trabalhos:
+
+* viaturas
+* montras
+* impressão
+* espaços comerciais
+
+Não criar nova galeria complexa.
+
+5. CHAMADA À AÇÃO FINAL
+
+Título:
+"Vamos destacar a sua empresa?"
+
+Texto curto de incentivo.
+
+Botões:
+
+* Pedir Orçamento
+* WhatsApp Direto
+
+MENU
+
+Adicionar esta página como destino principal da opção "Serviços".
+
+Ao clicar em "Serviços" deve abrir esta nova página.
+
+O dropdown atual dos serviços individuais deve continuar a funcionar normalmente.
+
+SEO
+
+Title:
+Comunicação Visual para Empresas | DOMREALCE
+
+Meta Description:
+Comunicação visual, impressão digital, decoração de viaturas, montras, autocolantes e publicidade para empresas. Produção e aplicação própria na DOMREALCE.
+
+VALIDAÇÃO
+
+* Confirmar build sem erros.
+* Confirmar que todos os links funcionam.
+* Não alterar o visual geral do site.
+* Indicar no relatório final os ficheiros criados e modificados.
