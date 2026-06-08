@@ -55,7 +55,7 @@ const services = [
   {
     icon: Store,
     title: "Espaços Comerciais",
-    desc: "Decoração de montras, interiores e espaços comerciais que reforçam a presença da sua marca.",
+    desc: "Montras, interiores e espaços comerciais que reforçam a presença da sua marca.",
     href: "/servico-espacos-comerciais",
   },
   {
