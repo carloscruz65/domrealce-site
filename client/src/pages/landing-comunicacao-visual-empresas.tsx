@@ -139,14 +139,35 @@ export default function LandingComunicacaoVisualEmpresas() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-[90vh] flex items-center bg-black overflow-hidden pt-20">
-        {/* Background image */}
-        <div className="absolute inset-0 z-0">
+        {/* Background — colagem 2×2 com 4 serviços */}
+        <div className="absolute inset-0 z-0 grid grid-cols-2 grid-rows-2">
           <img
-            src={`${GALLERY_BASE}/IMG20231030164706.webp`}
-            alt="Comunicação visual para empresas - DOMREALCE"
-            className="w-full h-full object-cover opacity-30"
+            src="/public-objects/servicos/decoracao-viaturas/comerciais.webp"
+            alt="Decoração de viaturas"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+          <img
+            src="/public-objects/servicos/espacos-comerciais.webp"
+            alt="Espaços comerciais"
+            className="w-full h-full object-cover"
+          />
+          <img
+            src="/public-objects/servicos/impressao-digital.webp"
+            alt="Impressão digital"
+            className="w-full h-full object-cover"
+          />
+          <img
+            src="/public-objects/servicos/autocolantes.webp"
+            alt="Autocolantes e etiquetas"
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay gradiente sobre a colagem */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/40" />
+          {/* Separadores subtis entre as 4 células */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/60" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-black/60" />
+          </div>
         </div>
 
         <div className="relative z-10 container mx-auto px-4 py-20">
