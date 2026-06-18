@@ -15,9 +15,13 @@ import type { News } from "@shared/schema";
 
 type Variant = "full" | "compact";
 
-function getCanonicalUrl(id: string) {
+function getNoticiaPath(noticia: any): string {
+  return `/noticia/${noticia.slug || noticia.id}`;
+}
+
+function getCanonicalUrl(noticia: any) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  return `${origin}/noticia/${id}`;
+  return `${origin}${getNoticiaPath(noticia)}`;
 }
 
 export default function SocialNewsCard({
@@ -35,8 +39,8 @@ export default function SocialNewsCard({
   const imagens = cardImage ? [cardImage] : [];
 
   const canonicalUrl = useMemo(
-    () => getCanonicalUrl(String(noticia.id)),
-    [noticia.id]
+    () => getCanonicalUrl(noticia),
+    [noticia]
   );
 
   const formatarData = (data: string | Date) =>
@@ -54,7 +58,7 @@ export default function SocialNewsCard({
       e.preventDefault();
       e.stopPropagation();
     }
-    setLocation(`/noticia/${noticia.id}`);
+    setLocation(getNoticiaPath(noticia));
   };
 
   const partilharFacebook = (e: MouseEvent) => {
@@ -87,7 +91,7 @@ export default function SocialNewsCard({
   const isCompact = variant === "compact";
 
   return (
-    <Link href={`/noticia/${noticia.id}`}>
+    <Link href={getNoticiaPath(noticia)}>
       <Card className="overflow-hidden bg-black border border-gray-800 hover:border-brand-yellow/50 transition-all cursor-pointer group h-full flex flex-col">
         {imagens.length > 0 && (
           <div className="relative bg-gray-900">

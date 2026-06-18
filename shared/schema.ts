@@ -118,6 +118,9 @@ export const news = pgTable("news", {
   shareDescription: text("share_description"),
   shareImage: text("share_image"),
 
+  // v7: URL personalizada (slug)
+  slug: text("slug"),
+
   data: timestamp("data").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -384,6 +387,9 @@ export const insertNewsSchema = createInsertSchema(news)
     shareTitle: true,
     shareDescription: true,
     shareImage: true,
+
+    // v7: Slug
+    slug: true,
   })
   .extend({
     data: z.string().optional(),
@@ -428,6 +434,9 @@ export const insertNewsSchema = createInsertSchema(news)
     shareTitle: z.string().nullish(),
     shareDescription: z.string().nullish(),
     shareImage: z.string().nullish(),
+
+    // v7: Slug
+    slug: z.string().nullish(),
   });
 
 export const insertSlideSchema = createInsertSchema(slides).pick({

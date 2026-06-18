@@ -37,13 +37,14 @@ export async function ogMetaMiddleware(
   try {
     const noticias = await storage.getAllNews();
     const noticia = noticias.find(
-      (n: any) => String(n.id) === String(noticiaId)
+      (n: any) => String(n.id) === String(noticiaId) || (n.slug && n.slug === noticiaId)
     );
 
     if (!noticia) return next();
 
     const origin = `${req.protocol}://${req.get("host")}`;
-    const pageUrl = `${origin}/noticia/${noticiaId}`;
+    const canonicalSlug = (noticia as any).slug || noticiaId;
+    const pageUrl = `${origin}/noticia/${canonicalSlug}`;
 
     // Seleccionar a melhor imagem disponível:
     // 1. shareImage (definido manualmente no CMS — melhor opção)

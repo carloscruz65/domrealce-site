@@ -158,7 +158,9 @@ export default function NoticiaDetalhes() {
 
   const noticia = useMemo(() => {
     if (!noticiaId) return undefined;
-    return noticias.find((n) => n.id?.toString() === noticiaId);
+    return noticias.find(
+      (n) => n.id?.toString() === noticiaId || (n as any).slug === noticiaId
+    );
   }, [noticias, noticiaId]);
 
   const mediaItems = useMemo((): MediaItem[] => {
@@ -183,8 +185,9 @@ export default function NoticiaDetalhes() {
 
   const canonicalUrl = useMemo(() => {
     if (!noticiaId) return "";
-    return getCanonicalUrl(noticiaId);
-  }, [noticiaId]);
+    const slug = (noticia as any)?.slug;
+    return getCanonicalUrl(slug || noticiaId);
+  }, [noticiaId, noticia]);
 
   const { intro, body, tags } = useMemo(() => {
     const { cleanText, tags } = extractTagsFromText(noticia?.descricao || "");
@@ -266,7 +269,7 @@ export default function NoticiaDetalhes() {
     updateMetaName("twitter:description", ogDesc);
     if (shareImageAbs) updateMetaName("twitter:image", shareImageAbs);
 
-    document.title = `${noticia.titulo || "Notícia"} | DOMREALCE`;
+    document.title = `${(noticia as any).shareTitle || noticia.titulo || "Notícia"} | DOMREALCE`;
   }, [noticia, imagens, canonicalUrl]);
 
   // Partilhas (regras finais)

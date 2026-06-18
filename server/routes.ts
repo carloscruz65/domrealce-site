@@ -380,7 +380,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // =========================================
   // SITEMAP + ROBOTS
   // =========================================
-  app.get("/sitemap.xml", (req, res) => {
+  app.get("/sitemap.xml", async (req, res) => {
     const baseUrl = "https://www.domrealce.com";
     const pages = [
       { url: "/", priority: "1.0", changefreq: "daily" },
@@ -406,18 +406,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       { url: "/aviso-legal", priority: "0.3", changefreq: "yearly" }
     ];
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages
-  .map(
-    page => `  <url>
+    // Incluir artigos de notícias publicados no sitemap
+    let noticiaUrls: { url: string; lastmod: string }[] = [];
+    try {
+      const noticias = await storage.getAllNews();
+      noticiaUrls = noticias
+        .filter((n: any) => n.published)
+        .map((n: any) => ({
+          url: `/noticia/${n.slug || n.id}`,
+          lastmod: (n.updatedAt || n.publishedAt || n.data || new Date()).toString().split("T")[0],
+        }));
+    } catch { /* fallback silencioso */ }
+
+    const staticEntries = pages
+      .map(
+        page => `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`
-  )
-  .join("\n")}
+      )
+      .join("\n");
+
+    const noticiaEntries = noticiaUrls
+      .map(
+        n => `  <url>
+    <loc>${baseUrl}${n.url}</loc>
+    <lastmod>${n.lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`
+      )
+      .join("\n");
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticEntries}${noticiaEntries ? "\n" + noticiaEntries : ""}
 </urlset>`;
 
     res.set("Content-Type", "text/xml");
@@ -1803,6 +1828,20 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     } catch (error) {
       logRouteError(requestId, "GET /api/admin/noticias failed", error);
       res.status(500).json({ error: "Failed to fetch news", requestId });
+    }
+  });
+
+  app.get("/api/admin/noticias/check-slug", async (req, res) => {
+    const { slug, excludeId } = req.query as { slug?: string; excludeId?: string };
+    if (!slug?.trim()) return res.json({ available: false, error: "Slug vazio" });
+    try {
+      const noticias = await storage.getAllNews();
+      const exists = noticias.some(
+        (n: any) => n.slug === slug && n.id !== excludeId
+      );
+      res.json({ available: !exists });
+    } catch {
+      res.status(500).json({ available: false });
     }
   });
 

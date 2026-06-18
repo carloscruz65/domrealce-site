@@ -46,6 +46,7 @@ interface Noticia {
   shareTitle?: string | null;
   shareDescription?: string | null;
   shareImage?: string | null;
+  slug?: string | null;
 }
 
 const CATEGORIAS = [
@@ -64,11 +65,24 @@ const LAYOUTS = [
   { value: "beforeAfter", label: "Antes/Depois" },
 ];
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 80);
+}
+
 export default function NoticiasManager() {
   const { toast } = useToast();
   const [editing, setEditing] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft">("all");
+  const [slugTouched, setSlugTouched] = useState(false);
   
   const [formData, setFormData] = useState<Partial<Noticia>>({
     titulo: "",
@@ -86,6 +100,7 @@ export default function NoticiasManager() {
     shareTitle: "",
     shareDescription: "",
     shareImage: "",
+    slug: "",
   });
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
@@ -137,6 +152,7 @@ export default function NoticiasManager() {
 
   const resetForm = () => {
     setEditing(null);
+    setSlugTouched(false);
     setFormData({
       titulo: "",
       descricao: "",
@@ -153,6 +169,7 @@ export default function NoticiasManager() {
       shareTitle: "",
       shareDescription: "",
       shareImage: "",
+      slug: "",
     });
   };
 
@@ -221,6 +238,7 @@ export default function NoticiasManager() {
       shareTitle: noticia.shareTitle || "",
       shareDescription: noticia.shareDescription || "",
       shareImage: noticia.shareImage || "",
+      slug: noticia.slug || "",
     });
   };
 
@@ -264,6 +282,7 @@ export default function NoticiasManager() {
       shareTitle: formData.shareTitle || null,
       shareDescription: formData.shareDescription || null,
       shareImage: formData.shareImage || null,
+      slug: formData.slug?.trim() || null,
     };
 
     if (editing && editing !== "new") {
@@ -361,7 +380,14 @@ export default function NoticiasManager() {
                 <Label className="text-white">Título *</Label>
                 <Input
                   value={formData.titulo || ""}
-                  onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                  onChange={(e) => {
+                    const newTitle = e.target.value;
+                    const updates: Partial<Noticia> = { titulo: newTitle };
+                    if (editing === "new" && !slugTouched) {
+                      updates.slug = slugify(newTitle);
+                    }
+                    setFormData({ ...formData, ...updates });
+                  }}
                   placeholder="Título da notícia"
                   className="bg-gray-800 border-gray-700 text-white"
                   data-testid="input-titulo"
@@ -560,46 +586,80 @@ export default function NoticiasManager() {
               </div>
             </div>
 
-            {/* Partilha nas Redes Sociais (Open Graph) */}
+            {/* SEO e Partilha nas Redes Sociais */}
             <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-blue-700/40">
               <div>
-                <Label className="text-white text-lg font-semibold">Partilha nas Redes Sociais</Label>
+                <Label className="text-white text-lg font-semibold">SEO e Partilha</Label>
                 <p className="text-gray-400 text-sm mt-1">
-                  Controla o que aparece quando esta notícia é partilhada no Facebook, WhatsApp, LinkedIn, etc.
-                  Se deixar vazio, usa automaticamente o título e a imagem do cartão/galeria.
+                  Controla como esta página aparece no Google e quando é partilhada no Facebook, WhatsApp e LinkedIn.
+                  Se deixar vazio, usa automaticamente o título e o resumo.
                 </p>
               </div>
 
+              {/* URL Personalizada (Slug) */}
               <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Título para partilha</Label>
+                <Label className="text-gray-300 text-sm">URL Personalizada (Slug)</Label>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 text-sm whitespace-nowrap shrink-0">/noticia/</span>
+                  <Input
+                    value={formData.slug || ""}
+                    onChange={(e) => {
+                      setSlugTouched(true);
+                      const clean = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
+                      setFormData({ ...formData, slug: clean });
+                    }}
+                    placeholder="url-do-projeto"
+                    className="bg-gray-700 border-gray-600 text-white font-mono text-sm"
+                  />
+                </div>
+                <p className="text-gray-500 text-xs">
+                  Gerado automaticamente a partir do título na criação. Use apenas letras minúsculas, números e hífens.
+                </p>
+              </div>
+
+              {/* Título SEO */}
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Título SEO</Label>
                 <Input
                   value={formData.shareTitle || ""}
                   onChange={(e) => setFormData({ ...formData, shareTitle: e.target.value })}
-                  placeholder={formData.titulo || "Título da notícia (fallback automático)"}
+                  placeholder={formData.titulo || "Título (fallback automático)"}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
-                <p className="text-gray-500 text-xs">Recomendado: até 60 caracteres</p>
+                <p className="text-gray-500 text-xs">
+                  Aparece no separador do browser e nos resultados do Google (og:title).
+                  {formData.shareTitle ? ` — ${formData.shareTitle.length}/60 caracteres` : " Recomendado: até 60 caracteres."}
+                </p>
               </div>
 
+              {/* Meta Descrição */}
               <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Descrição para partilha</Label>
+                <Label className="text-gray-300 text-sm">Meta Descrição</Label>
                 <Textarea
                   value={formData.shareDescription || ""}
-                  onChange={(e) => setFormData({ ...formData, shareDescription: e.target.value })}
-                  placeholder="Breve descrição que aparece na pré-visualização da partilha..."
+                  onChange={(e) => setFormData({ ...formData, shareDescription: e.target.value.slice(0, 160) })}
+                  placeholder={formData.summary || "Breve descrição para motores de busca e pré-visualização nas redes..."}
                   className="bg-gray-700 border-gray-600 text-white min-h-[70px]"
+                  maxLength={160}
                 />
-                <p className="text-gray-500 text-xs">Recomendado: até 160 caracteres</p>
+                <div className="flex justify-between items-center">
+                  <p className="text-gray-500 text-xs">Aparece nos resultados do Google e na pré-visualização das partilhas (og:description).</p>
+                  <p className={`text-xs font-mono shrink-0 ml-2 ${(formData.shareDescription?.length || 0) > 140 ? "text-yellow-400" : "text-gray-500"}`}>
+                    {formData.shareDescription?.length || 0}/160
+                  </p>
+                </div>
               </div>
 
+              {/* Imagem de Partilha (Open Graph) */}
               <div className="space-y-2">
                 <Label className="text-white flex items-center gap-2">
                   <ImageIcon className="h-4 w-4 text-blue-400" />
-                  Imagem de partilha
+                  Imagem de Partilha (Open Graph)
                 </Label>
                 <p className="text-gray-400 text-xs">
-                  Imagem independente da galeria. Tamanho ideal: <strong className="text-white">1200×630 px</strong> (rácio 1.91:1).
-                  Se vazio, usa a imagem do cartão ou a primeira imagem da galeria.
+                  Imagem exibida quando o link é partilhado no Facebook, LinkedIn ou WhatsApp.
+                  Tamanho ideal: <strong className="text-white">1200×630 px</strong>.
+                  Se vazio, usa a imagem do cartão.
                 </p>
                 <ImageUploader
                   value={formData.shareImage || ""}

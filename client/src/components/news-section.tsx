@@ -52,7 +52,7 @@ export default function NewsSection() {
           {news.map((article, index) => (
             <Link 
               key={article.id} 
-              href={`/noticia/${article.id}`}
+              href={`/noticia/${(article as any).slug || article.id}`}
               className="block"
             >
               <article 
