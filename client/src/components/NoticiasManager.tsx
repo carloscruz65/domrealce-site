@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Plus, Edit, Trash2, Save, X, Image as ImageIcon, Video, 
-  ChevronUp, ChevronDown, Search, Filter, Eye, EyeOff, GripVertical
+  ChevronUp, ChevronDown, Search, Filter, Eye, EyeOff, GripVertical,
+  Copy, Wand2, Check
 } from "lucide-react";
 import ImageUploader from "@/components/ImageUploader";
 
@@ -83,6 +84,8 @@ export default function NoticiasManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "published" | "draft">("all");
   const [slugTouched, setSlugTouched] = useState(false);
+  const [socialTexts, setSocialTexts] = useState({ linkedin: "", facebook: "", instagram: "", whatsapp: "" });
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<Partial<Noticia>>({
     titulo: "",
@@ -150,9 +153,36 @@ export default function NoticiasManager() {
     },
   });
 
+  const gerarTextosSociais = () => {
+    const titulo = formData.titulo?.trim() || "Novo Projeto";
+    const resumo = formData.summary?.trim() || formData.descricao?.slice(0, 140).trim() || "";
+    const metaDesc = formData.shareDescription?.trim() || resumo;
+    const urlSlug = formData.slug?.trim() || editing || "";
+    const url = `https://www.domrealce.com/noticia/${urlSlug}`;
+
+    const linkedin = `🏆 ${titulo}\n\n${resumo}\n\nUm projeto que combina criatividade e técnica para alcançar resultados de excelência.\n\nConheça o processo completo:\n👉 ${url}\n\n#DomRealce #ComunicaçãoVisual #ImpressãoDigital #Design #Portugal`;
+
+    const facebook = `✨ ${titulo}\n\n${metaDesc}\n\nQuer transformar a imagem do seu negócio? É isto que fazemos na DomRealce.\n\n👉 Ver projeto: ${url}`;
+
+    const resumoCurto = (resumo || metaDesc).slice(0, 100);
+    const instagram = `${titulo} ✨\n\n${resumoCurto}${(resumo || metaDesc).length > 100 ? "..." : ""}\n\nLink na bio 🔗\n\n#domrealce #impressaodigital #comunicacaovisual #design #branding #portugal #lisboa #viaturas #decoracao`;
+
+    const whatsapp = `*${titulo}*\n${(resumo || metaDesc).slice(0, 90)}${(resumo || metaDesc).length > 90 ? "..." : ""}\n\n🔗 ${url}`;
+
+    setSocialTexts({ linkedin, facebook, instagram, whatsapp });
+  };
+
+  const copiarTexto = (key: string, text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2000);
+    });
+  };
+
   const resetForm = () => {
     setEditing(null);
     setSlugTouched(false);
+    setSocialTexts({ linkedin: "", facebook: "", instagram: "", whatsapp: "" });
     setFormData({
       titulo: "",
       descricao: "",
@@ -679,6 +709,140 @@ export default function NoticiasManager() {
                     </span>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* Conteúdo para Redes Sociais */}
+            <div className="space-y-4 p-4 bg-gray-800 rounded-lg border border-purple-700/40">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <Label className="text-white text-lg font-semibold">Conteúdo para Redes Sociais</Label>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Textos prontos a publicar, gerados a partir do título, resumo e URL desta notícia.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  onClick={gerarTextosSociais}
+                  className="bg-purple-700 hover:bg-purple-600 text-white shrink-0"
+                >
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Gerar Automaticamente
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* LinkedIn */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-blue-400 font-semibold flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-600 rounded text-white text-xs font-bold">in</span>
+                      LinkedIn
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copiarTexto("linkedin", socialTexts.linkedin)}
+                      disabled={!socialTexts.linkedin}
+                      className="text-gray-400 hover:text-white h-7 px-2"
+                    >
+                      {copiedKey === "linkedin" ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span className="ml-1 text-xs">{copiedKey === "linkedin" ? "Copiado!" : "Copiar"}</span>
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={socialTexts.linkedin}
+                    onChange={(e) => setSocialTexts({ ...socialTexts, linkedin: e.target.value })}
+                    placeholder="Clique em 'Gerar Automaticamente' para criar o texto para LinkedIn..."
+                    className="bg-gray-700 border-gray-600 text-white text-sm min-h-[140px] resize-y"
+                  />
+                  <p className="text-gray-600 text-xs text-right">{socialTexts.linkedin.length} caracteres</p>
+                </div>
+
+                {/* Facebook */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-blue-500 font-semibold flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-500 rounded text-white text-xs font-bold">f</span>
+                      Facebook
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copiarTexto("facebook", socialTexts.facebook)}
+                      disabled={!socialTexts.facebook}
+                      className="text-gray-400 hover:text-white h-7 px-2"
+                    >
+                      {copiedKey === "facebook" ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span className="ml-1 text-xs">{copiedKey === "facebook" ? "Copiado!" : "Copiar"}</span>
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={socialTexts.facebook}
+                    onChange={(e) => setSocialTexts({ ...socialTexts, facebook: e.target.value })}
+                    placeholder="Clique em 'Gerar Automaticamente' para criar o texto para Facebook..."
+                    className="bg-gray-700 border-gray-600 text-white text-sm min-h-[140px] resize-y"
+                  />
+                  <p className="text-gray-600 text-xs text-right">{socialTexts.facebook.length} caracteres</p>
+                </div>
+
+                {/* Instagram */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-pink-400 font-semibold flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded text-white text-xs font-bold">ig</span>
+                      Instagram
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copiarTexto("instagram", socialTexts.instagram)}
+                      disabled={!socialTexts.instagram}
+                      className="text-gray-400 hover:text-white h-7 px-2"
+                    >
+                      {copiedKey === "instagram" ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span className="ml-1 text-xs">{copiedKey === "instagram" ? "Copiado!" : "Copiar"}</span>
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={socialTexts.instagram}
+                    onChange={(e) => setSocialTexts({ ...socialTexts, instagram: e.target.value })}
+                    placeholder="Clique em 'Gerar Automaticamente' para criar o texto para Instagram..."
+                    className="bg-gray-700 border-gray-600 text-white text-sm min-h-[140px] resize-y"
+                  />
+                  <p className="text-gray-600 text-xs text-right">{socialTexts.instagram.length} caracteres</p>
+                </div>
+
+                {/* WhatsApp */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-green-400 font-semibold flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center w-5 h-5 bg-green-500 rounded text-white text-xs font-bold">W</span>
+                      WhatsApp
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copiarTexto("whatsapp", socialTexts.whatsapp)}
+                      disabled={!socialTexts.whatsapp}
+                      className="text-gray-400 hover:text-white h-7 px-2"
+                    >
+                      {copiedKey === "whatsapp" ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      <span className="ml-1 text-xs">{copiedKey === "whatsapp" ? "Copiado!" : "Copiar"}</span>
+                    </Button>
+                  </div>
+                  <Textarea
+                    value={socialTexts.whatsapp}
+                    onChange={(e) => setSocialTexts({ ...socialTexts, whatsapp: e.target.value })}
+                    placeholder="Clique em 'Gerar Automaticamente' para criar o texto para WhatsApp..."
+                    className="bg-gray-700 border-gray-600 text-white text-sm min-h-[120px] resize-y"
+                  />
+                  <p className="text-gray-600 text-xs text-right">{socialTexts.whatsapp.length} caracteres</p>
+                </div>
               </div>
             </div>
 
