@@ -46,17 +46,76 @@ function splitIntroAndBody(text: string) {
   const raw = (text || "").trim();
   if (!raw) return { intro: "", body: "" };
 
-  const lines = raw
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
+  const lines = raw.split(/\r?\n/);
+  let nonBlankCount = 0;
+  let splitIdx = lines.length;
 
-  if (lines.length <= 3) return { intro: lines.join("\n"), body: "" };
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim()) {
+      nonBlankCount++;
+      if (nonBlankCount === 3) {
+        splitIdx = i + 1;
+        break;
+      }
+    }
+  }
+
+  if (nonBlankCount <= 3) return { intro: raw, body: "" };
 
   return {
-    intro: lines.slice(0, 3).join("\n"),
-    body: lines.slice(3).join("\n"),
+    intro: lines.slice(0, splitIdx).join("\n").trim(),
+    body: lines.slice(splitIdx).join("\n").trim(),
   };
+}
+
+function extractTagsFromText(text: string): { cleanText: string; tags: string[] } {
+  const lines = (text || "").split(/\r?\n/);
+  const tags: string[] = [];
+  const cleanLines: string[] = [];
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed && /^(#[\w\u00C0-\u017E-]+\s*)+$/.test(trimmed)) {
+      const found = trimmed.match(/#([\w\u00C0-\u017E-]+)/g) || [];
+      tags.push(...found.map((t) => t.slice(1)));
+    } else {
+      cleanLines.push(line);
+    }
+  }
+  return { cleanText: cleanLines.join("\n"), tags };
+}
+
+function renderParagraphs(text: string): JSX.Element[] {
+  if (!text) return [];
+  const paras = text.split(/\n{2,}/);
+  const result: JSX.Element[] = [];
+  paras.forEach((para, i) => {
+    const trimmed = para.trim();
+    if (!trimmed) return;
+    const firstLine = trimmed.split("\n")[0].trim();
+    if (/^#{1,3}\s/.test(firstLine)) {
+      const headingText = firstLine.replace(/^#+\s*/, "");
+      const rest = trimmed.split("\n").slice(1).join("\n").trim();
+      result.push(
+        <div key={i} className="mb-4">
+          <h3 className="text-xl font-bold text-white mt-6 mb-2 border-l-4 border-brand-yellow pl-3">
+            {headingText}
+          </h3>
+          {rest && (
+            <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
+              {rest}
+            </p>
+          )}
+        </div>
+      );
+    } else {
+      result.push(
+        <p key={i} className="text-lg leading-relaxed text-gray-300 mb-4 whitespace-pre-wrap">
+          {trimmed}
+        </p>
+      );
+    }
+  });
+  return result;
 }
 
 export default function NoticiaDetalhes() {
@@ -127,8 +186,10 @@ export default function NoticiaDetalhes() {
     return getCanonicalUrl(noticiaId);
   }, [noticiaId]);
 
-  const { intro, body } = useMemo(() => {
-    return splitIntroAndBody(noticia?.descricao || "");
+  const { intro, body, tags } = useMemo(() => {
+    const { cleanText, tags } = extractTagsFromText(noticia?.descricao || "");
+    const { intro, body } = splitIntroAndBody(cleanText);
+    return { intro, body, tags };
   }, [noticia?.descricao]);
 
   const proximaImagem = () => {
@@ -442,16 +503,16 @@ export default function NoticiaDetalhes() {
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {mediaItems.map((item, idx) =>
                       item.type === "image" ? (
-                        <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-gray-900 group cursor-pointer">
-                          <img
-                            src={item.url}
-                            alt={item.caption || `${noticia.titulo} — imagem ${idx + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
+                        <div key={idx} className="flex flex-col">
+                          <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-900 group cursor-pointer">
+                            <img
+                              src={item.url}
+                              alt={item.caption || `${noticia.titulo} — imagem ${idx + 1}`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
                           {item.caption && (
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1">
-                              <p className="text-white text-xs truncate">{item.caption}</p>
-                            </div>
+                            <p className="text-gray-400 text-xs mt-1 px-1 italic">{item.caption}</p>
                           )}
                         </div>
                       ) : (
@@ -517,15 +578,14 @@ export default function NoticiaDetalhes() {
                       </>
                     )}
 
-                    {/* Legenda (figcaption) */}
-                    {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption && (
-                      <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8">
-                        <p className="text-white text-sm md:text-base">
-                          {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption}
-                        </p>
-                      </figcaption>
-                    )}
                   </figure>
+                  {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption && (
+                    <figcaption className="px-3 pt-2 pb-1">
+                      <p className="text-gray-400 text-xs md:text-sm italic">
+                        {mediaItems[Math.min(indiceImagem, mediaItems.length - 1)]?.caption}
+                      </p>
+                    </figcaption>
+                  )}
                 </div>
               )}
             </>
@@ -546,9 +606,26 @@ export default function NoticiaDetalhes() {
           {/* Corpo */}
           {body && (
             <div className="prose prose-invert prose-lg max-w-none mb-5 px-1 sm:px-0">
-              <p className="text-lg leading-relaxed text-gray-300 whitespace-pre-wrap">
-                {body}
-              </p>
+              {renderParagraphs(body)}
+            </div>
+          )}
+
+          {/* Tags do Projeto */}
+          {tags.length > 0 && (
+            <div className="mb-5 px-1 sm:px-0">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
+                Tags do Projeto
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 rounded-full bg-brand-yellow text-black text-sm font-semibold"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
