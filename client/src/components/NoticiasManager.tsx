@@ -161,19 +161,20 @@ export default function NoticiasManager() {
     const url = `https://www.domrealce.com/noticia/${urlSlug}`;
     const categoria = formData.categoria || "Projetos";
 
-    // LinkedIn — curto e profissional
+    // LinkedIn — curto, profissional; CTA + link no fim
     const resumoLinkedIn = resumo.slice(0, 160);
     const linkedin = [
       titulo,
       "",
       resumoLinkedIn + (resumo.length > 160 ? "..." : ""),
       "",
-      `🔗 ${url}`,
+      "#DomRealce #ImpressãoDigital #ComunicaçãoVisual #Design #Portugal",
       "",
-      "#DomRealce #ImpressãoDigital #ComunicaçãoVisual #Design #Portugal"
+      "👉 Ver projeto completo:",
+      url
     ].join("\n");
 
-    // Facebook — comercial, orientado para o cliente
+    // Facebook — comercial; CTA + link no fim
     const descFacebook = metaDesc.slice(0, 200);
     const ctaFacebook: Record<string, string> = {
       "Projetos": "Veja como transformámos esta visão em realidade. ✅",
@@ -189,7 +190,8 @@ export default function NoticiasManager() {
       "",
       ctaFacebook[categoria] || "Conheça o trabalho da DomRealce. ✅",
       "",
-      `👉 ${url}`
+      "🔗 Saiba mais:",
+      url
     ].join("\n");
 
     // Instagram — hashtags inteligentes por tipo de projeto (sem geo automático)
@@ -241,25 +243,28 @@ export default function NoticiasManager() {
         (marcasDetectadas.length ? " " + marcasDetectadas.join(" ") : "");
     }
 
+    // Instagram — CTA + link antes das hashtags
     const resumoIG = (resumo || metaDesc).slice(0, 90);
     const instagram = [
       `${titulo} ✨`,
       "",
       resumoIG + ((resumo || metaDesc).length > 90 ? "..." : ""),
       "",
-      "🔗 Link na bio",
+      "👉 Ver projeto completo:",
+      url,
       "",
       hashtagsIG
     ].join("\n");
 
-    // WhatsApp — muito curto, emoji, espaçamento limpo
+    // WhatsApp — muito curto, CTA + link no fim
     const resumoWA = (resumo || metaDesc).slice(0, 80);
     const whatsapp = [
       `✅ *${titulo}*`,
       "",
       resumoWA + ((resumo || metaDesc).length > 80 ? "..." : ""),
       "",
-      `🔗 ${url}`
+      "🔗 Ver projeto completo:",
+      url
     ].join("\n");
 
     setSocialTexts({ linkedin, facebook, instagram, whatsapp });
