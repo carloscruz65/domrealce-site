@@ -192,17 +192,55 @@ export default function NoticiasManager() {
       `👉 ${url}`
     ].join("\n");
 
-    // Instagram — curto + hashtags por categoria
-    const hashtagsPorCategoria: Record<string, string> = {
-      "Projetos":    "#projeto #portfolio #resultado #transformacao #criatividade",
-      "Novidades":   "#novidades #lancamento #novo #tendencia",
-      "Dicas":       "#dicas #tips #aprenda #sabia #conhecimento",
-      "Eventos":     "#evento #workshop #formacao #agenda",
-      "Parcerias":   "#parceria #colaboracao #juntos #negocios",
-      "Outros":      "#trabalho #inspiracao #criatividade",
-    };
-    const hashtagsBase = "#domrealce #impressaodigital #comunicacaovisual #design #branding #portugal #lisboa";
-    const hashtagsExtra = hashtagsPorCategoria[categoria] || hashtagsPorCategoria["Outros"];
+    // Instagram — hashtags inteligentes por tipo de projeto (sem geo automático)
+    const textoDetecao = `${titulo} ${resumo}`.toLowerCase();
+
+    // Detectar projecto de decoração de viaturas por palavras-chave
+    const isViatura = /viatura|sprinter|transporter|ducato|transit|trafic|master|van\b|carro|autocarro|caminhão|caminhao|reboque|trailer|pickup|autocaravana/i.test(textoDetecao);
+
+    // Detectar marca/modelo específico para hashtag extra
+    const marcasDetectadas: string[] = [];
+    if (/mercedes.*sprinter|sprinter.*mercedes/i.test(textoDetecao)) {
+      marcasDetectadas.push("#MercedesSprinter");
+    } else if (/mercedes/i.test(textoDetecao)) {
+      marcasDetectadas.push("#Mercedes");
+    }
+    if (/volkswagen|transporter\b|vw\b/i.test(textoDetecao)) marcasDetectadas.push("#Volkswagen");
+    if (/ford.*transit|transit.*ford/i.test(textoDetecao)) marcasDetectadas.push("#FordTransit");
+    else if (/\bford\b/i.test(textoDetecao)) marcasDetectadas.push("#Ford");
+    if (/renault.*master|renault.*trafic|master.*renault|trafic.*renault/i.test(textoDetecao)) marcasDetectadas.push("#Renault");
+    if (/peugeot|boxer/i.test(textoDetecao)) marcasDetectadas.push("#Peugeot");
+    if (/fiat.*ducato|ducato.*fiat/i.test(textoDetecao)) marcasDetectadas.push("#FiatDucato");
+    else if (/\bfiat\b/i.test(textoDetecao)) marcasDetectadas.push("#Fiat");
+    if (/citroen|citroën|berlingo|jumper/i.test(textoDetecao)) marcasDetectadas.push("#Citroen");
+    if (/iveco/i.test(textoDetecao)) marcasDetectadas.push("#Iveco");
+
+    let hashtagsIG: string;
+    if (isViatura) {
+      // Hashtags específicas para decoração de viaturas
+      hashtagsIG = [
+        "#DOMREALCE",
+        "#DecoraçãoDeViaturas",
+        "#PublicidadeEmViaturas",
+        "#VinilDeCorte",
+        "#ComunicaçãoVisual",
+        "#DesignGráfico",
+        ...marcasDetectadas
+      ].join(" ");
+    } else {
+      // Hashtags por categoria (sem geo)
+      const hashtagsPorCategoria: Record<string, string> = {
+        "Projetos":  "#DOMREALCE #ImpressãoDigital #ComunicaçãoVisual #DesignGráfico #Branding",
+        "Novidades": "#DOMREALCE #Novidades #Lançamento #ComunicaçãoVisual",
+        "Dicas":     "#DOMREALCE #Dicas #ImpressãoDigital #DesignGráfico",
+        "Eventos":   "#DOMREALCE #Evento #ComunicaçãoVisual",
+        "Parcerias": "#DOMREALCE #Parceria #ComunicaçãoVisual #DesignGráfico",
+        "Outros":    "#DOMREALCE #ComunicaçãoVisual #ImpressãoDigital",
+      };
+      hashtagsIG = (hashtagsPorCategoria[categoria] || hashtagsPorCategoria["Outros"]) +
+        (marcasDetectadas.length ? " " + marcasDetectadas.join(" ") : "");
+    }
+
     const resumoIG = (resumo || metaDesc).slice(0, 90);
     const instagram = [
       `${titulo} ✨`,
@@ -211,7 +249,7 @@ export default function NoticiasManager() {
       "",
       "🔗 Link na bio",
       "",
-      `${hashtagsBase} ${hashtagsExtra}`
+      hashtagsIG
     ].join("\n");
 
     // WhatsApp — muito curto, emoji, espaçamento limpo
