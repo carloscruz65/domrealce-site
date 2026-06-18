@@ -155,19 +155,74 @@ export default function NoticiasManager() {
 
   const gerarTextosSociais = () => {
     const titulo = formData.titulo?.trim() || "Novo Projeto";
-    const resumo = formData.summary?.trim() || formData.descricao?.slice(0, 140).trim() || "";
+    const resumo = formData.summary?.trim() || formData.descricao?.slice(0, 150).trim() || "";
     const metaDesc = formData.shareDescription?.trim() || resumo;
     const urlSlug = formData.slug?.trim() || editing || "";
     const url = `https://www.domrealce.com/noticia/${urlSlug}`;
+    const categoria = formData.categoria || "Projetos";
 
-    const linkedin = `🏆 ${titulo}\n\n${resumo}\n\nUm projeto que combina criatividade e técnica para alcançar resultados de excelência.\n\nConheça o processo completo:\n👉 ${url}\n\n#DomRealce #ComunicaçãoVisual #ImpressãoDigital #Design #Portugal`;
+    // LinkedIn — curto e profissional
+    const resumoLinkedIn = resumo.slice(0, 160);
+    const linkedin = [
+      titulo,
+      "",
+      resumoLinkedIn + (resumo.length > 160 ? "..." : ""),
+      "",
+      `🔗 ${url}`,
+      "",
+      "#DomRealce #ImpressãoDigital #ComunicaçãoVisual #Design #Portugal"
+    ].join("\n");
 
-    const facebook = `✨ ${titulo}\n\n${metaDesc}\n\nQuer transformar a imagem do seu negócio? É isto que fazemos na DomRealce.\n\n👉 Ver projeto: ${url}`;
+    // Facebook — comercial, orientado para o cliente
+    const descFacebook = metaDesc.slice(0, 200);
+    const ctaFacebook: Record<string, string> = {
+      "Projetos": "Veja como transformámos esta visão em realidade. ✅",
+      "Novidades": "Fique a par das novidades da DomRealce! 📣",
+      "Dicas": "Guarde esta dica — pode ser muito útil! 💡",
+      "Eventos": "Não perca este evento! 📅",
+      "Parcerias": "Grandes resultados nascem de grandes parcerias. 🤝",
+    };
+    const facebook = [
+      `🎯 ${titulo}`,
+      "",
+      descFacebook + (metaDesc.length > 200 ? "..." : ""),
+      "",
+      ctaFacebook[categoria] || "Conheça o trabalho da DomRealce. ✅",
+      "",
+      `👉 ${url}`
+    ].join("\n");
 
-    const resumoCurto = (resumo || metaDesc).slice(0, 100);
-    const instagram = `${titulo} ✨\n\n${resumoCurto}${(resumo || metaDesc).length > 100 ? "..." : ""}\n\nLink na bio 🔗\n\n#domrealce #impressaodigital #comunicacaovisual #design #branding #portugal #lisboa #viaturas #decoracao`;
+    // Instagram — curto + hashtags por categoria
+    const hashtagsPorCategoria: Record<string, string> = {
+      "Projetos":    "#projeto #portfolio #resultado #transformacao #criatividade",
+      "Novidades":   "#novidades #lancamento #novo #tendencia",
+      "Dicas":       "#dicas #tips #aprenda #sabia #conhecimento",
+      "Eventos":     "#evento #workshop #formacao #agenda",
+      "Parcerias":   "#parceria #colaboracao #juntos #negocios",
+      "Outros":      "#trabalho #inspiracao #criatividade",
+    };
+    const hashtagsBase = "#domrealce #impressaodigital #comunicacaovisual #design #branding #portugal #lisboa";
+    const hashtagsExtra = hashtagsPorCategoria[categoria] || hashtagsPorCategoria["Outros"];
+    const resumoIG = (resumo || metaDesc).slice(0, 90);
+    const instagram = [
+      `${titulo} ✨`,
+      "",
+      resumoIG + ((resumo || metaDesc).length > 90 ? "..." : ""),
+      "",
+      "🔗 Link na bio",
+      "",
+      `${hashtagsBase} ${hashtagsExtra}`
+    ].join("\n");
 
-    const whatsapp = `*${titulo}*\n${(resumo || metaDesc).slice(0, 90)}${(resumo || metaDesc).length > 90 ? "..." : ""}\n\n🔗 ${url}`;
+    // WhatsApp — muito curto, emoji, espaçamento limpo
+    const resumoWA = (resumo || metaDesc).slice(0, 80);
+    const whatsapp = [
+      `✅ *${titulo}*`,
+      "",
+      resumoWA + ((resumo || metaDesc).length > 80 ? "..." : ""),
+      "",
+      `🔗 ${url}`
+    ].join("\n");
 
     setSocialTexts({ linkedin, facebook, instagram, whatsapp });
   };
