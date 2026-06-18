@@ -50,15 +50,6 @@ interface Noticia {
   slug?: string | null;
 }
 
-const CATEGORIAS = [
-  "Projetos",
-  "Novidades", 
-  "Dicas",
-  "Eventos",
-  "Parcerias",
-  "Outros"
-];
-
 const LAYOUTS = [
   { value: "single", label: "Imagem Única" },
   { value: "slider", label: "Slideshow" },
@@ -108,6 +99,9 @@ export default function NoticiasManager() {
 
   const { data: noticiasData, isLoading } = useQuery<{ noticias: Noticia[] }>({
     queryKey: ['/api/admin/noticias'],
+  });
+  const { data: categoriesData } = useQuery<{ categories: { id: string; nome: string; slug: string; cor?: string | null; ordem: number }[] }>({
+    queryKey: ['/api/admin/news-categories'],
   });
   
   const noticias = noticiasData?.noticias || [];
@@ -531,9 +525,11 @@ export default function NoticiasManager() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIAS.map(cat => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                    ))}
+                    {(categoriesData?.categories || [])
+                      .sort((a, b) => a.ordem - b.ordem)
+                      .map(cat => (
+                        <SelectItem key={cat.id} value={cat.nome}>{cat.nome}</SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>

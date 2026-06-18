@@ -862,6 +862,69 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     }
   });
 
+  // =========================================
+  // ADMIN: NEWS CATEGORIES CRUD
+  // =========================================
+  app.get("/api/admin/news-categories", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const categories = await storage.getAllNewsCategories();
+      res.json({ categories, requestId });
+    } catch (error) {
+      logRouteError(requestId, "GET /api/admin/news-categories failed", error);
+      res.status(500).json({ error: "Failed to fetch news categories", requestId });
+    }
+  });
+
+  app.post("/api/admin/news-categories", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { nome, slug, cor, ordem } = req.body;
+      if (!nome?.trim() || !slug?.trim()) return res.status(400).json({ error: "nome e slug são obrigatórios" });
+      const category = await storage.createNewsCategory({ nome: nome.trim(), slug: slug.trim(), cor: cor || null, ordem: Number(ordem) || 0 });
+      res.json({ success: true, category, requestId });
+    } catch (error) {
+      logRouteError(requestId, "POST /api/admin/news-categories failed", error);
+      res.status(500).json({ error: "Failed to create news category", requestId });
+    }
+  });
+
+  app.put("/api/admin/news-categories/:id", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { id } = req.params;
+      const { nome, slug, cor, ordem } = req.body;
+      if (!nome?.trim() || !slug?.trim()) return res.status(400).json({ error: "nome e slug são obrigatórios" });
+      const category = await storage.updateNewsCategory(id, { nome: nome.trim(), slug: slug.trim(), cor: cor || null, ordem: Number(ordem) || 0 });
+      res.json({ success: true, category, requestId });
+    } catch (error) {
+      logRouteError(requestId, "PUT /api/admin/news-categories failed", error);
+      res.status(500).json({ error: "Failed to update news category", requestId });
+    }
+  });
+
+  app.delete("/api/admin/news-categories/:id", protegerAdmin, async (req, res) => {
+    const requestId = makeRequestId();
+    try {
+      const { id } = req.params;
+      await storage.deleteNewsCategory(id);
+      res.json({ success: true, requestId });
+    } catch (error) {
+      logRouteError(requestId, "DELETE /api/admin/news-categories failed", error);
+      res.status(500).json({ error: "Failed to delete news category", requestId });
+    }
+  });
+
+  // Public endpoint (future category pages)
+  app.get("/api/public/news-categories", async (req, res) => {
+    try {
+      const categories = await storage.getAllNewsCategories();
+      res.json({ categories });
+    } catch {
+      res.status(500).json({ error: "Failed to fetch categories" });
+    }
+  });
+
   app.get("/api/news/categories", async (req, res) => {
     const requestId = makeRequestId();
     try {

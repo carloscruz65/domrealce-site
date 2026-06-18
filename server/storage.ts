@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, type ServiceGallery, type InsertServiceGallery, type ServiceHero, type InsertServiceHero, type Testimonial, type InsertTestimonial, users, contacts, products, news, slides, pageConfigs, orders, serviceGalleries, serviceHeros, testimonials } from "@shared/schema";
+import { type User, type InsertUser, type UpsertUser, type Contact, type InsertContact, type Product, type InsertProduct, type News, type InsertNews, type Slide, type InsertSlide, type PageConfig, type InsertPageConfig, type Order, type InsertOrder, type ServiceGallery, type InsertServiceGallery, type ServiceHero, type InsertServiceHero, type Testimonial, type InsertTestimonial, type NewsCategory, type InsertNewsCategory, users, contacts, products, news, slides, pageConfigs, orders, serviceGalleries, serviceHeros, testimonials, newsCategories } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -58,6 +58,11 @@ export interface IStorage {
   approveTestimonial(id: string): Promise<Testimonial>;
   rejectTestimonial(id: string): Promise<Testimonial>;
   deleteTestimonial(id: string): Promise<boolean>;
+  // News categories
+  getAllNewsCategories(): Promise<NewsCategory[]>;
+  createNewsCategory(cat: InsertNewsCategory): Promise<NewsCategory>;
+  updateNewsCategory(id: string, cat: InsertNewsCategory): Promise<NewsCategory>;
+  deleteNewsCategory(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -504,6 +509,14 @@ export class MemStorage implements IStorage {
   async deleteTestimonial(id: string): Promise<boolean> {
     return this.testimonialMap.delete(id);
   }
+  async getAllNewsCategories(): Promise<NewsCategory[]> { return []; }
+  async createNewsCategory(cat: InsertNewsCategory): Promise<NewsCategory> {
+    return { id: randomUUID(), ...cat, cor: cat.cor ?? null, ordem: cat.ordem ?? 0, createdAt: new Date(), updatedAt: new Date() };
+  }
+  async updateNewsCategory(id: string, cat: InsertNewsCategory): Promise<NewsCategory> {
+    return { id, ...cat, cor: cat.cor ?? null, ordem: cat.ordem ?? 0, createdAt: new Date(), updatedAt: new Date() };
+  }
+  async deleteNewsCategory(id: string): Promise<boolean> { return true; }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -816,6 +829,30 @@ export class DatabaseStorage implements IStorage {
 
   async deleteTestimonial(id: string): Promise<boolean> {
     const result = await db.delete(testimonials).where(eq(testimonials.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
+  }
+
+  // News categories
+  async getAllNewsCategories(): Promise<NewsCategory[]> {
+    return await db.select().from(newsCategories).orderBy(newsCategories.ordem, newsCategories.nome);
+  }
+
+  async createNewsCategory(cat: InsertNewsCategory): Promise<NewsCategory> {
+    const [created] = await db.insert(newsCategories).values(cat).returning();
+    return created;
+  }
+
+  async updateNewsCategory(id: string, cat: InsertNewsCategory): Promise<NewsCategory> {
+    const [updated] = await db
+      .update(newsCategories)
+      .set({ ...cat, updatedAt: new Date() })
+      .where(eq(newsCategories.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteNewsCategory(id: string): Promise<boolean> {
+    const result = await db.delete(newsCategories).where(eq(newsCategories.id, id));
     return result.rowCount !== null && result.rowCount > 0;
   }
 }

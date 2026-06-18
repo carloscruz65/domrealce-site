@@ -5,6 +5,7 @@ import MediaManager from "@/components/MediaManager";
 import SliderManager from "@/components/SliderManager";
 import ProdutosManager from "@/components/ProdutosManager";
 import NoticiasManager from "@/components/NoticiasManager";
+import NewsCategoriesManager from "@/components/NewsCategoriesManager";
 import TestimonialsManager from "@/components/TestimonialsManager";
 import PortfolioManager from "@/components/PortfolioManager";
 import EncomendasManager from "@/components/EncomendasManager";
@@ -27,7 +28,8 @@ import {
   Store,
   ShoppingCart,
   Briefcase,
-  MessageSquare
+  MessageSquare,
+  Tag
 } from "lucide-react";
 
 const serviceNames: Record<string, string> = {
@@ -94,45 +96,49 @@ export default function AdminPage() {
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-9 mb-8">
-              <TabsTrigger value="dashboard" className="flex items-center gap-2">
-                <LayoutDashboard className="h-4 w-4" />
+            <TabsList className="flex flex-wrap gap-1 h-auto mb-8 bg-gray-900 p-1">
+              <TabsTrigger value="dashboard" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <LayoutDashboard className="h-3.5 w-3.5" />
                 Dashboard
               </TabsTrigger>
-              <TabsTrigger value="editor" className="flex items-center gap-2">
-                <Monitor className="h-4 w-4" />
+              <TabsTrigger value="editor" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <Monitor className="h-3.5 w-3.5" />
                 Editor
               </TabsTrigger>
-              <TabsTrigger value="conteudos" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
+              <TabsTrigger value="conteudos" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <Settings className="h-3.5 w-3.5" />
                 Slider
               </TabsTrigger>
-              <TabsTrigger value="produtos" className="flex items-center gap-2">
-                <Package className="h-4 w-4" />
+              <TabsTrigger value="produtos" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <Package className="h-3.5 w-3.5" />
                 Produtos
               </TabsTrigger>
-              <TabsTrigger value="noticias" className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
+              <TabsTrigger value="noticias" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <FileText className="h-3.5 w-3.5" />
                 Notícias
               </TabsTrigger>
-              <TabsTrigger value="portfolio" className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4" />
+              <TabsTrigger value="cat-noticias" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <Tag className="h-3.5 w-3.5" />
+                Cat. Notícias
+              </TabsTrigger>
+              <TabsTrigger value="portfolio" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <ImageIcon className="h-3.5 w-3.5" />
                 Portfolio
               </TabsTrigger>
-              <TabsTrigger value="servicos" className="flex items-center gap-2">
-                <Briefcase className="h-4 w-4" />
+              <TabsTrigger value="servicos" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <Briefcase className="h-3.5 w-3.5" />
                 Serviços
               </TabsTrigger>
-              <TabsTrigger value="encomendas" className="flex items-center gap-2">
-                <ShoppingCart className="h-4 w-4" />
+              <TabsTrigger value="encomendas" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <ShoppingCart className="h-3.5 w-3.5" />
                 Encomendas
               </TabsTrigger>
-              <TabsTrigger value="media" className="flex items-center gap-2">
-                <FolderOpen className="h-4 w-4" />
+              <TabsTrigger value="media" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <FolderOpen className="h-3.5 w-3.5" />
                 Media
               </TabsTrigger>
-              <TabsTrigger value="testemunhos" className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4" />
+              <TabsTrigger value="testemunhos" className="flex items-center gap-1.5 text-xs px-3 py-2">
+                <MessageSquare className="h-3.5 w-3.5" />
                 Testemunhos
               </TabsTrigger>
             </TabsList>
@@ -205,6 +211,11 @@ export default function AdminPage() {
             {/* Notícias Tab */}
             <TabsContent value="noticias">
               <NoticiasManager />
+            </TabsContent>
+
+            {/* Categorias de Notícias Tab */}
+            <TabsContent value="cat-noticias">
+              <NewsCategoriesManager />
             </TabsContent>
 
             {/* Portfolio Tab */}

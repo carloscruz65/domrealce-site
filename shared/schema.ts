@@ -126,6 +126,29 @@ export const news = pgTable("news", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// =======================
+// NEWS CATEGORIES (v8)
+// =======================
+export const newsCategories = pgTable("news_categories", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  nome: text("nome").notNull(),
+  slug: text("slug").notNull(),
+  cor: text("cor"),
+  ordem: integer("ordem").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type NewsCategory = typeof newsCategories.$inferSelect;
+export const insertNewsCategorySchema = createInsertSchema(newsCategories).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertNewsCategory = z.infer<typeof insertNewsCategorySchema>;
+
 export const slides = pgTable("slides", {
   id: varchar("id")
     .primaryKey()
