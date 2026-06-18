@@ -410,11 +410,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     let noticiaUrls: { url: string; lastmod: string }[] = [];
     try {
       const noticias = await storage.getAllNews();
+      const toISODate = (val: any): string => {
+        try { return new Date(val).toISOString().split("T")[0]; } catch { return new Date().toISOString().split("T")[0]; }
+      };
       noticiaUrls = noticias
         .filter((n: any) => n.published)
         .map((n: any) => ({
           url: `/noticia/${n.slug || n.id}`,
-          lastmod: (n.updatedAt || n.publishedAt || n.data || new Date()).toString().split("T")[0],
+          lastmod: toISODate(n.updatedAt || n.publishedAt || n.data || new Date()),
         }));
     } catch { /* fallback silencioso */ }
 
