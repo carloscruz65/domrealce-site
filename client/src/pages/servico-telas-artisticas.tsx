@@ -1,3 +1,4 @@
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -1030,6 +1031,7 @@ export default function ServicoTelasArtisticas() {
                   href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."); }}
                 >
                   WhatsApp direto
                 </a>
