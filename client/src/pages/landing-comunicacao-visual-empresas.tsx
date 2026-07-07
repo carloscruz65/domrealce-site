@@ -131,8 +131,8 @@ export default function LandingComunicacaoVisualEmpresas() {
   return (
     <>
       <SEOHead
-        title="Comunicação Visual para Empresas | DOMREALCE"
-        description="Comunicação visual, impressão digital, decoração de viaturas, montras, autocolantes e publicidade para empresas. Produção e aplicação própria na DOMREALCE."
+        title="Impressão Digital & Vinil Personalizado para Empresas | DOMREALCE"
+        description="Design, impressão e aplicação para destacar a sua marca em viaturas, montras, espaços comerciais e suportes publicitários. Produção e aplicação própria na DOMREALCE."
         keywords="comunicação visual empresas, impressão digital, decoração viaturas, autocolantes, papel de parede, espaços comerciais, Porto"
       />
       <Navigation />
@@ -143,7 +143,7 @@ export default function LandingComunicacaoVisualEmpresas() {
         <div className="absolute right-0 top-0 bottom-0 w-1/2 z-0 hidden md:block">
           <img
             src="/public-objects/servicos/espacos-comerciais.webp"
-            alt="Comunicação visual para empresas"
+            alt="Impressão Digital & Vinil Personalizado para Empresas"
             className="w-full h-full object-cover object-left-top"
           />
           {/* Gradiente para fundir com o fundo escuro */}
@@ -160,13 +160,12 @@ export default function LandingComunicacaoVisualEmpresas() {
             </span>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight mb-6">
-              Comunicação Visual{" "}
-              <span className="text-brand-yellow">para Empresas</span>
+              Impressão Digital & Vinil{" "}
+              <span className="text-brand-yellow">Personalizado para Empresas</span>
             </h1>
 
             <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-xl">
-              Design, impressão e aplicação para destacar a sua marca em
-              viaturas, montras, espaços comerciais e suportes publicitários.
+              Produção própria de vinil, lonas, papel de parede personalizado, autocolantes, etiquetas, canvas e decoração de montras.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
