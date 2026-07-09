@@ -311,6 +311,16 @@ export default function Navigation() {
               </Link>
 
               <Link
+                href="/blog"
+                className={`${baseLinkClasses} ${
+                  location === "/blog" ? activeLinkClasses : ""
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
+              </Link>
+
+              <Link
                 href="/contactos"
                 className={`${baseLinkClasses} ${
                   location === "/contactos" ? activeLinkClasses : ""
@@ -555,6 +565,18 @@ export default function Navigation() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Notícias
+                </Link>
+
+                <Link
+                  href="/blog"
+                  className={`transition-all duration-300 font-medium py-3 px-4 rounded-lg text-left ${
+                    location === "/blog"
+                      ? "bg-white/5 text-brand-yellow"
+                      : "text-white/80 hover:bg-white/5 hover:text-white"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Blog
                 </Link>
 
                 <Link

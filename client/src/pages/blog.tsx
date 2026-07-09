@@ -36,10 +36,10 @@ export default function Blog() {
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-brand-yellow/40" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white text-center leading-tight">
-            Artigos & Inspiração
+            Blog DOMREALCE
           </h1>
-          <p className="mt-4 text-gray-400 text-center max-w-xl mx-auto text-lg">
-            Dicas, tendências e projetos de comunicação visual, impressão digital e decoração de espaços.
+          <p className="mt-4 text-gray-400 text-center max-w-2xl mx-auto text-lg">
+            Artigos, dicas e guias sobre comunicação visual, decoração de viaturas, sinalética, montras, papel de parede personalizado e impressão digital.
           </p>
         </div>
       </section>

@@ -61,6 +61,7 @@ const ExportarSite = lazy(() => import("@/pages/exportar-site"));
 const DemoInterativo = lazy(() => import("@/pages/demo-interativo"));
 const VisualEditorDemo = lazy(() => import("@/pages/visual-editor-demo"));
 const ObrigadoOrcamento = lazy(() => import("@/pages/obrigado-orcamento"));
+const Blog = lazy(() => import("@/pages/blog"));
 
 // Componentes pesados com lazy loading
 const WhatsAppFAB = lazy(() => import("@/components/whatsapp-fab"));
@@ -164,6 +165,7 @@ function Router() {
           <Route path="/visual-editor-demo" component={VisualEditorDemo} />
           <Route path="/obrigado" component={Obrigado} />
           <Route path="/obrigado-orcamento" component={ObrigadoOrcamento} />
+          <Route path="/blog" component={Blog} />
           <Route path="/pagamento-erro" component={PagamentoErro} />
           <Route path="/contactos-maquinas" component={ContactosMaquinas} />
           <Route path="/decoracao-viaturas-empresas" component={LandingViaturasEmpresas} />
