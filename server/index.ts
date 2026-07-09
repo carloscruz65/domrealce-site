@@ -73,12 +73,14 @@ app.use((req, res, next) => {
         "https://graph.facebook.com " +
         "https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
-        "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com",
+        "https://www.clarity.ms https://*.clarity.ms https://*.bing.com https://bat.bing.com " +
+        "https://app.trysoro.com https://*.trysoro.com",
 
       // Iframes
       "frame-src 'self' " +
         "https://www.googletagmanager.com " +
-        "https://www.facebook.com https://connect.facebook.net",
+        "https://www.facebook.com https://connect.facebook.net " +
+        "https://app.trysoro.com https://*.trysoro.com",
     ].join("; ")
   );
 
