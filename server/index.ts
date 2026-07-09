@@ -34,7 +34,8 @@ app.use((req, res, next) => {
         "https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
         "https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms " +
-        "https://connect.facebook.net",
+        "https://connect.facebook.net " +
+        "https://app.trysoro.com",
 
       // script-src-elem: controla <script src="..."> — browsers modernos verificam esta separadamente
       "script-src-elem 'self' 'unsafe-inline' " +
@@ -43,7 +44,8 @@ app.use((req, res, next) => {
         "https://maps.googleapis.com " +
         "https://www.paypal.com https://www.sandbox.paypal.com " +
         "https://www.clarity.ms https://scripts.clarity.ms https://*.clarity.ms " +
-        "https://connect.facebook.net",
+        "https://connect.facebook.net " +
+        "https://app.trysoro.com",
 
       // Styles
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
