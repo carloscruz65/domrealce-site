@@ -1,24 +1,14 @@
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 export default function WhatsAppFAB() {
   const whatsappUrl =
     "https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20DOMREALCE";
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault(); // ⛔ trava abertura imediata
-
-    if (window.gtag) {
-      window.gtag("event", "conversion", {
-        send_to: "AW-11438840519/lTnxCKfU34scEMe1u84q",
-        event_callback: () => {
-          window.open(whatsappUrl, "_blank"); // 👉 abre depois de enviar
-        },
-      });
-    } else {
-      // fallback caso gtag não esteja carregado
-      window.open(whatsappUrl, "_blank");
-    }
+    e.preventDefault();
+    trackWhatsAppConversion(whatsappUrl);
   };
 
   return (

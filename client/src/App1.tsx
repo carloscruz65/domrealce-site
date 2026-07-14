@@ -12,6 +12,7 @@ import StructuredData from "@/components/structured-data";
 import { useLazyImages } from "@/hooks/use-lazy-images";
 
 import React, { useEffect, lazy, Suspense } from "react";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 // Páginas críticas (carregamento imediato)
 import Home from "@/pages/home";
@@ -113,16 +114,7 @@ function App() {
       if (href && href.includes("wa.me")) {
         e.preventDefault();
 
-        if (window.gtag) {
-          window.gtag("event", "conversion", {
-            send_to: "AW-11438840519/lTnxCKfU34scEMe1u84q",
-            event_callback: () => {
-              window.open(href, "_blank");
-            },
-          });
-        } else {
-          window.open(href, "_blank");
-        }
+        trackWhatsAppConversion(href);
       }
     };
 
