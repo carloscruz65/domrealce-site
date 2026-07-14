@@ -10,7 +10,7 @@ export default function WhatsAppFAB() {
 
     if (window.gtag) {
       window.gtag("event", "conversion", {
-        send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
+        send_to: "AW-11438840519/lTnxCKfU34scEMe1u84q",
         event_callback: () => {
           window.open(whatsappUrl, "_blank"); // 👉 abre depois de enviar
         },

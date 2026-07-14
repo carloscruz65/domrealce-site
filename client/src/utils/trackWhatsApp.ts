@@ -10,7 +10,7 @@ declare global {
  */
 export const trackWhatsAppConversion = (url: string): void => {
   window.gtag?.("event", "conversion", {
-    send_to: "AW-11438840519/lTnXCKFU34scEMe1u84q",
+    send_to: "AW-11438840519/lTnxCKfU34scEMe1u84q",
   });
   window.open(url, "_blank", "noopener,noreferrer");
 };
