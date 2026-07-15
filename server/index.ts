@@ -66,8 +66,12 @@ app.use((req, res, next) => {
       "connect-src 'self' " +
         "https://www.googletagmanager.com " +
         "https://www.google-analytics.com https://region1.google-analytics.com " +
+        "https://*.google-analytics.com " +
+        "https://region1.analytics.google.com https://*.analytics.google.com " +
         "https://www.googleadservices.com " +
-        "https://googleads.g.doubleclick.net " +
+        "https://www.google.com https://*.google.com " +
+        "https://www.doubleclick.net https://*.doubleclick.net " +
+        "https://ad.doubleclick.net https://googleads.g.doubleclick.net " +
         "https://stats.g.doubleclick.net " +
         "https://www.facebook.com https://connect.facebook.net " +
         "https://graph.facebook.com " +
