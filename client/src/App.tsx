@@ -16,10 +16,10 @@ import React, { useEffect, lazy, Suspense } from "react";
 // Páginas críticas (carregamento imediato)
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
-import Obrigado from "@/pages/Obrigado";
-import PagamentoErro from "@/pages/PagamentoErro";
-import ContactosMaquinas from "@/pages/contactos-maquinas";
-import LandingViaturasEmpresas from "@/pages/landing-viaturas-empresas";
+const Obrigado = lazy(() => import("@/pages/Obrigado"));
+const PagamentoErro = lazy(() => import("@/pages/PagamentoErro"));
+const ContactosMaquinas = lazy(() => import("@/pages/contactos-maquinas"));
+const LandingViaturasEmpresas = lazy(() => import("@/pages/landing-viaturas-empresas"));
 const LandingComunicacaoVisual = lazy(() => import("@/pages/landing-comunicacao-visual-empresas"));
 
 

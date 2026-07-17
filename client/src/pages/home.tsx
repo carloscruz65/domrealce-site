@@ -2,28 +2,19 @@ import { lazy, Suspense } from "react";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import StaticHero from "@/components/StaticHero";
-import ServicesSection from "@/components/services-section"; // opcional se quiseres tirar o lazy
-import PortfolioSection from "@/components/portfolio-section"; // idem
-import NewsSection from "@/components/news-section"; // idem
-import ClientLogos from "@/components/ClientLogos"; // idem
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
-import { usePageConfig } from "@/hooks/use-page-config";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import HomeFeaturedWallpapers from "@/components/HomeFeaturedWallpapers";
 
 // carregados de forma preguiçosa (abaixo da dobra)
 const LazyServicesSection = lazy(() => import("@/components/services-section"));
-const LazyPortfolioSection = lazy(
-  () => import("@/components/portfolio-section")
-);
+const LazyPortfolioSection = lazy(() => import("@/components/portfolio-section"));
 const LazyNewsSection = lazy(() => import("@/components/news-section"));
 const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 export default function Home() {
-  const { getConfig, isLoading } = usePageConfig("home");
 
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
@@ -42,6 +33,7 @@ export default function Home() {
         <StaticHero
           imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
           alt="Bem-vindos à DOMREALCE - Comunicação Visual"
+          priority={true}
         />
       </section>
 

@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 interface StaticHeroProps {
   imageSrc: string;
   imageSrcMobile?: string;
@@ -13,31 +11,20 @@ export default function StaticHero({
   alt = "DOMREALCE - Comunicação Visual",
   priority = false,
 }: StaticHeroProps) {
-  const imgRef = useRef<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    if (priority && imgRef.current) {
-      imgRef.current.setAttribute("fetchpriority", "high");
-    }
-  }, [priority]);
-
   return (
     <section className="relative w-full overflow-hidden bg-black">
-      {/* HERO
-          Mobile: ganha altura suficiente para “segurar” o hero sem a secção seguinte entrar logo
-          Desktop: mantém 16/9 + max height */}
       <div className="relative w-full min-h-[85vh] md:min-h-0 md:aspect-[16/9] md:max-h-[85vh]">
         <picture>
           {imageSrcMobile && (
             <source media="(max-width: 768px)" srcSet={imageSrcMobile} />
           )}
           <img
-            ref={imgRef}
             src={imageSrc}
             alt={alt}
             className="absolute inset-0 w-full h-full object-cover"
             loading={priority ? "eager" : "lazy"}
-            decoding="async"
+            decoding={priority ? "sync" : "async"}
+            fetchPriority={priority ? "high" : "auto"}
           />
         </picture>
 
