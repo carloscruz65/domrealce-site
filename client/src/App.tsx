@@ -14,8 +14,8 @@ import { useLazyImages } from "@/hooks/use-lazy-images";
 import React, { useEffect, lazy, Suspense } from "react";
 
 // Páginas críticas (carregamento imediato)
-import HomeV2 from "@/pages/home-v2";
 import NotFound from "@/pages/not-found";
+const HomeV2 = lazy(() => import("@/pages/home-v2"));
 const Home = lazy(() => import("@/pages/home"));
 const Obrigado = lazy(() => import("@/pages/Obrigado"));
 const PagamentoErro = lazy(() => import("@/pages/PagamentoErro"));
