@@ -261,7 +261,8 @@ export default function HomeV2() {
                     alt="Decoração de viatura DOMREALCE"
                     className="w-full aspect-[4/3] object-cover"
                     loading="eager"
-                    decoding="async"
+                    decoding="sync"
+                    fetchpriority="high"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
@@ -302,7 +303,8 @@ export default function HomeV2() {
                   alt="Decoração de viatura DOMREALCE"
                   className="w-full aspect-[4/3] object-cover"
                   loading="eager"
-                  decoding="async"
+                  decoding="sync"
+                  fetchpriority="high"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 

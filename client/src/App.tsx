@@ -14,8 +14,9 @@ import { useLazyImages } from "@/hooks/use-lazy-images";
 import React, { useEffect, lazy, Suspense } from "react";
 
 // Páginas críticas (carregamento imediato)
-import Home from "@/pages/home";
+import HomeV2 from "@/pages/home-v2";
 import NotFound from "@/pages/not-found";
+const Home = lazy(() => import("@/pages/home"));
 const Obrigado = lazy(() => import("@/pages/Obrigado"));
 const PagamentoErro = lazy(() => import("@/pages/PagamentoErro"));
 const ContactosMaquinas = lazy(() => import("@/pages/contactos-maquinas"));
@@ -35,7 +36,6 @@ const LojaTexturaDetalhes = lazy(() => import("@/pages/textura-detalhes"));
 const Carrinho = lazy(() => import("@/pages/carrinho"));
 const Portfolio = lazy(() => import("@/pages/portfolio"));
 const PortfolioV2 = lazy(() => import("@/pages/portfolio-v2"));
-const HomeV2 = lazy(() => import("./pages/home-v2"));
 const ServicoDesignGrafico = lazy(() => import("@/pages/servico-design-grafico"));
 const ServicoImpressaoDigital = lazy(() => import("@/pages/servico-impressao-digital"));
 const ServicoPapelParede = lazy(() => import("@/pages/servico-papel-parede"));
