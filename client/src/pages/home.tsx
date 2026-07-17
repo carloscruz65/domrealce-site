@@ -32,6 +32,7 @@ export default function Home() {
       <section className="mt-16">
         <StaticHero
           imageSrc="/public-objects/inicio/slider/bem-vindo-domrealce.webp"
+          imageSrcMobile="/public-objects/inicio/slider/bem-vindo-domrealce-mobile.webp"
           alt="Bem-vindos à DOMREALCE - Comunicação Visual"
           priority={true}
         />
