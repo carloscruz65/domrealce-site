@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle, AlertCircle, Download } from "lucide-react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 export default function ComoAplicarPapelParede() {
   return (
@@ -149,7 +150,7 @@ export default function ComoAplicarPapelParede() {
               <Button 
                 variant="outline" 
                 className="border-[#20B2AA] text-[#20B2AA] hover:bg-[#20B2AA] hover:text-black px-6 py-3"
-                onClick={() => window.open('https://wa.me/351910014140', '_blank')}
+                onClick={() => trackWhatsAppConversion('https://wa.me/351910014140')}
               >
                 📱 WhatsApp: 910 014 140
               </Button>

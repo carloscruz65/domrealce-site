@@ -262,7 +262,7 @@ export default function HomeV2() {
                     className="w-full aspect-[4/3] object-cover"
                     loading="eager"
                     decoding="sync"
-                    fetchpriority="high"
+                    {...({ fetchpriority: "high" } as Record<string, string>)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
@@ -304,7 +304,7 @@ export default function HomeV2() {
                   className="w-full aspect-[4/3] object-cover"
                   loading="eager"
                   decoding="sync"
-                  fetchpriority="high"
+                  {...({ fetchpriority: "high" } as Record<string, string>)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 

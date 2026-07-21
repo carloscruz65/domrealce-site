@@ -5,6 +5,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { CheckCircle, Package, Mail, Phone, Home } from "lucide-react";
 import { Link } from "wouter";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 export default function PedidoConfirmado() {
   useEffect(() => {
@@ -85,7 +86,7 @@ export default function PedidoConfirmado() {
                 
                 <p className="text-sm text-gray-400">
                   Dúvidas? Entre em contacto connosco através do WhatsApp: 
-                  <a href="https://wa.me/351930682725" className="text-[#FFD700] hover:text-[#20B2AA] ml-1">
+                  <a href="https://wa.me/351930682725" className="text-[#FFD700] hover:text-[#20B2AA] ml-1" onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725"); }}>
                     +351 930 682 725
                   </a>
                 </p>

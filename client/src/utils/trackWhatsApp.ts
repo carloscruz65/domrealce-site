@@ -22,7 +22,7 @@ export const trackWhatsAppConversion = (url: string): void => {
 
   if (typeof window.gtag === "function") {
     window.gtag("event", "conversion", {
-      send_to: "AW-11438840519/lTnxCKfU34scEMe1u84q",
+      send_to: "AW-11438840519/lTnXCKfU34scEMe1u84q",
       event_callback: go,
       event_timeout: 2000,
     });

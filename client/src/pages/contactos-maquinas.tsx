@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Settings, ArrowRight, Shield } from "lucide-react";
 import React, { useMemo, useState } from "react";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 type FormState = {
   nome: string;
@@ -148,6 +149,7 @@ export default function ContactosMaquinas() {
                   href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20máquina%20industrial.%20Vou%20enviar%20fotos%20e%20detalhes."
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20máquina%20industrial.%20Vou%20enviar%20fotos%20e%20detalhes."); }}
                 >
                   930 682 725
                 </a>
@@ -267,6 +269,7 @@ export default function ContactosMaquinas() {
                       href="https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20máquina%20industrial.%20Vou%20enviar%20fotos%20e%20detalhes."
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Quero%20um%20orçamento%20para%20máquina%20industrial.%20Vou%20enviar%20fotos%20e%20detalhes."); }}
                     >
                       Enviar por WhatsApp
                     </a>

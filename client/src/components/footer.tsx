@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import logoDomrealce from "@/assets/domrealce-logo.png";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -174,6 +175,7 @@ export default function Footer() {
                 href="https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20vossos%20serviços."); }}
               >
                 <Button className="bg-black text-brand-yellow px-6 py-3 rounded-full font-semibold hover:bg-black/90 hover:text-white transition-colors flex items-center">
                   <svg

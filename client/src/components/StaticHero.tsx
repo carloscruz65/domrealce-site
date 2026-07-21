@@ -24,7 +24,7 @@ export default function StaticHero({
             className="absolute inset-0 w-full h-full object-cover"
             loading={priority ? "eager" : "lazy"}
             decoding={priority ? "sync" : "async"}
-            fetchpriority={priority ? "high" : "auto"}
+            {...({ fetchpriority: priority ? "high" : "auto" } as Record<string, string>)}
           />
         </picture>
 
