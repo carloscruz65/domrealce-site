@@ -9,6 +9,7 @@ import type { ServiceAccordionCard } from "@/components/services/ServiceCardAcco
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Sticker,
@@ -163,29 +164,6 @@ export default function ServicoAutocolantes() {
     },
   ];
 
-  const quickSteps = [
-    {
-      step: "01",
-      title: "Escolha medidas e quantidade",
-      description: "Indique as dimensões e a quantidade para obter uma estimativa imediata.",
-    },
-    {
-      step: "02",
-      title: "Personalize o trabalho",
-      description: "Escolha material, laminação, acabamento e tipo de corte.",
-    },
-    {
-      step: "03",
-      title: "Envie a arte ou peça ajuda",
-      description: "Pode enviar o seu ficheiro ou pedir apoio na preparação e criação da arte.",
-    },
-    {
-      step: "04",
-      title: "Confirme e pague online",
-      description: "Finalize o pedido, escolha o pagamento e acompanhe o processo online.",
-    },
-  ];
-
   const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1611532736579-6b16e2b50449?w=800&q=80",
@@ -239,8 +217,8 @@ export default function ServicoAutocolantes() {
         badge="Autocolantes profissionais"
         badgeIcon={<Sticker className="w-4 h-4" />}
         title="Autocolantes e etiquetas com corte de contorno"
-        subtitle="Preço imediato • Encomenda online"
-        description="Calcule o preço na hora, escolha medidas, material e acabamento, envie a sua arte ou peça ajuda na criação e finalize o pedido online."
+        subtitle="Precisão digital"
+        description="Tecnologia de corte digital de precisão para criar autocolantes únicos. Desde etiquetas simples até designs complexos com formas personalizadas."
         imageSrc="/public-objects/servicos/autocolantes.webp"
         imageAlt="Autocolantes DOMREALCE"
         primaryCta={{
@@ -250,48 +228,6 @@ export default function ServicoAutocolantes() {
       />
 
       <main>
-        {/* Como encomendar */}
-        <section className="py-10 bg-gray-900/40 border-y border-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
-                <span className="text-white">Do preço à encomenda em </span>
-                <span className="text-brand-yellow">4 passos</span>
-              </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
-                Configure o trabalho, veja o valor de imediato e conclua o pedido sem esperar por um orçamento manual.
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
-              {quickSteps.map((item) => (
-                <div
-                  key={item.step}
-                  className="bg-black border border-gray-800 rounded-xl p-5 hover:border-brand-yellow transition-colors"
-                >
-                  <div className="w-9 h-9 rounded-full bg-brand-yellow text-black flex items-center justify-center font-bold text-sm mb-4">
-                    {item.step}
-                  </div>
-                  <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-8 text-sm text-gray-300">
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-brand-yellow" /> Preço imediato
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-brand-yellow" /> Pagamento online
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-brand-yellow" /> Produção DOMREALCE
-              </span>
-            </div>
-          </div>
-        </section>
-
         {/* ✅ Tecnologias / Features (normalizado para accordion) */}
         <ServiceCardsSection
           titleTop="Tecnologia"
@@ -531,7 +467,8 @@ export default function ServicoAutocolantes() {
               <span className="text-brand-yellow">autocolantes?</span>
             </h2>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Escolha as medidas, quantidade, material e acabamento. Veja o preço de imediato e conclua a encomenda online.
+              Entre em contacto e descubra como os nossos autocolantes personalizados
+              podem dar uma nova dimensão ao seu projeto ou negócio.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -539,10 +476,10 @@ export default function ServicoAutocolantes() {
                 asChild
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
-                <a href="https://simple-web-light.replit.app/">
-                  Calcular preço e encomendar
+                <Link href="/contactos#formulario">
+                  Solicitar orçamento
                   <ArrowRight className="w-5 h-5 ml-2" />
-                </a>
+                </Link>
               </Button>
               <Button
                 asChild
