@@ -8,19 +8,15 @@ import ServiceCardsSection from "@/components/services/ServiceCardsSection";
 import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import {
   Sticker,
   CheckCircle,
-  Star,
   ArrowRight,
   Scissors,
-  Shield,
   Palette,
   Settings,
   Zap,
-  Award,
 } from "lucide-react";
 
 export default function ServicoAutocolantes() {
@@ -28,44 +24,44 @@ export default function ServicoAutocolantes() {
     {
       icon: <Scissors className="w-6 h-6" />,
       title: "Corte de contorno preciso",
-      description:
-        "Tecnologia de corte digital que segue perfeitamente as formas do seu design.",
+      description: "Formatos redondos, quadrados ou personalizados.",
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Materiais duradouros",
-      description: "Vinil de alta qualidade resistente a água, UV e intempéries.",
+      icon: <Sticker className="w-6 h-6" />,
+      title: "Impressão em vinil",
+      description:
+        "Produção para interior e exterior, conforme o material escolhido.",
     },
     {
       icon: <Palette className="w-6 h-6" />,
-      title: "Design personalizado",
-      description:
-        "Criação de designs únicos ou adaptação dos seus logótipos e imagens.",
+      title: "Design com IA",
+      description: "Gere até 3 propostas diretamente na aplicação.",
     },
     {
       icon: <Settings className="w-6 h-6" />,
-      title: "Aplicação fácil",
-      description: "Autocolantes preparados para aplicação simples e sem bolhas.",
+      title: "Apoio no design",
+      description:
+        "Se a IA não chegar ao resultado pretendido, a DOMREALCE pode finalizar a arte.",
     },
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Produção rápida",
-      description: "Prazos de entrega reduzidos para projetos urgentes.",
+      title: "Preço imediato",
+      description:
+        "Saiba o valor antes de avançar, sem esperar por orçamento manual.",
     },
     {
-      icon: <Award className="w-6 h-6" />,
-      title: "Acabamento profissional",
+      icon: <CheckCircle className="w-6 h-6" />,
+      title: "Encomenda e pagamento online",
       description:
-        "Cortes limpos e precisos com acabamento de qualidade comercial.",
+        "Configure, confirme e pague diretamente através da aplicação.",
     },
   ];
 
-  // ✅ Features no modelo accordion (igual ao Design)
   const tecnologiaCards: ServiceAccordionCard[] = features.map((f, idx) => ({
     key: `feature-${idx}`,
     icon: f.icon,
     title: f.title,
-    intro: "Precisão, qualidade e durabilidade.",
+    intro: f.description,
     content: [f.description],
   }));
 
@@ -73,26 +69,18 @@ export default function ServicoAutocolantes() {
     {
       name: "Vinil autocolante brilhante",
       description: "Acabamento brilhante para máximo impacto visual.",
-      durability: "5-7 anos exterior",
-      applications: ["Montras", "Viaturas", "Sinalização"],
     },
     {
       name: "Vinil autocolante mate",
       description: "Acabamento mate elegante e discreto.",
-      durability: "5-7 anos exterior",
-      applications: ["Decoração", "Etiquetas premium", "Equipamentos"],
     },
     {
       name: "Vinil removível",
       description: "Para aplicações temporárias sem deixar resíduos.",
-      durability: "1-2 anos",
-      applications: ["Eventos", "Promoções", "Decoração temporária"],
     },
     {
       name: "Vinil transparente",
-      description: "Para aplicação sobre superfícies coloridas.",
-      durability: "3-5 anos",
-      applications: ["Vidros", "Acrílicos", "Superfícies transparentes"],
+      description: "Para vidros, acrílicos e outras superfícies transparentes.",
     },
   ];
 
@@ -138,52 +126,64 @@ export default function ServicoAutocolantes() {
   const process = [
     {
       step: "01",
-      title: "Design e preparação",
-      description: "Criamos ou preparamos o seu design para corte de contorno.",
+      title: "Preparação da arte",
+      description:
+        "Recebemos o seu ficheiro, o design criado com IA ou o pedido de apoio à DOMREALCE.",
     },
     {
       step: "02",
-      title: "Seleção do material",
-      description: "Escolhemos o vinil ideal para a aplicação pretendida.",
+      title: "Impressão e corte",
+      description:
+        "Produzimos em vinil e efetuamos o corte adequado ao formato escolhido.",
     },
     {
       step: "03",
-      title: "Impressão digital",
-      description: "Impressão em alta resolução com cores vibrantes e duradouras.",
-    },
-    {
-      step: "04",
-      title: "Corte de contorno",
-      description: "Corte de precisão seguindo perfeitamente as formas do design.",
-    },
-    {
-      step: "05",
-      title: "Acabamento e entrega",
-      description: "Aplicação de transfer e preparação para aplicação final.",
+      title: "Confirmação e produção",
+      description:
+        "A produção avança depois da confirmação da encomenda e da arte.",
     },
   ];
 
   const quickSteps = [
     {
       step: "01",
-      title: "Escolha medidas e quantidade",
-      description: "Indique as dimensões e a quantidade para obter uma estimativa imediata.",
+      title: "Indique medidas e quantidade",
+      description:
+        "Introduza as dimensões e a quantidade pretendida e obtenha imediatamente uma estimativa do preço.",
     },
     {
       step: "02",
       title: "Personalize o trabalho",
-      description: "Escolha material, laminação, acabamento e tipo de corte.",
+      description:
+        "Escolha o material, acabamento, laminação e tipo de corte mais adequado.",
     },
     {
       step: "03",
-      title: "Envie a arte ou peça ajuda",
-      description: "Pode enviar o seu ficheiro ou pedir apoio na preparação e criação da arte.",
+      title: "Envie ou crie a sua arte",
+      description:
+        "Envie o ficheiro pronto, crie o design com IA até 3 vezes ou peça à DOMREALCE para finalizar a arte.",
     },
     {
       step: "04",
       title: "Confirme e pague online",
-      description: "Finalize o pedido, escolha o pagamento e acompanhe o processo online.",
+      description:
+        "Reveja o pedido, escolha o método de pagamento e conclua a encomenda.",
     },
+  ];
+
+  const audiences = [
+    "Empresas e lojas",
+    "Marcas e produtos",
+    "Eventos e promoções",
+    "Particulares",
+  ];
+
+  const trustPoints = [
+    "Pode enviar a sua própria arte.",
+    "Pode criar o design com IA.",
+    "Pode pedir ajuda à DOMREALCE na preparação da arte.",
+    "O preço é calculado antes da encomenda.",
+    "A produção só avança depois da confirmação.",
   ];
 
   const defaultImages = [
@@ -235,19 +235,22 @@ export default function ServicoAutocolantes() {
       <Navigation />
 
       <ServiceHeroTwoColumn
-        serviceId="autocolantes"
         badge="Autocolantes profissionais"
         badgeIcon={<Sticker className="w-4 h-4" />}
-        title="Autocolantes e etiquetas com corte de contorno"
-        subtitle="Preço imediato • Encomenda online"
-        description="Calcule o preço na hora, escolha medidas, material e acabamento, envie a sua arte ou peça ajuda na criação e finalize o pedido online."
-        imageSrc="/public-objects/servicos/autocolantes.webp"
+        title="Autocolantes e Etiquetas Personalizadas"
+        subtitle="Calcule o preço, personalize e encomende online em poucos minutos."
+        description="Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online."
+        imageSrc="/public-objects/portfolio/Autocolantes/IMG_20221014_095235.webp"
         imageAlt="Autocolantes DOMREALCE"
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
           href: "https://simple-web-light.replit.app/"
         }}
-      />
+      >
+        <p className="max-w-xl text-xs md:text-sm leading-relaxed text-white/60">
+          Preço imediato · Design com IA · Corte de contorno · Pagamento online · Produção própria
+        </p>
+      </ServiceHeroTwoColumn>
 
       <main>
         {/* Como encomendar */}
@@ -289,14 +292,26 @@ export default function ServicoAutocolantes() {
                 <CheckCircle className="w-4 h-4 text-brand-yellow" /> Produção DOMREALCE
               </span>
             </div>
+
+            <div className="mt-8 text-center">
+              <Button
+                asChild
+                className="bg-brand-yellow text-black font-bold px-7 py-6 hover:bg-brand-yellow/90"
+              >
+                <a href="https://simple-web-light.replit.app/">
+                  CALCULAR O MEU PREÇO
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
 
-        {/* ✅ Tecnologias / Features (normalizado para accordion) */}
+        {/* Funcionalidades principais */}
         <ServiceCardsSection
-          titleTop="Tecnologia"
-          titleBottom="de precisão"
-          subtitle="Equipamentos de corte digital que garantem precisão milimétrica em cada autocolante."
+          titleTop="Tudo o que precisa para encomendar"
+          titleBottom="os seus autocolantes"
+          subtitle="Configure o trabalho, prepare a arte e conclua a encomenda online."
           cards={tecnologiaCards}
           defaultOpenKey={null}
         />
@@ -305,134 +320,112 @@ export default function ServicoAutocolantes() {
         <ServiceGallery
           images={galleryImages}
           title="Exemplos de autocolantes e etiquetas"
-          description="Alguns projetos de autocolantes personalizados produzidos para diferentes tipos de clientes."
+          description="Alguns trabalhos produzidos pela DOMREALCE em diferentes formatos, aplicações e tipos de corte."
           columns={3}
         />
 
-        {/* Materiais */}
-        <section className="pt-8 pb-16 bg-black border-t border-gray-900">
+        {/* Informação complementar para clareza e SEO */}
+        <section className="py-14 bg-black border-t border-gray-900">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-9">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Tipos de</span>{" "}
-                <span className="text-brand-yellow">material</span>
-              </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Materiais de alta qualidade para diferentes aplicações e durabilidades.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {materials.map((material, index) => (
-                <Card
-                  key={index}
-                  className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-                >
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-3 text-brand-yellow">
-                      {material.name}
-                    </h3>
-                    <p className="text-gray-400 mb-4">{material.description}</p>
-
-                    <div className="mb-4">
-                      <span className="text-sm text-gray-500">Durabilidade:</span>
-                      <span className="text-brand-yellow font-semibold ml-2">
-                        {material.durability}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-sm text-gray-500 mb-2 block">
-                        Aplicações:
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {material.applications.map((app, appIndex) => (
-                          <Badge
-                            key={appIndex}
-                            variant="outline"
-                            className="border-brand-yellow text-brand-yellow"
-                          >
-                            {app}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Aplicações comuns */}
-        <section className="pt-8 pb-16 bg-gray-900/40">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Aplicações</span>{" "}
-                <span className="text-brand-yellow">comuns</span>
-              </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Infinitas possibilidades de uso para autocolantes e etiquetas personalizadas.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {applications.map((application, index) => (
-                <Card
-                  key={index}
-                  className="bg-black border border-gray-800 hover:border-brand-yellow transition-all duration-300"
-                >
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold mb-4 text-brand-yellow">
-                      {application.category}
-                    </h3>
-                    <div className="space-y-2">
-                      {application.items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full flex-shrink-0" />
-                          <span className="text-sm text-gray-300">{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Processo de produção */}
-        <section className="py-16 bg-black border-t border-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                <span className="text-white">Processo de</span>{" "}
+                <span className="text-white">Materiais, aplicações e</span>{" "}
                 <span className="text-brand-yellow">produção</span>
               </h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Metodologia que garante qualidade e precisão em cada autocolante produzido.
+              <p className="text-gray-400 max-w-3xl mx-auto">
+                Informação essencial para escolher autocolantes e etiquetas personalizados adequados ao seu projeto.
               </p>
             </div>
 
-            <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6">
-                {process.map((step, index) => (
+            <div className="grid lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+              <Card className="bg-gray-900/60 border border-gray-800">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-brand-yellow">
+                    Materiais disponíveis
+                  </h3>
+                  <div className="space-y-4">
+                    {materials.map((material) => (
+                      <div key={material.name}>
+                        <h4 className="text-sm font-semibold text-white">
+                          {material.name}
+                        </h4>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {material.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-900/60 border border-gray-800">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-brand-yellow">
+                    Aplicações comuns
+                  </h3>
+                  <div className="space-y-4">
+                    {applications.map((application) => (
+                      <div key={application.category}>
+                        <h4 className="text-sm font-semibold text-white">
+                          {application.category}
+                        </h4>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {application.items.join(" · ")}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-900/60 border border-gray-800">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-brand-yellow">
+                    Como produzimos
+                  </h3>
+                  <div className="space-y-5">
+                    {process.map((step) => (
+                      <div key={step.step} className="flex gap-3">
+                        <div className="w-8 h-8 rounded-full bg-brand-yellow text-black flex items-center justify-center font-bold text-xs flex-shrink-0">
+                          {step.step}
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold text-white">
+                            {step.title}
+                          </h4>
+                          <p className="text-sm text-gray-400 mt-1 leading-relaxed">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Público-alvo */}
+        <section className="py-14 bg-gray-900/40 border-y border-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-white">Para quem é este </span>
+                <span className="text-brand-yellow">serviço?</span>
+              </h2>
+              <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Ideal para empresas, lojas, marcas, eventos e particulares que precisam de etiquetas e autocolantes personalizados para produtos, embalagens, promoções, identificação, montras, eventos e outras aplicações.
+              </p>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-8">
+                {audiences.map((audience) => (
                   <div
-                    key={index}
-                    className="bg-gray-900/60 border border-gray-800 rounded-xl p-5 flex gap-4"
+                    key={audience}
+                    className="rounded-xl border border-gray-800 bg-black px-4 py-5 text-sm font-semibold text-white"
                   >
-                    <div className="w-10 h-10 rounded-full bg-brand-yellow text-black flex items-center justify-center font-semibold text-sm">
-                      {step.step}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-white">
-                        {step.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
+                    <CheckCircle className="w-5 h-5 text-brand-yellow mx-auto mb-3" />
+                    {audience}
                   </div>
                 ))}
               </div>
@@ -440,84 +433,31 @@ export default function ServicoAutocolantes() {
           </div>
         </section>
 
-        {/* Especificações técnicas */}
-        <section className="py-16 bg-gray-900/40">
+        {/* Confiança e esclarecimento */}
+        <section className="py-14 bg-black">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">
-                    <span className="text-brand-yellow">Especificações</span>{" "}
-                    <span className="text-white">técnicas</span>
-                  </h2>
-                  <p className="text-gray-400 mb-8 text-lg">
-                    Equipamentos de corte de última geração que permitem criar autocolantes
-                    com detalhes impossíveis de conseguir manualmente.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Corte de precisão até 0.1 mm</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Largura máxima: 1,37 m</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Formas complexas e detalhadas</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">Vários materiais compatíveis</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-6 h-6 text-brand-yellow flex-shrink-0" />
-                      <span className="text-white">
-                        Produção em série ou pequenas quantidades
-                      </span>
-                    </div>
-                  </div>
-                </div>
+            <div className="max-w-5xl mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-8 items-center">
+              <div>
+                <p className="text-brand-yellow text-sm font-semibold uppercase tracking-wider mb-3">
+                  Encomende com confiança
+                </p>
+                <h2 className="text-3xl md:text-4xl font-heading font-bold text-white">
+                  Tem dúvidas antes de encomendar?
+                </h2>
+              </div>
 
-                <div className="bg-black rounded-2xl p-8 border border-gray-800">
-                  <div className="text-center mb-6">
-                    <Star className="w-12 h-12 text-brand-yellow mx-auto mb-4" />
-                    <h3 className="text-2xl font-semibold mb-2 text-white">
-                      Qualidade garantida
-                    </h3>
-                    <p className="text-gray-400">
-                      Cada autocolante é inspecionado antes da entrega.
-                    </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {trustPoints.map((point) => (
+                  <div
+                    key={point}
+                    className="flex items-start gap-3 rounded-xl border border-gray-800 bg-gray-900/60 p-4"
+                  >
+                    <CheckCircle className="w-5 h-5 text-brand-yellow flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-200 leading-relaxed">
+                      {point}
+                    </span>
                   </div>
-
-                  <div className="space-y-4 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Espessura do vinil</span>
-                      <span className="text-brand-yellow font-semibold">
-                        80–100 microns
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Resistência UV</span>
-                      <span className="text-brand-yellow font-semibold">
-                        5–7 anos
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Prazo médio</span>
-                      <span className="text-brand-yellow font-semibold">
-                        1–3 dias
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Quantidade mínima</span>
-                      <span className="text-brand-yellow font-semibold">
-                        1 unidade
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -531,7 +471,7 @@ export default function ServicoAutocolantes() {
               <span className="text-brand-yellow">autocolantes?</span>
             </h2>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Escolha as medidas, quantidade, material e acabamento. Veja o preço de imediato e conclua a encomenda online.
+              Introduza as medidas, veja o preço e avance com a encomenda online.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -540,7 +480,7 @@ export default function ServicoAutocolantes() {
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
                 <a href="https://simple-web-light.replit.app/">
-                  Calcular preço e encomendar
+                  CALCULAR PREÇO AGORA
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
@@ -559,6 +499,9 @@ export default function ServicoAutocolantes() {
                 </a>
               </Button>
             </div>
+            <p className="text-sm text-gray-500 mt-5">
+              Sem esperar por orçamento manual.
+            </p>
           </div>
         </section>
       </main>
