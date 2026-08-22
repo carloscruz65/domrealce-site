@@ -1,0 +1,172 @@
+Quero melhorar a página de serviço de **Autocolantes e Etiquetas Personalizadas** sem alterar o estilo visual geral do site DOMREALCE.
+
+Objetivo principal:
+Transformar a página numa landing page mais comercial, que explique claramente a proposta e conduza o visitante para a calculadora/app.
+
+Não alterar:
+
+* identidade visual;
+* cores;
+* tipografia;
+* navegação geral;
+* estrutura técnica da app;
+* funcionamento da calculadora;
+* preços, pagamentos ou tracking;
+* outras páginas do site.
+
+Pretendo apenas rever esta página de serviço, mantendo o design coerente com o site atual.
+
+### 1. HERO
+
+Manter o título principal:
+
+**Autocolantes e Etiquetas Personalizadas**
+
+Substituir o subtítulo/texto atual por:
+
+**Calcule o preço, personalize e encomende online em poucos minutos.**
+
+Texto de apoio:
+
+**Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online.**
+
+CTA principal:
+
+**CALCULAR PREÇO E ENCOMENDAR**
+
+Logo abaixo do botão, adicionar uma linha curta com:
+
+**Preço imediato · Design com IA · Corte de contorno · Pagamento online · Produção própria**
+
+### 2. SECÇÃO “DO PREÇO À ENCOMENDA EM 4 PASSOS”
+
+Manter a estrutura em 4 cartões, mas substituir os textos por:
+
+**1. Indique medidas e quantidade**
+Introduza as dimensões e a quantidade pretendida e obtenha imediatamente uma estimativa do preço.
+
+**2. Personalize o trabalho**
+Escolha o material, acabamento, laminação e tipo de corte mais adequado.
+
+**3. Envie ou crie a sua arte**
+Envie o ficheiro pronto, crie o design com IA até 3 vezes ou peça à DOMREALCE para finalizar a arte.
+
+**4. Confirme e pague online**
+Reveja o pedido, escolha o método de pagamento e conclua a encomenda.
+
+Adicionar logo abaixo destes quatro passos um novo CTA:
+
+**CALCULAR O MEU PREÇO**
+
+Este botão deve levar para a mesma calculadora/app do CTA principal.
+
+### 3. SUBSTITUIR A SECÇÃO “TECNOLOGIA DE PRECISÃO”
+
+Alterar o título para:
+
+**Tudo o que precisa para encomendar os seus autocolantes**
+
+Subtítulo curto:
+
+**Configure o trabalho, prepare a arte e conclua a encomenda online.**
+
+Substituir os atuais cartões genéricos pelos seguintes:
+
+**Corte de contorno preciso**
+Formatos redondos, quadrados ou personalizados.
+
+**Impressão em vinil**
+Produção para interior e exterior, conforme o material escolhido.
+
+**Design com IA**
+Gere até 3 propostas diretamente na aplicação.
+
+**Apoio no design**
+Se a IA não chegar ao resultado pretendido, a DOMREALCE pode finalizar a arte.
+
+**Preço imediato**
+Saiba o valor antes de avançar, sem esperar por orçamento manual.
+
+**Encomenda e pagamento online**
+Configure, confirme e pague diretamente através da aplicação.
+
+### 4. EXEMPLOS
+
+Manter a secção atual de exemplos.
+
+Alterar o título para:
+
+**Exemplos de autocolantes e etiquetas**
+
+Adicionar subtítulo:
+
+**Alguns trabalhos produzidos pela DOMREALCE em diferentes formatos, aplicações e tipos de corte.**
+
+Manter apenas imagens reais relevantes de etiquetas, autocolantes e vinil impresso.
+
+### 5. NOVA SECÇÃO “PARA QUEM É ESTE SERVIÇO?”
+
+Adicionar uma secção antes do CTA final.
+
+Título:
+
+**Para quem é este serviço?**
+
+Texto:
+
+**Ideal para empresas, lojas, marcas, eventos e particulares que precisam de etiquetas e autocolantes personalizados para produtos, embalagens, promoções, identificação, montras, eventos e outras aplicações.**
+
+Apresentar esta informação de forma visual e curta, sem criar demasiado texto.
+
+### 6. NOVA SECÇÃO DE CONFIANÇA / DÚVIDAS
+
+Adicionar uma secção:
+
+**Tem dúvidas antes de encomendar?**
+
+Mostrar de forma simples estas vantagens:
+
+* Pode enviar a sua própria arte.
+* Pode criar o design com IA.
+* Pode pedir ajuda à DOMREALCE na preparação da arte.
+* O preço é calculado antes da encomenda.
+* A produção só avança depois da confirmação.
+
+### 7. CTA FINAL
+
+Adicionar no final da página uma área visual forte com:
+
+**Pronto para criar os seus autocolantes?**
+
+Texto:
+
+**Introduza as medidas, veja o preço e avance com a encomenda online.**
+
+Botão:
+
+**CALCULAR PREÇO AGORA**
+
+Texto pequeno por baixo:
+
+**Sem esperar por orçamento manual.**
+
+### REGRAS IMPORTANTES
+
+* Não criar informações que não existam no serviço.
+* Não inventar descontos, prazos ou preços.
+* Não mencionar instalação/aplicação como serviço desta página.
+* Não alterar a calculadora nem o seu funcionamento.
+* Não alterar pagamentos, tracking ou Google Ads.
+* Não alterar outras páginas.
+* Preservar o estilo escuro/preto e amarelo já existente.
+* Garantir boa apresentação em desktop e mobile.
+* Reutilizar componentes existentes sempre que possível.
+
+Antes de alterar o código, responde primeiro com:
+
+1. ficheiro(s) que vais alterar;
+2. secções/componentes que vais modificar;
+3. se algum texto ou componente existente será removido;
+4. confirmação de que nenhuma lógica da calculadora, pagamentos ou tracking será alterada.
+
+Não alteres o código até eu aprovar.
