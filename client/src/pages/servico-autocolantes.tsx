@@ -186,6 +186,17 @@ export default function ServicoAutocolantes() {
     "A produção só avança depois da confirmação.",
   ];
 
+  const applicationExamples = [
+    "Etiquetas para produtos e embalagens",
+    "Etiquetas para copos e garrafas",
+    "Autocolantes para fechar caixas e sacos",
+    "Autocolantes para montras, saldos e promoções",
+    "Autocolantes para festas e campanhas sazonais",
+    "Logótipos e identificação de marca",
+    "Autocolantes com corte de contorno",
+    "Autocolantes de grande formato",
+  ];
+
   const defaultImages = [
     {
       src: "https://images.unsplash.com/photo-1611532736579-6b16e2b50449?w=800&q=80",
@@ -239,7 +250,7 @@ export default function ServicoAutocolantes() {
         badgeIcon={<Sticker className="w-4 h-4" />}
         title="Autocolantes e Etiquetas Personalizadas"
         subtitle="Calcule o preço, personalize e encomende online em poucos minutos."
-        description="Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online."
+        description="Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online. Comece aqui: indique as medidas e veja o preço imediatamente."
         imageSrc="/public-objects/portfolio/Autocolantes/IMG_20221014_095235.webp"
         imageAlt="Autocolantes DOMREALCE"
         primaryCta={{
@@ -268,16 +279,20 @@ export default function ServicoAutocolantes() {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
               {quickSteps.map((item) => (
-                <div
+                <a
                   key={item.step}
-                  className="bg-black border border-gray-800 rounded-xl p-5 hover:border-brand-yellow transition-colors"
+                  href="https://simple-web-light.replit.app/"
+                  className="group block h-full bg-black border border-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-200 hover:border-brand-yellow hover:-translate-y-0.5 hover:bg-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   <div className="w-9 h-9 rounded-full bg-brand-yellow text-black flex items-center justify-center font-bold text-sm mb-4">
                     {item.step}
                   </div>
                   <h3 className="text-white font-semibold mb-2">{item.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
-                </div>
+                  <span className="inline-flex mt-4 text-sm font-semibold text-brand-yellow transition-transform duration-200 group-hover:translate-x-1">
+                    Começar agora →
+                  </span>
+                </a>
               ))}
             </div>
 
@@ -303,6 +318,35 @@ export default function ServicoAutocolantes() {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </a>
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Exemplos de utilização da aplicação */}
+        <section className="py-14 bg-black border-b border-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-9">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-white">O que pode criar com esta </span>
+                <span className="text-brand-yellow">aplicação?</span>
+              </h2>
+              <p className="text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                Desde pequenas etiquetas até autocolantes de grande formato. Escolha as medidas, quantidade e acabamento e veja o preço na hora.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+              {applicationExamples.map((example) => (
+                <div
+                  key={example}
+                  className="min-h-28 rounded-xl border border-gray-800 bg-gray-900/50 p-5 flex items-start gap-3"
+                >
+                  <CheckCircle className="w-5 h-5 text-brand-yellow flex-shrink-0 mt-0.5" />
+                  <h3 className="text-sm md:text-base font-semibold text-white leading-snug">
+                    {example}
+                  </h3>
+                </div>
+              ))}
             </div>
           </div>
         </section>
