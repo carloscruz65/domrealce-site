@@ -1,0 +1,89 @@
+Quero fazer algumas melhorias rápidas na landing page servico-autocolantes, com base no comportamento real observado no Microsoft Clarity.
+
+Objetivo: aumentar a percentagem de visitantes que percebem para que serve o serviço e avançam para a calculadora.
+
+1. Tornar os 4 cartões dos “4 passos” clicáveis
+
+Na secção “Do preço à encomenda em 4 passos”, tornar cada um dos 4 cartões totalmente clicável.
+
+Ao clicar em qualquer cartão, deve abrir o mesmo destino do botão principal “CALCULAR PREÇO E ENCOMENDAR”.
+
+Desktop:
+
+cursor pointer;
+efeito hover discreto;
+toda a área do cartão é clicável.
+
+Mobile/tablet:
+
+toda a área do cartão funciona por toque.
+
+Acrescentar uma microfrase visual em cada cartão, por exemplo:
+“Começar agora →”
+
+Não alterar a lógica da calculadora nem tentar abrir etapas específicas.
+
+2. Reforçar o CTA principal
+
+No hero, imediatamente antes do botão principal, acrescentar uma frase curta:
+
+“Comece aqui: indique as medidas e veja o preço imediatamente.”
+
+Manter o botão atual “CALCULAR PREÇO E ENCOMENDAR”.
+
+3. Repetir o CTA depois dos 4 passos
+
+Depois da secção dos 4 passos, acrescentar novamente um botão:
+
+“CALCULAR O MEU PREÇO”
+
+com o mesmo destino da calculadora.
+
+4. Nova secção sem imagens por enquanto
+
+Criar uma secção simples chamada:
+
+“O que pode criar com esta aplicação?”
+
+Texto introdutório:
+
+“Desde pequenas etiquetas até autocolantes de grande formato. Escolha as medidas, quantidade e acabamento e veja o preço na hora.”
+
+Mostrar exemplos em cartões de texto:
+
+Etiquetas para produtos e embalagens
+Etiquetas para copos e garrafas
+Autocolantes para fechar caixas e sacos
+Autocolantes para montras, saldos e promoções
+Autocolantes para festas e campanhas sazonais
+Logótipos e identificação de marca
+Autocolantes com corte de contorno
+Autocolantes de grande formato
+
+Manter esta secção simples e coerente com o design preto/amarelo atual.
+
+5. Não mexer nos dropdowns existentes
+
+Os cartões de benefícios com setas amarelas já têm informação em dropdown. Não alterar esse funcionamento nesta mudança.
+
+6. Não alterar
+calculadora;
+preços;
+pagamentos;
+tracking;
+Clarity;
+Google Ads;
+lógica de pedidos.
+
+Antes de implementar, confirma:
+
+qual é o ficheiro da landing page;
+qual é atualmente o destino do CTA principal;
+onde pretendes inserir a nova secção.
+
+Pergunta adicional: consegues também criar ou gerar diretamente no projeto:
+
+mockups credíveis de etiquetas/autocolantes aplicados para estes exemplos;
+e um vídeo curto explicativo da utilização da app, com voz e legendas em português de Portugal, mostrando o preenchimento da calculadora, a IA de ajuda e a criação de design com IA?
+
+Para já não cries mockups nem vídeo. Quero apenas saber que ferramentas/capacidades tens disponíveis, que qualidade podemos esperar e se isso teria custo adicional em créditos.
