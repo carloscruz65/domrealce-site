@@ -19,7 +19,27 @@ import {
   Zap,
 } from "lucide-react";
 
+const CALCULATOR_BASE_URL = "https://calcular.domrealce.com/";
+
+export function buildCalculatorUrl(
+  currentSearch: string,
+  baseUrl = CALCULATOR_BASE_URL,
+) {
+  const calculatorUrl = new URL(baseUrl);
+  const currentParams = new URLSearchParams(currentSearch);
+
+  currentParams.forEach((value, key) => {
+    calculatorUrl.searchParams.set(key, value);
+  });
+
+  return calculatorUrl.toString();
+}
+
 export default function ServicoAutocolantes() {
+  const calculatorUrl = buildCalculatorUrl(
+    typeof window === "undefined" ? "" : window.location.search,
+  );
+
   const features = [
     {
       icon: <Scissors className="w-6 h-6" />,
@@ -255,7 +275,7 @@ export default function ServicoAutocolantes() {
         imageAlt="Autocolantes DOMREALCE"
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
-          href: "https://simple-web-light.replit.app/"
+          onClick: () => window.location.assign(calculatorUrl),
         }}
       >
         <p className="max-w-xl text-xs md:text-sm leading-relaxed text-white/60">
@@ -281,7 +301,7 @@ export default function ServicoAutocolantes() {
               {quickSteps.map((item) => (
                 <a
                   key={item.step}
-                  href="https://simple-web-light.replit.app/"
+                  href={calculatorUrl}
                   className="group block h-full bg-black border border-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-200 hover:border-brand-yellow hover:-translate-y-0.5 hover:bg-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   <div className="w-9 h-9 rounded-full bg-brand-yellow text-black flex items-center justify-center font-bold text-sm mb-4">
@@ -313,7 +333,7 @@ export default function ServicoAutocolantes() {
                 asChild
                 className="bg-brand-yellow text-black font-bold px-7 py-6 hover:bg-brand-yellow/90"
               >
-                <a href="https://simple-web-light.replit.app/">
+                <a href={calculatorUrl}>
                   CALCULAR O MEU PREÇO
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </a>
@@ -523,7 +543,7 @@ export default function ServicoAutocolantes() {
                 asChild
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
-                <a href="https://simple-web-light.replit.app/">
+                <a href={calculatorUrl}>
                   CALCULAR PREÇO AGORA
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
