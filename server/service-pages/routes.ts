@@ -12,6 +12,7 @@ import {
   patchServiceSection,
   patchServiceSeo,
   reorderServiceSections,
+  seedAutocolantesServicePage,
   ServicePageConflictError,
   ServicePageNotFoundError,
   ServicePageValidationError,
@@ -58,6 +59,24 @@ export function registerServicePageRoutes(app: Express) {
     protegerAdmin,
     async (req: Request, res: Response) => {
       try {
+        const page = await getStoredServicePage(req.params.serviceId);
+        if (!page) return res.status(404).json({ error: "Service page not found" });
+        return res.json(page);
+      } catch (error) {
+        return sendServicePageError(res, error);
+      }
+    },
+  );
+
+  app.post(
+    "/api/admin/service-pages/:serviceId/initialize",
+    protegerAdmin,
+    async (req: Request, res: Response) => {
+      try {
+        if (req.params.serviceId !== "autocolantes") {
+          return res.status(404).json({ error: "Service page not found" });
+        }
+        await seedAutocolantesServicePage();
         const page = await getStoredServicePage(req.params.serviceId);
         if (!page) return res.status(404).json({ error: "Service page not found" });
         return res.json(page);

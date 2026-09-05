@@ -6,6 +6,7 @@ import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
 import ServiceGallery from "@/components/service-gallery";
 import ServiceCardsSection from "@/components/services/ServiceCardsSection";
 import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
+import { CmsAutocolantesPage } from "@/pages/servico-autocolantes-cms-renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +21,10 @@ import {
 } from "lucide-react";
 
 const CALCULATOR_BASE_URL = "https://calcular.domrealce.com/";
+const WHATSAPP_URL = "https://wa.me/351930682725?text=Olá!%20Interessado%20em%20autocolantes.";
+type CmsSection = { id: string; key: string; type: string; position: number; visible: boolean; content: Record<string, unknown> };
+type CmsPage = { serviceId: string; sections: CmsSection[]; seo?: { title: string; description: string; ogImage: string | null }; legacyGallery?: { images?: GalleryImage[] } | GalleryImage[] };
+type GalleryImage = { src: string; alt: string; title: string };
 
 export function buildCalculatorUrl(currentSearch: string) {
   const calculatorUrl = new URL(CALCULATOR_BASE_URL);
@@ -33,6 +38,11 @@ export function buildCalculatorUrl(currentSearch: string) {
 }
 
 export default function ServicoAutocolantes() {
+  const publicPageQuery = useQuery<CmsPage>({
+    queryKey: ["/api/service-pages/autocolantes"],
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
   const calculatorUrl = buildCalculatorUrl(
     typeof window === "undefined" ? "" : window.location.search,
   );
@@ -247,7 +257,11 @@ export default function ServicoAutocolantes() {
     },
   ];
 
-  const SERVICE_GALLERY_KEY = "autocolantes";
+  const cmsGalleryKey = publicPageQuery.data?.sections
+    ?.find((section) => section.type === "gallery")
+    ?.content.legacyServiceGalleryKey;
+  const SERVICE_GALLERY_KEY =
+    typeof cmsGalleryKey === "string" && cmsGalleryKey ? cmsGalleryKey : "autocolantes";
 
   const { data: galleryData } = useQuery<{ images: typeof defaultImages }>({
     queryKey: ["/api/service-galleries", SERVICE_GALLERY_KEY],
@@ -257,6 +271,11 @@ export default function ServicoAutocolantes() {
   const cmsImages = galleryData?.images;
   const galleryImages =
     cmsImages && cmsImages.length > 0 ? cmsImages : defaultImages;
+  const publicGalleryImages = cmsImages ?? [];
+
+  if (publicPageQuery.data?.sections?.length) {
+    return <CmsAutocolantesPage page={publicPageQuery.data} calculatorUrl={calculatorUrl} legacyImages={publicGalleryImages} />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">

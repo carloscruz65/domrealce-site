@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { servicePageSettings, serviceSections } from "../shared/schema";
+import { selectPublicGalleryImages } from "../client/src/pages/servico-autocolantes-cms-data";
 import {
   serviceSectionOrderPatchSchema,
   serviceSectionPatchSchema,
@@ -19,6 +20,12 @@ import {
 } from "../server/service-pages/storage";
 
 async function verify() {
+  const fallbackGallery = [{ src: "/cms-fallback.webp", alt: "Fallback CMS", title: "Fallback" }];
+  assert.deepEqual(
+    selectPublicGalleryImages([], undefined, fallbackGallery),
+    fallbackGallery,
+  );
+
   const serviceId = `service-page-verification-${randomUUID()}`;
   const hero = autocolantesSectionDefaults.find((section) => section.type === "hero")!;
   const trust = autocolantesSectionDefaults.find((section) => section.type === "trust")!;
