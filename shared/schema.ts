@@ -8,7 +8,9 @@ import {
   boolean,
   integer,
   index,
+  uniqueIndex,
   jsonb,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -218,6 +220,61 @@ export const serviceHeros = pgTable("service_heroes", {
 
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const serviceSectionTypeEnum = pgEnum("service_section_type", [
+  "hero",
+  "ordering_steps",
+  "application_examples",
+  "feature_accordions",
+  "gallery",
+  "materials_applications_production",
+  "audiences",
+  "trust",
+  "video",
+  "final_cta",
+]);
+
+export const serviceSections = pgTable(
+  "service_sections",
+  {
+    id: varchar("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    serviceId: text("service_id").notNull(),
+    key: text("key").notNull(),
+    type: serviceSectionTypeEnum("type").notNull(),
+    content: jsonb("content").notNull(),
+    position: integer("position").notNull(),
+    visible: boolean("visible").notNull().default(true),
+    version: integer("version").notNull().default(1),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("service_sections_service_key_unique").on(
+      table.serviceId,
+      table.key,
+    ),
+    uniqueIndex("service_sections_service_position_unique").on(
+      table.serviceId,
+      table.position,
+    ),
+    index("service_sections_ordering_idx").on(
+      table.serviceId,
+      table.position,
+    ),
+  ],
+);
+
+export const servicePageSettings = pgTable("service_page_settings", {
+  serviceId: text("service_id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  ogImage: text("og_image"),
+  version: integer("version").notNull().default(1),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const orders = pgTable("orders", {
@@ -658,6 +715,8 @@ export type InsertServiceGallery = z.infer<typeof insertServiceGallerySchema>;
 export type ServiceGallery = typeof serviceGalleries.$inferSelect;
 export type InsertServiceHero = z.infer<typeof insertServiceHeroSchema>;
 export type ServiceHero = typeof serviceHeros.$inferSelect;
+export type ServiceSection = typeof serviceSections.$inferSelect;
+export type ServicePageSettings = typeof servicePageSettings.$inferSelect;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof orders.$inferSelect;
 

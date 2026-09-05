@@ -1,0 +1,1 @@
+- [Drizzle schema application](drizzle-schema-application.md) — full db:push prompts on a redundant legacy gallery constraint; preserve data and apply only additive dev DDL.

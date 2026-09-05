@@ -27,6 +27,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { protegerAdmin } from "./middleware";
 import { randomUUID } from "crypto";
+import { registerServicePageRoutes } from "./service-pages/routes";
 
 // ✅ Recriar __dirname para ES Modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,7 @@ function logRouteError(requestId: string, label: string, err: unknown) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit authentication
   await setupAuth(app);
+  registerServicePageRoutes(app);
 
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
