@@ -12,6 +12,7 @@ import EncomendasManager from "@/components/EncomendasManager";
 import PageEditor from "@/components/PageEditor";
 import ServiceGalleryEditor from "@/components/ServiceGalleryEditor";
 import HeroEditor from "@/components/HeroEditor";
+import AutocolantesServicePageEditor from "@/components/service-page-editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -54,9 +55,13 @@ function getServiceName(serviceId: string): string {
 }
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const initialParams = new URLSearchParams(window.location.search);
+  const [activeTab, setActiveTab] = useState(initialParams.get("tab") || "dashboard");
+  const [selectedService, setSelectedService] = useState<string | null>(
+    initialParams.get("service"),
+  );
   const [serviceSubTab, setServiceSubTab] = useState<"gallery" | "hero">("gallery");
+  const [serviceEditorDirty, setServiceEditorDirty] = useState(false);
 
   const { data: authStatus } = useQuery<{ authenticated: boolean; user?: { name: string } }>({
     queryKey: ["/api/auth/status"],
@@ -64,6 +69,27 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
+  };
+
+  const confirmDiscardServiceDraft = () =>
+    !serviceEditorDirty ||
+    window.confirm("Existem alterações por guardar. Quer descartá-las e sair do editor?");
+
+  const handleAdminTabChange = (nextTab: string) => {
+    if (
+      activeTab === "servicos" &&
+      selectedService === "autocolantes" &&
+      nextTab !== activeTab &&
+      !confirmDiscardServiceDraft()
+    ) {
+      return;
+    }
+    setActiveTab(nextTab);
+  };
+
+  const handleBackToServices = () => {
+    if (!confirmDiscardServiceDraft()) return;
+    setSelectedService(null);
   };
 
   return (
@@ -95,7 +121,7 @@ export default function AdminPage() {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleAdminTabChange} className="w-full">
             <TabsList className="flex flex-wrap gap-1 h-auto mb-8 bg-gray-900 p-1">
               <TabsTrigger value="dashboard" className="flex items-center gap-1.5 text-xs px-3 py-2">
                 <LayoutDashboard className="h-3.5 w-3.5" />
@@ -230,31 +256,35 @@ export default function AdminPage() {
                   <Button 
                     variant="outline" 
                     className="mb-4" 
-                    onClick={() => setSelectedService(null)}
+                    onClick={handleBackToServices}
                     data-testid="button-back-services"
                   >
                     ← Voltar à Lista de Serviços
                   </Button>
-                  <Tabs value={serviceSubTab} onValueChange={(val) => setServiceSubTab(val as "gallery" | "hero")} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
-                      <TabsTrigger value="gallery">Galeria de Imagens</TabsTrigger>
-                      <TabsTrigger value="hero">Hero Section</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="gallery">
-                      <ServiceGalleryEditor 
-                        serviceId={selectedService} 
-                        serviceName={getServiceName(selectedService)}
-                        onBack={() => setSelectedService(null)}
-                      />
-                    </TabsContent>
-                    <TabsContent value="hero">
-                      <HeroEditor 
-                        serviceId={selectedService} 
-                        serviceName={getServiceName(selectedService)}
-                        onBack={() => setSelectedService(null)}
-                      />
-                    </TabsContent>
-                  </Tabs>
+                  {selectedService === "autocolantes" ? (
+                    <AutocolantesServicePageEditor onDirtyChange={setServiceEditorDirty} />
+                  ) : (
+                    <Tabs value={serviceSubTab} onValueChange={(val) => setServiceSubTab(val as "gallery" | "hero")} className="w-full">
+                      <TabsList className="grid w-full grid-cols-2 mb-6">
+                        <TabsTrigger value="gallery">Galeria de Imagens</TabsTrigger>
+                        <TabsTrigger value="hero">Hero Section</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="gallery">
+                        <ServiceGalleryEditor
+                          serviceId={selectedService}
+                          serviceName={getServiceName(selectedService)}
+                          onBack={() => setSelectedService(null)}
+                        />
+                      </TabsContent>
+                      <TabsContent value="hero">
+                        <HeroEditor
+                          serviceId={selectedService}
+                          serviceName={getServiceName(selectedService)}
+                          onBack={() => setSelectedService(null)}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  )}
                 </div>
               ) : (
                 <ServicesGalleryList onSelectService={setSelectedService} />
@@ -345,7 +375,7 @@ function ServicesGalleryList({ onSelectService }: ServicesGalleryListProps) {
     <div>
       <h2 className="text-2xl font-bold mb-6">Gestão de Serviços</h2>
       <p className="text-muted-foreground mb-8">
-        Selecione um serviço para editar a galeria de imagens e hero section
+        Selecione um serviço para editar o conteúdo e os elementos visuais disponíveis
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {services.map((service) => (
@@ -361,7 +391,7 @@ function ServicesGalleryList({ onSelectService }: ServicesGalleryListProps) {
             </CardHeader>
             <CardContent>
               <Button className="w-full" data-testid={`button-edit-${service.id}`}>
-                Editar Galeria
+                {service.id === "autocolantes" ? "Editar página" : "Editar Galeria"}
               </Button>
             </CardContent>
           </Card>

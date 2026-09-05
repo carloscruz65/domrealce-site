@@ -59,6 +59,27 @@ async function verify() {
       (hero.content.primaryCta as Record<string, unknown>).href,
     );
 
+    const originalPoints = trust.content.points as Array<Record<string, unknown>>;
+    const reversedPoints = [...originalPoints]
+      .reverse()
+      .map((point, position) => ({ ...point, position }));
+    const reorderedPointsPatch = serviceSectionPatchSchema.parse({
+      type: "trust",
+      version: 1,
+      content: { points: reversedPoints },
+    });
+    const reorderedPoints = await patchServiceSection(
+      serviceId,
+      "trust",
+      reorderedPointsPatch.type,
+      reorderedPointsPatch.version,
+      reorderedPointsPatch.content,
+    );
+    assert.deepEqual(
+      (reorderedPoints.content as Record<string, unknown>).points,
+      reversedPoints,
+    );
+
     const emptyPatch = serviceSectionPatchSchema.parse({
       type: "hero",
       version: 2,
@@ -75,7 +96,7 @@ async function verify() {
 
     const emptyArrayPatch = serviceSectionPatchSchema.parse({
       type: "trust",
-      version: 1,
+      version: 2,
       content: { points: [] },
     });
     const emptiedArray = await patchServiceSection(
@@ -106,7 +127,7 @@ async function verify() {
     const reorder = serviceSectionOrderPatchSchema.parse({
       sections: [
         { key: "hero", position: 1, visible: false, version: 3 },
-        { key: "trust", position: 0, visible: true, version: 2 },
+        { key: "trust", position: 0, visible: true, version: 3 },
       ],
     });
     const reordered = await reorderServiceSections(serviceId, reorder.sections);
@@ -128,11 +149,11 @@ async function verify() {
     const concurrent = await Promise.allSettled([
       reorderServiceSections(serviceId, [
         { key: "hero", position: 0, visible: true, version: 4 },
-        { key: "trust", position: 1, visible: true, version: 3 },
+        { key: "trust", position: 1, visible: true, version: 4 },
       ]),
       reorderServiceSections(serviceId, [
         { key: "hero", position: 0, visible: false, version: 4 },
-        { key: "trust", position: 1, visible: false, version: 3 },
+        { key: "trust", position: 1, visible: false, version: 4 },
       ]),
     ]);
     assert.equal(concurrent.filter((result) => result.status === "fulfilled").length, 1);

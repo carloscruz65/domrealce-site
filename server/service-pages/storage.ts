@@ -49,6 +49,16 @@ export function deepMerge<T>(current: T, patch: unknown): T {
       for (const value of patch) {
         if (!existingIds.has((value as Record<string, unknown>).id)) merged.push(value);
       }
+      if (merged.every((value) =>
+        value !== null &&
+        typeof value === "object" &&
+        typeof (value as Record<string, unknown>).position === "number"
+      )) {
+        merged.sort((left, right) =>
+          ((left as Record<string, unknown>).position as number) -
+          ((right as Record<string, unknown>).position as number)
+        );
+      }
       return merged as T;
     }
     return patch as T;
