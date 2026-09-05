@@ -1,0 +1,127 @@
+Quero avançar agora com o Passo 3 — Atualização integral do administrador da página de etiquetas.
+
+Importante: não alterar o Admin da app/calculadora. Essa parte já está funcional e configurável.
+
+O objetivo é tornar a página pública de etiquetas/autocolantes do site DOMREALCE totalmente editável pelo Admin do site, sem depender de alterações no código.
+
+Com base na página atual, quero que o Admin permita gerir estas secções:
+
+1. Hero
+
+selo pequeno;
+título principal;
+subtítulo;
+texto introdutório;
+texto do botão principal;
+link do botão;
+linha curta de vantagens;
+imagem ou vídeo principal.
+
+2. Do preço à encomenda em 4 passos
+
+título da secção;
+subtítulo;
+título e texto de cada um dos 4 passos;
+texto/link “Começar agora”;
+botão final “Calcular o meu preço”.
+
+3. O que pode criar com esta aplicação?
+
+título;
+subtítulo;
+gerir os cartões;
+texto de cada cartão;
+ordem;
+mostrar/ocultar cada cartão.
+
+4. Tudo o que precisa para encomendar os seus autocolantes
+
+título;
+subtítulo;
+título de cada cartão;
+descrição curta;
+conteúdo expandido do dropdown;
+ícone, se aplicável;
+ordem;
+mostrar/ocultar.
+
+5. Exemplos de autocolantes e etiquetas
+
+título;
+subtítulo;
+galeria de imagens;
+adicionar/remover/substituir imagens;
+ordenar imagens;
+texto alternativo;
+mostrar/ocultar imagem.
+
+6. Materiais, aplicações e produção
+
+título;
+subtítulo;
+bloco “Materiais disponíveis”;
+bloco “Aplicações comuns”;
+bloco “Como produzimos”;
+todos os títulos e textos editáveis.
+
+7. Para quem é este serviço?
+
+título;
+texto introdutório;
+editar os 4 cartões;
+ordem;
+mostrar/ocultar.
+
+8. Tem dúvidas antes de encomendar?
+
+pequeno título superior;
+título principal;
+lista de vantagens/confiança;
+textos editáveis;
+ordem;
+mostrar/ocultar.
+
+9. CTA final
+
+título;
+subtítulo;
+texto do botão “Calcular preço agora”;
+link do botão;
+texto do botão “WhatsApp direto”;
+número/link de WhatsApp;
+texto inferior.
+
+10. Nova secção para vídeo explicativo
+
+criar já no Admin, mesmo que inicialmente fique desativada;
+título;
+subtítulo;
+URL/upload do vídeo;
+poster/thumbnail;
+posição da secção;
+mostrar/ocultar.
+
+11. SEO
+
+title;
+meta description;
+imagem social/Open Graph, se a estrutura atual do site suportar.
+
+Funções globais importantes
+
+permitir alterar a ordem das secções;
+permitir mostrar/ocultar secções;
+preservar todo o conteúdo atual ao migrar para o Admin;
+uma gravação no Admin nunca deve apagar conteúdo que não tenha sido editado;
+manter o design visual atual da página pública;
+não alterar URLs, tracking, CTAs existentes, calculadora, pagamentos ou lógica da app.
+
+Antes de implementar, quero que faças primeiro uma análise e me mostres:
+
+como está hoje estruturado o Admin do site;
+que partes desta página já são configuráveis;
+quais estão fixas no código;
+que alterações de base de dados/schema/API serão necessárias;
+como vais garantir compatibilidade com o conteúdo atual.
+
+Não implementes ainda antes de me mostrares essa análise.
