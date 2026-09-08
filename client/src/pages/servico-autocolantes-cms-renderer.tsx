@@ -99,6 +99,7 @@ function renderSection(
           description={asText(content.description)}
           imageSrc={asText(content.imageSrc)}
           imageAlt={asText(content.imageAlt)}
+          textForward
           primaryCta={{
             text: asText((content.primaryCta as Record<string, unknown>)?.text),
             onClick: () => window.location.assign(calculatorUrl),

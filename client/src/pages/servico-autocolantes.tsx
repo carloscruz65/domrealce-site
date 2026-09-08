@@ -289,6 +289,7 @@ export default function ServicoAutocolantes() {
         description="Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online. Comece aqui: indique as medidas e veja o preço imediatamente."
         imageSrc="/public-objects/portfolio/Autocolantes/IMG_20221014_095235.webp"
         imageAlt="Autocolantes DOMREALCE"
+        textForward
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
           onClick: () => window.location.assign(calculatorUrl),

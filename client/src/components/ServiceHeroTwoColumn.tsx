@@ -43,6 +43,9 @@ interface ServiceHeroTwoColumnProps {
 
   /** ✅ Novo: evita repetir o título quando o card já o mostra */
   hideTitle?: boolean;
+
+  /** Dá mais largura e presença à coluna de texto sem afetar o conteúdo */
+  textForward?: boolean;
 }
 
 function HeroSkeleton({
@@ -103,6 +106,7 @@ export default function ServiceHeroTwoColumn({
 
   compact = false,
   hideTitle = false,
+  textForward = false,
 }: ServiceHeroTwoColumnProps) {
   const cmsEnabled = Boolean(serviceId && serviceId.trim() !== "");
 
@@ -163,7 +167,7 @@ export default function ServiceHeroTwoColumn({
   );
 
   const TextBlock = (
-    <div className="space-y-4">
+    <div className={textForward ? "space-y-5" : "space-y-4"}>
       {resolved.badge ? (
         <div className="flex items-center gap-2">
           {badgeIcon ? <span className="text-brand-yellow">{badgeIcon}</span> : null}
@@ -185,7 +189,10 @@ export default function ServiceHeroTwoColumn({
       ) : null}
 
       {resolved.description ? (
-        <p className="text-sm md:text-base text-white/70 leading-relaxed">
+        <p className={textForward
+          ? "max-w-2xl text-base leading-relaxed text-white/70 md:text-[1.0625rem] lg:text-lg"
+          : "text-sm md:text-base text-white/70 leading-relaxed"
+        }>
           {resolved.description}
         </p>
       ) : null}
@@ -270,7 +277,11 @@ export default function ServiceHeroTwoColumn({
   return (
     <section className={`w-full ${sectionPadding}`}>
       <div className={wrapperClass}>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
+        <div className={`grid grid-cols-1 items-center gap-8 ${
+          textForward
+            ? "md:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:gap-10"
+            : "md:grid-cols-2"
+        }`}>
           {imagePosition === "left" ? (
             <>
               {ImageBlock}
