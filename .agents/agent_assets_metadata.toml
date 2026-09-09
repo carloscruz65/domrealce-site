@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "9HDMRTn0U0LoKW04Id1Qc"
+uri = "file://screenshots/autocolantes-hero-preview.jpg"
+type = "image"
+title = "Preview — Hero de Autocolantes"
+description = "Hero público renderizado pelo CMS no Preview após o ajuste visual."
+logical_id = "be00a11b-0c88-4512-a7b0-6eb9c4b6a039"
+content_hash = "sha256:df1307d5dec17c9bc551793cbd91a01d61c8b0a5f48e2e330949028728f22373"
+size = 116648
+mtime_ms = 1788936941786
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:3bf90cb8-837d-49dd-b68d-11cd7e048610/be00a11b-0c88-4512-a7b0-6eb9c4b6a039/cd11068d-ff21-45a5-8fe2-1db4f1940b47"
+storage_version_token = "1788936950241970"
+content_type = "image/jpeg"

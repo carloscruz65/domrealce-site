@@ -46,6 +46,9 @@ interface ServiceHeroTwoColumnProps {
 
   /** Dá mais largura e presença à coluna de texto sem afetar o conteúdo */
   textForward?: boolean;
+
+  /** Amplia discretamente tipografia e imagem para páginas de maior destaque */
+  prominent?: boolean;
 }
 
 function HeroSkeleton({
@@ -107,6 +110,7 @@ export default function ServiceHeroTwoColumn({
   compact = false,
   hideTitle = false,
   textForward = false,
+  prominent = false,
 }: ServiceHeroTwoColumnProps) {
   const cmsEnabled = Boolean(serviceId && serviceId.trim() !== "");
 
@@ -151,7 +155,9 @@ export default function ServiceHeroTwoColumn({
   };
 
   const ImageBlock = (
-    <div className="relative overflow-hidden rounded-2xl">
+    <div className={`relative overflow-hidden rounded-2xl ${
+      prominent ? "md:scale-[1.025] lg:translate-x-4 lg:scale-105 xl:translate-x-6" : ""
+    }`}>
       {resolved.imageSrc ? (
         <img
           src={resolved.imageSrc}
@@ -179,17 +185,25 @@ export default function ServiceHeroTwoColumn({
 
       {/* ✅ evita repetição do título quando já existe no card */}
       {!hideTitle && resolved.title ? (
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-brand-yellow">
+        <h1 className={prominent
+          ? "text-[2rem] font-semibold tracking-tight text-brand-yellow md:text-[2.625rem] lg:text-[2.875rem]"
+          : "text-3xl font-semibold tracking-tight text-brand-yellow md:text-4xl"
+        }>
           {resolved.title}
         </h1>
       ) : null}
 
       {resolved.subtitle ? (
-        <p className="text-base md:text-lg text-white/80">{resolved.subtitle}</p>
+        <p className={prominent
+          ? "text-lg leading-relaxed text-white/80 md:text-xl"
+          : "text-base text-white/80 md:text-lg"
+        }>{resolved.subtitle}</p>
       ) : null}
 
       {resolved.description ? (
-        <p className={textForward
+        <p className={prominent
+          ? "max-w-2xl text-[1.0625rem] leading-relaxed text-white/70 md:text-lg lg:text-[1.1875rem]"
+          : textForward
           ? "max-w-2xl text-base leading-relaxed text-white/70 md:text-[1.0625rem] lg:text-lg"
           : "text-sm md:text-base text-white/70 leading-relaxed"
         }>
@@ -279,7 +293,9 @@ export default function ServiceHeroTwoColumn({
       <div className={wrapperClass}>
         <div className={`grid grid-cols-1 items-center gap-8 ${
           textForward
-            ? "md:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:gap-10"
+            ? prominent
+              ? "md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)] lg:gap-12"
+              : "md:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:grid-cols-[minmax(0,1.16fr)_minmax(0,0.84fr)] lg:gap-10"
             : "md:grid-cols-2"
         }`}>
           {imagePosition === "left" ? (

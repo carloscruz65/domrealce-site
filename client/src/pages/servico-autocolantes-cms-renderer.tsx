@@ -100,6 +100,8 @@ function renderSection(
           imageSrc={asText(content.imageSrc)}
           imageAlt={asText(content.imageAlt)}
           textForward
+          prominent
+          contentClassName="mx-auto max-w-[90rem] px-4 md:px-6 lg:px-8"
           primaryCta={{
             text: asText((content.primaryCta as Record<string, unknown>)?.text),
             onClick: () => window.location.assign(calculatorUrl),
