@@ -20,22 +20,12 @@ import {
   Zap,
 } from "lucide-react";
 
-const CALCULATOR_BASE_URL = "https://calcular.domrealce.com/";
+import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
+export { buildCalculatorUrl } from "@/utils/calculatorAttribution";
 const WHATSAPP_URL = "https://wa.me/351930682725?text=Olá!%20Interessado%20em%20autocolantes.";
 type CmsSection = { id: string; key: string; type: string; position: number; visible: boolean; content: Record<string, unknown> };
 type CmsPage = { serviceId: string; sections: CmsSection[]; seo?: { title: string; description: string; ogImage: string | null }; legacyGallery?: { images?: GalleryImage[] } | GalleryImage[] };
 type GalleryImage = { src: string; alt: string; title: string };
-
-export function buildCalculatorUrl(currentSearch: string) {
-  const calculatorUrl = new URL(CALCULATOR_BASE_URL);
-  const currentParams = new URLSearchParams(currentSearch);
-
-  currentParams.forEach((value, key) => {
-    calculatorUrl.searchParams.set(key, value);
-  });
-
-  return calculatorUrl.toString();
-}
 
 export default function ServicoAutocolantes() {
   const publicPageQuery = useQuery<CmsPage>({
@@ -292,7 +282,8 @@ export default function ServicoAutocolantes() {
         textForward
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
-          onClick: () => window.location.assign(calculatorUrl),
+          href: calculatorUrl,
+          nativeNavigation: true,
         }}
       >
         <p className="max-w-xl text-xs md:text-sm leading-relaxed text-white/60">

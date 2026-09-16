@@ -104,7 +104,8 @@ function renderSection(
           contentClassName="mx-auto max-w-[90rem] px-4 md:px-6 lg:px-8"
           primaryCta={{
             text: asText((content.primaryCta as Record<string, unknown>)?.text),
-            onClick: () => window.location.assign(calculatorUrl),
+            href: calculatorUrl,
+            nativeNavigation: true,
           }}
         >
           <p className="max-w-xl text-xs leading-relaxed text-white/60 md:text-sm">

@@ -1,4 +1,5 @@
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
+import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
@@ -223,7 +224,8 @@ export default function ServicoAutocolantes() {
         imageAlt="Autocolantes DOMREALCE"
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
-          href: "https://simple-web-light.replit.app/"
+          href: buildCalculatorUrl(),
+          nativeNavigation: true,
         }}
       />
 

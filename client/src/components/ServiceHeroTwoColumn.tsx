@@ -27,7 +27,7 @@ interface ServiceHeroTwoColumnProps {
   description?: string;
   imageSrc?: string;
   imageAlt?: string;
-  primaryCta?: { text: string; href?: string; onClick?: () => void };
+  primaryCta?: { text: string; href?: string; onClick?: () => void; nativeNavigation?: boolean };
   secondaryCta?: { text: string; href?: string; onClick?: () => void };
   imagePosition?: "left" | "right";
   children?: React.ReactNode;
@@ -145,7 +145,9 @@ export default function ServiceHeroTwoColumn({
     imageSrc: cmsHero?.backgroundImage ?? propImageSrc,
     imageAlt: propImageAlt ?? "Imagem do serviço",
     primaryCta:
-      cmsHero?.primaryCtaText && cmsHero?.primaryCtaHref
+      propPrimaryCta?.nativeNavigation
+        ? { ...propPrimaryCta, text: cmsHero?.primaryCtaText || propPrimaryCta.text }
+        : cmsHero?.primaryCtaText && cmsHero?.primaryCtaHref
         ? { text: cmsHero.primaryCtaText, href: cmsHero.primaryCtaHref }
         : propPrimaryCta,
     secondaryCta:
@@ -220,6 +222,13 @@ export default function ServiceHeroTwoColumn({
       <div className="flex flex-wrap gap-3 pt-2">
         {resolved.primaryCta?.text ? (() => {
           const pCta = resolved.primaryCta!;
+          if ("nativeNavigation" in pCta && pCta.nativeNavigation && pCta.href) {
+            return (
+              <Button asChild className="bg-brand-yellow text-black hover:bg-brand-yellow/90">
+                <a href={pCta.href}>{pCta.text} <ArrowRight className="ml-2 h-4 w-4" /></a>
+              </Button>
+            );
+          }
           const pClick = pCta.onClick
             ?? (pCta.href?.startsWith("http")
               ? () => window.open(pCta.href!, "_blank", "noopener,noreferrer")
