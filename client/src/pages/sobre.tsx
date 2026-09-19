@@ -123,28 +123,35 @@ export default function Sobre() {
               </p>
             </div>
           </div>
+          {/* FOTO COM TEXTO "COM QUEM VAI TRABALHAR" SOBREPOSTO */}
+          <div className="relative rounded-xl overflow-hidden border border-[#333] bg-[#0f0f0f] h-[520px]">
+            <img
+              src="/public-objects/sobre/carlos-domrealce.webp"
+              alt="Carlos Cruz, responsável pela DOMREALCE"
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              loading="lazy"
+            />
 
-          {/* BLOCO "COM QUEM VAI TRABALHAR" – sem grande destaque pessoal */}
-          <Card className="bg-[#0f0f0f] border-[#333]">
-            <CardContent className="p-6 space-y-4">
-              <h3 className="text-xl font-bold text-[#FFD700]">
-                Com quem vai trabalhar
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Por trás da DOMREALCE está alguém que faz “um pouco de tudo”:
-                desenha, prepara ficheiros, acompanha a produção, faz a
-                aplicação e ainda trata da gestão de prazos e tarefas. Essa
-                visão completa do processo evita falhas de comunicação e garante
-                que o que foi combinado é exatamente o que é entregue.
-              </p>
-              <p className="text-gray-400 text-xs">
-                Ferramentas do dia a dia: Illustrator, Photoshop, software de
-                corte, gestão de tarefas e ferramentas de maquetização para
-                apresentar ao cliente uma pré-visualização muito próxima do
-                resultado final.
-              </p>
-            </CardContent>
-          </Card>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
+
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-7">
+              <div className="max-w-[500px]">
+                <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-gray-300 mb-2">
+                  Carlos Cruz · DOMREALCE
+                </p>
+
+                <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-3">
+                  Com quem vai trabalhar
+                </h3>
+
+                <p className="text-gray-100 text-sm md:text-base leading-relaxed">
+                  Por trás da DOMREALCE está alguém que acompanha todo o processo:
+                  desenho, preparação de ficheiros, produção, aplicação e gestão do trabalho,
+                  garantindo que o resultado corresponde ao que foi combinado.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
