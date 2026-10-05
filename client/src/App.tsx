@@ -107,7 +107,7 @@ function Router() {
     console.log('📍 Mudança de página para:', location);
     if (typeof window !== 'undefined' && window.gtag) {
       console.log('📊 Enviando pageview para GA4:', location);
-      window.gtag('config', 'G-S51RFB39HK', {
+      window.gtag('config', 'G-8V3ZNVPNWT', {
         page_path: location
       });
       // Enviar evento adicional de page_view
@@ -188,36 +188,6 @@ function App() {
     (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
   const showEditor = isReplitPreview || import.meta.env.DEV;
 
-  // Initialize Google Analytics AFTER first paint (defer to improve LCP)
-  useEffect(() => {
-    // Delay GA loading until after page is interactive
-    const loadGA = () => {
-      const script1 = document.createElement('script');
-      script1.async = true;
-      script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-S51RFB39HK';
-      document.head.appendChild(script1);
-
-      const script2 = document.createElement('script');
-      script2.textContent = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-S51RFB39HK', {'send_page_view': true});
-        gtag('config', 'AW-11438840519'); // 👈 ADICIONAR ESTA LINHA
-      `;
-      document.head.appendChild(script2);
-      
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function() { window.dataLayer.push(arguments); };
-    };
-
-    // Load GA after 2 seconds or when page becomes idle
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(loadGA, { timeout: 2000 });
-    } else {
-      setTimeout(loadGA, 2000);
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
