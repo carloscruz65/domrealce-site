@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "./ClientLogos.css";
 
@@ -23,12 +22,6 @@ const fallbackLogos: ClientLogo[] = [
 ];
 
 export default function ClientLogos() {
-  const [translateX, setTranslateX] = useState(0);
-  const [mousePosition, setMousePosition] = useState(0.5); // 0.5 = centro
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const animationRef = useRef<number>();
-  const containerRef = useRef<HTMLDivElement>(null);
-
   // Carregar logótipos da API (object storage)
   const { data: logosData, isLoading } = useQuery<LogosResponse>({
     queryKey: ['/api/client-logos'],
@@ -41,65 +34,6 @@ export default function ClientLogos() {
   
   // Duplicar os logos para criar o efeito infinito
   const duplicatedLogos = [...clientLogos, ...clientLogos, ...clientLogos];
-
-  // Controlar movimento baseado na posição do rato ou movimento automático
-  useEffect(() => {
-    const animate = () => {
-      if (isMouseOver) {
-        // Rato sobre os logótipos - controlo manual
-        if (mousePosition < 0.4) {
-          // Rato à esquerda - mover logótipos para a direita
-          setTranslateX(prev => prev + 2);
-        } else if (mousePosition > 0.6) {
-          // Rato à direita - mover logótipos para a esquerda
-          setTranslateX(prev => prev - 2);
-        }
-        // Entre 0.4 e 0.6 (centro) - não mexer
-      } else {
-        // Sem rato - movimento automático para a esquerda
-        setTranslateX(prev => {
-          const newTranslateX = prev - 1;
-          // Resetar quando completamos um ciclo completo
-          // Cada logo tem aprox. 200px de largura (incluindo gap)
-          const logoWidth = 200;
-          const totalWidth = clientLogos.length * logoWidth;
-          
-          if (Math.abs(newTranslateX) >= totalWidth) {
-            return 0;
-          }
-          return newTranslateX;
-        });
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [mousePosition, isMouseOver, clientLogos.length]);
-
-  // Detectar posição do rato
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const width = rect.width;
-    setMousePosition(x / width); // Normalizar entre 0 e 1
-  };
-
-  // Detectar quando rato entra e sai
-  const handleMouseEnter = () => {
-    setIsMouseOver(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsMouseOver(false);
-    setMousePosition(0.5); // Voltar ao centro
-  };
 
   if (isLoading) {
     return (
@@ -125,19 +59,11 @@ export default function ClientLogos() {
       </div>
 
       {/* Linha Horizontal de Logótipos com Movimento */}
-      <div 
-        ref={containerRef}
-        className="relative overflow-hidden cursor-none w-full"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+      <div
+        className="client-logos-marquee relative overflow-hidden w-full"
       >
           <div 
-            className="flex items-center gap-8 transition-transform duration-100 ease-linear"
-            style={{
-              transform: `translateX(${translateX}px)`,
-              width: 'fit-content'
-            }}
+            className="client-logos-track flex items-center gap-8"
           >
             {duplicatedLogos.map((logo, index) => (
               <div

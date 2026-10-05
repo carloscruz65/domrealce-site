@@ -38,3 +38,28 @@
 .progress-indicator.active {
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
+/* Carrossel otimizado: animação feita pelo browser, sem renders React contínuos */
+@keyframes client-logos-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-33.333333%, 0, 0);
+  }
+}
+
+.client-logos-track {
+  width: max-content;
+  will-change: transform;
+  animation: client-logos-marquee 35s linear infinite;
+}
+
+.client-logos-marquee:hover .client-logos-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .client-logos-track {
+    animation: none;
+  }
+}

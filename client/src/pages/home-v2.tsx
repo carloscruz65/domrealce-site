@@ -385,7 +385,7 @@ export default function HomeV2() {
                     src={item.image}
                     alt={item.title}
                     decoding="async"
-                    loading={index < 3 ? "eager" : "lazy"}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       const img = e.currentTarget as HTMLImageElement;
