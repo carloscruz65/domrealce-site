@@ -26,6 +26,11 @@ export default function ServicoTelasArtisticas() {
   const calculatorUrl = buildCalculatorUrl(
     typeof window === "undefined" ? "" : window.location.search,
   );
+  const calculatorProductUrl = (() => {
+    const url = new URL(calculatorUrl);
+    url.pathname = "/canvas";
+    return url.toString();
+  })();
 
   // ✅ Agora vamos usar estes “features” no accordion
   const features = [
@@ -187,7 +192,7 @@ export default function ServicoTelasArtisticas() {
         imageAlt="Telas Artísticas DOMREALCE"
         primaryCta={{
           text: "CALCULAR PREÇO E ENCOMENDAR",
-          href: calculatorUrl,
+          href: calculatorProductUrl,
           nativeNavigation: true,
         }}
       />
@@ -435,7 +440,7 @@ export default function ServicoTelasArtisticas() {
               asChild
               className="bg-brand-yellow text-black hover:bg-brand-yellow/90 px-8 py-6 text-lg font-semibold"
             >
-              <a href={calculatorUrl}>
+              <a href={calculatorProductUrl}>
                 CALCULAR PREÇO E ENCOMENDAR
                 <ArrowRight className="w-5 h-5 ml-2" />
               </a>

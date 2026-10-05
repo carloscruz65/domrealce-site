@@ -27,6 +27,11 @@ export default function ServicoPapelParede() {
   const calculatorUrl = buildCalculatorUrl(
     typeof window === "undefined" ? "" : window.location.search,
   );
+  const calculatorProductUrl = (() => {
+    const url = new URL(calculatorUrl);
+    url.pathname = "/papel-de-parede";
+    return url.toString();
+  })();
 
   const process = [
     {
@@ -241,7 +246,7 @@ export default function ServicoPapelParede() {
                 <h3 className="text-lg font-semibold mb-2 text-white">Quer algo personalizado?</h3>
                 <p className="text-gray-400 text-sm mb-4">Envie uma imagem, escolha de um banco de imagens ou peça ajuda.</p>
                 <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
-                  <a href={calculatorUrl}>
+                  <a href={calculatorProductUrl}>
                     Calcular preço e encomendar
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
@@ -383,7 +388,7 @@ export default function ServicoPapelParede() {
                 asChild
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
-                <a href={calculatorUrl}>
+                <a href={calculatorProductUrl}>
                   CALCULAR PREÇO E ENCOMENDAR
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
