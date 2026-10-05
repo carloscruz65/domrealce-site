@@ -66,13 +66,9 @@ const Blog = lazy(() => import("@/pages/blog"));
 
 // Componentes pesados com lazy loading
 const WhatsAppFAB = lazy(() => import("@/components/whatsapp-fab"));
-const PerformanceOptimizer = lazy(() => import("@/components/performance-optimizer"));
 const PerformancePreloader = lazy(() => import("@/components/performance-preloader"));
-const VisualEditorToolbar = lazy(() => import("@/components/visual-editor").then(m => ({ default: m.VisualEditorToolbar })));
 const ScrollToTopButton = lazy(() => import("@/components/ScrollToTopButton"));
 
-// Contexto importado diretamente (necessário para providers)
-import { VisualEditorProvider } from "@/contexts/VisualEditorContext";
 
 // Loading fallback minimalista
 const PageLoader = () => (
@@ -92,11 +88,6 @@ declare global {
 function Router() {
   useScrollToTop();
   const [location] = useLocation();
-  
-  // Detectar se está rodando no Replit
-  const isReplitPreview = typeof window !== 'undefined' && 
-    (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
-  const showEditor = isReplitPreview || import.meta.env.DEV;
   
   // Verificar se o modo de edição está ativo via URL
   const isEditMode = typeof window !== 'undefined' && 
@@ -183,27 +174,19 @@ function App() {
   captureAttribution(attributionSearch);
   useLazyImages();
 
-  // Detectar se está rodando no Replit
-  const isReplitPreview = typeof window !== 'undefined' && 
-    (/replit\.dev|worf\.replit\.dev|repl\.co/.test(window.location.hostname));
-  const showEditor = isReplitPreview || import.meta.env.DEV;
-
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <VisualEditorProvider>
-          <Suspense fallback={null}>
-            <PerformanceOptimizer />
-            <PerformancePreloader />
-          </Suspense>
-          <Toaster />
-          <Router />
-          <Suspense fallback={null}>
-            <WhatsAppFAB />
-            <ScrollToTopButton />
-          </Suspense>
-        </VisualEditorProvider>
+        <Suspense fallback={null}>
+          <PerformancePreloader />
+        </Suspense>
+        <Toaster />
+        <Router />
+        <Suspense fallback={null}>
+          <WhatsAppFAB />
+          <ScrollToTopButton />
+        </Suspense>
       </TooltipProvider>
     </QueryClientProvider>
   );
