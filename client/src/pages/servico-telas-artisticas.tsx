@@ -1,4 +1,4 @@
-import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
+import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -7,8 +7,7 @@ import ServiceCardsSection from "@/components/services/ServiceCardsSection";
 import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link, useLocation } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Image,
   CheckCircle,
@@ -21,215 +20,12 @@ import {
   Palette,
   Award,
   Shield,
-  FileText,
-  X,
 } from "lucide-react";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ObjectUploader } from "@/components/ObjectUploader";
-import { useToast } from "@/hooks/use-toast";
-import { insertContactSchema } from "@shared/schema";
-import { z } from "zod";
-
-type TelasAnexoItem = {
-  file: File;
-  originalName: string;
-  size: number;
-  type?: string;
-};
 
 export default function ServicoTelasArtisticas() {
-  const { toast } = useToast();
-  const [, navigate] = useLocation();
-
-  const [formData, setFormData] = useState({
-    largura: "",
-    altura: "",
-    quantidade: "1",
-
-    // ✅ novo (sem Adobe)
-    opcaoImagem: "aconselhamento", // 'referencia' | 'aconselhamento'
-    descricaoImagem: "",
-
-    // ✅ novos campos universais
-    linkReferencia: "",
-    origemReferencia: "",
-
-    mensagem: "",
-    nome: "",
-    email: "",
-    telefone: "",
-    anexos: [] as TelasAnexoItem[],
-  });
-
-  const submitMutation = useMutation({
-    mutationFn: async () => {
-      // ✅ Validação extra (sem Adobe)
-      if (formData.opcaoImagem === "referencia") {
-        const hasLink = formData.linkReferencia.trim() !== "";
-        const hasOrigem = formData.origemReferencia.trim() !== "";
-        const hasDesc = formData.descricaoImagem.trim() !== "";
-
-        if (!hasLink && !hasOrigem && !hasDesc) {
-          throw new Error(
-            "Indique pelo menos um destes elementos: link da imagem, onde encontrou, ou uma breve descrição do que procura."
-          );
-        }
-      }
-
-      if (formData.opcaoImagem === "aconselhamento") {
-        if (formData.descricaoImagem.trim() === "") {
-          throw new Error(
-            "Por favor descreva o estilo/ideia pretendida para podermos aconselhar."
-          );
-        }
-      }
-
-      // ✅ Montar info da imagem (universal)
-      const imagemInfo =
-        formData.opcaoImagem === "referencia"
-          ? [
-              "Imagem: Link / Referência",
-              formData.linkReferencia
-                ? `- Link: ${formData.linkReferencia}`
-                : "",
-              formData.origemReferencia
-                ? `- Onde encontrou: ${formData.origemReferencia}`
-                : "",
-              formData.descricaoImagem
-                ? `- Notas: ${formData.descricaoImagem}`
-                : "",
-            ]
-              .filter(Boolean)
-              .join("\n")
-          : [
-              "Imagem: Aconselhamento (sem imagem definida)",
-              `- Descrição/ideia: ${formData.descricaoImagem}`,
-              "- Nota: podemos sugerir imagens/visuais adequados ao estilo pretendido.",
-            ].join("\n");
-
-      const detalhesTelas = [
-        "=== Pedido de Orçamento: Telas Artísticas ===",
-        `Medidas: ${formData.largura} cm x ${formData.altura} cm`,
-        `Quantidade: ${formData.quantidade} tela(s)`,
-        "",
-        imagemInfo,
-        "",
-        "Mensagem adicional:",
-        formData.mensagem?.trim() || "(sem mensagem adicional)",
-      ].join("\n");
-
-      // Validar com o schema do contacto (como em Contactos)
-      const payload = {
-        nome: formData.nome.trim(),
-        email: formData.email.trim(),
-        telefone: formData.telefone?.trim() || undefined,
-        empresa: undefined,
-        mensagem: detalhesTelas.trim(),
-        ficheiros: [],
-      };
-
-      const validatedData = insertContactSchema.parse(payload);
-
-      // FormData com texto + ficheiros reais
-      const fd = new FormData();
-      fd.append("nome", validatedData.nome);
-      fd.append("email", validatedData.email);
-      fd.append("telefone", validatedData.telefone ?? "");
-      fd.append("empresa", validatedData.empresa ?? "");
-      fd.append("mensagem", validatedData.mensagem);
-
-      // backend espera "files"
-      (formData.anexos || []).forEach((a) => {
-        if (a?.file) fd.append("files", a.file);
-      });
-
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        body: fd,
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok || data?.success === false) {
-        throw new Error(data?.message || "Erro ao enviar pedido.");
-      }
-
-      return data;
-    },
-
-    onSuccess: () => {
-      toast({
-        title: "Pedido enviado",
-        description: "Recebemos o seu pedido. Respondemos com a maior brevidade.",
-      });
-
-      setFormData({
-        largura: "",
-        altura: "",
-        quantidade: "1",
-        opcaoImagem: "aconselhamento",
-        descricaoImagem: "",
-        linkReferencia: "",
-        origemReferencia: "",
-        mensagem: "",
-        nome: "",
-        email: "",
-        telefone: "",
-        anexos: [],
-      });
-
-      navigate("/obrigado-orcamento");
-    },
-
-    onError: (error: any) => {
-      // Zod errors mais “humanos”
-      if (error instanceof z.ZodError) {
-        const issues = error.issues;
-
-        let errorMessage = "Por favor, verifique os dados inseridos.";
-        if (
-          issues.some(
-            (issue) =>
-              issue.path[0] === "nome" &&
-              issue.message.toLowerCase().includes("2 caracteres")
-          )
-        ) {
-          errorMessage = "Nome deve ter pelo menos 2 caracteres.";
-        } else if (
-          issues.some(
-            (issue) =>
-              issue.path[0] === "mensagem" &&
-              issue.message.toLowerCase().includes("10 caracteres")
-          )
-        ) {
-          errorMessage = "Mensagem deve ter pelo menos 10 caracteres.";
-        } else if (issues.some((issue) => issue.path[0] === "email")) {
-          errorMessage = "Por favor insira um email válido.";
-        }
-
-        toast({
-          title: "Erro de validação",
-          description: errorMessage,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      toast({
-        title: "Erro",
-        description: error?.message || "Erro ao enviar. Tente novamente.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    submitMutation.mutate();
-  };
+  const calculatorUrl = buildCalculatorUrl(
+    typeof window === "undefined" ? "" : window.location.search,
+  );
 
   // ✅ Agora vamos usar estes “features” no accordion
   const features = [
@@ -389,7 +185,11 @@ export default function ServicoTelasArtisticas() {
         description="Impressão artística em canvas de alta qualidade. Transforme as suas memórias mais preciosas ou criações artísticas em telas duradouras e elegantes."
         imageSrc="/public-objects/servicos/telas-artisticas.webp"
         imageAlt="Telas Artísticas DOMREALCE"
-        primaryCta={{ text: "Criar minha tela", href: "/contactos#formulario" }}
+        primaryCta={{
+          text: "CALCULAR PREÇO E ENCOMENDAR",
+          href: calculatorUrl,
+          nativeNavigation: true,
+        }}
       />
 
       <main>
@@ -435,19 +235,6 @@ export default function ServicoTelasArtisticas() {
                   <div className="text-sm text-gray-400">Formato padrão</div>
                 </div>
               ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <p className="text-gray-400 mb-4">
-                Precisa de um tamanho personalizado?
-              </p>
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black"
-              >
-                <Link href="/contactos#formulario">Solicitar medida especial</Link>
-              </Button>
             </div>
           </div>
         </section>
@@ -628,386 +415,7 @@ export default function ServicoTelasArtisticas() {
           </div>
         </section>
 
-        {/* Orçamento personalizado */}
-        <section
-          id="orcamento"
-            className="py-16 bg-black border-t border-gray-900 scroll-mt-24"
-          >
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
-                  <span className="text-brand-yellow">Orçamento</span>{" "}
-                  <span className="text-white">personalizado</span>
-                </h2>
-                <p className="text-gray-400 text-lg">
-                  Envie um link/referência ou descreva a ideia. Se não tiver imagem, nós ajudamos a escolher.
-                </p>
-              </div>
 
-              <Card className="bg-black border border-gray-800">
-                <CardContent className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="largura" className="text-white">
-                          Largura (cm)
-                        </Label>
-                        <Input
-                          id="largura"
-                          type="number"
-                          step="1"
-                          placeholder="Ex: 70"
-                          value={formData.largura}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              largura: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="altura" className="text-white">
-                          Altura (cm)
-                        </Label>
-                        <Input
-                          id="altura"
-                          type="number"
-                          step="1"
-                          placeholder="Ex: 100"
-                          value={formData.altura}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              altura: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="quantidade" className="text-white">
-                        Quantidade de telas
-                      </Label>
-                      <Input
-                        id="quantidade"
-                        type="number"
-                        min="1"
-                        value={formData.quantidade}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            quantidade: e.target.value,
-                          })
-                        }
-                        className="bg-gray-900 border-gray-700 text-white"
-                        required
-                      />
-                    </div>
-
-                    {/* ✅ Opção de imagem (nova, sem Adobe) */}
-                    <div>
-                      <Label className="text-white">Imagem / Referência</Label>
-
-                      <div className="flex flex-col sm:flex-row gap-4 mt-2">
-                        <label className="flex items-center text-white">
-                          <input
-                            type="radio"
-                            name="opcaoImagem"
-                            value="referencia"
-                            checked={formData.opcaoImagem === "referencia"}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                opcaoImagem: e.target.value,
-                              })
-                            }
-                            className="mr-2"
-                          />
-                          Tenho um link ou referência
-                        </label>
-
-                        <label className="flex items-center text-white">
-                          <input
-                            type="radio"
-                            name="opcaoImagem"
-                            value="aconselhamento"
-                            checked={formData.opcaoImagem === "aconselhamento"}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                opcaoImagem: e.target.value,
-                              })
-                            }
-                            className="mr-2"
-                          />
-                          Preciso de ajuda a escolher
-                        </label>
-                      </div>
-
-                      <p className="mt-2 text-sm text-gray-400">
-                        Pode enviar um link de qualquer site (Instagram, Pinterest, lojas, etc.) ou pedir aconselhamento.
-                      </p>
-                    </div>
-
-                    {formData.opcaoImagem === "referencia" ? (
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="linkReferencia" className="text-white">
-                            Link da imagem (opcional)
-                          </Label>
-                          <Input
-                            id="linkReferencia"
-                            type="url"
-                            placeholder="Cole aqui o link (https://...)"
-                            value={formData.linkReferencia}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                linkReferencia: e.target.value,
-                              })
-                            }
-                            className="bg-gray-900 border-gray-700 text-white"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="origemReferencia" className="text-white">
-                            Onde encontrou? (opcional)
-                          </Label>
-                          <Input
-                            id="origemReferencia"
-                            placeholder="Ex: Instagram, Pinterest, site, loja online..."
-                            value={formData.origemReferencia}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                origemReferencia: e.target.value,
-                              })
-                            }
-                            className="bg-gray-900 border-gray-700 text-white"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="descricaoImagem" className="text-white">
-                            Notas / detalhes (opcional)
-                          </Label>
-                          <Textarea
-                            id="descricaoImagem"
-                            placeholder="Ex: estilo, cores, composição, se quer parecido ou igual..."
-                            value={formData.descricaoImagem}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                descricaoImagem: e.target.value,
-                              })
-                            }
-                            className="bg-gray-900 border-gray-700 text-white"
-                          />
-                        </div>
-
-                        <div className="bg-brand-yellow/10 border border-brand-yellow/40 rounded-lg p-4">
-                          <p className="text-brand-yellow text-sm">
-                            💡 <strong>Dica:</strong> se não tiver link, indique onde viu a imagem e descreva o máximo possível.
-                            Nós tentamos encontrar uma alternativa muito próxima.
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div>
-                        <Label htmlFor="descricaoImagemAjuda" className="text-white">
-                          Descreva o que pretende (obrigatório)
-                        </Label>
-                        <Textarea
-                          id="descricaoImagemAjuda"
-                          placeholder="Ex: preto e branco, minimalista, natureza, abstrato, retrato, cores quentes..."
-                          value={formData.descricaoImagem}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              descricaoImagem: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-1 gap-4">
-                      <div>
-                        <Label htmlFor="nome" className="text-white">
-                          Nome
-                        </Label>
-                        <Input
-                          id="nome"
-                          value={formData.nome}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              nome: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email" className="text-white">
-                          Email
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              email: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="telefone" className="text-white">
-                          Telefone
-                        </Label>
-                        <Input
-                          id="telefone"
-                          value={formData.telefone}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              telefone: e.target.value,
-                            })
-                          }
-                          className="bg-gray-900 border-gray-700 text-white"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="mensagem" className="text-white">
-                        Mensagem adicional
-                      </Label>
-                      <Textarea
-                        id="mensagem"
-                        placeholder="Detalhes adicionais sobre o projeto..."
-                        value={formData.mensagem}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            mensagem: e.target.value,
-                          })
-                        }
-                        className="bg-gray-900 border-gray-700 text-white"
-                      />
-                    </div>
-
-                    {/* Anexos (opcional) */}
-                    <div>
-                      <Label className="text-white">Anexos (opcional)</Label>
-
-                      <ObjectUploader
-                        onUpload={(files) =>
-                          setFormData({
-                            ...formData,
-                            anexos: files as any,
-                          })
-                        }
-                        maxFiles={3}
-                        acceptedTypes={[
-                          "image/*",
-                          ".pdf",
-                          ".ai",
-                          ".svg",
-                          ".tif",
-                          ".tiff",
-                        ]}
-                        className="w-full mt-2"
-                      />
-
-                      <div className="mt-3 text-xs text-white/60 space-y-1">
-                        <p>• Máximo 3 ficheiros, até 10MB cada</p>
-                        <p>
-                          • Formatos aceites: JPG, JPEG, PNG, TIFF, SVG, AI, PDF
-                        </p>
-                        <p>
-                          • Importante: Fontes devem ser convertidas em linhas antes do envio
-                        </p>
-                      </div>
-
-                      {formData.anexos && formData.anexos.length > 0 && (
-                        <div className="mt-3">
-                          <p className="text-white/60 mb-2 text-sm">
-                            Ficheiros anexados:
-                          </p>
-                          <div className="space-y-2">
-                            {formData.anexos.map((file: any, index: number) => (
-                              <div
-                                key={index}
-                                className="flex items-center justify-between bg-gray-800/30 p-2 rounded border border-white/10"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <FileText className="h-4 w-4 text-brand-turquoise" />
-                                  <span className="text-white/80 text-sm">
-                                    {file.originalName}
-                                  </span>
-                                  {typeof file.size === "number" && (
-                                    <span className="text-white/40 text-xs">
-                                      ({(file.size / 1024).toFixed(1)} KB)
-                                    </span>
-                                  )}
-                                </div>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    setFormData({
-                                      ...formData,
-                                      anexos: formData.anexos.filter(
-                                        (_: any, i: number) => i !== index
-                                      ),
-                                    })
-                                  }
-                                  className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                                >
-                                  <X className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={submitMutation.isPending}
-                      className="w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90"
-                    >
-                      <ArrowRight className="w-4 h-4 mr-2" />
-                      {submitMutation.isPending
-                        ? "A enviar..."
-                        : "Solicitar orçamento por email"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
 
         {/* CTA final */}
         <section className="py-16 bg-black border-t border-gray-900">
@@ -1016,27 +424,22 @@ export default function ServicoTelasArtisticas() {
               <span className="text-white">Pronto para criar a sua</span>{" "}
               <span className="text-brand-yellow">obra de arte?</span>
             </h2>
+
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Transforme as suas fotografias favoritas ou criações artísticas em
-              telas profissionais que durarão muitos anos.
+              Escolha as medidas, indique a quantidade e configure a sua tela
+              diretamente na nossa app. Veja o preço de imediato e conclua a
+              encomenda online.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
-              >
-                <a
-                  href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20telas%20artísticas."); }}
-                >
-                  WhatsApp direto
-                </a>
-              </Button>
-            </div>
+            <Button
+              asChild
+              className="bg-brand-yellow text-black hover:bg-brand-yellow/90 px-8 py-6 text-lg font-semibold"
+            >
+              <a href={calculatorUrl}>
+                CALCULAR PREÇO E ENCOMENDAR
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </a>
+            </Button>
           </div>
         </section>
       </main>
