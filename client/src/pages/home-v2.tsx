@@ -165,9 +165,12 @@ function WallpaperHighlightsSection() {
           {wallpaperHighlights.map((item) => (
             <Link key={item.title} href={item.href}>
               <div className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-brand-yellow/40 transition-all group cursor-pointer h-[210px] sm:h-[220px]">
-                <div
-                  className="absolute inset-0 bg-center bg-cover group-hover:scale-[1.02] transition-transform duration-300"
-                  style={{ backgroundImage: `url(${item.image})` }}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
                 />
 
                 <div className="absolute inset-0 bg-black/40" />
