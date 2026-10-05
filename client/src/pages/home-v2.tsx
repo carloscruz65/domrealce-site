@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -197,6 +197,28 @@ function WallpaperHighlightsSection() {
 }
 
 export default function HomeV2() {
+  const lowerSectionsRef = useRef<HTMLDivElement>(null);
+  const [showLowerSections, setShowLowerSections] = useState(false);
+
+  useEffect(() => {
+    const element = lowerSectionsRef.current;
+    if (!element || showLowerSections) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowLowerSections(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [showLowerSections]);
+
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden w-full">
       <SEOHead
@@ -433,15 +455,19 @@ export default function HomeV2() {
       <WallpaperHighlightsSection />
 
       {/* Notícias e clientes */}
-      <Suspense fallback={null}>
-        <section className="bg-[#050505]">
-          <LazyNewsSection />
-        </section>
+      <div ref={lowerSectionsRef}>
+        {showLowerSections && (
+          <Suspense fallback={null}>
+            <section className="bg-[#050505]">
+              <LazyNewsSection />
+            </section>
 
-        <section className="bg-[#050505]">
-          <LazyClientLogos />
-        </section>
-      </Suspense>
+            <section className="bg-[#050505]">
+              <LazyClientLogos />
+            </section>
+          </Suspense>
+        )}
+      </div>
 
       {/* CTA final */}
       <section className="py-10 bg-gradient-to-r from-brand-yellow/10 via-[#0a0a0a] to-brand-turquoise/10 border-t border-white/5">
