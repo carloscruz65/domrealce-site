@@ -259,6 +259,11 @@ export default function ServicoImpressaoDigital() {
         description="Tecnologia de impressão digital de última geração para projetos de grande impacto. Qualidade fotográfica em materiais resistentes e duradouros."
         imageSrc="/public-objects/servicos/impressao-digital.webp"
         imageAlt="Impressão Digital DOMREALCE"
+        primaryCta={{
+          text: "CALCULAR PREÇO E ENCOMENDAR",
+          href: calculatorUrl,
+          nativeNavigation: true,
+        }}
       />
 
       <main>
