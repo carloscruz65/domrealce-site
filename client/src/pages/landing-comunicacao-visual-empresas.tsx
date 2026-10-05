@@ -1,13 +1,12 @@
 import React from "react";
-import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
+import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
 import {
-  MessageCircle,
   ArrowRight,
   CheckCircle,
   Wrench,
@@ -21,9 +20,6 @@ import {
   Wallpaper,
   Building2,
 } from "lucide-react";
-
-const WA_URL =
-  "https://wa.me/351930682725?text=Olá!%20Vi%20a%20página%20de%20Comunicação%20Visual%20e%20quero%20um%20orçamento.";
 
 const GALLERY_BASE = "/public-objects/inicio/Landing-page-viaturas";
 
@@ -123,10 +119,9 @@ const gallery = [
 ];
 
 export default function LandingComunicacaoVisualEmpresas() {
-  const handleWA = (e: React.MouseEvent) => {
-    e.preventDefault();
-    trackWhatsAppConversion(WA_URL);
-  };
+  const calculatorUrl = buildCalculatorUrl(
+    typeof window === "undefined" ? "" : window.location.search,
+  );
 
   return (
     <>
@@ -168,37 +163,23 @@ export default function LandingComunicacaoVisualEmpresas() {
               Produção própria de vinil, lonas, papel de parede personalizado, autocolantes, etiquetas, canvas e decoração de montras.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/contactos">
-                <Button
-                  size="lg"
-                  className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8"
-                >
-                  Pedir Orçamento
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <a
-                href={WA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleWA}
+            <div className="flex">
+              <Button
+                asChild
+                size="lg"
+                className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8"
               >
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-green-500 text-green-400 hover:bg-green-500 hover:text-white text-base px-8 w-full sm:w-auto"
-                >
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  WhatsApp Direto
-                </Button>
-              </a>
+                <a href={calculatorUrl}>
+                  CALCULAR PREÇO E ENCOMENDAR
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4 text-sm text-gray-400">
               <span className="flex items-center gap-1">
                 <CheckCircle className="h-4 w-4 text-brand-yellow" />
-                Resposta em 24h
+                Preço imediato
               </span>
               <span className="flex items-center gap-1">
                 <CheckCircle className="h-4 w-4 text-brand-yellow" />
@@ -376,44 +357,28 @@ export default function LandingComunicacaoVisualEmpresas() {
       <section className="py-24 bg-black">
         <div className="container mx-auto px-4 text-center max-w-2xl">
           <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
-            Vamos destacar{" "}
-            <span className="text-brand-yellow">a sua empresa?</span>
+            Vamos dar forma ao seu{" "}
+            <span className="text-brand-yellow">próximo projeto?</span>
           </h2>
-          <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-            Envie-nos as suas ideias ou dimensões e receba um orçamento sem
-            compromisso. Respondemos em menos de 24 horas.
+
+          <p className="text-gray-400 text-lg leading-relaxed mb-8">
+            Escolha o produto, indique as medidas, quantidade e acabamentos e veja
+            o preço de imediato. Pode adicionar vários produtos ao mesmo pedido e
+            concluir a encomenda online.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contactos">
-              <Button
-                size="lg"
-                className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8 w-full sm:w-auto"
-              >
-                Pedir Orçamento
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <a
-              href={WA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleWA}
+          <div className="flex justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8"
             >
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-green-500 text-green-400 hover:bg-green-500 hover:text-white text-base px-8 w-full sm:w-auto"
-              >
-                <MessageCircle className="mr-2 h-4 w-4" />
-                WhatsApp Direto
-              </Button>
-            </a>
+              <a href={calculatorUrl}>
+                CALCULAR PREÇO E ENCOMENDAR
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
           </div>
-
-          <p className="mt-6 text-gray-500 text-sm">
-            Atelier em Paredes · Grande Porto · Produção e aplicação própria
-          </p>
         </div>
       </section>
 
