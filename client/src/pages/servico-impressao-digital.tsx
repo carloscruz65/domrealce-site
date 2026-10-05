@@ -1,4 +1,3 @@
-import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -7,7 +6,7 @@ import type { ServiceAccordionCard } from "@/components/services/ServiceCardAcco
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "wouter";
+import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
 import { useQuery } from "@tanstack/react-query";
 import {
   Printer,
@@ -24,6 +23,10 @@ import {
 } from "lucide-react";
 
 export default function ServicoImpressaoDigital() {
+  const calculatorUrl = buildCalculatorUrl(
+    typeof window === "undefined" ? "" : window.location.search,
+  );
+
   const materials = [
     {
       name: "Vinil Autocolante",
@@ -593,33 +596,20 @@ export default function ServicoImpressaoDigital() {
               <span className="text-white">Pronto para imprimir o seu</span>{" "}
               <span className="text-brand-yellow">próximo projeto?</span>
             </h2>
+
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Envie-nos os detalhes do seu projeto e ajudamos a escolher os
-              materiais e formatos ideais para obter o melhor resultado.
+              Calcule o preço de forma imediata, escolha o produto, medidas,
+              quantidade e acabamentos e faça a sua encomenda diretamente online.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button
                 asChild
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
-                <Link href="/contactos#formulario">
-                  Solicitar orçamento
+                <a href={calculatorUrl}>
+                  CALCULAR PREÇO E ENCOMENDAR
                   <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-yellow text-brand-yellow hover:bg-brand-yellow hover:text-black px-8 py-6 text-lg"
-              >
-                <a
-                  href="https://wa.me/351930682725?text=Olá!%20Interessado%20em%20impressão%20digital."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => { e.preventDefault(); trackWhatsAppConversion("https://wa.me/351930682725?text=Olá!%20Interessado%20em%20impressão%20digital."); }}
-                >
-                  Falar por WhatsApp
                 </a>
               </Button>
             </div>
