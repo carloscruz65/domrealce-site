@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -16,6 +17,9 @@ import {
   MapPin,
 } from "lucide-react";
 import { Link } from "wouter";
+
+const LazyNewsSection = lazy(() => import("@/components/news-section"));
+const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
 
 const quickServices = [
   {
@@ -427,6 +431,17 @@ export default function HomeV2() {
       </section>
 
       <WallpaperHighlightsSection />
+
+      {/* Notícias e clientes */}
+      <Suspense fallback={null}>
+        <section className="bg-[#050505]">
+          <LazyNewsSection />
+        </section>
+
+        <section className="bg-[#050505]">
+          <LazyClientLogos />
+        </section>
+      </Suspense>
 
       {/* CTA final */}
       <section className="py-10 bg-gradient-to-r from-brand-yellow/10 via-[#0a0a0a] to-brand-turquoise/10 border-t border-white/5">
