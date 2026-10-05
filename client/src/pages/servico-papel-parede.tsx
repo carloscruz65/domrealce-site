@@ -186,18 +186,17 @@ export default function ServicoPapelParede() {
         description="Descubra uma coleção completa de papéis de parede, com visualização em tamanho real, várias categorias e produção personalizada à medida do seu espaço."
         imageSrc="/public-objects/servicos/papel-parede.webp"
         imageAlt="Papel de Parede DOMREALCE"
-        extraContent={
-          <div className="mt-6 max-w-xl rounded-xl border border-brand-yellow/30 bg-brand-yellow/5 px-5 py-4">
-            <p className="font-semibold text-white mb-1">
-              Configure o seu papel de parede online
-            </p>
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Veja o preço de imediato, ajuste medidas e opções e faça a encomenda
-              diretamente na nossa app, sem esperar por orçamento.
-            </p>
-          </div>
-        }
-      />
+      >
+        <div className="mt-2 max-w-xl rounded-xl border border-brand-yellow/30 bg-brand-yellow/5 px-5 py-4">
+          <p className="font-semibold text-white mb-1">
+            Configure o seu papel de parede online
+          </p>
+          <p className="text-sm text-gray-300 leading-relaxed">
+            Veja o preço de imediato, ajuste medidas e opções e faça a encomenda
+            diretamente na nossa app, sem esperar por orçamento.
+          </p>
+        </div>
+      </ServiceHeroTwoColumn>
 
       {/* Trust signals */}
       <section className="py-3 bg-gray-900/70 border-y border-gray-800">
