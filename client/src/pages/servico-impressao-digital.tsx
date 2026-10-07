@@ -106,29 +106,36 @@ export default function ServicoImpressaoDigital() {
 
   const galleryImages = galleryData?.images || defaultImages;
 
+  // Existing product routes in the calculator app; retain the attribution query.
+  const calculatorProductUrl = (path: string) => {
+    const url = new URL(calculatorUrl);
+    url.pathname = path;
+    return url.toString();
+  };
+
   const products = [
     {
       name: "Vinil impresso",
       description: "Impressão autocolante para montras, viaturas e sinalética.",
-      href: calculatorUrl,
+      href: calculatorProductUrl("/vinil-impresso"),
       action: "Calcular preço",
     },
     {
       name: "Etiquetas",
       description: "Etiquetas autocolantes para embalagens, produtos e identificação.",
-      href: calculatorUrl,
-      action: "Calcular preço",
+      href: "/servico-autocolantes",
+      action: "Ver produto",
     },
     {
       name: "Lonas",
       description: "Impressão em grande formato para fachadas, eventos e publicidade.",
-      href: calculatorUrl,
+      href: calculatorProductUrl("/lonas"),
       action: "Calcular preço",
     },
     {
       name: "PVC",
       description: "Placas rígidas e leves para sinalética, expositores e comunicação.",
-      href: calculatorUrl,
+      href: calculatorProductUrl("/pvc"),
       action: "Calcular preço",
     },
     {
@@ -146,7 +153,7 @@ export default function ServicoImpressaoDigital() {
     {
       name: "Vinil de corte",
       description: "Letras, logótipos e formas recortadas para montras, paredes e viaturas.",
-      href: calculatorUrl,
+      href: calculatorProductUrl("/vinil-corte"),
       action: "Calcular preço",
     },
   ];
