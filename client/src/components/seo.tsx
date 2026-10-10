@@ -16,98 +16,98 @@ interface PageSEOData {
 
 const pageSEOData: PageSEOData = {
   '/': {
-    title: 'DOMREALCE | Design Gráfico, Impressão Digital e Papel de Parede em Portugal',
-    description: 'Comunicação visual, impressão digital e aplicação de papel de parede. Orçamentos rápidos, qualidade e alto acabamento. Fale com a DOMREALCE.',
-    keywords: ['comunicação visual', 'impressão digital', 'papel de parede', 'design gráfico', 'Lisboa', 'Portugal', 'DOMREALCE', 'orçamento', 'qualidade'],
+    title: 'DOMREALCE | Impressão Digital e Comunicação Visual em Portugal',
+    description: 'Impressão digital e comunicação visual para empresas e particulares. Vinil, etiquetas, PVC, lonas, roll-ups, canvas e papel de parede, com fornecimento para Portugal.',
+    keywords: ['comunicação visual', 'impressão digital', 'vinil', 'etiquetas', 'PVC', 'lonas', 'roll-ups', 'canvas', 'papel de parede', 'Portugal', 'DOMREALCE'],
     type: 'website'
   },
   '/servicos': {
-    title: 'Serviços de Comunicação Visual | DOMREALCE Lisboa',
-    description: 'Descubra todos os nossos serviços: design gráfico, impressão digital, papel de parede, decoração de viaturas, telas artísticas e sinalética comercial.',
-    keywords: ['serviços', 'design gráfico', 'impressão', 'decoração viaturas', 'sinalética'],
+    title: 'Serviços de Impressão Digital e Comunicação Visual | DOMREALCE',
+    description: 'Conheça os serviços DOMREALCE: impressão digital, vinil, etiquetas, PVC, lonas, roll-ups, canvas, papel de parede e decoração de viaturas.',
+    keywords: ['serviços', 'impressão digital', 'vinil', 'etiquetas', 'PVC', 'lonas', 'roll-ups', 'canvas', 'papel de parede'],
     type: 'website'
   },
   '/servico-design-grafico': {
-    title: 'Design Gráfico Profissional | DOMREALCE Lisboa',
-    description: 'Criação de logótipos, material publicitário, branding e identidade visual. Design gráfico profissional com 40 anos de experiência.',
+    title: 'Design Gráfico Profissional | DOMREALCE',
+    description: 'Criação e preparação de logótipos, material publicitário, branding e identidade visual para impressão e comunicação.',
     keywords: ['design gráfico', 'logótipo', 'branding', 'identidade visual', 'publicidade'],
     type: 'website'
   },
   '/servico-impressao-digital': {
-    title: 'Impressão Digital de Alta Qualidade | DOMREALCE Lisboa',
-    description: 'Impressão digital profissional em grande formato. Banners, cartazes, vinil adesivo, papel de parede e muito mais.',
-    keywords: ['impressão digital', 'grande formato', 'banners', 'cartazes', 'vinil'],
+    title: 'Impressão Digital em Grande Formato | DOMREALCE',
+    description: 'Impressão digital em grande formato para vinil, lonas, PVC, roll-ups, canvas, papel de parede e outros suportes de comunicação visual.',
+    keywords: ['impressão digital', 'grande formato', 'lonas', 'PVC', 'roll-ups', 'vinil'],
     type: 'website'
   },
   '/servico-papel-parede': {
-    title: 'Papel de Parede Personalizado | DOMREALCE Lisboa',
-    description: 'Papel de parede personalizado com as suas imagens. Texturas exclusivas, medidas personalizadas e aplicação profissional.',
-    keywords: ['papel de parede', 'personalizado', 'texturas', 'decoração interior'],
+    title: 'Papel de Parede Personalizado | DOMREALCE',
+    description: 'Papel de parede personalizado por medida, com imagens ou texturas à escolha. Produção DOMREALCE e fornecimento para Portugal.',
+    keywords: ['papel de parede', 'papel de parede personalizado', 'texturas', 'decoração interior'],
     type: 'website'
   },
   '/servico-decoracao-viaturas': {
-    title: 'Decoração de Viaturas Profissional | DOMREALCE Lisboa',
-    description: 'Decoração completa de viaturas, frotas comerciais e veículos publicitários. Vinil de qualidade premium e aplicação profissional.',
+    title: 'Decoração de Viaturas e Frotas | DOMREALCE',
+    description: 'Decoração publicitária de viaturas e frotas com vinil, desde a preparação gráfica à produção e aplicação na zona de atuação DOMREALCE.',
     keywords: ['decoração viaturas', 'publicidade móvel', 'frotas', 'vinil automóvel'],
     type: 'website'
   },
   '/loja': {
     title: 'Loja Online DOMREALCE | Produtos de Comunicação Visual',
-    description: 'Compre online produtos de comunicação visual. Papel de parede personalizado, impressões digitais e muito mais.',
+    description: 'Compre online produtos de comunicação visual e decoração, incluindo papel de parede personalizado e impressão digital.',
     keywords: ['loja online', 'comprar', 'papel de parede', 'impressão digital'],
     type: 'website'
   },
   '/loja-papel-parede': {
     title: 'Papel de Parede Online - Texturas e Medidas Personalizadas | DOMREALCE',
-    description: 'Escolha entre centenas de texturas de papel de parede. Calculadora automática de medidas e preços transparentes.',
+    description: 'Escolha entre centenas de texturas de papel de parede, indique as medidas e encontre a solução adequada ao seu espaço.',
     keywords: ['papel de parede online', 'texturas', 'comprar papel parede', 'medidas'],
     type: 'website'
   },
   '/portfolio': {
-    title: 'Portfolio DOMREALCE - Projetos de Comunicação Visual | Lisboa',
-    description: 'Explore o nosso portfolio com mais de 200 projetos realizados. Trabalhos de design, impressão, decoração e sinalética.',
-    keywords: ['portfolio', 'projetos', 'trabalhos realizados', 'referências'],
+    title: 'Portfolio DOMREALCE | Projetos de Comunicação Visual',
+    description: 'Conheça projetos realizados pela DOMREALCE em impressão digital, decoração, vinil, sinalética e comunicação visual.',
+    keywords: ['portfolio', 'projetos', 'trabalhos realizados', 'comunicação visual'],
     type: 'website'
   },
   '/contactos': {
-    title: 'Contactos DOMREALCE Lisboa | Orçamentos Gratuitos',
-    description: 'Entre em contacto connosco para orçamentos gratuitos. Telefone, email, WhatsApp e morada em Lisboa.',
-    keywords: ['contactos', 'orçamentos', 'Lisboa', 'telefone', 'WhatsApp'],
+    title: 'Contactos DOMREALCE | Paredes, Portugal',
+    description: 'Contacte a DOMREALCE por telefone, email ou WhatsApp. Estamos em Gondalães, Paredes, e fornecemos produtos de impressão para Portugal.',
+    keywords: ['contactos', 'DOMREALCE', 'Paredes', 'Gondalães', 'telefone', 'WhatsApp'],
     type: 'website'
   },
   '/sobre': {
-    title: 'Sobre a DOMREALCE | 40 Anos de Experiência em Comunicação Visual',
-    description: 'Conheça a história da DOMREALCE. Mais de 40 anos de experiência em comunicação visual e impressão digital em Lisboa.',
-    keywords: ['sobre', 'história', 'experiência', 'empresa', 'comunicação visual'],
+    title: 'Sobre a DOMREALCE | Experiência em Comunicação Visual',
+    description: 'Conheça a DOMREALCE, empresa de Paredes dedicada à comunicação visual, impressão digital e soluções personalizadas para empresas e particulares.',
+    keywords: ['sobre', 'história', 'experiência', 'empresa', 'comunicação visual', 'Paredes'],
     type: 'website'
   },
   '/noticias': {
-    title: 'Notícias e Novidades | DOMREALCE Lisboa',
-    description: 'Fique a par das últimas novidades, projetos e inovações da DOMREALCE. Blog com dicas e tendências de comunicação visual.',
+    title: 'Notícias e Novidades | DOMREALCE',
+    description: 'Novidades, projetos, dicas e tendências de impressão digital e comunicação visual da DOMREALCE.',
     keywords: ['notícias', 'novidades', 'blog', 'tendências', 'comunicação visual'],
     type: 'website'
   },
   '/servico-telas-artisticas': {
-    title: 'Telas Artísticas Personalizadas | DOMREALCE Lisboa',
-    description: 'Impressão de telas artísticas em alta qualidade. Canvas personalizado, reproduções de arte e impressões decorativas.',
+    title: 'Canvas e Telas Personalizadas | DOMREALCE',
+    description: 'Impressão de canvas e telas personalizadas em alta qualidade para decoração, fotografia e reprodução de imagens.',
     keywords: ['telas artísticas', 'canvas', 'impressão arte', 'decoração'],
     type: 'website'
   },
   '/servico-autocolantes': {
-    title: 'Autocolantes e Vinil Adesivo | DOMREALCE Lisboa',
-    description: 'Autocolantes personalizados, vinil adesivo para decoração e publicidade. Corte automático e aplicação profissional.',
-    keywords: ['autocolantes', 'vinil adesivo', 'corte automático', 'personalização'],
+    title: 'Etiquetas e Autocolantes Personalizados | DOMREALCE',
+    description: 'Etiquetas e autocolantes personalizados em vinil, produzidos por medida e quantidade, com diferentes opções de corte e acabamento.',
+    keywords: ['etiquetas', 'autocolantes personalizados', 'vinil adesivo', 'corte de contorno', 'personalização'],
     type: 'website'
   },
   '/servico-espacos-comerciais': {
-    title: 'Sinalética Comercial e Decoração de Espaços | DOMREALCE',
-    description: 'Sinalética para espaços comerciais, decoração de montras e ambientes corporativos. Soluções completas de comunicação visual.',
-    keywords: ['sinalética comercial', 'decoração espaços', 'montras', 'empresas'],
+    title: 'Decoração de Espaços Comerciais e Montras | DOMREALCE',
+    description: 'Decoração de montras, espaços comerciais e ambientes empresariais com soluções de comunicação visual personalizadas.',
+    keywords: ['decoração espaços', 'montras', 'empresas', 'comunicação visual'],
     type: 'website'
   },
   '/servico-peliculas-protecao-solar': {
-    title: 'Películas de Proteção Solar | DOMREALCE Lisboa',
-    description: 'Películas de proteção solar para janelas. Redução de calor, proteção UV e maior privacidade para casa e escritório.',
+    title: 'Películas de Proteção Solar | DOMREALCE',
+    description: 'Películas de proteção solar para janelas, com redução de calor, proteção UV e maior privacidade para espaços comerciais e particulares.',
     keywords: ['películas solares', 'proteção UV', 'janelas', 'isolamento'],
     type: 'website'
   },
@@ -151,54 +151,35 @@ export default function SEO({ title, description, image, type = 'website', keywo
   const [location] = useLocation();
   
   useEffect(() => {
-    // Get page-specific SEO data or use provided props
     const pageData = pageSEOData[location] || {};
-    const finalTitle = title || pageData.title || 'DOMREALCE - Comunicação Visual | Lisboa';
-    const finalDescription = description || pageData.description || 'Especialista em comunicação visual e impressão digital em Lisboa.';
+    const finalTitle = title || pageData.title || 'DOMREALCE | Impressão Digital e Comunicação Visual';
+    const finalDescription = description || pageData.description || 'Impressão digital e comunicação visual. Produção em Paredes e fornecimento de produtos para Portugal.';
     const finalKeywords = [...(pageData.keywords || []), ...keywords];
     const finalType = type || pageData.type || 'website';
     const finalImage = image || pageData.image || 'https://www.domrealce.com/og-image.jpg';
     
-    // Update document title
     document.title = finalTitle;
-    
-    // Update meta description
     updateMetaTag('description', finalDescription);
-    
-    // Update keywords
     if (finalKeywords.length > 0) {
       updateMetaTag('keywords', finalKeywords.join(', '));
     }
-    
-    // Update robots
     updateMetaTag('robots', noIndex ? 'noindex, nofollow' : 'index, follow');
-    
-    // Update canonical URL
     updateLinkTag('canonical', `https://www.domrealce.com${location}`);
-    
-    // Update Open Graph tags
     updateMetaProperty('og:title', finalTitle);
     updateMetaProperty('og:description', finalDescription);
     updateMetaProperty('og:type', finalType);
     updateMetaProperty('og:url', `https://www.domrealce.com${location}`);
     updateMetaProperty('og:image', finalImage);
-    
-    // Update Twitter Card tags
     updateMetaName('twitter:card', 'summary_large_image');
     updateMetaName('twitter:title', finalTitle);
     updateMetaName('twitter:description', finalDescription);
     updateMetaName('twitter:image', finalImage);
-    
-    // Update additional SEO tags
     updateMetaName('author', 'DOMREALCE');
     updateMetaProperty('og:locale', 'pt_PT');
     updateMetaProperty('og:site_name', 'DOMREALCE');
-    
-    // Add preconnect for performance
     addPreconnectLink('https://fonts.googleapis.com');
     addPreconnectLink('https://fonts.gstatic.com');
     addPreconnectLink('https://www.google-analytics.com');
-    
   }, [location, title, description, image, type, keywords, noIndex]);
   
   return null;
