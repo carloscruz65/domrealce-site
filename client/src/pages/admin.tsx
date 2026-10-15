@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import ProtectedAdminLayout from "@/components/ProtectedAdminLayout";
 import MediaManager from "@/components/MediaManager";
 import SliderManager from "@/components/SliderManager";
+import ShopCatalogManager from "@/components/ShopCatalogManager";
 import ProdutosManager from "@/components/ProdutosManager";
 import NoticiasManager from "@/components/NoticiasManager";
 import NewsCategoriesManager from "@/components/NewsCategoriesManager";
@@ -96,12 +97,12 @@ export default function AdminPage() {
     <ProtectedAdminLayout>
       <div className="min-h-screen bg-background">
         {/* Header */}
-        <div className="border-b bg-card">
+        <div className="border-b border-[#333] bg-[#111] text-white">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">Painel Administrativo</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-300">
                   Bem-vindo, {authStatus?.user?.name || "Admin"}
                 </p>
               </div>
@@ -135,9 +136,10 @@ export default function AdminPage() {
                 <Settings className="h-3.5 w-3.5" />
                 Slider
               </TabsTrigger>
+              <TabsTrigger value="loja" className="text-xs px-3 py-2">Loja</TabsTrigger>
               <TabsTrigger value="produtos" className="flex items-center gap-1.5 text-xs px-3 py-2">
                 <Package className="h-3.5 w-3.5" />
-                Produtos
+                Destaques
               </TabsTrigger>
               <TabsTrigger value="noticias" className="flex items-center gap-1.5 text-xs px-3 py-2">
                 <FileText className="h-3.5 w-3.5" />
@@ -202,9 +204,9 @@ export default function AdminPage() {
                 />
                 <DashboardCard
                   title="Loja Online"
-                  description="Administre produtos e texturas da loja"
+                  description="Crie categorias, produtos e preços de compra"
                   icon={Store}
-                  onClick={() => setActiveTab("produtos")}
+                  onClick={() => setActiveTab("loja")}
                   color="text-pink-400"
                 />
                 <DashboardCard
@@ -230,6 +232,7 @@ export default function AdminPage() {
             </TabsContent>
 
             {/* Produtos Tab */}
+            <TabsContent value="loja"><ShopCatalogManager /></TabsContent>
             <TabsContent value="produtos">
               <ProdutosManager />
             </TabsContent>

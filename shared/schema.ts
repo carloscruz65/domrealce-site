@@ -11,6 +11,7 @@ import {
   uniqueIndex,
   jsonb,
   pgEnum,
+  check,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -754,3 +755,26 @@ export const insertTestimonialSchema = createInsertSchema(testimonials)
 
 export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
 export type Testimonial = typeof testimonials.$inferSelect;
+// Catálogo de compra: separado dos cartões de produtos em destaque.
+export const shopCategories = pgTable("shop_categories", {
+  id: varchar("id").primaryKey(), name: text("name").notNull(), slug: text("slug").notNull().unique(),
+  description: text("description").notNull().default(""), image: text("image").notNull().default(""),
+  published: boolean("published").notNull().default(false), position: integer("position").notNull().default(0),
+});
+export const shopProducts = pgTable("shop_products", {
+  id: varchar("id").primaryKey(), categoryId: varchar("category_id").notNull().references(() => shopCategories.id),
+  name: text("name").notNull(), slug: text("slug").notNull().unique(),
+  description: text("description").notNull().default(""), specifications: text("specifications").notNull().default(""),
+  image: text("image").notNull().default(""), priceCents: integer("price_cents").notNull(),
+  minimumQuantity: integer("minimum_quantity").notNull().default(1), quantityStep: integer("quantity_step").notNull().default(1),
+  unit: text("unit").$type<"unidade" | "conjunto">().notNull().default("unidade"),
+  published: boolean("published").notNull().default(false), position: integer("position").notNull().default(0),
+}, (table) => [
+  check("shop_products_price_cents_check", sql`${table.priceCents} > 0`),
+  check("shop_products_minimum_quantity_check", sql`${table.minimumQuantity} > 0`),
+  check("shop_products_quantity_step_check", sql`${table.quantityStep} > 0`),
+  check("shop_products_unit_check", sql`${table.unit} IN ('unidade', 'conjunto')`),
+]);
+export const shopSettings = pgTable("shop_settings", {
+  id: text("id").primaryKey(), config: jsonb("config").$type<import("./shop-catalog").ShopSettings>().notNull(),
+});

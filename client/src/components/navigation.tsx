@@ -113,12 +113,14 @@ export default function Navigation() {
       }
     };
     window.addEventListener("storage", handleStorage);
+    window.addEventListener("cartUpdated", updateCartCount);
 
     // Atualização periódica para apanhar alterações feitas na mesma página
     const intervalId = window.setInterval(updateCartCount, 5000); // A cada 5 segundos (otimizado)
 
     return () => {
       window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("cartUpdated", updateCartCount);
       window.clearInterval(intervalId);
     };
   }, []);

@@ -508,7 +508,7 @@ export default function EncomendasManager() {
                   {selectedOrder.itens?.map((item: any, idx: number) => (
                     <div key={idx} className="flex justify-between p-3 border-b last:border-b-0 bg-muted/30">
                       <div>
-                        <span className="font-medium">{item.textureName || item.canvasName || item.nome || item.titulo}</span>
+                        <span className="font-medium">{item.productName || item.textureName || item.canvasName || item.nome || item.titulo}</span>
                         {item.larguraCm && item.alturaCm && (
                           <span className="text-xs text-muted-foreground ml-2">
                             ({item.larguraCm}×{item.alturaCm}cm)

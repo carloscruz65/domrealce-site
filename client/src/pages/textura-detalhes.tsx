@@ -1,3 +1,4 @@
+import { useShopCatalog } from "@/hooks/use-shop-catalog";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,8 @@ export default function LojaTexturaDetalhes() {
       return numA - numB;
     }) || [];
   
-  const basePrice = 20;
+  const { data: catalog } = useShopCatalog();
+  const basePrice = (catalog?.settings.wallpaperPriceCentsM2 ?? 2000) / 100;
 
   const handleAddToCart = () => {
     if (!selectedTexture) {

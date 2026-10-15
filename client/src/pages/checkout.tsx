@@ -19,7 +19,7 @@ import { PaypalButton } from "@/components/PaypalButton";
 
 interface CartItem {
   id: string;
-  type?: "papel-parede" | "quadros-canvas";
+  type?: "papel-parede" | "quadros-canvas" | "produto";
   textureName?: string;
   textureImage?: string;
   category?: string;
@@ -75,6 +75,8 @@ export default function Checkout() {
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [quote, setQuote] = useState<{ subtotal: number; envio: number; iva: number; total: number } | null>(null);
+  const [quoteError, setQuoteError] = useState("");
 
   // ✅ Método de entrega vindo do carrinho (obrigatório)
   const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickup" | null>(null);
@@ -155,7 +157,7 @@ export default function Checkout() {
       // Verificar se há itens sem medidas (apenas para papel de parede)
       const itemsSemMedidas = items.filter((item: CartItem) => {
         const type = item.type || (item.tamanho ? "quadros-canvas" : "papel-parede");
-        if (type === "quadros-canvas") return false;
+        if (type !== "papel-parede") return false;
 
         return (
           !item.larguraCm ||
@@ -176,26 +178,27 @@ export default function Checkout() {
         return;
       }
 
-      setCartItems(items);
+      fetch("/api/shop/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items, delivery: savedDelivery }) })
+        .then(async response => { const result = await response.json(); if (!response.ok) throw new Error(result.error || "Não foi possível confirmar o pedido."); return result; })
+        .then(result => { setCartItems(result.items); setQuote(result); localStorage.setItem("cart", JSON.stringify(result.items)); })
+        .catch(error => setQuoteError(error.message));
     } else {
       setLocation("/carrinho");
     }
   }, []);
 
-  const totalCarrinho = cartItems.reduce(
-    (total, item) =>
-      total + item.precoTotal * (item.quantidade || item.quantity || 1),
-    0
-  );
-
-  // ✅ Portes: pickup = 0
-  const custoEnvio =
-    deliveryMethod === "pickup" ? 0 : totalCarrinho >= 100 ? 0 : 10;
-
-  const ivaRate = 0.23; // 23% IVA em Portugal
-  const totalSemIva = totalCarrinho + custoEnvio;
-  const valorIva = totalSemIva * ivaRate;
-  const totalFinal = totalSemIva + valorIva;
+  const totalCarrinho = quote?.subtotal ?? 0;
+  const custoEnvio = quote?.envio ?? 0;
+  const valorIva = quote?.iva ?? 0;
+  const totalFinal = quote?.total ?? 0;
+  // Confirm the currently displayed amount immediately before creating any payment.
+  const confirmQuote = async () => {
+    if (!quote || quoteError) throw new Error(quoteError || "Aguarde pela confirmação do pedido.");
+    const response = await fetch("/api/shop/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: cartItems, delivery: deliveryMethod }) });
+    const current = await response.json(); if (!response.ok) throw new Error(current.error || "Não foi possível confirmar o pedido.");
+    setCartItems(current.items); setQuote(current); localStorage.setItem("cart", JSON.stringify(current.items));
+    if (Math.round(current.total * 100) !== Math.round(totalFinal * 100)) throw new Error("O preço foi atualizado. Confirme o novo total e volte a avançar para o pagamento.");
+  };
 
   // Função para validar um campo específico
   const validateField = (fieldName: string, value: string): string => {
@@ -312,6 +315,7 @@ export default function Checkout() {
   // Creates both the internal order and the PayPal order server-side so that
   // custom_id = internalOrderId binds them.  Returns the PayPal order ID.
   const handleCreatePaypalOrder = async (): Promise<string> => {
+    await confirmQuote();
     if (!validateAllFields()) {
       throw new Error("Por favor, preencha os dados obrigatórios antes de pagar.");
     }
@@ -433,6 +437,7 @@ export default function Checkout() {
     setIsProcessing(true);
 
     try {
+      await confirmQuote();
       const timestamp = Date.now();
       const randomSuffix = Math.random().toString(36).substr(2, 4).toUpperCase();
       const numeroEncomenda = `EN-${new Date().getFullYear()}-${timestamp
@@ -661,6 +666,7 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navigation />
+      {(!quote || quoteError) && <div role={quoteError ? "alert" : "status"} className="max-w-6xl mx-auto px-4 pt-28 text-[#FFD700]">{quoteError || "A confirmar preços e disponibilidade…"}{quoteError && <Link href="/carrinho" className="block underline">Voltar ao carrinho</Link>}</div>}
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
@@ -1027,16 +1033,16 @@ export default function Checkout() {
                       className="flex gap-3 p-3 bg-[#0a0a0a] rounded border border-[#333]"
                     >
                       <img
-                        src={item.textureImage || item.canvasImage}
-                        alt={item.textureName || item.canvasName}
+                        src={item.productImage || item.textureImage || item.canvasImage}
+                        alt={item.productName || item.textureName || item.canvasName}
                         className="w-16 h-16 object-cover rounded"
                       />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium text-white truncate">
-                          {item.textureName || item.canvasName}
+                          {item.productName || item.textureName || item.canvasName}
                         </h4>
 
-                        {(item.type === "quadros-canvas" || item.tamanho) ? (
+                        {item.type === "produto" ? <p className="text-xs text-gray-400">{item.quantidade} × {item.unit} · {item.specifications}</p> : (item.type === "quadros-canvas" || item.tamanho) ? (
                           <p className="text-xs text-gray-400">
                             {item.tamanho} • Quadro em Canvas
                           </p>
@@ -1096,7 +1102,7 @@ export default function Checkout() {
 
                   {deliveryMethod === "delivery" && custoEnvio === 0 && (
                     <p className="text-xs text-green-400">
-                      Envio grátis para compras acima de €100
+                      Envio gratuito aplicado a este pedido.
                     </p>
                   )}
 
@@ -1139,7 +1145,7 @@ export default function Checkout() {
                 <Button
                   onClick={handleFinalizarPedido}
                   disabled={
-                    isProcessing ||
+                    !quote || !!quoteError || isProcessing ||
                     cartItems.length === 0 ||
                     paymentData.metodoPagamento === "paypal" ||
                     !deliveryMethod

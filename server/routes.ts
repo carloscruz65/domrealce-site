@@ -28,6 +28,9 @@ import { dirname } from "path";
 import { protegerAdmin } from "./middleware";
 import { randomUUID } from "crypto";
 import { registerServicePageRoutes } from "./service-pages/routes";
+import { registerShopCatalogRoutes } from "./shop/routes";
+import { catalogStore } from "./shop/store";
+import { quoteShopCart } from "../shared/shop-pricing";
 
 // ✅ Recriar __dirname para ES Modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -71,7 +74,10 @@ function logRouteError(requestId: string, label: string, err: unknown) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit authentication
   await setupAuth(app);
+  // Todas as rotas administrativas passam pela mesma proteção, antes do registo.
+  app.use("/api/admin", protegerAdmin);
   registerServicePageRoutes(app);
+  registerShopCatalogRoutes(app, catalogStore, protegerAdmin);
 
   // Rate limiting for contact form
   const contactLimiter = rateLimit({
@@ -989,96 +995,22 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // ORDERS
   // =========================================
 
-  // Server-authoritative pricing constants.
-  // These MUST stay in sync with client-side values in:
-  //   client/src/pages/textura-detalhes.tsx  (papel-parede)
-  //   client/src/pages/canvas-detalhes.tsx   (quadros-canvas)
-  const WALLPAPER_PRICE_PER_M2 = 20;        // €/m²  (textura-detalhes line 97)
-  const WALLPAPER_LAMINATION_PER_M2 = 8;    // €/m²  (carrinho.tsx line 207)
-  const CANVAS_IVA_RATE = 0.23;             // IVA included at item level for canvas
-  const CANVAS_SIZE_PRICES: Record<string, number> = {
-    "20x30": 15.00,
-    "30x40": 25.00,
-    "40x50": 35.00,
-    "50x70": 50.00,
-    "60x80": 70.00,
-    "70x100": 90.00,
-    "80x120": 120.00,
-    "100x150": 150.00,
-  };
-
-  /**
-   * Compute an item's net price (before global IVA) from its structural
-   * attributes only.  All client-supplied monetary fields (preco, precoTotal,
-   * precoBase, subtotal, …) are ignored.
-   *
-   * Returns 0 if the item cannot be priced (unknown type, missing/invalid
-   * dimensions, etc.).
-   */
-  function computeItemPrecoTotal(item: Record<string, unknown>): number {
-    const type = String(item.type ?? "");
-
-    if (type === "papel-parede") {
-      const larguraCm = Number(item.larguraCm) || 0;
-      const alturaCm = Number(item.alturaCm) || 0;
-      if (larguraCm <= 0 || alturaCm <= 0) return 0;
-
-      const material = String(item.material ?? "");
-      if (!material) return 0;
-
-      const area = (larguraCm / 100) * (alturaCm / 100);
-      const base = WALLPAPER_PRICE_PER_M2 * area;
-      const laminacao = item.laminacao === true && material === "vinil"
-        ? WALLPAPER_LAMINATION_PER_M2 * area
-        : 0;
-      return base + laminacao;
-    }
-
-    if (type === "quadros-canvas") {
-      const tamanho = String(item.tamanho ?? "");
-      const basePrice = CANVAS_SIZE_PRICES[tamanho];
-      if (!basePrice) return 0;
-      // Canvas items store precoTotal WITH IVA already included
-      // (matches canvas-detalhes.tsx: precoTotal = precoBase * 1.23)
-      return basePrice * (1 + CANVAS_IVA_RATE);
-    }
-
-    return 0; // unknown type
-  }
-
   app.post("/api/orders", async (req, res) => {
     const requestId = makeRequestId();
     try {
       const orderData = insertOrderSchema.parse(req.body);
 
-      // Recompute all financial values server-side using authoritative pricing.
-      // Client-supplied monetary fields (precoTotal, preco, subtotal, envio,
-      // iva, total) are completely ignored — only structural fields like
-      // dimensions, material, tamanho and quantity influence the price.
-      const itens = (orderData.itens as Array<Record<string, unknown>>) ?? [];
-
-      let subtotal = 0;
-      for (const item of itens) {
-        const itemPrice = computeItemPrecoTotal(item);
-        if (itemPrice <= 0) {
-          return res.status(400).json({
-            error: `Item inválido ou sem preço definido: tipo="${item.type}", tamanho="${item.tamanho}", largura=${item.larguraCm}, altura=${item.alturaCm}`,
-            requestId,
-          });
-        }
-        const qty = Math.max(1, Math.round(Number(item.quantidade ?? item.quantity ?? 1)));
-        subtotal += itemPrice * qty;
+      const shopCatalog = await catalogStore.getCatalog();
+      let quote;
+      try {
+        quote = quoteShopCart(orderData.itens as Array<Record<string, unknown>>, shopCatalog, req.body.metodoEntrega);
+      } catch (error) {
+        return res.status(400).json({ error: error instanceof Error ? error.message : "Carrinho inválido.", requestId });
       }
-
-      // Shipping: pickup = free; delivery free ≥ €100 else €10.
-      // metodoEntrega is sent in the raw body but is not part of
-      // insertOrderSchema, so we read it from req.body directly.
-      const metodoEntrega = req.body.metodoEntrega === "pickup" ? "pickup" : "delivery";
-      const envio = metodoEntrega === "pickup" ? 0 : subtotal >= 100 ? 0 : 10;
-
-      const IVA_RATE = 0.23;
-      const iva = (subtotal + envio) * IVA_RATE;
-      const total = subtotal + envio + iva;
+      const { subtotal, envio, iva, total } = quote;
+      if (!Number.isFinite(Number(orderData.total)) || Math.round(Number(orderData.total) * 100) !== Math.round(total * 100)) {
+        return res.status(409).json({ success: false, error: "O preço foi atualizado. Reveja o pedido antes de pagar.", message: "O preço foi atualizado. Reveja o pedido antes de pagar.", requestId });
+      }
 
       // Build the order with server-authoritative values.
       // estado and estadoPagamento are ALWAYS forced to "pendente" on creation
@@ -1086,6 +1018,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // after a verified payment event.
       const safeOrderData = {
         ...orderData,
+        itens: quote.items,
         subtotal: subtotal.toFixed(2),
         envio: envio.toFixed(2),
         iva: iva.toFixed(2),
@@ -1350,27 +1283,17 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // Parse and validate checkout data using the same schema as POST /api/orders.
       const orderData = insertOrderSchema.parse(req.body);
 
-      // Recompute all financial values server-side (same logic as POST /api/orders).
-      const itens = (orderData.itens as Array<Record<string, unknown>>) ?? [];
-      let subtotal = 0;
-      for (const item of itens) {
-        const itemPrice = computeItemPrecoTotal(item);
-        if (itemPrice <= 0) {
-          return res.status(400).json({
-            success: false,
-            message: `Item inválido ou sem preço: tipo="${item.type}", tamanho="${item.tamanho}"`,
-            requestId,
-          });
-        }
-        const qty = Math.max(1, Math.round(Number(item.quantidade ?? item.quantity ?? 1)));
-        subtotal += itemPrice * qty;
+      const shopCatalog = await catalogStore.getCatalog();
+      let quote;
+      try {
+        quote = quoteShopCart(orderData.itens as Array<Record<string, unknown>>, shopCatalog, req.body.metodoEntrega);
+      } catch (error) {
+        return res.status(400).json({ success: false, message: error instanceof Error ? error.message : "Carrinho inválido.", requestId });
       }
-
-      const metodoEntrega = req.body.metodoEntrega === "pickup" ? "pickup" : "delivery";
-      const envio = metodoEntrega === "pickup" ? 0 : subtotal >= 100 ? 0 : 10;
-      const IVA_RATE = 0.23;
-      const iva = (subtotal + envio) * IVA_RATE;
-      const total = subtotal + envio + iva;
+      const { subtotal, envio, iva, total } = quote;
+      if (!Number.isFinite(Number(orderData.total)) || Math.round(Number(orderData.total) * 100) !== Math.round(total * 100)) {
+        return res.status(409).json({ success: false, error: "O preço foi atualizado. Reveja o pedido antes de pagar.", message: "O preço foi atualizado. Reveja o pedido antes de pagar.", requestId });
+      }
 
       // Generate a server-side order number.
       const timestamp = Date.now();
@@ -1380,6 +1303,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // Create the internal order first (pending).
       const safeOrderData = {
         ...orderData,
+        itens: quote.items,
         numeroEncomenda,
         subtotal: subtotal.toFixed(2),
         envio: envio.toFixed(2),
@@ -1787,7 +1711,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
   // =========================================
   // ADMIN: proteger todas /api/admin
   // =========================================
-  app.use("/api/admin", protegerAdmin);
+  // A proteção global foi registada no início de registerRoutes.
 
   // Admin Slider routes
   app.get("/api/admin/slider", async (req, res) => {
