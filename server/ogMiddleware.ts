@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { storage } from "./storage";
+import { staticSocialHtml } from "./staticSocialMeta";
 
 const SOCIAL_BOT_UA =
   /facebookexternalhit|facebot|twitterbot|whatsapp|linkedinbot|telegrambot|slackbot|discordbot|applebot|rogerbot|embedly|quora|outbrain|pinterest|vkshare|w3c_validator|redditbot/i;
@@ -27,7 +28,16 @@ export async function ogMetaMiddleware(
   if (req.method !== "GET") return next();
 
   const noticiaMatch = req.path.match(/^\/noticia\/(.+)$/);
-  if (!noticiaMatch) return next();
+  if (!noticiaMatch) {
+    // Vary both bot and human responses so caches never mix their HTML.
+    res.vary("User-Agent");
+    if (!isSocialBot(req.headers["user-agent"] || "")) return next();
+    const html = await staticSocialHtml(req.path);
+    if (!html) return next();
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=300");
+    return res.status(200).send(html);
+  }
 
   const ua = req.headers["user-agent"] || "";
   if (!isSocialBot(ua)) return next();
