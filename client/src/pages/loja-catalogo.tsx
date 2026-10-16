@@ -155,6 +155,7 @@ export default function LojaCatalogo() {
                         id="product-personalization"
                         required
                         maxLength={200}
+                        placeholder={/alvar/i.test(product.personalizationLabel) ? "Ex.: 0066621" : `Escreva aqui: ${product.personalizationLabel}`}
                         value={personalizationValue}
                         aria-invalid={Boolean(personalizationError)}
                         aria-describedby="personalization-help"
