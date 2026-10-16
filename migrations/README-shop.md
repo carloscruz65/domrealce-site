@@ -39,7 +39,7 @@ npm run build
 npm run check
 ```
 
-Os 23 testes incluem migração repetível com PostgreSQL temporário/PGlite, recusa da base incorreta, instalação gradual sem interromper a loja antiga, falhas de ligação e instalações parciais, além de preços/IVA/portes, quantidades inválidas, mínimo/incrementos, rascunhos, categorias retiradas, validação de dados, autenticação administrativa em produção, CRUD HTTP, e as rotas reais de criação de pedidos e PayPal com serviços externos simulados. Não contactam bancos, PayPal, SMTP ou bases reais.
+Os testes do catálogo incluem migração repetível com PostgreSQL temporário/PGlite, recusa da base incorreta, instalação gradual sem interromper a loja antiga, falhas de ligação e instalações parciais, além de preços/IVA/portes, quantidades inválidas, mínimo/incrementos, rascunhos, categorias retiradas, validação de dados, autenticação administrativa em produção, CRUD HTTP, e as rotas reais de criação de pedidos e PayPal com serviços externos simulados. Não contactam bancos, PayPal, SMTP ou bases reais.
 
 O percurso do admin e da compra foi também verificado num navegador em 1280 × 900 e 390 × 844, com API e imagens simuladas: criação de categoria/produto, gravação de preços, navegação até ao checkout, mínimo/incremento 3/2 e total de 30,75 € para 5 conjuntos de 5 € líquidos. Os exemplos existem apenas nos testes locais.
 
@@ -54,6 +54,10 @@ Não migra as bibliotecas antigas de papel de parede/canvas para o novo gestor d
 
 ## Situação da publicação (16/10/2026)
 
-Versão revista em `codex/admin-loja-catalogo`, PR 1. `main` ainda está em `1de2d81722cda64c2ce043aa5a2c5f6db1dd2e15` (10/10). O conector Replit identifica o site publicado como `DomrealceDesign` (`3bf90cb8-837d-49dd-b68d-11cd7e048610`), em `https://domrealce.com`, com estado success. A data mais recente da aplicação no Replit é posterior à da main; é necessário verificar Git/status no workspace antes de integrar, para confirmar se há alterações locais por guardar. Esta diferença de datas, por si só, não prova divergência de código.
+Versão revista em `codex/admin-loja-catalogo`, PR 1. A main do GitHub está em `1de2d81722cda64c2ce043aa5a2c5f6db1dd2e15`. O utilizador guardou os seis commits do Replit em `backup/replit-site-20261016`, SHA `a90944602d6808f0ce50143e65d9e76889fefd94`.
 
-Não foram alterados a base real, o deployment do Replit ou o ramo main. A validação local não substitui o teste de login, upload no Object Storage e pagamentos/webhooks sandbox no ambiente de teste do site principal.
+A versão integrada mantém as alterações de impressão digital e partilha social do Replit, migrando os textos nacionais sem referências a Lisboa da main para o novo mapa partilhado de SEO. O commit de integração conserva ambos os históricos. Os ficheiros de metadados e a imagem de verificação da cópia do Replit são preservados sem alterações.
+
+Validação da integração: 24 testes passam (23 do catálogo/base e um teste de metadados sociais que percorre as páginas com cinco bots, URLs individuais, CMS/fallback e notícias por ID/slug). O build passa. O TypeScript mantém os 63 diagnósticos anteriores, sem novos diagnósticos nos ficheiros integrados.
+
+O conector identifica o site publicado como `DomrealceDesign` (`3bf90cb8-837d-49dd-b68d-11cd7e048610`), em `https://domrealce.com`, com estado success. Não foram alterados a main, a base real ou o deployment do Replit. Falta identificar/copiar a base do site principal, aplicar o diagnóstico e a migração na cópia e validar login, upload no Object Storage e pagamentos/webhooks sandbox antes da publicação.

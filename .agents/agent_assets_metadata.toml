@@ -14,3 +14,17 @@ mtime_ms = 1788936941786
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:3bf90cb8-837d-49dd-b68d-11cd7e048610/be00a11b-0c88-4512-a7b0-6eb9c4b6a039/cd11068d-ff21-45a5-8fe2-1db4f1940b47"
 storage_version_token = "1788936950241970"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "i5KnRd2mqAPut5Vip_sfl"
+uri = "file://screenshots/impressao-digital-desktop.jpg"
+type = "image"
+title = "Impressão Digital — Preview"
+description = "Sete cartões de produtos após o hero e Tecnologia Avançada reduzida a três pontos. Apenas no projeto, sem publicação."
+logical_id = "8dd78057-d636-4373-8341-d8a25fbfe15f"
+content_hash = "sha256:69bf97d9c89e3e9c1cdbf5f6a8d0feff0555a0bc7c6cfdaee3994d7c5e5a5a6c"
+size = 242583
+mtime_ms = 1791409567365
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:3bf90cb8-837d-49dd-b68d-11cd7e048610/8dd78057-d636-4373-8341-d8a25fbfe15f/1e82720c-d69b-493e-8e75-5c202ef35253"
+storage_version_token = "1791409580261594"
+content_type = "image/jpeg"
