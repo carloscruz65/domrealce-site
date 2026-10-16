@@ -261,44 +261,81 @@ export default function ShopCatalogManager() {
             <p>Crie primeiro uma categoria.</p>
           )}
           {(mode === "categories" ? data.categories : data.products).map(
-            (entry) => (
-              <div
-                key={entry.id}
-                className="flex flex-wrap items-center justify-between gap-3 border rounded p-4"
-              >
-                <div>
-                  <strong>{entry.name}</strong>
-                  <p className="text-sm text-gray-300">
-                    {entry.published ? "Publicado" : "Rascunho"}
-                    {"priceCents" in entry
-                      ? ` · €${money((entry as ShopProduct).priceCents)} sem IVA / ${(entry as ShopProduct).unit}`
-                      : ""}
-                  </p>
-                  <a
-                    className="text-[#FFD700] underline break-all"
-                    href={
-                      "priceCents" in entry
-                        ? `/loja/produto/${entry.slug}`
-                        : `/loja/categoria/${entry.slug}`
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Abrir ligação{" "}
-                    {entry.published ? "pública" : "(disponível após publicar)"}
-                  </a>
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setEditing(entry);
-                    setMessage("");
-                  }}
+            (entry) => {
+              const productEntry = "priceCents" in entry;
+              const publicPath = productEntry
+                ? `/loja/produto/${entry.slug}`
+                : `/loja/categoria/${entry.slug}`;
+              const visible =
+                entry.published &&
+                (!productEntry ||
+                  data.categories.some(
+                    (c) =>
+                      c.id === (entry as ShopProduct).categoryId && c.published,
+                  ));
+              return (
+                <div
+                  key={entry.id}
+                  className="flex flex-wrap items-center justify-between gap-3 border rounded p-4"
                 >
-                  Editar
-                </Button>
-              </div>
-            ),
+                  <div>
+                    <strong>{entry.name}</strong>
+                    <p className="text-sm text-gray-300">
+                      {visible
+                        ? "Publicado"
+                        : entry.published
+                          ? "Categoria em rascunho — produto ainda não visível"
+                          : "Rascunho"}
+                      {productEntry
+                        ? ` · €${money((entry as ShopProduct).priceCents)} sem IVA / ${(entry as ShopProduct).unit}`
+                        : ""}
+                    </p>
+                    <a
+                      className="text-[#FFD700] underline break-all"
+                      href={publicPath}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Abrir ligação{" "}
+                      {visible ? "pública" : "(disponível após publicar)"}
+                    </a>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!visible}
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(
+                            new URL(publicPath, window.location.origin).href,
+                          );
+                          setMessage(
+                            "Ligação copiada. Pode utilizá-la num cartão, botão ou mensagem.",
+                          );
+                        } catch {
+                          setMessage(
+                            "Não foi possível copiar automaticamente. Abra a ligação e copie o endereço na barra do navegador.",
+                          );
+                        }
+                      }}
+                    >
+                      Copiar ligação
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setEditing(entry);
+                        setMessage("");
+                      }}
+                    >
+                      Editar
+                    </Button>
+                  </div>
+                </div>
+              );
+            },
           )}
           {!data.categories.length && (
             <p>
@@ -373,7 +410,7 @@ export default function ShopCatalogManager() {
               <Field name="name" label="Nome" value={selected?.name} />
               <Field
                 name="slug"
-                label="Endereço (slug; vazio cria a partir do nome)"
+                label="Endereço da página (opcional; criado automaticamente a partir do nome)"
                 value={selected?.slug}
                 required={false}
               />

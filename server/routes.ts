@@ -1000,7 +1000,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
     try {
       const orderData = insertOrderSchema.parse(req.body);
 
-      const shopCatalog = await catalogStore.getCatalog();
+      const shopCatalog = await catalogStore.getCatalog({ allowLegacy: true });
       let quote;
       try {
         quote = quoteShopCart(orderData.itens as Array<Record<string, unknown>>, shopCatalog, req.body.metodoEntrega);
@@ -1283,7 +1283,7 @@ Sitemap: https://www.domrealce.com/sitemap.xml`;
       // Parse and validate checkout data using the same schema as POST /api/orders.
       const orderData = insertOrderSchema.parse(req.body);
 
-      const shopCatalog = await catalogStore.getCatalog();
+      const shopCatalog = await catalogStore.getCatalog({ allowLegacy: true });
       let quote;
       try {
         quote = quoteShopCart(orderData.itens as Array<Record<string, unknown>>, shopCatalog, req.body.metodoEntrega);

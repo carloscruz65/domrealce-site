@@ -41,7 +41,7 @@ export function registerShopCatalogRoutes(
   app.get(
     "/api/shop/catalog",
     wrap(async (_req, res) => {
-      const catalog = await store.getCatalog();
+      const catalog = await store.getCatalog({ allowLegacy: true });
       const categories = catalog.categories.filter((c) => c.published);
       res.setHeader("Cache-Control", "no-store");
       res.json({
@@ -56,7 +56,7 @@ export function registerShopCatalogRoutes(
   app.post(
     "/api/shop/quote",
     wrap(async (req, res) => {
-      const catalog = await store.getCatalog();
+      const catalog = await store.getCatalog({ allowLegacy: true });
       try {
         res.setHeader("Cache-Control", "no-store");
         res.json(quoteShopCart(req.body.items, catalog, req.body.delivery));

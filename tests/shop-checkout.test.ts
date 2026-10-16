@@ -52,7 +52,7 @@ test("real order and PayPal routes price the same cart, reject changed totals an
     "./ifthenpay": "export const createIfthenPayService=()=>({});",
     "./service-pages/routes": "export function registerServicePageRoutes() {}",
     "./shop/store":
-      "export const catalogStore={getCatalog:async()=>globalThis.__shopCheckoutFixture.catalog};",
+      "export const catalogStore={getCatalog:async(options)=>{if(options?.allowLegacy!==true)throw new Error('Checkout must allow existing shop before catalog migration');return globalThis.__shopCheckoutFixture.catalog;}};",
     "./visual-editor": [
       "getPageContent",
       "savePageContentEndpoint",

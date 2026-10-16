@@ -1,4 +1,16 @@
 BEGIN;
+-- Confirma o esquema do SITE PRINCIPAL antes de criar qualquer tabela.
+DO $$
+BEGIN
+ IF NOT EXISTS (
+  SELECT 1 FROM pg_attribute
+  WHERE attrelid = to_regclass('orders')
+    AND attname = 'numero_encomenda' AND NOT attisdropped
+ ) THEN
+  RAISE EXCEPTION 'Base incorreta: esta migração exige a tabela orders.numero_encomenda do site principal DOMREALCE. Não aplicar na calculadora.';
+ END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS shop_categories (
  id varchar PRIMARY KEY, name text NOT NULL, slug text NOT NULL UNIQUE, description text NOT NULL DEFAULT '',
  image text NOT NULL DEFAULT '', published boolean NOT NULL DEFAULT false, position integer NOT NULL DEFAULT 0

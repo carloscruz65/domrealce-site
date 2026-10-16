@@ -6,6 +6,7 @@ Esta atualização pertence a `carloscruz65/domrealce-site` (site principal). N�
 
 - Admin → **Loja**: criar/editar categorias e produtos compráveis, publicar ou guardar em rascunho, fotografias por upload ou URL, material/medidas em texto, unidade/conjunto, preço líquido, quantidade mínima e incremento.
 - Admin → **Destaques**: os cartões de apresentação existentes continuam separados do catálogo de compra.
+- O botão **Copiar ligação** copia o endereço público para utilizar em cartões, botões ou mensagens. A ligação só fica disponível quando o artigo e a categoria estão publicados.
 - Categorias e produtos têm endereços públicos `/loja/categoria/:slug` e `/loja/produto/:slug`. Pode utilizar o endereço de um produto num botão/cartão da página de serviços.
 - Novos produtos utilizam o carrinho e checkout existentes do site. Não passam pela calculadora.
 - Despublicar um produto ou a sua categoria impede novas compras. O registo dos pedidos anteriores mantém os dados e os preços da compra.
@@ -18,14 +19,16 @@ Esta atualização pertence a `carloscruz65/domrealce-site` (site principal). N�
 ## Instalar primeiro num ambiente de teste
 
 1. Criar uma cópia/branch de teste da base PostgreSQL **do site principal**. Não reutilizar a base de teste da calculadora sem confirmar a origem: são aplicações diferentes.
-2. Aplicar apenas `migrations/20261015_shop_catalog.sql` nessa cópia, por exemplo `psql "$DATABASE_URL_TEST" -v ON_ERROR_STOP=1 -f migrations/20261015_shop_catalog.sql`. Nunca colocar credenciais no GitHub ou em mensagens.
+2. Executar primeiro `migrations/20261016_shop_preflight.sql` (apenas leitura) e confirmar o esquema do site principal. Depois aplicar apenas `migrations/20261015_shop_catalog.sql` nessa cópia, por exemplo `psql "$DATABASE_URL_TEST" -v ON_ERROR_STOP=1 -f migrations/20261015_shop_catalog.sql`. Nunca colocar credenciais no GitHub ou em mensagens.
 3. Publicar esta branch num ambiente isolado com essa base e armazenamento de imagens de teste. A autenticação continua dependente da configuração Replit existente; testar o acesso com uma conta administrativa autorizada.
 4. Criar uma categoria e um produto em rascunho. Verificar foto, preço, descrição, medidas, unidade/conjunto e quantidades antes de publicar no ambiente de teste.
 5. Verificar o percurso em telemóvel e computador: loja → categoria → produto → carrinho → checkout. Testar carrinho misto com canvas/papel de parede, portes e levantamento, indisponibilidade, mudança de preço e preservação dos pedidos antigos.
 6. Validar pagamentos/webhooks apenas com credenciais e configuração de sandbox dos fornecedores. Esta atualização não introduz um interruptor universal de pagamentos de teste. Não efetuar cobranças reais para validar.
 7. Depois da revisão e aprovação, fazer backup da base real, aplicar a migração do catálogo à base do site principal e publicar a mesma versão. A migração é aditiva e repetível; não cria categorias, produtos ou encomendas de exemplo. Reverter o código não exige apagar as tabelas novas.
 
-A migração tem de estar aplicada **antes de publicar o código**: a consulta de preços e a criação de pedidos passam a consultar o novo catálogo, mesmo para produtos antigos.
+A migração tem de estar aplicada **antes de ativar os novos produtos no admin**. Sem nenhuma das tabelas novas, as páginas públicas e o checkout continuam a aceitar canvas/papel de parede com a tabela anterior. O admin do novo catálogo fica indisponível até à instalação. Falhas de ligação, tabelas parcialmente instaladas ou dados inválidos continuam a falhar; não se substituem preços existentes por preços por omissão nesses casos. Nenhuma tabela é criada automaticamente.
+
+A migração confirma `orders.numero_encomenda` antes de criar tabelas e recusa uma base da calculadora. Esta verificação complementa a confirmação humana da ligação e não substitui o backup.
 
 ## Verificação
 
@@ -36,7 +39,7 @@ npm run build
 npm run check
 ```
 
-Os testes incluem preços/IVA/portes, quantidades inválidas, mínimo/incrementos, rascunhos, categorias retiradas, validação de dados, autenticação administrativa em produção, CRUD HTTP, e as rotas reais de criação de pedidos e PayPal com serviços externos simulados. Não contactam bancos, PayPal, SMTP ou bases reais.
+Os 23 testes incluem migração repetível com PostgreSQL temporário/PGlite, recusa da base incorreta, instalação gradual sem interromper a loja antiga, falhas de ligação e instalações parciais, além de preços/IVA/portes, quantidades inválidas, mínimo/incrementos, rascunhos, categorias retiradas, validação de dados, autenticação administrativa em produção, CRUD HTTP, e as rotas reais de criação de pedidos e PayPal com serviços externos simulados. Não contactam bancos, PayPal, SMTP ou bases reais.
 
 O percurso do admin e da compra foi também verificado num navegador em 1280 × 900 e 390 × 844, com API e imagens simuladas: criação de categoria/produto, gravação de preços, navegação até ao checkout, mínimo/incremento 3/2 e total de 30,75 € para 5 conjuntos de 5 € líquidos. Os exemplos existem apenas nos testes locais.
 
@@ -47,3 +50,10 @@ Na preparação desta branch, a migração e o CRUD Drizzle foram também exerci
 ## Limites desta entrega
 
 Não migra as bibliotecas antigas de papel de parede/canvas para o novo gestor de artigos: as páginas e pastas existentes continuam disponíveis. Não implementa stock, variantes com preços próprios ou descontos de revenda no site principal. Produtos com diferentes materiais ou medidas e preços distintos podem ser criados como artigos separados. A modernização do editor geral da homepage/serviços é uma fase separada; esta entrega resolve a gestão do catálogo comprável.
+
+
+## Situação da publicação (16/10/2026)
+
+Versão revista em `codex/admin-loja-catalogo`, PR 1. `main` ainda está em `1de2d81722cda64c2ce043aa5a2c5f6db1dd2e15` (10/10). O conector Replit identifica o site publicado como `DomrealceDesign` (`3bf90cb8-837d-49dd-b68d-11cd7e048610`), em `https://domrealce.com`, com estado success. A data mais recente da aplicação no Replit é posterior à da main; é necessário verificar Git/status no workspace antes de integrar, para confirmar se há alterações locais por guardar. Esta diferença de datas, por si só, não prova divergência de código.
+
+Não foram alterados a base real, o deployment do Replit ou o ramo main. A validação local não substitui o teste de login, upload no Object Storage e pagamentos/webhooks sandbox no ambiente de teste do site principal.
