@@ -1,8 +1,6 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
-import ServiceCardsSection from "@/components/services/ServiceCardsSection";
-import type { ServiceAccordionCard } from "@/components/services/ServiceCardAccordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,13 +11,11 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
-  Zap,
   Shield,
   Maximize,
   Palette,
   Clock,
   Award,
-  ChevronDown,
 } from "lucide-react";
 
 export default function ServicoImpressaoDigital() {
@@ -110,139 +106,73 @@ export default function ServicoImpressaoDigital() {
 
   const galleryImages = galleryData?.images || defaultImages;
 
-  // ✅ Secção normalizada no estilo Design (cards + dropdown), mantendo o <details> existente
-  const tecnologiaCards: ServiceAccordionCard[] = [
+  // Existing product routes in the calculator app; retain the attribution query.
+  const calculatorProductUrl = (path: string) => {
+    const url = new URL(calculatorUrl);
+    url.pathname = path;
+    return url.toString();
+  };
+
+  const products = [
     {
-      key: "materiais-acabamentos",
-      icon: <Maximize className="w-6 h-6" />,
-      title: "Materiais e Acabamentos",
-      intro: "Escolha técnica, acabamento limpo e pensado para durar.",
-      body: (
-        <>
-          <p className="text-gray-300">
-            Trabalhamos com uma seleção de materiais profissionais e acabamentos
-            técnicos pensados para durar. Cada projeto é preparado de acordo com
-            o local de aplicação, exposição ao exterior e objetivo de comunicação,
-            garantindo boa reprodução de cor, estabilidade e durabilidade.
-          </p>
-
-          {/* Dropdown original mantido */}
-          <details className="group mt-4">
-            <summary className="cursor-pointer flex items-center justify-between text-sm text-brand-yellow select-none">
-              <span>Ver materiais e suportes utilizados</span>
-              <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
-            </summary>
-
-            <div className="mt-4 space-y-3">
-              <div className="flex items-start gap-3">
-                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                <p className="text-sm text-gray-300">
-                  <span className="text-white font-medium">
-                    Vinis de várias gamas
-                  </span>{" "}
-                  (monoméricos, poliméricos e cast) para montras, viaturas e
-                  sinalética interior e exterior.
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                <p className="text-sm text-gray-300">
-                  <span className="text-white font-medium">
-                    Lonas publicitárias
-                  </span>{" "}
-                  (frontlit, backlit e perfuradas) para fachadas, eventos,
-                  vedações e grandes formatos.
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                <p className="text-sm text-gray-300">
-                  <span className="text-white font-medium">
-                    Vinil decorativo e jateado
-                  </span>{" "}
-                  para interiores, privacidade em vidro e ambientes mais acolhedores.
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                <p className="text-sm text-gray-300">
-                  <span className="text-white font-medium">Suportes rígidos</span>{" "}
-                  como PVC e acrílico, ideais para placas, sinalética e comunicação permanente.
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="mt-1 w-2 h-2 rounded-full bg-brand-yellow" />
-                <p className="text-sm text-gray-300">
-                  <span className="text-white font-medium">
-                    Proteção e acabamentos
-                  </span>{" "}
-                  com laminação mate ou brilho, proteção UV e corte de contorno para maior
-                  durabilidade e melhor acabamento visual.
-                </p>
-              </div>
-            </div>
-          </details>
-        </>
-      ),
+      name: "Vinil impresso",
+      description: "Impressão autocolante para montras, viaturas e sinalética.",
+      href: calculatorProductUrl("/vinil-impresso"),
+      action: "Calcular preço",
     },
     {
-      key: "tintas",
-      icon: <Palette className="w-6 h-6" />,
-      title: "Tintas Látex Premium",
-      intro: "Sem odor, boa resistência e resultado consistente.",
-      content: [
-        "Tintas látex de alta qualidade, com excelente reprodução de cor.",
-        "Opção indicada para interior e exterior, consoante o material e acabamento.",
-        "Maior resistência ao desbotamento e bom comportamento em uso real.",
-      ],
+      name: "Etiquetas",
+      description: "Etiquetas autocolantes para embalagens, produtos e identificação.",
+      href: "/servico-autocolantes",
+      action: "Ver produto",
     },
     {
-      key: "producao",
-      icon: <Zap className="w-6 h-6" />,
-      title: "Produção Rápida",
-      intro: "Prazos curtos sem comprometer qualidade.",
-      content: [
-        "Planeamento e produção otimizados para trabalhos urgentes.",
-        "Acabamentos e preparação com controlo de qualidade.",
-        "Entrega ou instalação conforme combinado.",
-      ],
+      name: "Lonas",
+      description: "Impressão em grande formato para fachadas, eventos e publicidade.",
+      href: calculatorProductUrl("/lonas"),
+      action: "Calcular preço",
     },
     {
-      key: "prazos",
-      icon: <Clock className="w-6 h-6" />,
-      title: "Gestão de Prazos",
-      intro: "Cumprimos prazos apertados com segurança.",
-      content: [
-        "Priorização e calendarização de produção por tipo de trabalho.",
-        "Comunicação clara de prazos e etapas.",
-        "Consistência no resultado final e no timing de entrega.",
-      ],
+      name: "PVC",
+      description: "Placas rígidas e leves para sinalética, expositores e comunicação.",
+      href: calculatorProductUrl("/pvc"),
+      action: "Calcular preço",
     },
     {
-      key: "durabilidade",
-      icon: <Shield className="w-6 h-6" />,
-      title: "Durabilidade e Materiais Certos",
-      intro: "O material certo para o contexto certo.",
-      content: [
-        "Seleção de materiais conforme exposição ao sol, chuva e desgaste.",
-        "Opções de laminação e proteção UV para maior longevidade.",
-        "Acabamentos limpos para valorizar o projeto.",
-      ],
+      name: "Canvas",
+      description: "Impressão em tela para fotografias, reproduções artísticas e decoração.",
+      href: "/servico-telas-artisticas",
+      action: "Ver produto",
     },
     {
-      key: "qualidade",
-      icon: <Award className="w-6 h-6" />,
-      title: "Qualidade Profissional",
-      intro: "Detalhe, consistência e controlo técnico.",
-      content: [
-        "Verificação técnica do ficheiro (resolução, margens, cortes, cor).",
-        "Produção orientada a consistência e repetibilidade.",
-        "Acabamentos profissionais com rigor de aplicação.",
-      ],
+      name: "Papel de parede",
+      description: "Impressão personalizada para decorar paredes de casas e espaços comerciais.",
+      href: "/servico-papel-parede",
+      action: "Ver produto",
+    },
+    {
+      name: "Vinil de corte",
+      description: "Letras, logótipos e formas recortadas para montras, paredes e viaturas.",
+      href: calculatorProductUrl("/vinil-corte"),
+      action: "Calcular preço",
+    },
+  ];
+
+  const tecnologiaCards = [
+    {
+      icon: <Printer className="w-6 h-6" aria-hidden="true" />,
+      title: "Tecnologia Látex",
+      description: "Impressão com tintas látex sem odor, adequada a aplicações interiores.",
+    },
+    {
+      icon: <Palette className="w-6 h-6" aria-hidden="true" />,
+      title: "Controlo de cor",
+      description: "Perfis ICC calibrados para uma reprodução de cor consistente.",
+    },
+    {
+      icon: <Maximize className="w-6 h-6" aria-hidden="true" />,
+      title: "Acabamentos profissionais",
+      description: "Laminação, corte de contorno e ilhós conforme o suporte e a aplicação.",
     },
   ];
 
@@ -267,14 +197,71 @@ export default function ServicoImpressaoDigital() {
       />
 
       <main>
-        {/* ✅ TECNOLOGIA AVANÇADA (agora normalizado para cards + dropdown) */}
-        <ServiceCardsSection
-          titleTop="Tecnologia"
-          titleBottom="Avançada"
-          subtitle="Equipamentos e materiais que garantem qualidade excecional em todos os projetos."
-          cards={tecnologiaCards}
-          defaultOpenKey={null}
-        />
+        {/* PRODUTOS DE IMPRESSÃO */}
+        <section className="py-16 bg-black border-t border-gray-900 font-sans">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                <span className="text-white">Escolha o seu</span>{" "}
+                <span className="text-brand-yellow">produto</span>
+              </h2>
+              <p className="text-gray-400 text-lg">
+                Calcule o preço e encomende online ou conheça as opções para o seu projeto.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <article
+                  key={product.name}
+                  className="flex flex-col rounded-xl border border-gray-800 bg-gray-900/60 p-6"
+                >
+                  <h3 className="font-heading text-xl font-semibold text-white mb-3">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-400 mb-6">
+                    {product.description}
+                  </p>
+                  <Button
+                    asChild
+                    className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 focus-visible:ring-brand-yellow"
+                  >
+                    <a href={product.href} aria-label={`${product.action} — ${product.name}`}>
+                      {product.action}
+                      <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+                    </a>
+                  </Button>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* TECNOLOGIA AVANÇADA */}
+        <section className="py-12 bg-black border-t border-gray-900 font-sans">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center">
+              <span className="text-white">Tecnologia</span>{" "}
+              <span className="text-brand-yellow">Avançada</span>
+            </h2>
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
+              {tecnologiaCards.map((card) => (
+                <article
+                  key={card.title}
+                  className="rounded-xl border border-gray-800 bg-gray-900/60 p-5"
+                >
+                  <div className="text-brand-yellow mb-4">{card.icon}</div>
+                  <h3 className="font-heading text-lg font-semibold text-white mb-2">
+                    {card.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {card.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* PORQUÊ ESCOLHER A NOSSA IMPRESSÃO DIGITAL */}
         <section className="py-16 bg-black border-t border-gray-900">

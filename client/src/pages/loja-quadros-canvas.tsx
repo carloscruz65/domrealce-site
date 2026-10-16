@@ -1,3 +1,5 @@
+import { useShopCatalog } from "@/hooks/use-shop-catalog";
+import { canvasOptions } from "@shared/shop-pricing";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,18 +24,11 @@ interface SizeOption {
   price: number;
 }
 
-const sizeOptions: SizeOption[] = [
-  { size: "20x30", width: 20, height: 30, price: 25.0 },
-  { size: "30x40", width: 30, height: 40, price: 35.0 },
-  { size: "40x50", width: 40, height: 50, price: 45.0 },
-  { size: "50x70", width: 50, height: 70, price: 65.0 },
-  { size: "60x80", width: 60, height: 80, price: 85.0 },
-  { size: "70x100", width: 70, height: 100, price: 125.0 },
-  { size: "80x120", width: 80, height: 120, price: 165.0 },
-  { size: "100x150", width: 100, height: 150, price: 245.0 },
-];
+
 
 export default function LojaQuadrosCanvas() {
+  const { data: catalog } = useShopCatalog();
+  const sizeOptions = canvasOptions(catalog?.settings);
   const {
     data: images,
     isLoading,

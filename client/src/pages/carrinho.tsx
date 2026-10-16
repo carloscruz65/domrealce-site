@@ -1,3 +1,6 @@
+import { useShopCatalog } from "@/hooks/use-shop-catalog";
+import { normalizeShopLine, cents } from "@shared/shop-pricing";
+import { DEFAULT_SHOP_SETTINGS } from "@shared/shop-catalog";
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,7 +27,14 @@ const MIN_ALTURA_CM = 100;
 // Unified CartItem interface that supports both product types
 interface CartItem {
   id: string;
-  type: "papel-parede" | "quadros-canvas";
+  type: "papel-parede" | "quadros-canvas" | "produto";
+  shopProductId?: string;
+  productName?: string;
+  productImage?: string;
+  minimumQuantity?: number;
+  quantityStep?: number;
+  unit?: string;
+  specifications?: string;
 
   // Wallpaper properties
   textureName?: string;
@@ -81,8 +91,12 @@ function validateWallpaper(item: CartItem) {
 
 export default function Carrinho() {
   const { toast } = useToast();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [rawCartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { data: catalog, error: catalogError } = useShopCatalog();
+  const settings = catalog?.settings ?? DEFAULT_SHOP_SETTINGS;
+  const cartItems = useMemo(() => rawCartItems.map(item => catalog ? normalizeShopLine(item, catalog) : item), [rawCartItems, catalog]);
+  const invalidProduct = catalog && cartItems.some(item => item.type === "produto" && item.precoTotal <= 0);
 
   // ✅ Começa SEM seleção sempre
   const [deliveryMethod, setDeliveryMethod] = useState<
@@ -201,10 +215,11 @@ export default function Carrinho() {
         }
 
         const area = updatedItem.area || 0;
-        const basePrice = (updatedItem.preco || 0) * area;
+        const basePrice = settings.wallpaperPriceCentsM2 / 100 * area;
+        updatedItem.preco = settings.wallpaperPriceCentsM2 / 100;
 
         const laminacaoPrice =
-          material === "vinil" && updatedItem.laminacao ? 8 * area : 0;
+          material === "vinil" && updatedItem.laminacao ? settings.wallpaperLaminationCentsM2 / 100 * area : 0;
 
         updatedItem.precoTotal = basePrice + laminacaoPrice;
       }
@@ -216,7 +231,9 @@ export default function Carrinho() {
   };
 
   const updateQuantity = (id: string, quantidade: number) => {
-    if (quantidade < 1) return;
+    const item = cartItems.find(i => i.id === id);
+    const minimum = item?.minimumQuantity ?? 1, step = item?.quantityStep ?? 1;
+    if (quantidade < minimum || (quantidade - minimum) % step !== 0) return;
     updateItem(id, { quantidade });
   };
 
@@ -254,13 +271,13 @@ export default function Carrinho() {
       deliveryMethod === "pickup"
         ? 0
         : deliveryMethod === "delivery"
-        ? subtotal >= 100
+        ? cents(subtotal) >= settings.freeShippingFromCents
           ? 0
-          : 10
+          : settings.shippingCents / 100
         : 0;
 
     const subtotalWithShipping = subtotal + shipping;
-    const iva = subtotalWithShipping * 0.23;
+    const iva = cents(subtotalWithShipping * 0.23) / 100;
 
     return {
       subtotal,
@@ -281,7 +298,7 @@ export default function Carrinho() {
   }, [cartItems]);
 
   const canProceed =
-    cartItems.length > 0 && deliveryMethod !== null && !hasInvalidWallpaper;
+    cartItems.length > 0 && deliveryMethod !== null && !hasInvalidWallpaper && !!catalog && !catalogError && !invalidProduct;
 
   if (isLoading) {
     return (
@@ -345,6 +362,7 @@ export default function Carrinho() {
                 </Button>
               </div>
 
+              {(catalogError || invalidProduct) && <p role="alert" className="border border-yellow-500 p-4 rounded">{catalogError ? "Não foi possível confirmar os preços. Tente novamente mais tarde." : "Um produto já não está disponível ou a quantidade deixou de ser válida. Remova-o e volte a adicioná-lo na loja."}</p>}
               {cartItems.map((item) => {
                 const wall =
                   item.type === "papel-parede" ? validateWallpaper(item) : null;
@@ -359,12 +377,12 @@ export default function Carrinho() {
                             src={
                               item.type === "papel-parede"
                                 ? item.textureImage
-                                : item.canvasImage
+                                : item.productImage || item.canvasImage
                             }
                             alt={
                               item.type === "papel-parede"
                                 ? item.textureName
-                                : item.canvasName
+                                : item.productName || item.canvasName
                             }
                             className="w-full aspect-square object-cover rounded-lg border border-[#333]"
                           />
@@ -376,15 +394,16 @@ export default function Carrinho() {
                             <h3 className="text-lg font-bold text-[#FFD700] mb-2">
                               {item.type === "papel-parede"
                                 ? item.textureName
-                                : item.canvasName}
+                                : item.productName || item.canvasName}
                             </h3>
                             <Badge className="bg-[#20B2AA] text-black">
                               {item.type === "papel-parede"
                                 ? "PAPEL DE PAREDE"
-                                : "QUADROS EM CANVAS"}
+                                : item.type === "produto" ? "PRODUTO" : "QUADROS EM CANVAS"}
                             </Badge>
                           </div>
 
+                          {item.type === "produto" && <p className="text-sm text-gray-300 whitespace-pre-wrap">{item.specifications}<br />Vendido por {item.unit}. Mínimo {item.minimumQuantity}; incrementos de {item.quantityStep}.</p>}
                           {/* Canvas Size Display */}
                           {item.type === "quadros-canvas" && (
                             <div className="p-3 bg-[#0a0a0a] rounded-lg border border-[#333] space-y-1">
@@ -614,13 +633,14 @@ export default function Carrinho() {
                                 onClick={() =>
                                   updateQuantity(
                                     item.id,
-                                    (item.quantidade || 1) - 1
+                                    (item.quantidade || 1) - (item.quantityStep || 1)
                                   )
                                 }
-                                disabled={(item.quantidade || 1) <= 1}
+                                aria-label="Diminuir quantidade"
+                                disabled={(item.quantidade || 1) <= (item.minimumQuantity || 1)}
                                 className="border-[#333] text-white hover:bg-[#333]"
                               >
-                                <Minus className="h-4 w-4" />
+                                <Minus className="h-4 w-4" aria-hidden="true" />
                               </Button>
                               <span className="w-12 text-center font-semibold">
                                 {item.quantidade || 1}
@@ -631,12 +651,13 @@ export default function Carrinho() {
                                 onClick={() =>
                                   updateQuantity(
                                     item.id,
-                                    (item.quantidade || 1) + 1
+                                    (item.quantidade || 1) + (item.quantityStep || 1)
                                   )
                                 }
                                 className="border-[#333] text-white hover:bg-[#333]"
+                                aria-label="Aumentar quantidade"
                               >
-                                <Plus className="h-4 w-4" />
+                                <Plus className="h-4 w-4" aria-hidden="true" />
                               </Button>
                             </div>
                           </div>
@@ -649,11 +670,11 @@ export default function Carrinho() {
                               <>
                                 <p className="text-sm text-[#FFD700]">Preço por m²:</p>
                                 <p className="text-md font-semibold text-white">
-                                  €{item.preco}/m²
+                                  €{(settings.wallpaperPriceCentsM2 / 100).toFixed(2)}/m²
                                 </p>
                                 {item.laminacao && (
                                   <p className="text-xs text-gray-400">
-                                    + €8/m² laminação
+                                    + €{(settings.wallpaperLaminationCentsM2 / 100).toFixed(2)}/m² laminação
                                   </p>
                                 )}
                                 <div className="mt-2 pt-2 border-t border-[#333]">
@@ -671,7 +692,7 @@ export default function Carrinho() {
                               </>
                             )}
 
-                            {item.type === "quadros-canvas" && (
+                            {item.type !== "papel-parede" && (
                               <>
                                 <p className="text-sm text-[#FFD700]">Preço base:</p>
                                 <p className="text-md font-semibold text-white">
@@ -679,7 +700,7 @@ export default function Carrinho() {
                                 </p>
                                 <div className="mt-2 pt-2 border-t border-[#333]">
                                   <p className="text-sm text-[#FFD700]">
-                                    Total (c/ IVA):
+                                    Unidade (sem IVA):
                                   </p>
                                   <p className="text-lg font-semibold text-[#FFD700]">
                                     €{item.precoTotal.toFixed(2)}
@@ -689,7 +710,7 @@ export default function Carrinho() {
                             )}
 
                             <p className="text-sm text-gray-400 mt-2">
-                              Final: €
+                              Linha (sem IVA): €
                               {(item.precoTotal * (item.quantidade || 1)).toFixed(2)}
                             </p>
                           </div>
@@ -809,10 +830,10 @@ export default function Carrinho() {
                   </div>
 
                   {/* ✅ Dica só faz sentido em transportadora */}
-                  {deliveryMethod === "delivery" && totals.subtotal < 100 && (
+                  {deliveryMethod === "delivery" && cents(totals.subtotal) < settings.freeShippingFromCents && (
                     <div className="mb-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
                       <p className="text-xs text-blue-200">
-                        💡 Adicione mais €{(100 - totals.subtotal).toFixed(2)} para
+                        💡 Adicione mais €{(settings.freeShippingFromCents / 100 - totals.subtotal).toFixed(2)} para
                         envio gratuito!
                       </p>
                     </div>

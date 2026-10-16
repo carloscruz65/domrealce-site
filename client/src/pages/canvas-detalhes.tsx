@@ -1,3 +1,5 @@
+import { useShopCatalog } from "@/hooks/use-shop-catalog";
+import { canvasOptions } from "@shared/shop-pricing";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -24,18 +26,11 @@ interface SizeOption {
 }
 
 // Preços por tamanho (baseado em Telas Artísticas)
-const sizeOptions: SizeOption[] = [
-  { size: '20x30', width: 20, height: 30, price: 15.00 },
-  { size: '30x40', width: 30, height: 40, price: 25.00 },
-  { size: '40x50', width: 40, height: 50, price: 35.00 },
-  { size: '50x70', width: 50, height: 70, price: 50.00 },
-  { size: '60x80', width: 60, height: 80, price: 70.00 },
-  { size: '70x100', width: 70, height: 95, price: 90.00 },
-  { size: '80x120', width: 90, height: 120, price: 120.00 },
-  { size: '100x150', width: 95, height: 150, price: 150.00 },
-];
+
 
 export default function LojaCanvasDetalhes() {
+  const { data: catalog } = useShopCatalog();
+  const sizeOptions = canvasOptions(catalog?.settings);
   const { categoria } = useParams();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -104,8 +99,7 @@ export default function LojaCanvasDetalhes() {
     // Calculate area and pricing
     const area = (sizeOption.width * sizeOption.height) / 10000; // m²
     const precoBase = sizeOption.price;
-    const iva = precoBase * 0.23;
-    const precoTotal = precoBase + iva;
+    const precoTotal = precoBase; // Unit price before IVA; checkout applies IVA once.
 
     const cartItem = {
       id: Date.now().toString(),
@@ -128,7 +122,7 @@ export default function LojaCanvasDetalhes() {
 
     toast({
       title: "Produto adicionado!",
-      description: `Quadro ${selectedSize}cm adicionado ao carrinho - €${precoTotal.toFixed(2)}`,
+      description: `Quadro ${selectedSize}cm adicionado ao carrinho - €${precoTotal.toFixed(2)} sem IVA`,
     });
 
     // Redirecionar automaticamente para o carrinho
@@ -375,7 +369,7 @@ export default function LojaCanvasDetalhes() {
                             value={option.size}
                             className="text-white data-[highlighted]:bg-[#20B2AA] data-[highlighted]:text-black"
                           >
-                            {option.size}cm - €{option.price.toFixed(2)}
+                            {option.size}cm - €{option.price.toFixed(2)} + IVA
                           </SelectItem>
                         ))}
                       </SelectContent>

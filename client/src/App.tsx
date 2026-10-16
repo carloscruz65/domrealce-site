@@ -29,6 +29,7 @@ const LandingComunicacaoVisual = lazy(() => import("@/pages/landing-comunicacao-
 // Páginas com lazy loading (carregamento diferido)
 const Contactos = lazy(() => import("@/pages/contactos"));
 const Sobre = lazy(() => import("@/pages/sobre"));
+const LojaCatalogo = lazy(() => import("@/pages/loja-catalogo"));
 const Loja = lazy(() => import("@/pages/loja"));
 const LojaPapelParede = lazy(() => import("@/pages/loja-papel-parede"));
 const LojaQuadrosCanvas = lazy(() => import("@/pages/loja-quadros-canvas"));
@@ -137,6 +138,8 @@ function Router() {
           <Route path="/portfolio" component={Portfolio} />
           <Route path="/portfolio-v2" component={PortfolioV2} />
           <Route path="/loja" component={Loja} />
+          <Route path="/loja/categoria/:slug" component={LojaCatalogo} />
+          <Route path="/loja/produto/:slug" component={LojaCatalogo} />
           <Route path="/loja/papel-parede" component={LojaPapelParede} />
           <Route path="/loja/quadros-canvas" component={LojaQuadrosCanvas} />
           <Route path="/loja/quadros-canvas/categoria/:categoria" component={LojaCanvasDetalhes} />

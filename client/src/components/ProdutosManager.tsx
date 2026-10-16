@@ -76,7 +76,7 @@ export default function ProdutosManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Gestão de Produtos</h2>
-          <p className="text-muted-foreground">Administrar produtos da loja</p>
+          <p className="text-muted-foreground">Cartões em destaque na homepage. Para artigos compráveis, utilize o separador Loja.</p>
         </div>
         {!editing && (
           <Button onClick={() => setEditing('new')} data-testid="button-novo-produto">

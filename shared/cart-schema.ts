@@ -37,10 +37,18 @@ export const canvasCartItemSchema = baseCartItemSchema.extend({
   precoTotal: z.number(),
 });
 
+export const productCartItemSchema = baseCartItemSchema.extend({
+  type: z.literal("produto"), shopProductId: z.string().uuid(), productName: z.string(),
+  productImage: z.string(), unit: z.enum(["unidade", "conjunto"]), specifications: z.string(),
+  minimumQuantity: z.number().int().positive(), quantityStep: z.number().int().positive(),
+  precoBase: z.number(), precoTotal: z.number(),
+});
+
 // Union of all cart item types
 export const cartItemSchema = z.discriminatedUnion('type', [
   wallpaperCartItemSchema,
-  canvasCartItemSchema
+  canvasCartItemSchema,
+  productCartItemSchema
 ]);
 
 export const cartSchema = z.object({
@@ -67,7 +75,8 @@ export const createCanvasCartItemSchema = canvasCartItemSchema.omit({
 
 export const createCartItemSchema = z.discriminatedUnion('type', [
   createWallpaperCartItemSchema,
-  createCanvasCartItemSchema
+  createCanvasCartItemSchema,
+  productCartItemSchema.omit({ id: true, createdAt: true })
 ]);
 
 export type CreateCartItem = z.infer<typeof createCartItemSchema>;
