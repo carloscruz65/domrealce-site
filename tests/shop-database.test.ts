@@ -118,6 +118,12 @@ test("instalação gradual, migração repetível e catálogo HTTP usam PostgreS
       "utf8",
     );
     await pg.exec(migration);
+    const personalizationMigration = await readFile(
+      "migrations/20261016_shop_personalization.sql",
+      "utf8",
+    );
+    await pg.exec(personalizationMigration);
+    await pg.exec(personalizationMigration);
     await pg.exec(migration);
     assert.deepEqual((await pg.query("select * from orders")).rows, before);
     assert.deepEqual((await store.getCatalog()).products, []);
@@ -181,6 +187,29 @@ test("instalação gradual, migração repetível e catálogo HTTP usam PostgreS
       priceCents: 700,
     });
     assert.equal((await store.getCatalog()).products[0].priceCents, 700);
+    assert.equal(
+      (await store.getCatalog()).products[0].personalizationLabel,
+      "",
+    );
+    const personalized = await request(
+      `/api/admin/shop/products/${product.id}`,
+      "PUT",
+      {
+        ...body,
+        priceCents: 700,
+        personalizationLabel: "Número do alvará",
+      },
+    );
+    assert.equal(personalized.status, 200);
+    assert.equal(
+      (await store.getCatalog()).products[0].personalizationLabel,
+      "Número do alvará",
+    );
+    await pg.exec(personalizationMigration);
+    assert.equal(
+      (await store.getCatalog()).products[0].personalizationLabel,
+      "Número do alvará",
+    );
     await request(`/api/admin/shop/categories/${category.id}`, "PUT", {
       ...categoryBody,
       published: false,

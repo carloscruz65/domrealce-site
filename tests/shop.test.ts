@@ -442,3 +442,75 @@ test("HTTP catalogue and admin CRUD use production auth and fail closed", async 
       else process.env[key] = value;
   }
 });
+
+test("personalization is required server-side, preserves leading zeros and uses the configured label", () => {
+  const data = catalog();
+  data.products[0].personalizationLabel = "Número do alvará";
+  for (const value of [
+    undefined,
+    null,
+    12345,
+    "",
+    "   ",
+    "a".repeat(201),
+    "123\n456",
+    "123\u0000456",
+  ]) {
+    assert.throws(
+      () =>
+        quoteShopCart(
+          [{ ...ready(), personalizationValue: value }],
+          data,
+          "pickup",
+        ),
+      /alvará/,
+    );
+  }
+  const quote = quoteShopCart(
+    [
+      {
+        ...ready(),
+        id: "first",
+        personalizationValue: "  0066621  ",
+        personalizationLabel: "Fake",
+      },
+      { ...ready(), id: "second", personalizationValue: "0099999" },
+    ],
+    data,
+    "pickup",
+  );
+  assert.equal(quote.items.length, 2);
+  assert.equal(quote.items[0].personalizationValue, "0066621");
+  assert.equal(quote.items[0].personalizationLabel, "Número do alvará");
+  assert.equal(quote.items[1].personalizationValue, "0099999");
+  assert.equal(quote.total, 36.9);
+  const previousOrder = structuredClone(quote);
+  data.products[0].personalizationLabel = "Matrícula";
+  assert.equal(previousOrder.items[0].personalizationLabel, "Número do alvará");
+  assert.equal(
+    normalizeShopLine(quote.items[0], data).personalizationValue,
+    "0066621",
+  );
+});
+
+test("unpersonalized products ignore client-injected personalization and labels are bounded", () => {
+  const quote = quoteShopCart(
+    [
+      {
+        ...ready(),
+        personalizationLabel: "Injected",
+        personalizationValue: "123",
+      },
+    ],
+    catalog(),
+    "pickup",
+  );
+  assert.equal(quote.items[0].personalizationLabel, "");
+  assert.equal(quote.items[0].personalizationValue, "");
+  const { id, ...valid } = product;
+  assert.equal(
+    productInput.safeParse({ ...valid, personalizationLabel: "x".repeat(101) })
+      .success,
+    false,
+  );
+});

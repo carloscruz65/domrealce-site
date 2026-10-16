@@ -38,6 +38,7 @@ export const productInput = z
     slug,
     description: z.string().trim().max(10000).default(""),
     specifications: z.string().trim().max(3000).default(""),
+    personalizationLabel: z.string().trim().max(100).default(""),
     image: image.default(""),
     priceCents: z.number().int().min(1).max(100000000),
     minimumQuantity: z.number().int().min(1).max(100000).default(1),
