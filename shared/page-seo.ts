@@ -23,6 +23,7 @@ export const pageSEOData: PageSEOData = {
     title: 'Serviços de Impressão Digital e Comunicação Visual | DOMREALCE',
     description: 'Conheça os serviços DOMREALCE: impressão digital, vinil, etiquetas, PVC, lonas, roll-ups, canvas, papel de parede e decoração de viaturas.',
     keywords: ['serviços', 'impressão digital', 'vinil', 'etiquetas', 'PVC', 'lonas', 'roll-ups', 'canvas', 'papel de parede'],
+    image: 'https://www.domrealce.com/images/domrealce-impressao-comunicacao-social-20261017.jpg',
     type: 'website'
   },
   '/servico-design-grafico': {
