@@ -765,6 +765,7 @@ export const shopProducts = pgTable("shop_products", {
   id: varchar("id").primaryKey(), categoryId: varchar("category_id").notNull().references(() => shopCategories.id),
   name: text("name").notNull(), slug: text("slug").notNull().unique(),
   description: text("description").notNull().default(""), specifications: text("specifications").notNull().default(""),
+  personalizationLabel: text("personalization_label").notNull().default(""),
   image: text("image").notNull().default(""), priceCents: integer("price_cents").notNull(),
   minimumQuantity: integer("minimum_quantity").notNull().default(1), quantityStep: integer("quantity_step").notNull().default(1),
   unit: text("unit").$type<"unidade" | "conjunto">().notNull().default("unidade"),
