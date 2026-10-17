@@ -108,10 +108,14 @@ test("integração mantém SEO nacional, links individuais nas redes e notícias
         const r = await request(route, ua);
         assert.equal(r.status, 200, `${route} ${ua}`);
         assert.ok(r.html.includes(`href="https://www.domrealce.com${route}"`));
-        assert.ok(r.html.includes(DEFAULT_SOCIAL_IMAGE));
+        assert.ok(r.html.includes(pageSEOData[route].image || DEFAULT_SOCIAL_IMAGE));
         assert.equal(r.headers.Vary, "User-Agent");
       }
     }
+    const home = await request("/", "LinkedInBot");
+    assert.match(home.html, /domrealce-impressao-comunicacao-social-20261017\.jpg/);
+    assert.ok(!home.html.includes(DEFAULT_SOCIAL_IMAGE));
+    assert.ok((await request("/servico-impressao-digital", "LinkedInBot")).html.includes(DEFAULT_SOCIAL_IMAGE));
     const stickers = await request("/servico-autocolantes", "LinkedInBot");
     assert.match(stickers.html, /Autocolantes &amp; Etiquetas/);
     assert.match(stickers.html, /Descrição do CMS/);
