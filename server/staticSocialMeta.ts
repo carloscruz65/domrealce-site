@@ -28,7 +28,7 @@ export async function staticSocialHtml(path: string): Promise<string | null> {
   const url = escapeHtml(`${SITE_CANONICAL_ORIGIN}${route}`);
   const safeTitle = escapeHtml(title);
   const safeDescription = escapeHtml(description);
-  const image = escapeHtml(DEFAULT_SOCIAL_IMAGE);
+  const image = escapeHtml(page.image || DEFAULT_SOCIAL_IMAGE);
   return `<!DOCTYPE html>
 <html lang="pt-PT">
 <head>

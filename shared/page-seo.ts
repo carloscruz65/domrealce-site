@@ -16,6 +16,7 @@ export const pageSEOData: PageSEOData = {
     title: 'DOMREALCE | Impressão Digital e Comunicação Visual em Portugal',
     description: 'Impressão digital e comunicação visual para empresas e particulares. Vinil, etiquetas, PVC, lonas, roll-ups, canvas e papel de parede, com fornecimento para Portugal.',
     keywords: ['comunicação visual', 'impressão digital', 'vinil', 'etiquetas', 'PVC', 'lonas', 'roll-ups', 'canvas', 'papel de parede', 'Portugal', 'DOMREALCE'],
+    image: 'https://www.domrealce.com/images/domrealce-impressao-comunicacao-social-20261017.jpg',
     type: 'website'
   },
   '/servicos': {
