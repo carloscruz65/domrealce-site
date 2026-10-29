@@ -1,3 +1,4 @@
+import AutocolantesProductChoices, { AutocolantesProductLinks } from "@/components/autocolantes-product-choices";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -13,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Sticker,
   CheckCircle,
-  ArrowRight,
   Scissors,
   Palette,
   Settings,
@@ -275,15 +275,15 @@ export default function ServicoAutocolantes() {
       <ServiceHeroTwoColumn
         badge="Autocolantes profissionais"
         badgeIcon={<Sticker className="w-4 h-4" />}
-        title="Autocolantes e Etiquetas Personalizadas"
-        subtitle="Calcule o preço, personalize e encomende online em poucos minutos."
+        title="Etiquetas e autocolantes personalizados"
+        subtitle="Escolha etiquetas com corte de contorno ou vinil impresso em rolo."
         description="Escolha as medidas, quantidade, material e acabamento. Envie a sua arte ou crie o design com IA. Veja o preço imediatamente e conclua a encomenda e o pagamento online. Comece aqui: indique as medidas e veja o preço imediatamente."
         imageSrc="/public-objects/portfolio/Autocolantes/IMG_20221014_095235.webp"
         imageAlt="Autocolantes DOMREALCE"
         textForward
         primaryCta={{
-          text: "CALCULAR PREÇO E ENCOMENDAR",
-          href: calculatorUrl,
+          text: "ESCOLHER O MEU PRODUTO",
+          href: "#escolher-autocolantes",
           nativeNavigation: true,
         }}
       >
@@ -293,6 +293,7 @@ export default function ServicoAutocolantes() {
       </ServiceHeroTwoColumn>
 
       <main>
+        <AutocolantesProductChoices calculatorUrl={calculatorUrl} />
         {/* Como encomendar */}
         <section className="py-10 bg-gray-900/40 border-y border-gray-900">
           <div className="container mx-auto px-4">
@@ -310,7 +311,7 @@ export default function ServicoAutocolantes() {
               {quickSteps.map((item) => (
                 <a
                   key={item.step}
-                  href={calculatorUrl}
+                  href="#escolher-autocolantes"
                   className="group block h-full bg-black border border-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-200 hover:border-brand-yellow hover:-translate-y-0.5 hover:bg-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   <div className="w-9 h-9 rounded-full bg-brand-yellow text-black flex items-center justify-center font-bold text-sm mb-4">
@@ -319,7 +320,7 @@ export default function ServicoAutocolantes() {
                   <h3 className="text-white font-semibold mb-2">{item.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
                   <span className="inline-flex mt-4 text-sm font-semibold text-brand-yellow transition-transform duration-200 group-hover:translate-x-1">
-                    Começar agora →
+                    Escolher produto →
                   </span>
                 </a>
               ))}
@@ -337,17 +338,7 @@ export default function ServicoAutocolantes() {
               </span>
             </div>
 
-            <div className="mt-8 text-center">
-              <Button
-                asChild
-                className="bg-brand-yellow text-black font-bold px-7 py-6 hover:bg-brand-yellow/90"
-              >
-                <a href={calculatorUrl}>
-                  CALCULAR O MEU PREÇO
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </a>
-              </Button>
-            </div>
+            <div className="mt-8"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /></div>
           </div>
         </section>
 
@@ -548,15 +539,7 @@ export default function ServicoAutocolantes() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
-              >
-                <a href={calculatorUrl}>
-                  CALCULAR PREÇO AGORA
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </a>
-              </Button>
+              <AutocolantesProductLinks calculatorUrl={calculatorUrl} />
               <Button
                 asChild
                 variant="outline"
