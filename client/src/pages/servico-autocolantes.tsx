@@ -35,6 +35,7 @@ export default function ServicoAutocolantes() {
   });
   const calculatorUrl = buildCalculatorUrl(
     typeof window === "undefined" ? "" : window.location.search,
+    "/etiquetas",
   );
 
   const features = [

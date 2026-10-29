@@ -33,3 +33,13 @@ assert.equal(buildCalculatorUrl(""), href);
 assert.equal(new URL(buildCalculatorUrl("?utm_campaign=new")).searchParams.get("utm_campaign"), "new");
 assert.equal(new URL(buildCalculatorUrl("")).searchParams.get("gclid"), incoming.get("gclid"));
 console.log("PASS: all attribution keys, internal navigation, later href, new-tab URL, empty visits, and partial updates.");
+
+// Product CTAs skip the generic catalogue and retain campaign attribution.
+const labelsDestination = new URL(buildCalculatorUrl("", "/etiquetas"));
+assert.equal(labelsDestination.origin, destination.origin);
+assert.equal(labelsDestination.pathname, "/etiquetas");
+assert.equal(labelsDestination.search, new URL(buildCalculatorUrl("")).search);
+assert.equal(labelsDestination.searchParams.get("utm_campaign"), "new");
+assert.equal(labelsDestination.searchParams.has("unrelated"), false);
+assert.equal(new URL(buildCalculatorUrl("")).pathname, "/");
+console.log("PASS: direct labels destination retains attribution; generic links remain unchanged.");
