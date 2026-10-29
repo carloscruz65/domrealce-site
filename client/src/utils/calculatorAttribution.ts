@@ -38,9 +38,11 @@ export function captureAttribution(search: string) {
 
 export function buildCalculatorUrl(
   search = typeof window === "undefined" ? "" : window.location.search,
+  productPath = "/",
 ) {
   const attribution = captureAttribution(search);
   const url = new URL("https://calcular.domrealce.com/");
+  url.pathname = productPath;
   for (const key of ATTRIBUTION_KEYS) {
     if (attribution[key]) url.searchParams.set(key, attribution[key]);
   }
