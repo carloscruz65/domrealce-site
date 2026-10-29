@@ -1,5 +1,6 @@
+import AutocolantesProductChoices, { AutocolantesProductLinks } from "@/components/autocolantes-product-choices";
 import { useEffect, type ReactNode } from "react";
-import { ArrowRight, CheckCircle, Palette, Scissors, Settings, Sticker, Zap } from "lucide-react";
+import { CheckCircle, Palette, Scissors, Settings, Sticker, Zap } from "lucide-react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import SEO from "@/components/seo";
@@ -72,7 +73,10 @@ export function CmsAutocolantesPage({
         image={page.seo?.ogImage ?? undefined}
       />
       <Navigation />
-      <main>{sections.map((section) => renderSection(section, page, calculatorUrl, legacyImages))}</main>
+      <main>
+        {!sections.some((section) => section.type === "hero") && <AutocolantesProductChoices calculatorUrl={calculatorUrl} />}
+        {sections.map((section) => renderSection(section, page, calculatorUrl, legacyImages))}
+      </main>
       <Footer />
     </div>
   );
@@ -94,8 +98,8 @@ function renderSection(
         <ServiceHeroTwoColumn
           badge={asText(content.badge)}
           badgeIcon={<Sticker className="h-4 w-4" />}
-          title={asText(content.title)}
-          subtitle={asText(content.subtitle)}
+          title="Etiquetas e autocolantes personalizados"
+          subtitle="Escolha etiquetas com corte de contorno ou vinil impresso em rolo."
           description={asText(content.description)}
           imageSrc={asText(content.imageSrc)}
           imageAlt={asText(content.imageAlt)}
@@ -103,8 +107,8 @@ function renderSection(
           prominent
           contentClassName="mx-auto max-w-[90rem] px-4 md:px-6 lg:px-8"
           primaryCta={{
-            text: asText((content.primaryCta as Record<string, unknown>)?.text),
-            href: calculatorUrl,
+            text: "ESCOLHER O MEU PRODUTO",
+            href: "#escolher-autocolantes",
             nativeNavigation: true,
           }}
         >
@@ -112,6 +116,7 @@ function renderSection(
             {asText(content.highlights)}
           </p>
         </ServiceHeroTwoColumn>
+        <AutocolantesProductChoices calculatorUrl={calculatorUrl} />
       </div>
     );
   }
@@ -127,13 +132,13 @@ function renderSection(
                 key={step.id}
                 id={`card-${step.id}`}
                 data-card-id={step.id}
-                href={calculatorUrl}
+                href="#escolher-autocolantes"
                 className="group block h-full cursor-pointer rounded-xl border border-gray-800 bg-black p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-yellow hover:bg-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-brand-yellow text-sm font-bold text-black">{asText(step.step)}</div>
                 <h3 className="mb-2 font-semibold text-white">{asText(step.title)}</h3>
                 <p className="text-sm leading-relaxed text-gray-400">{asText(step.description)}</p>
-                <span className="mt-4 inline-flex text-sm font-semibold text-brand-yellow transition-transform duration-200 group-hover:translate-x-1">{asText(step.linkText)}</span>
+                <span className="mt-4 inline-flex text-sm font-semibold text-brand-yellow transition-transform duration-200 group-hover:translate-x-1">Escolher produto →</span>
               </a>
             ))}
           </div>
@@ -144,7 +149,7 @@ function renderSection(
               </span>
             ))}
           </div>
-          <CalculatorCta text={asText((content.cta as Record<string, unknown>)?.text)} href={calculatorUrl} />
+          <div className="mt-8"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /></div>
         </div>
       </section>
     );
@@ -260,21 +265,13 @@ function renderSection(
 
   if (section.type === "final_cta") {
     const secondary = content.secondaryCta as Record<string, unknown>;
-    return <section key={section.id} {...sectionProps} className="border-t border-gray-900 bg-black py-16"><div className="container mx-auto px-4 text-center"><h2 className="mb-6 font-heading text-3xl font-bold md:text-4xl"><span className="text-white">{asText(content.titleTop)} </span><span className="text-brand-yellow">{asText(content.titleHighlight)}</span></h2><p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">{asText(content.description)}</p><div className="flex flex-col justify-center gap-4 sm:flex-row"><CalculatorButton text={asText((content.primaryCta as Record<string, unknown>)?.text)} href={calculatorUrl} large /><Button asChild variant="outline" className="border-brand-yellow px-8 py-6 text-lg text-brand-yellow hover:bg-brand-yellow hover:text-black"><a id="cta-whatsapp" href={asText(secondary?.href) || WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.preventDefault(); trackWhatsAppConversion(asText(secondary?.href) || WHATSAPP_URL); }}>{asText(secondary?.text)}</a></Button></div><p className="mt-5 text-sm text-gray-500">{asText(content.footnote)}</p></div></section>;
+    return <section key={section.id} {...sectionProps} className="border-t border-gray-900 bg-black py-16"><div className="container mx-auto px-4 text-center"><h2 className="mb-6 font-heading text-3xl font-bold md:text-4xl"><span className="text-white">{asText(content.titleTop)} </span><span className="text-brand-yellow">{asText(content.titleHighlight)}</span></h2><p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">{asText(content.description)}</p><div className="flex flex-col justify-center gap-4 sm:flex-row"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /><Button asChild variant="outline" className="border-brand-yellow px-8 py-6 text-lg text-brand-yellow hover:bg-brand-yellow hover:text-black"><a id="cta-whatsapp" href={asText(secondary?.href) || WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.preventDefault(); trackWhatsAppConversion(asText(secondary?.href) || WHATSAPP_URL); }}>{asText(secondary?.text)}</a></Button></div><p className="mt-5 text-sm text-gray-500">{asText(content.footnote)}</p></div></section>;
   }
   return null;
 }
 
 function Title({ top, highlight, description }: { top: string; highlight: string; description: string }) {
   return <div className="mb-9 text-center"><h2 className="mb-4 font-heading text-3xl font-bold md:text-4xl"><span className="text-white">{top}</span><span className="text-brand-yellow">{highlight}</span></h2><p className="mx-auto max-w-3xl leading-relaxed text-gray-400">{description}</p></div>;
-}
-
-function CalculatorCta({ text, href }: { text: string; href: string }) {
-  return <div className="mt-8 text-center"><CalculatorButton text={text} href={href} /></div>;
-}
-
-function CalculatorButton({ text, href, large = false }: { text: string; href: string; large?: boolean }) {
-  return <Button asChild className={`bg-brand-yellow font-bold text-black hover:bg-brand-yellow/90 ${large ? "px-8 py-6 text-lg" : "px-7 py-6"}`}><a href={href}>{text}<ArrowRight className={`${large ? "h-5 w-5" : "h-4 w-4"} ml-2`} /></a></Button>;
 }
 
 function InfoCard({ title, children }: { title: string; children: ReactNode }) {
