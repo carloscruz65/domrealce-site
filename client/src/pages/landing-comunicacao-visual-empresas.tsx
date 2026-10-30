@@ -137,8 +137,8 @@ export default function LandingComunicacaoVisualEmpresas() {
         {/* Coluna de imagem — apenas metade direita, contida */}
         <div className="absolute right-0 top-0 bottom-0 w-1/2 z-0 hidden md:block">
           <img
-            src="https://calcular.domrealce.com/images/vinil-em-rolo.webp"
-            alt="Vinil impresso em rolo com exemplos de impressão para publicidade e comunicação visual"
+            src="/images/impressao-digital-colorida.webp"
+            alt="Impressora de grande formato com vinil impresso em cores vivas"
             className="w-full h-full object-cover object-center"
           />
           {/* Gradiente para fundir com o fundo escuro */}
