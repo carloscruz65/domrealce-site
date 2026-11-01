@@ -233,15 +233,18 @@ export default function ServicoTelasArtisticas() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               {sizes.map((size, index) => (
-                <div
+                <a
+                  href={calculatorProductUrl}
+                  aria-label={`Calcular preço de Canvas — ${size}`}
                   key={index}
-                  className="bg-gray-900/60 border border-gray-800 rounded-lg p-6 text-center hover:border-brand-yellow transition-all duration-300"
+                  className="block bg-gray-900/60 border border-gray-800 rounded-lg p-6 text-center hover:border-brand-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow transition-all duration-300"
                 >
                   <div className="text-2xl font-bold text-brand-yellow mb-2">
                     {size}
                   </div>
                   <div className="text-sm text-gray-400">Formato padrão</div>
-                </div>
+                  <span className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-4 py-2 text-sm font-bold text-black">Calcular preço <ArrowRight className="h-4 w-4" aria-hidden="true" /></span>
+                </a>
               ))}
             </div>
           </div>

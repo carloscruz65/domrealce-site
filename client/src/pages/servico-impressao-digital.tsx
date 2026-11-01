@@ -124,8 +124,8 @@ export default function ServicoImpressaoDigital() {
     {
       name: "Etiquetas",
       description: "Etiquetas autocolantes para embalagens, produtos e identificação.",
-      href: "/servico-autocolantes",
-      action: "Ver produto",
+      href: calculatorProductUrl("/etiquetas"),
+      action: "Calcular preço",
     },
     {
       name: "Lonas",
@@ -142,14 +142,14 @@ export default function ServicoImpressaoDigital() {
     {
       name: "Canvas",
       description: "Impressão em tela para fotografias, reproduções artísticas e decoração.",
-      href: "/servico-telas-artisticas",
-      action: "Ver produto",
+      href: calculatorProductUrl("/canvas"),
+      action: "Calcular preço",
     },
     {
       name: "Papel de parede",
       description: "Impressão personalizada para decorar paredes de casas e espaços comerciais.",
-      href: "/servico-papel-parede",
-      action: "Ver produto",
+      href: calculatorProductUrl("/papel-de-parede"),
+      action: "Calcular preço",
     },
     {
       name: "Vinil de corte",
@@ -217,7 +217,7 @@ export default function ServicoImpressaoDigital() {
               {products.map((product) => (
                 <article
                   key={product.name}
-                  className="flex flex-col rounded-xl border border-gray-800 bg-gray-900/60 p-6"
+                  className="relative isolate flex flex-col rounded-xl border border-gray-800 bg-gray-900/60 p-6 transition-colors hover:border-brand-yellow focus-within:border-brand-yellow"
                 >
                   <h3 className="font-heading text-xl font-semibold text-white mb-3">
                     {product.name}
@@ -229,7 +229,7 @@ export default function ServicoImpressaoDigital() {
                     asChild
                     className="mt-auto w-full bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 focus-visible:ring-brand-yellow"
                   >
-                    <a href={product.href} aria-label={`${product.action} — ${product.name}`}>
+                    <a href={product.href} aria-label={`${product.action} — ${product.name}`} className="after:absolute after:inset-0 after:rounded-xl">
                       {product.action}
                       <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                     </a>
