@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 
 const products = [
   {
@@ -60,6 +61,7 @@ export default function AutocolantesProductChoices({ calculatorUrl }: { calculat
             );
           })}
         </div>
+        <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
       </div>
     </section>
   );

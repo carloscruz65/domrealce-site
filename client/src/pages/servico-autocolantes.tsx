@@ -1,4 +1,5 @@
 import AutocolantesProductChoices, { AutocolantesProductLinks } from "@/components/autocolantes-product-choices";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -69,9 +70,9 @@ export default function ServicoAutocolantes() {
     },
     {
       icon: <CheckCircle className="w-6 h-6" />,
-      title: "Encomenda e pagamento online",
+      title: "Online ou pelo WhatsApp",
       description:
-        "Configure, confirme e pague diretamente através da aplicação.",
+        "Veja o preço na aplicação e escolha: pagar online ou continuar pelo WhatsApp antes de pagar.",
     },
   ];
 
@@ -183,9 +184,9 @@ export default function ServicoAutocolantes() {
     },
     {
       step: "04",
-      title: "Confirme e pague online",
+      title: "Escolha como continuar",
       description:
-        "Reveja o pedido, escolha o método de pagamento e conclua a encomenda.",
+        "Reveja o pedido e escolha: pagar online ou continuar connosco pelo WhatsApp antes de pagar.",
     },
   ];
 
@@ -339,6 +340,7 @@ export default function ServicoAutocolantes() {
             </div>
 
             <div className="mt-8"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /></div>
+            <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
           </div>
         </section>
 
@@ -555,6 +557,7 @@ export default function ServicoAutocolantes() {
                 </a>
               </Button>
             </div>
+            <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
             <p className="text-sm text-gray-500 mt-5">
               Sem esperar por orçamento manual.
             </p>

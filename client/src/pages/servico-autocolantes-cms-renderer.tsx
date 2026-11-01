@@ -1,4 +1,5 @@
 import AutocolantesProductChoices, { AutocolantesProductLinks } from "@/components/autocolantes-product-choices";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import { useEffect, type ReactNode } from "react";
 import { CheckCircle, Palette, Scissors, Settings, Sticker, Zap } from "lucide-react";
 import Navigation from "@/components/navigation";
@@ -150,6 +151,7 @@ function renderSection(
             ))}
           </div>
           <div className="mt-8"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /></div>
+          <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
         </div>
       </section>
     );
@@ -265,7 +267,7 @@ function renderSection(
 
   if (section.type === "final_cta") {
     const secondary = content.secondaryCta as Record<string, unknown>;
-    return <section key={section.id} {...sectionProps} className="border-t border-gray-900 bg-black py-16"><div className="container mx-auto px-4 text-center"><h2 className="mb-6 font-heading text-3xl font-bold md:text-4xl"><span className="text-white">{asText(content.titleTop)} </span><span className="text-brand-yellow">{asText(content.titleHighlight)}</span></h2><p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">{asText(content.description)}</p><div className="flex flex-col justify-center gap-4 sm:flex-row"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /><Button asChild variant="outline" className="border-brand-yellow px-8 py-6 text-lg text-brand-yellow hover:bg-brand-yellow hover:text-black"><a id="cta-whatsapp" href={asText(secondary?.href) || WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.preventDefault(); trackWhatsAppConversion(asText(secondary?.href) || WHATSAPP_URL); }}>{asText(secondary?.text)}</a></Button></div><p className="mt-5 text-sm text-gray-500">{asText(content.footnote)}</p></div></section>;
+    return <section key={section.id} {...sectionProps} className="border-t border-gray-900 bg-black py-16"><div className="container mx-auto px-4 text-center"><h2 className="mb-6 font-heading text-3xl font-bold md:text-4xl"><span className="text-white">{asText(content.titleTop)} </span><span className="text-brand-yellow">{asText(content.titleHighlight)}</span></h2><p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">{asText(content.description)}</p><div className="flex flex-col justify-center gap-4 sm:flex-row"><AutocolantesProductLinks calculatorUrl={calculatorUrl} /><Button asChild variant="outline" className="border-brand-yellow px-8 py-6 text-lg text-brand-yellow hover:bg-brand-yellow hover:text-black"><a id="cta-whatsapp" href={asText(secondary?.href) || WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.preventDefault(); trackWhatsAppConversion(asText(secondary?.href) || WHATSAPP_URL); }}>{asText(secondary?.text)}</a></Button></div><CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" /><p className="mt-5 text-sm text-gray-500">{asText(content.footnote)}</p></div></section>;
   }
   return null;
 }
