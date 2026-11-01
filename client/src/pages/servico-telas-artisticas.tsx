@@ -1,4 +1,5 @@
 import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import ServiceHeroTwoColumn from "@/components/ServiceHeroTwoColumn";
@@ -191,11 +192,13 @@ export default function ServicoTelasArtisticas() {
         imageSrc="/public-objects/servicos/telas-artisticas.webp"
         imageAlt="Telas Artísticas DOMREALCE"
         primaryCta={{
-          text: "CALCULAR PREÇO E ENCOMENDAR",
+          text: "CALCULAR PREÇO NA APP",
           href: calculatorProductUrl,
           nativeNavigation: true,
         }}
-      />
+      >
+        <CalculatorWhatsAppNote className="max-w-xl" />
+      </ServiceHeroTwoColumn>
 
       <main>
         {/* ✅ Qualidade artística (normalizada para cards + dropdown) */}
@@ -432,8 +435,8 @@ export default function ServicoTelasArtisticas() {
 
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
               Escolha as medidas, indique a quantidade e configure a sua tela
-              diretamente na nossa app. Veja o preço de imediato e conclua a
-              encomenda online.
+              diretamente na nossa app. Veja o preço de imediato e escolha como
+              continuar o seu pedido.
             </p>
 
             <Button
@@ -441,10 +444,11 @@ export default function ServicoTelasArtisticas() {
               className="bg-brand-yellow text-black hover:bg-brand-yellow/90 px-8 py-6 text-lg font-semibold"
             >
               <a href={calculatorProductUrl}>
-                CALCULAR PREÇO E ENCOMENDAR
+                CALCULAR PREÇO NA APP
                 <ArrowRight className="w-5 h-5 ml-2" />
               </a>
             </Button>
+            <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
           </div>
         </section>
       </main>

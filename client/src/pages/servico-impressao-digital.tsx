@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import { useQuery } from "@tanstack/react-query";
 import {
   Printer,
@@ -190,11 +191,13 @@ export default function ServicoImpressaoDigital() {
         imageSrc="/public-objects/servicos/impressao-digital.webp"
         imageAlt="Impressão Digital DOMREALCE"
         primaryCta={{
-          text: "CALCULAR PREÇO E ENCOMENDAR",
+          text: "CALCULAR PREÇO NA APP",
           href: calculatorUrl,
           nativeNavigation: true,
         }}
-      />
+      >
+        <CalculatorWhatsAppNote className="max-w-xl" />
+      </ServiceHeroTwoColumn>
 
       <main>
         {/* PRODUTOS DE IMPRESSÃO */}
@@ -206,7 +209,7 @@ export default function ServicoImpressaoDigital() {
                 <span className="text-brand-yellow">produto</span>
               </h2>
               <p className="text-gray-400 text-lg">
-                Calcule o preço e encomende online ou conheça as opções para o seu projeto.
+                Calcule o preço na app e escolha como continuar: online ou pelo WhatsApp.
               </p>
             </div>
 
@@ -591,7 +594,7 @@ export default function ServicoImpressaoDigital() {
 
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
               Calcule o preço de forma imediata, escolha o produto, medidas,
-              quantidade e acabamentos e faça a sua encomenda diretamente online.
+              quantidade e acabamentos e escolha como continuar o seu pedido.
             </p>
 
             <div className="flex justify-center">
@@ -600,11 +603,12 @@ export default function ServicoImpressaoDigital() {
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
                 <a href={calculatorUrl}>
-                  CALCULAR PREÇO E ENCOMENDAR
+                  CALCULAR PREÇO NA APP
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
             </div>
+            <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
           </div>
         </section>
       </main>

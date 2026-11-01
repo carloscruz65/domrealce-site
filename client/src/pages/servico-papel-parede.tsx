@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import { useQuery } from "@tanstack/react-query";
 import {
   Wallpaper,
@@ -197,10 +198,10 @@ export default function ServicoPapelParede() {
             Configure o seu papel de parede online
           </p>
           <p className="text-sm text-gray-300 leading-relaxed">
-            Veja o preço de imediato, ajuste medidas e opções e faça a encomenda
-            diretamente na nossa app, sem esperar por orçamento.
+            Veja o preço de imediato e ajuste medidas e opções na nossa app.
           </p>
         </div>
+        <CalculatorWhatsAppNote className="max-w-xl" />
       </ServiceHeroTwoColumn>
 
       {/* Trust signals */}
@@ -247,10 +248,11 @@ export default function ServicoPapelParede() {
                 <p className="text-gray-400 text-sm mb-4">Envie uma imagem, escolha de um banco de imagens ou peça ajuda.</p>
                 <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
                   <a href={calculatorProductUrl}>
-                    Calcular preço e encomendar
+                    Calcular preço na app
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
                 </Button>
+                <CalculatorWhatsAppNote className="mt-4" />
               </CardContent>
             </Card>
           </div>
@@ -389,11 +391,12 @@ export default function ServicoPapelParede() {
                 className="bg-brand-yellow text-black font-bold px-8 py-6 text-lg hover:bg-brand-yellow/90"
               >
                 <a href={calculatorProductUrl}>
-                  CALCULAR PREÇO E ENCOMENDAR
+                  CALCULAR PREÇO NA APP
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
             </div>
+            <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
           </div>
         </section>
       </main>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { buildCalculatorUrl } from "@/utils/calculatorAttribution";
+import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import {
   ArrowRight,
   CheckCircle,
@@ -170,11 +171,13 @@ export default function LandingComunicacaoVisualEmpresas() {
                 className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8"
               >
                 <a href={calculatorUrl}>
-                  CALCULAR PREÇO E ENCOMENDAR
+                  CALCULAR PREÇO NA APP
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
             </div>
+
+            <CalculatorWhatsAppNote className="mt-4 max-w-xl" />
 
             <div className="mt-8 flex flex-wrap gap-4 text-sm text-gray-400">
               <span className="flex items-center gap-1">
@@ -364,7 +367,7 @@ export default function LandingComunicacaoVisualEmpresas() {
           <p className="text-gray-400 text-lg leading-relaxed mb-8">
             Escolha o produto, indique as medidas, quantidade e acabamentos e veja
             o preço de imediato. Pode adicionar vários produtos ao mesmo pedido e
-            concluir a encomenda online.
+            escolher como continuar o pedido.
           </p>
 
           <div className="flex justify-center">
@@ -374,11 +377,12 @@ export default function LandingComunicacaoVisualEmpresas() {
               className="bg-brand-yellow text-black font-bold hover:bg-brand-yellow/90 text-base px-8"
             >
               <a href={calculatorUrl}>
-                CALCULAR PREÇO E ENCOMENDAR
+                CALCULAR PREÇO NA APP
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
             </Button>
           </div>
+          <CalculatorWhatsAppNote className="mx-auto mt-5 max-w-2xl" />
         </div>
       </section>
 
