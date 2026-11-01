@@ -49,13 +49,13 @@ export default function AutocolantesProductChoices({ calculatorUrl }: { calculat
             const url = new URL(calculatorUrl);
             url.pathname = product.path;
             return (
-              <article key={product.path} className="flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-black">
+              <article key={product.path} className="relative isolate flex flex-col overflow-hidden rounded-2xl border border-gray-800 bg-black transition-colors hover:border-brand-yellow focus-within:border-brand-yellow">
                 <img src={product.image} alt={product.alt} width={640} height={360} loading="lazy" className="aspect-video w-full object-cover" />
                 <div className="flex flex-1 flex-col p-5 md:p-6">
                   <h3 className="text-xl font-bold text-brand-yellow">{product.title}</h3>
                   <p className="mb-4 mt-3 text-gray-300">{product.description}</p>
                   <ul className="mb-6 space-y-1 text-sm text-gray-400">{product.examples.map((example) => <li key={example}>{example}</li>)}</ul>
-                  <a href={url.toString()} className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand-yellow px-5 py-3 text-center font-bold text-black hover:bg-brand-yellow/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">{product.action}<ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" /></a>
+                  <a href={url.toString()} aria-label={`Calcular preço — ${product.title}`} className="after:absolute after:inset-0 after:rounded-2xl mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand-yellow px-5 py-3 text-center font-bold text-black hover:bg-brand-yellow/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">{product.action}<ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" /></a>
                 </div>
               </article>
             );

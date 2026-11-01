@@ -228,26 +228,26 @@ export default function ServicoPapelParede() {
       <section className="py-10 bg-black border-b border-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-            <Card className="bg-gray-900/60 border border-gray-800 hover:border-brand-yellow/60 transition-all duration-300">
+            <Card className="relative isolate bg-gray-900/60 border border-gray-800 hover:border-brand-yellow/60 focus-within:border-brand-yellow transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <ShoppingCart className="w-10 h-10 text-brand-yellow mx-auto mb-3" />
                 <h3 className="text-lg font-semibold mb-2 text-white">Quer comprar diretamente?</h3>
                 <p className="text-gray-400 text-sm mb-4">Explore a nossa loja online com dezenas de texturas disponíveis.</p>
                 <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
-                  <Link href="/loja/papel-parede">
+                  <Link href="/loja/papel-parede" className="after:absolute after:inset-0 after:rounded-xl">
                     Ver loja online <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900/60 border border-brand-yellow/40 hover:border-brand-yellow transition-all duration-300">
+            <Card className="relative isolate bg-gray-900/60 border border-brand-yellow/40 hover:border-brand-yellow focus-within:border-brand-yellow transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <Palette className="w-10 h-10 text-brand-yellow mx-auto mb-3" />
                 <h3 className="text-lg font-semibold mb-2 text-white">Quer algo personalizado?</h3>
                 <p className="text-gray-400 text-sm mb-4">Envie uma imagem, escolha de um banco de imagens ou peça ajuda.</p>
                 <Button asChild className="bg-brand-yellow text-black font-semibold hover:bg-brand-yellow/90">
-                  <a href={calculatorProductUrl}>
+                  <a href={calculatorProductUrl} className="after:absolute after:inset-0 after:rounded-xl">
                     Calcular preço na app
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
