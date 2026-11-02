@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
 import {
   selectPublicGalleryImages,
+  linkAutocolantesGallery,
   type PublicGalleryImage,
 } from "@/pages/servico-autocolantes-cms-data";
 
@@ -207,7 +208,7 @@ function renderSection(
     return (
       <section key={section.id} {...sectionProps}>
         <ServiceGallery
-          images={selectPublicGalleryImages(legacyImages, embedded, fallback)}
+          images={linkAutocolantesGallery(selectPublicGalleryImages(legacyImages, embedded, fallback), calculatorUrl)}
           title={asText(content.title)}
           description={asText(content.description)}
           columns={asGalleryColumns(content.columns)}

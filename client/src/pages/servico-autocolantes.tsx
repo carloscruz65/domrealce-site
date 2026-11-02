@@ -1,3 +1,4 @@
+import { linkAutocolantesGallery } from "@/pages/servico-autocolantes-cms-data";
 import AutocolantesProductChoices, { AutocolantesProductLinks } from "@/components/autocolantes-product-choices";
 import CalculatorWhatsAppNote from "@/components/calculator-whatsapp-note";
 import { trackWhatsAppConversion } from "@/utils/trackWhatsApp";
@@ -384,7 +385,7 @@ export default function ServicoAutocolantes() {
 
         {/* Galeria */}
         <ServiceGallery
-          images={galleryImages}
+          images={linkAutocolantesGallery(galleryImages, calculatorUrl)}
           title="Exemplos de autocolantes e etiquetas"
           description="Alguns trabalhos produzidos pela DOMREALCE em diferentes formatos, aplicações e tipos de corte."
           columns={3}
