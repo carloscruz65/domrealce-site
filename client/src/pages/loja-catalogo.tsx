@@ -18,8 +18,12 @@ export default function LojaCatalogo() {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState<number | null>(null);
   const [added, setAdded] = useState(false);
+  const [personalizationValue, setPersonalizationValue] = useState("");
+  const [personalizationError, setPersonalizationError] = useState("");
   useEffect(() => {
     setQuantity(null);
+    setPersonalizationValue("");
+    setPersonalizationError("");
     setAdded(false);
   }, [slug, detail]);
   const product = detail
@@ -31,6 +35,11 @@ export default function LojaCatalogo() {
   const [busy, setBusy] = useState(false);
   const add = async () => {
     if (!product) return;
+    if (product.personalizationLabel && !personalizationValue.trim()) {
+      setPersonalizationError(`Preencha ${product.personalizationLabel}.`);
+      document.getElementById("product-personalization")?.focus();
+      return;
+    }
     setBusy(true);
     try {
       const current = await refetch();
@@ -51,6 +60,7 @@ export default function LojaCatalogo() {
             type: "produto",
             shopProductId: product.id,
             quantidade: q,
+            personalizationValue,
           },
         ],
         current.data,
@@ -132,6 +142,44 @@ export default function LojaCatalogo() {
                     {euro(product.priceCents / 100)} sem IVA. Portes calculados
                     no carrinho.
                   </p>
+                  {product.personalizationLabel && (
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="product-personalization"
+                        className="block"
+                      >
+                        {product.personalizationLabel}{" "}
+                        <span aria-hidden="true">*</span>
+                      </label>
+                      <Input
+                        id="product-personalization"
+                        required
+                        maxLength={200}
+                        placeholder={/alvar/i.test(product.personalizationLabel) ? "Ex.: 0066621" : `Escreva aqui: ${product.personalizationLabel}`}
+                        value={personalizationValue}
+                        aria-invalid={Boolean(personalizationError)}
+                        aria-describedby="personalization-help"
+                        onChange={(e) => {
+                          setPersonalizationValue(e.target.value);
+                          setPersonalizationError("");
+                          setAdded(false);
+                        }}
+                      />
+                      <p
+                        id="personalization-help"
+                        className="text-sm text-gray-300"
+                      >
+                        Este texto será usado na produção. Confira antes de
+                        adicionar ao carrinho. Para outro texto, adicione o
+                        produto novamente com a nova personalização.
+                      </p>
+                      {personalizationError && (
+                        <p role="alert" className="text-red-400">
+                          {personalizationError}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <label className="block space-y-2">
                     Quantidade de{" "}
                     {product.unit === "conjunto" ? "conjuntos" : "unidades"}

@@ -98,6 +98,21 @@ export function quoteShopCart(
         throw new Error(
           `${product.name}: mínimo ${product.minimumQuantity}, acréscimos de ${product.quantityStep}.`,
         );
+      const personalizationLabel = product.personalizationLabel || "";
+      let personalizationValue = "";
+      if (personalizationLabel) {
+        if (typeof item.personalizationValue !== "string")
+          throw new Error(`${product.name}: preencha ${personalizationLabel}.`);
+        personalizationValue = item.personalizationValue.trim();
+        if (
+          !personalizationValue ||
+          personalizationValue.length > 200 ||
+          /[\u0000-\u001f\u007f]/.test(personalizationValue)
+        )
+          throw new Error(
+            `${product.name}: indique ${personalizationLabel} (1 a 200 caracteres, numa linha).`,
+          );
+      }
       unitPrice = product.priceCents;
       data = {
         id: String(item.id ?? product.id),
@@ -107,6 +122,8 @@ export function quoteShopCart(
         productImage: product.image,
         unit: product.unit,
         specifications: product.specifications,
+        personalizationLabel,
+        personalizationValue,
         minimumQuantity: product.minimumQuantity,
         quantityStep: product.quantityStep,
       };
@@ -172,7 +189,17 @@ export function normalizeShopLine<T extends ShopLine>(
   try {
     return quoteShopCart([item], catalog, "pickup").items[0] as unknown as T;
   } catch {
-    return { ...item, precoTotal: 0 };
+    const product =
+      item.type === "produto"
+        ? catalog.products.find((p) => p.id === item.shopProductId)
+        : undefined;
+    return {
+      ...item,
+      ...(product
+        ? { personalizationLabel: product.personalizationLabel || "" }
+        : {}),
+      precoTotal: 0,
+    };
   }
 }
 export function canvasOptions(settings: ShopSettings = DEFAULT_SHOP_SETTINGS) {

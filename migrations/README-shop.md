@@ -61,3 +61,12 @@ A versão integrada mantém as alterações de impressão digital e partilha soc
 Validação da integração: 24 testes passam (23 do catálogo/base e um teste de metadados sociais que percorre as páginas com cinco bots, URLs individuais, CMS/fallback e notícias por ID/slug). O build passa. O TypeScript mantém os 63 diagnósticos anteriores, sem novos diagnósticos nos ficheiros integrados.
 
 O conector identifica o site publicado como `DomrealceDesign` (`3bf90cb8-837d-49dd-b68d-11cd7e048610`), em `https://domrealce.com`, com estado success. Não foram alterados a main, a base real ou o deployment do Replit. Falta identificar/copiar a base do site principal, aplicar o diagnóstico e a migração na cópia e validar login, upload no Object Storage e pagamentos/webhooks sandbox antes da publicação.
+
+
+## Personalização por produto (16/10/2026)
+
+O campo `personalizationLabel` define o nome de uma resposta obrigatória do cliente (ex.: Número do alvará). Vazio desativa a opção. O texto é guardado como parte do artigo no JSON da encomenda, com o nome do campo definido pelo servidor; mudar o produto depois não altera pedidos anteriores. Mantém zeros iniciais e aceita até 200 caracteres numa linha. O mesmo produto adicionado duas vezes conserva linhas separadas, incluindo personalizações diferentes.
+
+Aplicar `migrations/20261016_shop_personalization.sql` às bases de desenvolvimento e produção antes de publicar esta versão. Acrescenta apenas `shop_products.personalization_label`, com valor vazio para produtos existentes. Não altera preços, encomendas nem pagamentos. O admin permite editar o nome do campo; o cliente preenche-o na página do produto e confirma-o no carrinho e no checkout. O admin mostra a resposta nos detalhes da encomenda. Para mudar o texto antes de comprar, retirar a linha e voltar a adicionar o produto com o novo texto.
+
+Testes: validação obrigatória também nos endpoints reais de pedidos e PayPal com serviços externos simulados; preservação do texto e do nome do campo na encomenda; rejeição de texto inválido e de rótulos falsificados; linhas distintas; migração repetida e persistência PostgreSQL/PGlite. Nenhum pagamento real é iniciado pelos testes.

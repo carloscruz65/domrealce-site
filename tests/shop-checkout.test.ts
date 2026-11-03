@@ -21,6 +21,7 @@ test("real order and PayPal routes price the same cart, reject changed totals an
         name: "Ângulo morto",
         image: "/public-objects/a.png",
         specifications: "Conjunto de 3",
+        personalizationLabel: "",
         unit: "conjunto",
         published: true,
         priceCents: 500,
@@ -194,6 +195,33 @@ test("real order and PayPal routes price the same cart, reject changed totals an
     data.products[0].published = false;
     for (const route of ["/api/orders", "/api/payments/paypal/create-order"])
       assert.equal((await request(route, input)).status, 400);
+    // Both payment entry points must reject omitted personalization before creating an order.
+    data.products[0].published = true;
+    data.products[0].priceCents = 500;
+    data.products[0].personalizationLabel = "Número do alvará";
+    for (const route of ["/api/orders", "/api/payments/paypal/create-order"]) {
+      const before = orders.length;
+      assert.equal((await request(route, input)).status, 400);
+      assert.equal(orders.length, before);
+      const response = await request(route, {
+        ...input,
+        itens: [
+          {
+            ...input.itens[0],
+            personalizationValue: "  0066621  ",
+            personalizationLabel: "Fake",
+          },
+        ],
+      });
+      assert.equal(response.status, 200);
+      assert.equal(orders.length, before + 1);
+      assert.equal(orders.at(-1).itens[0].personalizationValue, "0066621");
+      assert.equal(
+        orders.at(-1).itens[0].personalizationLabel,
+        "Número do alvará",
+      );
+      assert.equal(orders.at(-1).total, "18.45");
+    }
   } finally {
     globalThis.fetch = originalFetch;
     delete (globalThis as any).__shopCheckoutFixture;

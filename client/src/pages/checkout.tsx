@@ -1042,6 +1042,9 @@ export default function Checkout() {
                           {item.productName || item.textureName || item.canvasName}
                         </h4>
 
+                        {item.type === "produto" && item.personalizationLabel && (
+                          <p className="text-sm text-[#FFD700] break-words">{item.personalizationLabel}: {item.personalizationValue}</p>
+                        )}
                         {item.type === "produto" ? <p className="text-xs text-gray-400">{item.quantidade} × {item.unit} · {item.specifications}</p> : (item.type === "quadros-canvas" || item.tamanho) ? (
                           <p className="text-xs text-gray-400">
                             {item.tamanho} • Quadro em Canvas

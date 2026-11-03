@@ -35,6 +35,8 @@ interface CartItem {
   quantityStep?: number;
   unit?: string;
   specifications?: string;
+  personalizationLabel?: string;
+  personalizationValue?: string;
 
   // Wallpaper properties
   textureName?: string;
@@ -403,6 +405,11 @@ export default function Carrinho() {
                             </Badge>
                           </div>
 
+                          {item.type === "produto" && item.personalizationLabel && (
+                            <p className="text-sm text-[#FFD700] break-words">
+                              {item.personalizationLabel}: {item.personalizationValue || "Por preencher — retire e volte a adicionar o produto."}
+                            </p>
+                          )}
                           {item.type === "produto" && <p className="text-sm text-gray-300 whitespace-pre-wrap">{item.specifications}<br />Vendido por {item.unit}. Mínimo {item.minimumQuantity}; incrementos de {item.quantityStep}.</p>}
                           {/* Canvas Size Display */}
                           {item.type === "quadros-canvas" && (

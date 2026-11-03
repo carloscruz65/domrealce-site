@@ -165,6 +165,7 @@ export default function ShopCatalogManager() {
                 ...common,
                 categoryId: f.get("categoryId"),
                 specifications: f.get("specifications"),
+                personalizationLabel: f.get("personalizationLabel"),
                 priceCents: euroCents(f.get("price")),
                 minimumQuantity: Number(f.get("minimumQuantity")),
                 quantityStep: Number(f.get("quantityStep")),
@@ -451,6 +452,20 @@ export default function ShopCatalogManager() {
                       placeholder="Ex.: vinil; 17 × 25 cm; conjunto de 3 autocolantes"
                     />
                   </Label>
+                  <div className="space-y-2">
+                    <Field
+                      name="personalizationLabel"
+                      label="Campo de personalização (opcional)"
+                      value={product?.personalizationLabel || ""}
+                      required={false}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Ex.: Número do alvará, matrícula ou nome. Ao preencher, o
+                      cliente terá de indicar esse texto antes de comprar. Deixe
+                      vazio para não pedir personalização. Máximo: 100
+                      caracteres no nome do campo e 200 na resposta.
+                    </p>
+                  </div>
                   <Field
                     name="price"
                     label="Preço por unidade/conjunto (€ sem IVA)"
