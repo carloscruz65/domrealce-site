@@ -13,7 +13,8 @@ export default function ObrigadoOrcamento() {
 
       if (typeof window.gtag === "function") {
         window.gtag("event", "conversion", {
-          send_to: "AW-11438840519/lTnXCKfU34scEMe1u84q",
+          // Ação de formulário; os cliques no WhatsApp têm uma ação separada.
+          send_to: "AW-11438840519/4RotCNHHgI0cEMe1u84q",
         });
       } else if (retries > 0) {
         setTimeout(() => fireConversion(retries - 1), 300);
