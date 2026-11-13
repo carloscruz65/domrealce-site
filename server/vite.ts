@@ -1,7 +1,8 @@
-import type { Express } from "express";
+import express, { type Express } from "express";
 import type { Server } from "http";
 import fs from "fs";
 import path from "path";
+import { frontendHtml } from "./frontendHtml";
 
 export function log(message: string) {
   console.log(message);
@@ -29,6 +30,9 @@ export async function setupVite(app: Express, server: Server) {
   // ✅ SPA fallback (apenas para rotas não-API)
   app.use("*", async (req, res, next) => {
     try {
+      if (req.method !== "GET" && req.method !== "HEAD") {
+        return res.set("Allow", "GET, HEAD").status(405).end();
+      }
       const url = req.originalUrl;
 
       // Segurança extra: se por alguma razão chegar aqui com /api, devolve JSON
@@ -45,7 +49,9 @@ export async function setupVite(app: Express, server: Server) {
 
       template = await vite.transformIndexHtml(url, template);
 
-      res.status(200).set({ "Content-Type": "text/html" }).end(template);
+      const page = frontendHtml(template, req.originalUrl.split("?")[0]);
+      if (page.status === 404) res.set("X-Robots-Tag", "noindex");
+      res.status(page.status).type("html").end(page.html);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);
@@ -57,7 +63,8 @@ export function serveStatic(app: Express) {
   const distPath = path.resolve(process.cwd(), "dist", "public");
 
   // Static assets
-  app.use(require("express").static(distPath));
+  // A homepage passa pelo mesmo HTML inicial que as restantes rotas.
+  app.use(express.static(distPath, { index: false }));
 
   // ✅ API fallback em produção (mesma regra)
   app.use("/api", (req, res) => {
@@ -70,6 +77,9 @@ export function serveStatic(app: Express) {
 
   // ✅ SPA fallback (apenas não-API)
   app.use("*", (req, res) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      return res.set("Allow", "GET, HEAD").status(405).end();
+    }
     if (req.originalUrl.startsWith("/api")) {
       return res.status(404).json({
         error: "API route not found",
@@ -78,6 +88,10 @@ export function serveStatic(app: Express) {
       });
     }
 
-    res.sendFile(path.join(distPath, "index.html"));
+    const template = fs.readFileSync(path.join(distPath, "index.html"), "utf-8");
+    const page = frontendHtml(template, req.originalUrl.split("?")[0]);
+    if (page.status === 404) res.set("X-Robots-Tag", "noindex");
+    res.status(page.status).type("html").send(page.html);
   });
 }
+
