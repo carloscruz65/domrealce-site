@@ -17,6 +17,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Link } from "wouter";
+import { homeHero } from "../../../shared/home-hero";
 
 const LazyNewsSection = lazy(() => import("@/components/news-section"));
 const LazyClientLogos = lazy(() => import("@/components/ClientLogos"));
@@ -245,13 +246,13 @@ export default function HomeV2() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Decoração de viaturas{" "}
-                <span className="text-brand-yellow">que promove o seu negócio</span>,
-                <br className="hidden sm:block" /> todos os dias{" "}
+                {homeHero.title}{" "}
+                <span className="text-brand-yellow">{homeHero.highlight}</span>,
+                <br className="hidden sm:block" /> {homeHero.ending}{" "}
               </h1>
 
               <p className="text-base sm:text-lg text-gray-300 mb-5 max-w-xl mx-auto md:mx-0">
-                Aplicação profissional de vinil para carrinhas, camiões e frotas comerciais no Grande Porto.
+                {homeHero.description}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6 justify-center md:justify-start">
@@ -522,3 +523,4 @@ export default function HomeV2() {
     </div>
   );
 }
+
