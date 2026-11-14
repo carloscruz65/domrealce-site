@@ -12,6 +12,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
 import { SEOHead } from "@/components/seo-head";
+import { canvasCategoryImages } from "@/lib/canvas-gallery";
 
 interface CanvasImage {
   name: string;
@@ -61,16 +62,9 @@ export default function LojaCanvasDetalhes() {
   });
 
   // Filter canvas images for the specific category
-  const canvasImages: CanvasImage[] = (images as { images: string[] })?.images
-    ?.filter((path: string) => 
-      path.includes(`Quadros-em-canvas/${categoria}/`) &&
-      /\.(jpg|jpeg|png|gif|webp)$/i.test(path)
-    )
-    ?.map((path: string) => ({
-      name: path.split('/').pop()?.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '') || '',
-      path: `/public-objects/${path}`
-    }))
-    ?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+  const canvasImages: CanvasImage[] = canvasCategoryImages(
+    (images as { images: string[] })?.images || [], categoria,
+  );
 
   const selectedSizeOption = sizeOptions.find(s => s.size === selectedSize);
 
