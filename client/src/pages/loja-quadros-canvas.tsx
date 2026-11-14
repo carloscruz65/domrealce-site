@@ -9,11 +9,13 @@ import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { SEOHead } from "@/components/seo-head";
+import { canvasCategoryImages, normalizeCanvasCategory } from "@/lib/canvas-gallery";
 
 interface CanvasCover {
   name: string;
   path: string;
   fileName: string;
+  category: string;
   canvasCount?: number;
 }
 
@@ -74,33 +76,11 @@ export default function LojaQuadrosCanvas() {
             .replace(/[-_]/g, " ")
             .replace(/\b\w/g, (l: string) => l.toUpperCase());
 
-        const normalize = (s: string) =>
-          s
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, "");
+        const categoryImages = canvasCategoryImages(
+          (images as { images: string[] })?.images || [], fileName,
+        );
 
-        const normalizedName = normalize(fileName);
-
-        const categoryImages =
-          (images as { images: string[] })?.images?.filter(
-            (imgPath: string) => {
-              const pathLower = imgPath.toLowerCase();
-              if (!pathLower.includes("quadros-em-canvas/quadros-em-canvas/"))
-                return false;
-
-              const parts = imgPath.split("/");
-              const folder = parts[3]; // mantém a tua lógica
-              return (
-                folder &&
-                normalize(folder) === normalizedName &&
-                /\.(jpg|jpeg|png|gif|webp)$/i.test(imgPath)
-              );
-            },
-          ) ?? [];
-
-        const normalizedKey = normalize(fileName);
+        const normalizedKey = normalizeCanvasCategory(fileName);
         if (seenNames.has(normalizedKey)) return null;
         seenNames.add(normalizedKey);
 
@@ -108,6 +88,7 @@ export default function LojaQuadrosCanvas() {
           name: displayName,
           path: `/public-objects/${path}`,
           fileName,
+          category: categoryImages[0]?.category || fileName,
           canvasCount: categoryImages.length,
         };
       })
@@ -216,7 +197,7 @@ export default function LojaQuadrosCanvas() {
             {canvasCovers.map((canvas) => (
               <Link
                 key={canvas.fileName}
-                href={`/loja/quadros-canvas/categoria/${canvas.fileName}`}
+                href={`/loja/quadros-canvas/categoria/${encodeURIComponent(canvas.category)}`}
                 className="block"
               >
                 <Card className="bg-[#111] border border-[#333] hover:border-[#FFD700] transition cursor-pointer">
@@ -284,3 +265,4 @@ export default function LojaQuadrosCanvas() {
     </div>
   );
 }
+
